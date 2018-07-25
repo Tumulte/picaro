@@ -1,0 +1,52 @@
+{
+  "name": "javascript-development-environment",
+  "version": "0.0.1",
+  "eslintConfig": {},
+  "description": "Initial Json for a Node project",
+  "scripts": {
+    "prestart": "node buildScripts/startMessage.js",
+    "start": "npm-run-all --parallel open:src security-check test:watch lint:watch",
+    "open:src": "nodemon buildScripts/srcServer.js",
+    "security-check": "npm audit",
+    "lint": "esw public utils buildScripts controller --color",
+    "lint:watch": "npm run lint -- --watch",
+    "test": "mocha --reporter progress  \"utils/**/*.test.js\" \"public/**/*.test.js\"",
+    "test:watch": "npm run test -- --watch"
+  },
+  "author": "Étienne Rouge",
+  "license": "Copyright",
+  "dependencies": {},
+  "devDependencies": {
+    "watchify": "3.11.0",
+    "google-auth-library": "1.6.1",
+    "googleapis": "32.0.0",
+    "chai": "4.1.2",
+    "chalk": "2.4.1",
+    "compression": "1.7.3",
+    "eslint": "5.2.0",
+    "eslint-plugin-import": "2.13.0",
+    "eslint-watch": "4.0.2",
+    "express": "4.16.3",
+    "jsdom": "11.11.0",
+    "json-schema-faker": "0.5.0-rc15",
+    "json-server": "0.14.0",
+    "mocha": "5.2.0",
+    "nock": "9.4.3",
+    "nodemon": "1.18.3",
+    "npm-run-all": "4.1.3",
+    "pug": "2.0.3",
+    "lowdb": "1.0.0",
+    "body-parser": "1.18.3",
+    "shortid": "2.2.12",
+    "supertest": "3.1.0",
+    "jquery": "3.3.1"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "ignore": [
+      "public/*",
+      "views/*",
+      "*.test.js"
+    ]
+  }
+}
