@@ -5,6 +5,8 @@
 //- créer un type de quote «temoignage» (d'autres)
 // +lier des quotes entre elles autour de ? (idée ? concepte ???)
 
+console.log(""
+  "connected to port : " + port "");
 
 var express = require('express');
 //Tools
