@@ -18,7 +18,7 @@ var db = low(adapter)
 */
 
 //Server Params
-var port = 3000;
+var port = 8080;
 var app = express();
 
 //Parser
