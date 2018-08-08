@@ -7,7 +7,7 @@
     "prestart": "node buildScripts/startMessage.js",
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "npm-run-all --parallel open:src security-check test:watch lint:watch",
-    "start:prod": "node",
+    "start:prod": "node  buildScripts/srcServerDev.js",
     "open:src": "nodemon buildScripts/srcServerDev.js",
     "security-check": "npm audit",
     "lint": "esw public utils buildScripts controller --color",
