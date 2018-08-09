@@ -5,7 +5,7 @@
   "description": "Initial Json for a Node project",
   "scripts": {
     "prestart": "node buildScripts/startMessage.js",
-    "start": "node ./buildScripts/srcServerDev.js",
+    "start": "node ./buildScripts/srcServer.js",
     "start:dev": "npm-run-all --parallel open:src security-check test:watch lint:watch",
     "open:src": "nodemon buildScripts/srcServerDev.js",
     "security-check": "npm audit",
