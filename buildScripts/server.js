@@ -5,10 +5,13 @@
 //- créer un type de quote «temoignage» (d'autres)
 // +lier des quotes entre elles autour de ? (idée ? concepte ???)
 
-
-var express = require('express');
+import express from "express";
+import webpack from "webpack";
+import config from "../webpack.config.dev";
 //Tools
-var bodyParser = require('body-parser')
+import bodyParser from "body-parser";
+
+const compiler = webpack(config);
 
 /*DB
 var FileSync = require('lowdb/adapters/FileSync');
@@ -23,21 +26,28 @@ var app = express();
 
 //Parser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 
+app.use(
+  require("webpack-dev-middleware")(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+  })
+);
 
 //Template Engine
-app.set('view engine', "pug");
+app.set("view engine", "pug");
 
 //Static Files
-app.use(express.static('public'));
-
+app.use(express.static("dist"));
 
 //Pages
-app.get('/', function (req, res) {
-  res.render('index');
+app.get("/", function (req, res) {
+  res.render("index");
 });
 
 //Server
