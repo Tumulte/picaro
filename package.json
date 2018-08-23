@@ -10,9 +10,9 @@
     "prestart": "babel-node buildScripts/startMessage.js",
     "start": "node ./buildScripts/server.js",
     "start:dev": "npm-run-all --parallel open:src security-check test:watch lint:watch",
-    "open:src": "babel-node buildScripts/server.js",
+    "open:src": "set NODE_ENV='development'&& babel-node buildScripts/server.js",
     "security-check": "npm audit",
-    "lint": "esw public utils buildScripts controller --color",
+    "lint": "esw src controller buildScripts controller --color",
     "lint:watch": "npm run lint -- --watch",
     "test": "mocha --reporter progress  \"src/**/*.test.js\" \"controller/**/*.test.js\"",
     "test:watch": "npm run test -- --watch"

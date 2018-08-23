@@ -31,13 +31,14 @@ app.use(
     extended: true
   })
 );
-
 app.use(
   require("webpack-dev-middleware")(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath
   })
 );
+
+
 
 //Template Engine
 app.set("view engine", "pug");
