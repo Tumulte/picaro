@@ -1,0 +1,35 @@
+{
+  "coverage": "11.11%",
+  "expectCount": 18,
+  "actualCount": 2,
+  "files": {
+    "app/dbUtils.js": {
+      "expectCount": 15,
+      "actualCount": 2,
+      "undocumentLines": [
+        1,
+        3,
+        14,
+        26,
+        27,
+        28,
+        29,
+        30,
+        54,
+        68,
+        74,
+        87,
+        98
+      ]
+    },
+    "app/server.js": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        14,
+        24,
+        25
+      ]
+    }
+  }
+}

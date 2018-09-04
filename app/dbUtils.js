@@ -17,67 +17,80 @@ var trimAroundComma = function trimAroundComma(data) {
     }
     return data;
 }
-//GET HANDLER
-var dataHandler = function (db, req) {
+/**
+ * This is used to get data with its one-to-one relationships.
+ * Any field like foo_: bar (mind the "_") will be replaced by object 
+ * identified by the id "bar" from this table "foo"
+ */
+export class RelationHandler {
+    constructor(db, req) {
+        this.relationMarker = "_";
+        this.data = {};
+        this.db = db;
+        this.req = req;
 
-    this.data = {};
-
-    var relationEndMarker = "_";
-    var replaceIDByData = function (data, item, db) {
+    };
+    /**
+     * @param {object} _replaceIDByData.data The data from the original query
+     * @param {number|string} _replaceIDByData.item The field containing the id to look for
+     */
+    _replaceIDByData(data, item) {
         var dbQuery = false
         if (data[item] === false) {
             return dbQuery;
         } else if (typeof data[item] === "string") {
             var table = item.replace("_", "s");
-            dbQuery = db.get(table).find({
+            dbQuery = this.db.get(table).find({
                 "id": data[item]
             }).value();
         } else if (typeof data[item] !== 'undefined') {
             table = item.replace("_", "");
-            dbQuery = db.get(table).filter(function (o) {
+            dbQuery = this.db.get(table).filter(function (o) {
                 return data[item].indexOf(o.id) !== -1
             }).value();
         }
         return dbQuery;
     }
-    var findRelationnalProperties = function (data, db) {
+    _findRelationnalProperties(data, db) {
 
         for (var item in data) {
             var lastChar = item.substr(item.length - 1);
             if (data[item] !== null && typeof data[item] === "object" && data[item].hasOwnProperty("id")) {
-                data[item] = findRelationnalProperties(data[item], db);
-            } else if (lastChar === relationEndMarker) {
+                data[item] = this.findRelationnalProperties(data[item], db);
+            } else if (lastChar === this.relationMarker) {
                 var table = item.replace("_", "");
 
-                data[table] = replaceIDByData(data, item, db);
+                data[table] = this._replaceIDByData(data, item);
             }
         }
         return data
     }
-    var detachObject = function (data) {
+    _detachObject(data) {
         data = JSON.parse(JSON.stringify(data));
         return data;
     }
-    this.get = function () {
-        if (typeof req.params.quoteId !== "undefined") {
-            this.data = db.get(req.params.table).find({
-                "id": req.params.quoteId
+
+    //Public
+    get() {
+        if (typeof this.req.params.quoteId !== "undefined") {
+            this.data = this.req.db.get(this.req.params.table).find({
+                "id": this.req.params.quoteId
             }).value();
         } else {
-            this.data = db.get(req.params.table).filter(function (o) {
-                return filterFromQuery(o, req.query);
+            this.data = db.get(this.req.params.table).filter(function (o) {
+                return this._filterFromQuery(o, this.req.query);
             }).value();
         }
 
         return this;
     }
-    this.getRelations = function () {
+    getRelations() {
         if (typeof this.data === "undefined") {
             return this.data = false;
         }
-        var data = detachObject(this.data);
-        this.data = findRelationnalProperties(data, db);
-        return this.data;
+        var data = this._detachObject(this.data);
+        data = this._findRelationnalProperties(data, db);
+        return data;
     }
 }
 

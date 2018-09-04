@@ -1,0 +1,33 @@
+[
+  {
+    "name": "RelationHandler#_replaceIDByData",
+    "filePath": "app/dbUtils.js",
+    "lines": [
+      {
+        "lineNumber": 32,
+        "line": "    /**\r"
+      },
+      {
+        "lineNumber": 33,
+        "line": "     * @param {object} _replaceIDByData.data The data from the original query\r"
+      },
+      {
+        "lineNumber": 34,
+        "line": "     * @param {number|string} _replaceIDByData.item The field containing the id to look for\r"
+      },
+      {
+        "lineNumber": 35,
+        "line": "     */\r"
+      },
+      {
+        "lineNumber": 36,
+        "line": "    _replaceIDByData(data, item) {\r"
+      }
+    ],
+    "codeParams": [
+      "data",
+      "item"
+    ],
+    "docParams": []
+  }
+]
