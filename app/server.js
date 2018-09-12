@@ -7,6 +7,7 @@
 
 import express from "express";
 import webpack from "webpack";
+import crud from "./crud.js";
 import config from "../webpack.config.dev";
 //Tools
 import bodyParser from "body-parser";
@@ -38,13 +39,18 @@ app.use(
   })
 );
 
-
+//API
+api = crud.RESTRoutes(db);
 
 //Template Engine
 app.set("view engine", "pug");
 
 //Static Files
 app.use(express.static("dist"));
+
+//api 
+app.use('/api', api);
+
 
 //Pages
 app.get("/", function (req, res) {
