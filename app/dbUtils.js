@@ -10,8 +10,9 @@ var filterFromQuery = function filterFromQuery(o, query) {
         }
     }
     return true;
-};
-var trimAroundComma = function trimAroundComma(data) {
+}
+
+function trimAroundComma(data) {
     if (typeof data === "string") {
         return data.replace(", ", ",").replace(" ,", ",");
     }
@@ -26,10 +27,10 @@ export class RelationHandler {
     constructor(db, req) {
         this.relationMarker = "_";
         this.data = {};
+        this.relations = [];
         this.db = db;
         this.req = req;
-
-    };
+    }
     /**
      * @param {object} _replaceIDByData.data The data from the original query
      * @param {number|string} _replaceIDByData.item The field containing the id to look for
@@ -45,7 +46,7 @@ export class RelationHandler {
             }).value();
         } else if (typeof data[item] !== 'undefined') {
             table = item.replace("_", "");
-            dbQuery = this.db.get(table).filter(function (o) {
+            dbQuery = this.db.get(table).filter(function(o) {
                 return data[item].indexOf(o.id) !== -1
             }).value();
         }
@@ -56,7 +57,7 @@ export class RelationHandler {
         for (var item in data) {
             var lastChar = item.substr(item.length - 1);
             if (data[item] !== null && typeof data[item] === "object" && data[item].hasOwnProperty("id")) {
-                data[item] = this.findRelationnalProperties(data[item], db);
+                data[item] = this._findRelationnalProperties(data[item], db);
             } else if (lastChar === this.relationMarker) {
                 var table = item.replace("_", "");
 
@@ -72,13 +73,14 @@ export class RelationHandler {
 
     //Public
     get() {
-        if (typeof this.req.params.quoteId !== "undefined") {
-            this.data = this.req.db.get(this.req.params.table).find({
-                "id": this.req.params.quoteId
+        var self = this;
+        if (typeof this.req.params.elemID !== "undefined") {
+            this.data = this.db.get(this.req.params.table).find({
+                "id": this.req.params.elemID
             }).value();
         } else {
-            this.data = db.get(this.req.params.table).filter(function (o) {
-                return this._filterFromQuery(o, this.req.query);
+            this.data = this.db.get(this.req.params.table).filter(function(o) {
+                return filterFromQuery(o, self.req.query);
             }).value();
         }
 
@@ -89,15 +91,19 @@ export class RelationHandler {
             return this.data = false;
         }
         var data = this._detachObject(this.data);
-        data = this._findRelationnalProperties(data, db);
+        data = this._findRelationnalProperties(data, this.db);
         return data;
     }
 }
 
 //POST HANDLER
-var dataWriteHandler = function (db, req) {
-    var saveNewRelations = function (db, data) {
-        data.forEach(function (element) {
+export class DataWriteHandler {
+    constructor(db, req) {
+        this.db = db;
+        this.req = req;
+    }
+    _saveNewRelations(db, data) {
+        data.forEach(function(element) {
             var table = element.type.replace("_", "");
             if (element.hasOwnProperty("id") && element.id) {
                 db.get(table).push({
@@ -107,20 +113,20 @@ var dataWriteHandler = function (db, req) {
             }
         });
     }
-    var standardizePostData = function (data) {
+    _standardizePostData(data) {
         this.data = data;
         this.relations = [];
 
         this.data["id"] = shortid.generate();
 
 
-        var addExistingID = function (item) {
+        var addExistingID = function(item) {
             var attributeName = item.replace("existing_", "");
             this.data[attributeName] = this.data[item];
             delete this.data[item];
             return this;
         };
-        var handleNewRelations = function (item) {
+        var handleNewRelations = function(item) {
             if (this.data[item] === "") {
                 return false;
             } else if (typeof this.data[item] === "string") {
@@ -129,7 +135,7 @@ var dataWriteHandler = function (db, req) {
 
             var newRelationsID = "";
 
-            this.data[item].forEach(function (element) {
+            this.data[item].forEach(function(element) {
                 var id = shortid.generate();
                 newRelationsID += "," + id;
                 this.relations.push({
@@ -141,7 +147,7 @@ var dataWriteHandler = function (db, req) {
             return newRelationsID
 
         };
-        var standardizeIdList = function (list) {
+        var standardizeIdList = function(list) {
             if (list.charAt(0) === ',') {
                 list = list.slice(1);
             }
@@ -149,7 +155,7 @@ var dataWriteHandler = function (db, req) {
             return list.split(',');
         }
 
-        var populateRelations = function () {
+        var populateRelations = function() {
             for (var item in data) {
                 if (item.indexOf("existing_") !== -1) {
                     addExistingID(item);
@@ -178,17 +184,12 @@ var dataWriteHandler = function (db, req) {
     }
 
 
-    this.save = function () {
-        var data = standardizePostData(req.body);
-        db.get(req.params.table).push(
+    save() {
+        var data = this._standardizePostData(this.req.body);
+        this.db.get(this.req.params.table).push(
             data.data
         ).write();
-        saveNewRelations(db, data.relations);
+        this._saveNewRelations(this.db, data.relations);
         return data;
     }
 }
-
-module.exports = {
-    "dataHandler": dataHandler,
-    "dataWriteHandler": dataWriteHandler
-};

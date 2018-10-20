@@ -3,11 +3,13 @@ import path from "path";
 export default {
     devtool: "inline-source-map",
     mode: 'development',
-    entry: [path.resolve(__dirname, "src/main.js")],
+    entry: {
+        appIndex: path.resolve(__dirname, "appIndex/controllers/index.js")
+    },
     target: "web",
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "bundle.js"
+        filename: "[name].js"
     },
     plugins: [],
     module: {

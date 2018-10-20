@@ -1,0 +1,25 @@
+{
+    "Demo": {
+        "testData": {
+            "name": {
+                "type": "text",
+                "attribute": {
+                    "maxlenght": 100,
+                    "class": "input-test"
+                }
+            },
+            "species": {
+                "type": "checkbox",
+                "attribute": {
+                    "class": "yobila"
+                }
+            },
+            "alive": {
+                "type": "checkbox-bool",
+                "attribute": {
+                    "class": "another-test"
+                }
+            }
+        }
+    }
+}
