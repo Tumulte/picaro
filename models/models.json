@@ -1,5 +1,5 @@
 {
-    "Demo": {
+    "demo": {
         "testData": {
             "name": {
                 "type": "text",

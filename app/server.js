@@ -10,15 +10,17 @@ import webpack from "webpack";
 
 import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
-import config from "../webpack.config.dev";
+import config from "./../webpack.config.dev.js";
+import modelsToForm from "./formGenerator"
 //Tools
 import bodyParser from "body-parser";
 
 //Framework
 import crud from "./crud.js";
 
-const compiler = webpack(config);
+import models from "./../models/models.json";
 
+const compiler = webpack(config);
 /*DB
 var FileSync = require('lowdb/adapters/FileSync');
 var low = require('lowdb');
@@ -65,11 +67,8 @@ app.get("/", function(req, res) {
     res.render("index");
 });
 app.use("/edit/:app/:table", function(req, res, next) {
-    var data = {
-        prout: "pars",
-        prit: "ndrt"
-    }
-    req.data = data[req.params.table]
+    var form = modelsToForm([req.params.app], [req.params.table]);
+    req.form = form.name.type
 
     next();
 });
