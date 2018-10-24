@@ -68,14 +68,14 @@ app.get("/", function(req, res) {
 });
 app.use("/edit/:app/:table", function(req, res, next) {
     var form = modelsToForm([req.params.app], [req.params.table]);
-    req.form = form.name.type
+    req.form = form
 
     next();
 });
 app.get("/edit/:app/:table", function(req, res) {
     app.set("views", "./app" + req.params.app + "/views");
     res.render("edit", {
-        data: req.data
+        form: req.form
     });
 });
 //Server
