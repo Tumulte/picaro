@@ -66,8 +66,8 @@ app.get("/", function(req, res) {
     app.set("views", "./appIndex/views");
     res.render("index");
 });
-app.use("/edit/:app/:table", function(req, res, next) {
-    var form = modelsToForm([req.params.app], [req.params.table]);
+app.use("/:action/:app/:table", function(req, res, next) {
+    var form = modelsToForm([req.params]);
     req.form = form
 
     next();
