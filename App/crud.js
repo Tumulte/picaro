@@ -1,8 +1,8 @@
-import express from 'express';
-import {
-    RelationHandler,
-    DataWriteHandler
-} from './dbUtils';
+var express = require('express');
+var dbUtils = require('./dbUtils');
+var RelationHandler = dbUtils.RelationHandler;
+var DataWriteHandler = dbUtils.RelationHandler;
+
 
 var updateItem = function updateItem(req, res) {
     req.elemID
@@ -10,9 +10,9 @@ var updateItem = function updateItem(req, res) {
         .write()
     res.send("updated !");
 }
-export default function crud(db) {
+var crud = function crud(db) {
     var dataRouter = express.Router();
-    dataRouter.use('/:table/:elemID', function (req, res, next) {
+    dataRouter.use('/:table/:elemID', function(req, res, next) {
         if (db.has(req.params.table).value()) {
             var data = new RelationHandler(db, req);
             data = data.get().getRelations();
@@ -28,7 +28,7 @@ export default function crud(db) {
         }
     })
 
-    dataRouter.route('/:table').get(function (req, res) {
+    dataRouter.route('/:table').get(function(req, res) {
             if (db.has(req.params.table).value()) {
                 var data = new RelationHandler(db, req);
                 res.json(data.get().getRelations());
@@ -36,21 +36,21 @@ export default function crud(db) {
                 res.status(404).send("There is no table named " + req.params.table)
             }
         })
-        .post(function (req, res) {
+        .post(function(req, res) {
             var data = new DataWriteHandler(db, req);
             res.send(data.save());
         })
     dataRouter.route('/:table/:elemID')
-        .get(function (req, res) {
+        .get(function(req, res) {
             res.json(req.data)
         })
-        .put(function (req, res) {
+        .put(function(req, res) {
             updateItem(req, res);
         })
-        .patch(function (req, res) {
+        .patch(function(req, res) {
             updateItem(req, res);
         })
-        .delete(function (req, res) {
+        .delete(function(req, res) {
             db.get('posts')
                 .remove({
                     "id": req.params.elemID
@@ -59,4 +59,7 @@ export default function crud(db) {
             res.send("ok");
         });
     return dataRouter;
+}
+module.exports = {
+    crud: crud
 }

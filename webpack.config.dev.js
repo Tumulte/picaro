@@ -1,8 +1,8 @@
-import path from "path";
+var path = require("path");
 
-export default {
+module.exports = {
     devtool: "inline-source-map",
-    mode: 'development',
+    mode: "development",
     entry: {
         appIndex: path.resolve(__dirname, "appIndex/controllers/index.js")
     },
@@ -13,20 +13,25 @@ export default {
     },
     plugins: [],
     module: {
-        rules: [{
+        rules: [
+            {
                 test: /\.less$/,
-                use: [{
-                    loader: 'style-loader' // creates style nodes from JS strings
-                }, {
-                    loader: 'css-loader' // translates CSS into CommonJS
-                }, {
-                    loader: 'less-loader' // compiles Less to CSS
-                }]
-            },
+                use: [
+                    {
+                        loader: "style-loader" // creates style nodes from JS strings
+          },
+                    {
+                        loader: "css-loader" // translates CSS into CommonJS
+          },
+                    {
+                        loader: "less-loader" // compiles Less to CSS
+          }
+        ]
+      },
             {
                 test: /\.js$/,
-                use: 'babel-loader'
-            }
-        ]
+                use: "babel-loader"
+      }
+    ]
     }
 };

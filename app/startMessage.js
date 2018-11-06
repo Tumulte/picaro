@@ -1,3 +1,3 @@
 /* eslint-disable no-console */
-import chalk from "chalk";
+var chalk = require("chalk");
 console.log(chalk.green("Starting Up !"));

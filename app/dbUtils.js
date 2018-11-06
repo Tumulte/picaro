@@ -23,7 +23,7 @@ function trimAroundComma(data) {
  * Any field like foo_: bar (mind the "_") will be replaced by object 
  * identified by the id "bar" from this table "foo"
  */
-export class RelationHandler {
+class RelationHandler {
     constructor(db, req) {
         this.relationMarker = "_";
         this.data = {};
@@ -97,7 +97,7 @@ export class RelationHandler {
 }
 
 //POST HANDLER
-export class DataWriteHandler {
+class DataWriteHandler {
     constructor(db, req) {
         this.db = db;
         this.req = req;
@@ -192,4 +192,8 @@ export class DataWriteHandler {
         this._saveNewRelations(this.db, data.relations);
         return data;
     }
+}
+module.exports = {
+    DataWriteHandler: DataWriteHandler,
+    RelationHandler: RelationHandler
 }

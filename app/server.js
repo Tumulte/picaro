@@ -5,20 +5,18 @@
 //- créer un type de quote «temoignage» (d'autres)
 // +lier des quotes entre elles autour de ? (idée ? concepte ???)
 
-import express from "express";
-import webpack from "webpack";
+var express = require("express");
+var webpack = require("webpack");
 
-import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
-import config from "./../webpack.config.dev.js";
-import modelsToForm from "./formGenerator"
+var low = require("lowdb");
+var FileSync = require("lowdb/adapters/FileSync");
+var config = require("./../webpack.config.dev.js");
+var tableToForm = require("./formGenerator").tableToForm
 //Tools
-import bodyParser from "body-parser";
+var bodyParser = require("body-parser");
 
 //Framework
-import crud from "./crud.js";
-
-import models from "./../models/models.json";
+var crud = require("./crud.js").crud;
 
 const compiler = webpack(config);
 /*DB
@@ -67,7 +65,7 @@ app.get("/", function(req, res) {
     res.render("index");
 });
 app.use("/:action/:app/:table", function(req, res, next) {
-    var form = modelsToForm([req.params]);
+    var form = tableToForm(req.params);
     req.form = form
 
     next();

@@ -1,4 +1,4 @@
-import models from "./../models/models.json";
+var models = require("./../models/models.js");
 var createCheckbox = function createCheckbox(optionsList) {
     var html = "";
     optionsList.forEach(function(option) {
@@ -15,7 +15,7 @@ var makeAttribute = function makeAttribute(attributesList) {
     return html;
 };
 
-export default function tableToForm(params) {
+var tableToForm = function tableToForm(params) {
     var html = '<form action="' + params.action + '" method="/api/' + models[params.app] + '/' + [params.table] + '" class="' + '' + '">';
     var currentTable = models[params.app][params.table];
     for (var row in currentTable) {
@@ -35,4 +35,7 @@ export default function tableToForm(params) {
     }
     html += '</form>'
     return html;
+}
+module.exports = {
+    tableToForm: tableToForm
 }
