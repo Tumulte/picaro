@@ -97,12 +97,9 @@ class RelationHandler {
 }
 
 //POST HANDLER
-class DataWriteHandler {
-    constructor(db, req) {
-        this.db = db;
-        this.req = req;
-    }
-    _saveNewRelations(db, data) {
+var DataWriteHandler = function(db, req) {
+
+    var saveNewRelations = function(db, data) {
         data.forEach(function(element) {
             var table = element.type.replace("_", "");
             if (element.hasOwnProperty("id") && element.id) {
@@ -113,29 +110,28 @@ class DataWriteHandler {
             }
         });
     }
-    _standardizePostData(data) {
-        this.data = data;
+    var standardizePostData = function(data) {
         this.relations = [];
+        this.data = data;
 
-        this.data["id"] = shortid.generate();
-
+        data["id"] = shortid.generate();
 
         var addExistingID = function(item) {
             var attributeName = item.replace("existing_", "");
-            this.data[attributeName] = this.data[item];
-            delete this.data[item];
+            data[attributeName] = data[item];
+            delete data[item];
             return this;
         };
         var handleNewRelations = function(item) {
-            if (this.data[item] === "") {
+            if (data[item] === "") {
                 return false;
-            } else if (typeof this.data[item] === "string") {
-                this.data[item] = this.data[item].split(',');
+            } else if (typeof data[item] === "string") {
+                data[item] = data[item].split(',');
             }
 
             var newRelationsID = "";
 
-            this.data[item].forEach(function(element) {
+            data[item].forEach(function(element) {
                 var id = shortid.generate();
                 newRelationsID += "," + id;
                 this.relations.push({
@@ -164,15 +160,15 @@ class DataWriteHandler {
             for (item in data) {
                 if (item.indexOf("new_") !== -1) {
                     var attributeName = item.replace("new_", "");
-                    if (!this.data[attributeName] && this.data[item] === "") {
-                        this.data[attributeName] = false;
+                    if (!data[attributeName] && data[item] === "") {
+                        data[attributeName] = false;
                     } else {
                         var relations = handleNewRelations(item);
-                        var idList = this.data[attributeName] += relations;
-                        this.data[attributeName] = standardizeIdList(idList);
+                        var idList = data[attributeName] += relations;
+                        data[attributeName] = standardizeIdList(idList);
                     }
 
-                    delete this.data[item];
+                    delete data[item];
 
                 }
             }
@@ -182,14 +178,12 @@ class DataWriteHandler {
         populateRelations();
         return this;
     }
-
-
-    save() {
-        var data = this._standardizePostData(this.req.body);
-        this.db.get(this.req.params.table).push(
+    this.save = function() {
+        var data = standardizePostData(req.body);
+        db.get(req.params.app + '_' + req.params.table).push(
             data.data
         ).write();
-        this._saveNewRelations(this.db, data.relations);
+        saveNewRelations(db, data.relations);
         return data;
     }
 }
