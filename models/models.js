@@ -1,7 +1,7 @@
 module.exports = {
     demo: {
         testData: {
-            name: {
+            firstname: {
                 type: "text",
                 label: {
                     text: "Quel est votre nom ?",
@@ -45,6 +45,21 @@ module.exports = {
                 },
                 attributes: {
                     class: "another-test"
+                }
+            }
+        },
+        anotherData: {
+            name: {
+                type: "text",
+                label: {
+                    text: "Hello ?",
+                    attributes: {
+                        class: "test-form__species-label"
+                    }
+                },
+                attributes: {
+                    maxlenght: 100,
+                    class: "input-test"
                 }
             }
         }

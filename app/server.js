@@ -6,25 +6,18 @@
 // +lier des quotes entre elles autour de ? (idée ? concepte ???)
 
 var express = require("express");
-var webpack = require("webpack");
 
 var low = require("lowdb");
 var FileSync = require("lowdb/adapters/FileSync");
-var config = require("./../webpack.config.dev.js");
-var tableToForm = require("./formGenerator").tableToForm
+var tableToForm = require("./formGenerator").tableToForm;
 //Tools
 var bodyParser = require("body-parser");
 
 //Framework
 var crud = require("./crud.js").crud;
 
-const compiler = webpack(config);
-/*DB
-var FileSync = require('lowdb/adapters/FileSync');
-var low = require('lowdb');
-var adapter = new FileSync('./db/data.json')
-var db = low(adapter)
-*/
+//const compiler = webpack(config);
+
 
 //Server Params
 var port = 8080;
@@ -37,12 +30,14 @@ app.use(
         extended: true
     })
 );
+/*
 app.use(
     require("webpack-dev-middleware")(compiler, {
         noInfo: true,
         publicPath: config.output.publicPath
     })
 );
+*/
 
 var adapter = new FileSync("./App/Data/data.json");
 var db = low(adapter);
@@ -64,15 +59,34 @@ app.get("/", function(req, res) {
     app.set("views", "./appIndex/views");
     res.render("index");
 });
-app.use("/:action/:app/:table", function(req, res, next) {
+app.use("/edit/:app/:table/:id", function(req, res, next) {
+    var data = db.get(req.params.app + '_' + req.params.table)
+        .find({
+            id: req.params.id
+        })
+        .value();
+    req.params.method = "post";
+    var form = tableToForm(req.params, data);
+    req.form = form
+
+    next();
+});
+app.use("/add/:app/:table/", function(req, res, next) {
+    req.params.method = "post";
     var form = tableToForm(req.params);
     req.form = form
 
     next();
 });
-app.get("/edit/:app/:table", function(req, res) {
+app.get("/edit/:app/:table/:id", function(req, res) {
     app.set("views", "./app" + req.params.app + "/views");
     res.render("edit", {
+        form: req.form
+    });
+});
+app.get("/add/:app/:table", function(req, res) {
+    app.set("views", "./app" + req.params.app + "/views");
+    res.render("add", {
         form: req.form
     });
 });
@@ -85,4 +99,3 @@ app.listen(port, function(err) {
         console.log("connected to port : " + port);
     }
 });
-//TEST
