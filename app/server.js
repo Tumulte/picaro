@@ -15,13 +15,17 @@ var bodyParser = require("body-parser");
 
 //Framework
 var crud = require("./crud.js").crud;
+var methodOverride = require('method-override')
 
 //const compiler = webpack(config);
-
 
 //Server Params
 var port = 8080;
 var app = express();
+
+
+app.use(methodOverride("_method"))
+
 
 //Parser
 app.use(bodyParser.json());
@@ -51,8 +55,6 @@ app.set("view engine", "pug");
 //Static Files
 app.use(express.static("dist"));
 
-//api
-app.use("/api", api);
 
 //Pages
 app.get("/", function(req, res) {
@@ -60,21 +62,22 @@ app.get("/", function(req, res) {
     res.render("index");
 });
 app.use("/edit/:app/:table/:id", function(req, res, next) {
-    var data = db.get(req.params.app + '_' + req.params.table)
+    var data = db
+        .get(req.params.app + "_" + req.params.table)
         .find({
             id: req.params.id
         })
         .value();
-    req.params.method = "post";
+    req.params.method = "put";
     var form = tableToForm(req.params, data);
-    req.form = form
+    req.form = form;
 
     next();
 });
 app.use("/add/:app/:table/", function(req, res, next) {
     req.params.method = "post";
     var form = tableToForm(req.params);
-    req.form = form
+    req.form = form;
 
     next();
 });

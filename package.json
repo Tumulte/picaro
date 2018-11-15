@@ -7,7 +7,7 @@
     },
     "description": "Initial Json for a Node project",
     "scripts": {
-        "prestart": "babel-node app/startMessage.js",
+        "prestart": "node app/startMessage.js",
         "start": "node ./app/server.js",
         "start:dev": "npm-run-all --parallel open:src security-check test:watch lint:watch",
         "open:src": "set NODE_ENV='development'&& nodemon --watch App App/server.js",
@@ -20,15 +20,16 @@
     "author": "Étienne Rouge",
     "license": "SEE LICENSE IN LICENCE.md",
     "dependencies": {
-        "jsdom": "11.11.0",
-        "pug": "2.0.3",
-        "lowdb": "1.0.0",
-        "shortid": "2.2.12",
-        "express": "4.16.3",
         "body-parser": "1.18.3",
-        "json-server": "0.14.0",
+        "compression": "1.7.3",
+        "express": "4.16.3",
+        "jsdom": "11.11.0",
         "json-schema-faker": "0.5.0-rc15",
-        "compression": "1.7.3"
+        "json-server": "0.14.0",
+        "lowdb": "1.0.0",
+        "method-override": "^3.0.0",
+        "pug": "2.0.3",
+        "shortid": "2.2.12"
     },
     "devDependencies": {
         "babel": "^6.23.0",
@@ -39,7 +40,7 @@
         "babel-watch": "^2.0.7",
         "chai": "4.1.2",
         "chalk": "2.4.1",
-        "css-loader": "^1.0.0",
+        "css-loader": "^1.0.1",
         "esdoc": "^1.1.0",
         "esdoc-standard-plugin": "^1.0.0",
         "eslint": "5.2.0",
@@ -56,7 +57,7 @@
         "style-loader": "^0.22.1",
         "supertest": "3.1.0",
         "watchify": "3.11.0",
-        "webpack": "^4.16.5",
-        "webpack-dev-middleware": "^3.1.3"
+        "webpack": "^4.25.1",
+        "webpack-dev-middleware": "^3.4.0"
     }
 }

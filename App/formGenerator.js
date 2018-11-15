@@ -26,11 +26,15 @@ var populateValue = function populateValue(data, row) {
 
 var tableToForm = function tableToForm(params, data) {
     var id = params.id ? "/" + params.id : "";
-    var html = '<form method="' + params.method + '" action="/api/' + params.app + '/' + params.table + id + '" class="' + '' + '">';
+    var method = params.method ? '?_method=' + params.method : '';
+
+    var html = '<form method="post" action="/api/' + params.app + '/' + params.table + id + method + '" class="' + '' + '">';
     var currentTable = models[params.app][params.table];
+
     for (var row in currentTable) {
         var tableRow = currentTable[row];
         var value = populateValue(data, row);
+
         html +=
             "<label" +
             makeAttribute(tableRow.label.attributes) +

@@ -1,4 +1,6 @@
 var shortid = require("shortid");
+var makeTableName = require("./utils").makeTableName;
+
 
 var filterFromQuery = function filterFromQuery(o, query) {
     for (var property in query) {
@@ -71,16 +73,13 @@ var RelationHandler = function RelationHandler(db, req) {
         return data;
     };
     this.get = function() {
-        if (typeof req.params.quoteId !== "undefined") {
-            this.data = db
-                .get(req.params.table)
-                .find({
-                    id: req.params.quoteId
-                })
-                .value();
+        if (typeof req.params.itemId !== "undefined") {
+            this.data = db.get(makeTableName(req)).find({
+                id: req.params.itemId
+            }).value();
         } else {
             this.data = db
-                .get(req.params.table)
+                .get(makeTableName(req))
                 .filter(function(o) {
                     return filterFromQuery(o, req.query);
                 })
@@ -183,7 +182,7 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 
     this.save = function() {
         var data = standardizePostData(req.body);
-        db.get(req.params.app + '_' + req.params.table)
+        db.get(makeTableName(req))
             .push(data.data)
             .write();
         saveNewRelations(db, data.relations);
