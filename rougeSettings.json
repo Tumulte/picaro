@@ -1,0 +1,11 @@
+{
+    "defaultApp": "Demo",
+    "applications": {
+        "Demo": {
+            "applicationName": "demo",
+            "language": "fr",
+            "title": "Mon Application"
+        }
+    },
+    "googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
+}
