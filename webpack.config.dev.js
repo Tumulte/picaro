@@ -14,5 +14,11 @@ module.exports = {
     plugins: [],
     module: {
         rules: []
+    },
+    watch: true,
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.min.js'
+        }
     }
 };

@@ -1,10 +1,10 @@
 {
     "root": true,
     "extends": [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings"
-  ],
+        "eslint:recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings"
+    ],
     "parserOptions": {
         "ecmaVersion": 5,
         "sourceType": "module"
@@ -20,10 +20,7 @@
         "eqeqeq": 1
     },
     "globals": {
-        "authors": true,
-        "getData": true,
-        "authorsName": true,
-        "createListFromJSON": true,
-        "printFullDataList": true
+
+        "cssPanel": true
     }
 }

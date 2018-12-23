@@ -1,15 +1,19 @@
 html(lang=language)
   head
     title #{title}
-    script(src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js")
 
     style #{cssProperties}
-    script(src="/bundle.js")
     link(rel="stylesheet" type="text/css" href="/static/normalize.css")
     link(rel="stylesheet" type="text/css" href="/static/AppStyles.css")
     block head
 block body
 block cssPanel
     div(id="css-panel")
-        input(type="number" v-model="fontSize" v-on:change="updateCssProperty")
-        select
+        form(action="/admin/settings" method="POST")
+            input(type="text" name="config-name" value="#{configName}")
+            input(type="number" v-model="fontSize" name="font-size" v-on:change="updateCssProperty")
+            select( v-model="selectedGoogleFont"  name="font-family" v-on:change="updateCssFont")
+                option Selectionner une font
+                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+            button Enregistrer
+            button Enregistrer une nouvelle configuration

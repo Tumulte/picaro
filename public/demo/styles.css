@@ -1,5 +1,5 @@
-
 html {
+    font-family: var(--font-family-main);
     background: #aaa;
     font-size: var(--font-size);
 }
