@@ -1,11 +1,12 @@
 var express = require("express");
 var dbUtils = require("./dbUtils");
+
 var RelationHandler = dbUtils.RelationHandler;
 var DataWriteHandler = dbUtils.DataWriteHandler;
 var makeTableName = require("./utils").makeTableName;
 
-var updateItem = function updateItem(data) {
-    data.assign(req.body).write();
+var updateItem = function updateItem(db, req) {
+    db.assign(req.body).write();
 };
 var crud = function crud(db) {
     var dataRouter = express.Router();
@@ -53,7 +54,9 @@ var crud = function crud(db) {
 
         })
         .patch(function(req, res) {
-            updateItem(req, res);
+            updateItem(db, req);
+            res.send("updated !");
+
         })
         .delete(function(req, res) {
             db.get("posts")

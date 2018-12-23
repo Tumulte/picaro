@@ -10,6 +10,7 @@ block body
 block cssPanel
     div(id="css-panel")
         form(action="/admin/settings" method="POST")
+
             input(type="text" name="config-name" value="#{configName}")
             input(type="number" v-model="fontSize" name="font-size" v-on:change="updateCssProperty")
             select( v-model="selectedGoogleFont"  name="font-family" v-on:change="updateCssFont")
