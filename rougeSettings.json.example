@@ -2,7 +2,6 @@
     "defaultApp": "Demo",
     "applications": {
         "Demo": {
-            "applicationName": "demo",
             "language": "fr",
             "title": "Mon Application"
         }

@@ -1,5 +1,5 @@
 module.exports = {
-    demo: {
+    Demo: {
         testData: {
             firstname: {
                 type: "text",
@@ -22,15 +22,13 @@ module.exports = {
                         class: "test-form__species-label"
                     }
                 },
-                options: [
-                    {
-                        text: "Oui",
-                        value: 1
-                    }, {
-                        text: "Non",
-                        value: 0
-                    }
-                ],
+                options: [{
+                    text: "Oui",
+                    value: 1
+                }, {
+                    text: "Non",
+                    value: 0
+                }],
                 attributes: {
                     class: "yobila"
                 }
