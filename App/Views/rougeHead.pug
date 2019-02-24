@@ -3,34 +3,45 @@ html(lang=language)
     title #{title}
 
     style #{cssProperties}
-    script(src="/static/app-bundle.js")
+    link(rel="stylesheet" type="text/css" href="/normalize.css")
 
-    link(rel="stylesheet" type="text/css" href="/static/normalize.css")
-    link(rel="stylesheet" type="text/css" href="/static/AppStyles.css")
+    script(src="/app-bundle.js")
+
     block head
 block body
 block cssPanel
     div(id="css-panel")
         form(action="/admin/settings" method="POST")
 
-            input(type="text" name="config-name" value=configName)
-            input(type="number" v-model="fontSize" name="font-size" v-on:change="updateCssProperty")
-            label Main Font
-                select( v-model="selectedGoogleFont.main"  name="font-family" v-on:change="updateCssFont('main')")
-                    option Selectionner une font
-                    option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-            label Alternative Font
-                select( v-model="selectedGoogleFont.alt"  name="font-family" v-on:change="updateCssFont('alt')")
-                    option Selectionner une font
-                    option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-            label Title Font
-                select( v-model="selectedGoogleFont.title"  name="font-family" v-on:change="updateCssFont('title')")
-                    option Selectionner une font
-                    option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-            label Altenative Title Font
-                select( v-model="selectedGoogleFont.tilteAlt"  name="font-family" v-on:change="updateCssFont")
-                    option Selectionner une font
-                    option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-
-            button Enregistrer
-            button Enregistrer une nouvelle configuration
+            fieldset
+                legend Fonts
+                label
+                    div(class="css-panel__label") Font size (px)
+                    input(type="number" v-model="fontSize"  class="css-panel__input" name="font-size" v-on:change="updateCssProperty")
+                label
+                    div(class="css-panel__label") Main Font
+                    select( v-model="selectedGoogleFont.main"  class="css-panel__input" name="font-family" v-on:change="updateCssFont('main')")
+                        option Selectionner une font
+                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                label
+                    div(class="css-panel__label") Alternative Font
+                    select( v-model="selectedGoogleFont.alt" class="css-panel__input" name="font-family" v-on:change="updateCssFont('alt')")
+                        option Selectionner une font
+                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                label
+                    div(class="css-panel__label") Title Font
+                    select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="font-family" v-on:change="updateCssFont('title')")
+                        option Selectionner une font
+                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                label
+                    div(class="css-panel__label") Altenative Title Font
+                    select( v-model="selectedGoogleFont.tilteAlt" class="css-panel__input" name="font-family" v-on:change="updateCssFont")
+                        option Selectionner une font
+                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+            fieldset
+                legend Save
+                label
+                    div(class="css-panel__label") Config name
+                    input(type="text" class="css-panel__input" name="config-name" value=configName)
+                button Enregistrer
+                button Enregistrer une nouvelle configuration

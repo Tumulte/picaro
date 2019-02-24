@@ -5,10 +5,10 @@ module.exports = {
 	devtool: 'inline-source-map',
 	mode: 'development',
 	entry: {
-		app: path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
+		app: path.resolve(__dirname, 'static/demo/main.js'),
 	},
 	devServer: {
-		contentBase: path.resolve(__dirname, 'App/Dist'),
+		contentBase: path.join(__dirname, 'App/Dist'),
 		overlay: true,
 		hot: true,
 		stats: { colors: true },
@@ -19,7 +19,24 @@ module.exports = {
 		filename: '[name]-bundle.js',
 	},
 	module: {
-		rules: [],
+		rules: [
+			{
+				test: /\.css$/,
+				use: [
+					{ loader: 'style-loader' },
+					{
+						loader: 'css-loader',
+						options: {
+							sourceMap: true,
+						},
+					},
+				],
+			},
+			{
+				test: /\.(jpg|png)$/,
+				use: [{ loader: 'url-loader' }],
+			},
+		],
 	},
 	plugins: [new webpack.HotModuleReplacementPlugin()],
 	resolve: {

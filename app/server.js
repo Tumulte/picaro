@@ -57,9 +57,11 @@ app.use('/api', api);
 app.set('view engine', 'pug');
 
 //Static Files
-app.use('/static', express.static('public'));
-app.use('/static', express.static('node_modules/normalize.css'));
-app.use('/static', express.static('App/Dist'));
+app.use(express.static('static'));
+app.use(express.static('node_modules/normalize.css'));
+app.use(express.static('App/Dist'));
+app.use('/images', express.static('App/Static/images'));
+
 for (var application in settings.applications) {
 	app.use('/controllers', express.static('app/' + settings.applications[application] + '/controllers'));
 }

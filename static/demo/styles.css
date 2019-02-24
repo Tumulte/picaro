@@ -1,0 +1,5 @@
+html {
+	font-family: var(--font-family-main);
+	background: saddlebrown;
+	font-size: var(--font-size);
+}

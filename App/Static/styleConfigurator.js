@@ -1,8 +1,7 @@
 var settings = require('../../rougeSettings.json');
 var Vue = require('vue');
 var WebFont = require('webfontloader');
-require('webpack-hot-middleware/client');
-alert('rtiiiipp5ppiirt');
+
 window.addEventListener('load', function() {
 	/* eslint-disable no-unused-vars */
 	var cssPanel = new Vue({
