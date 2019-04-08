@@ -76,3 +76,12 @@
 	color: var(--app-color);
 	margin: 0 var(--app-ratio-xs);
 }
+
+#css-panel-color {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 300px;
+	right: 300px;
+	background: #fff;
+}

@@ -1,26 +1,24 @@
 {
-    "demo_testData": [{
-            "firstname": "(((((((((((",
-            "alive": "@@@@@@@@@",
-            "id": "ao5C0NUii"
-        },
-        {
-            "firstname": "ueueu",
-            "species": [
-                "1",
-                "0"
-            ],
-            "alive": "ueueu",
-            "id": "84lvv_H_y"
-        },
-        {
-            "firstname": "youpi",
-            "species": "1",
-            "alive": "brasr",
-            "id": "7yPJoTgTj"
-        }
-    ],
-
-    "Demo_testData": [],
-    "Demo_anotherData": []
+  "demo_testData": [
+    {
+      "firstname": "(((((((((((",
+      "alive": "@@@@@@@@@",
+      "id": "ao5C0NUii"
+    },
+    {
+      "firstname": "ueueu",
+      "species": [
+        "1",
+        "0"
+      ],
+      "alive": "ueueu",
+      "id": "84lvv_H_y"
+    },
+    {
+      "firstname": "youpi",
+      "species": "1",
+      "alive": "brasr",
+      "id": "7yPJoTgTj"
+    }
+  ]
 }

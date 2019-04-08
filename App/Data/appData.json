@@ -1,21 +1,71 @@
 {
-  "appDemo": [
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "NaGb7gBeZ"
-    },
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "f8NR0HLEM"
-    },
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "kq4oEV0D0"
-    }
-  ],
-  "Demo": [],
-  "Blog": []
+	"appDemo": [
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "NaGb7gBeZ"
+		},
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "f8NR0HLEM"
+		},
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "kq4oEV0D0"
+		}
+	],
+	"Demo": [
+		{
+			"fontSize": "20",
+			"configName": "styleSetx51PdBINY",
+			"id": "x51PdBINY"
+		},
+		{
+			"fontSize": "23",
+			"styleSet": "styleSet-gwaRMX3Qy",
+			"id": "gwaRMX3Qy"
+		},
+		{
+			"fontSize": "23",
+			"fontFamilyMain": "Abel",
+			"fontFamilyTitle": "Abhaya Libre",
+			"id": "eQhW3ulOK_",
+			"styleSet": "styleSet-gwaRMX3Qy"
+		},
+		{
+			"fontSize": "25",
+			"fontFamilyMain": "ZCOOL KuaiLe",
+			"fontFamilyAlt": "none",
+			"fontFamilyTitle": "Abhaya Libre",
+			"fontFamilyTitleAlt": "none",
+			"dominantColor": "#10B590",
+			"id": "NwC_bPXtQ6",
+			"styleSet": "styleSet-gwaRMX3Qy"
+		}
+	],
+	"colorCombinationTypes": [
+		{
+			"name": "Complementary",
+			"combinationCollection": [{ "hueVariation": 180 }]
+		},
+		{
+			"name": "Split-Complementary ",
+			"combinationCollection": [{ "hueVariation": 150 }, { "hueVariation": 210 }]
+		},
+		{
+			"name": "triad",
+			"combinationCollection": [{ "hueVariation": 120 }, { "hueVariation": 240 }]
+		},
+		{
+			"name": "quad",
+			"combinationCollection": [
+				{ "hueVariation": 60 },
+				{ "hueVariation": 120 },
+				{ "hueVariation": 240 },
+				{ "hueVariation": 300 }
+			]
+		}
+	]
 }

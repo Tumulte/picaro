@@ -1,9 +1,16 @@
 html(lang=language)
   head
     title #{title}
+    each font in cssProperties.fonts
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family="+font media="all")
+    style #{cssProperties.variables}
 
-    style #{cssProperties}
     link(rel="stylesheet" type="text/css" href="/normalize.css")
+
+    script.
+        var currentStyleSet = !{styleSet};
+        var styleSetCollection = !{styleSetCollection};
+        var combinationTypeCollection = !{combinationTypeCollection};
 
     script(src="/app-bundle.js")
 
@@ -11,37 +18,59 @@ html(lang=language)
 block body
 block cssPanel
     div(id="css-panel")
-        form(action="/admin/settings" method="POST")
+        div(id="css-panel-color")
+            fieldset
+                input(type="color" name="dominant-color" v-model="dominantColor" v-on:change="updateColor()")
+            label
+                div(class="css-panel__label") Color Combination
+                select(v-model="combinationType" class="css-panel__input" name="combinationType"  v-on:change="updateCombinationType")
+                    option(value="none") Selectionner un schéma de couleur
+                    option(v-for="type in combinationTypeCollection" v-bind:value="stringify(type.combinationCollection)") {{type.name}}
+            div(v-for="color in colorSet.combinationCollection" v-bind:style="bgColor(color)")
+                input(type="range" min="0" max="360" v-model="color.hue")
+                input(type="range" min="0" max="255"  v-model="color.light")
+                input(type="range" min="0" max="255"  v-model="color.saturation")
 
-            fieldset
-                legend Fonts
-                label
-                    div(class="css-panel__label") Font size (px)
-                    input(type="number" v-model="fontSize"  class="css-panel__input" name="font-size" v-on:change="updateCssProperty")
-                label
-                    div(class="css-panel__label") Main Font
-                    select( v-model="selectedGoogleFont.main"  class="css-panel__input" name="font-family" v-on:change="updateCssFont('main')")
-                        option Selectionner une font
-                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                label
-                    div(class="css-panel__label") Alternative Font
-                    select( v-model="selectedGoogleFont.alt" class="css-panel__input" name="font-family" v-on:change="updateCssFont('alt')")
-                        option Selectionner une font
-                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                label
-                    div(class="css-panel__label") Title Font
-                    select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="font-family" v-on:change="updateCssFont('title')")
-                        option Selectionner une font
-                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                label
-                    div(class="css-panel__label") Altenative Title Font
-                    select( v-model="selectedGoogleFont.tilteAlt" class="css-panel__input" name="font-family" v-on:change="updateCssFont")
-                        option Selectionner une font
-                        option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-            fieldset
-                legend Save
-                label
-                    div(class="css-panel__label") Config name
-                    input(type="text" class="css-panel__input" name="config-name" value=configName)
-                button Enregistrer
-                button Enregistrer une nouvelle configuration
+
+        div(id="css-panel-font")
+            form(action="/admin/settings" method="POST")
+                fieldset
+                    legend Style Set
+                    select( v-model="selectedGoogleFont.titleAlt" class="css-panel__input" name="fontFamilyTitleAlt" v-on:change="updateCssFont")
+                        option(value="none") Select a style set
+                        option(v-for="styleSet in dataCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
+                fieldset
+                    legend Fonts
+
+                    label
+                        div(class="css-panel__label") Font size (px)
+                        input(type="number" v-model="fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateCssProperty")
+                    label
+                        div(class="css-panel__label") Main Font
+                        select( v-model="selectedGoogleFont.main" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('main')")
+                            option(value="none") Selectionner une font
+                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                    label
+                        div(class="css-panel__label") Alternative Font
+                        select( v-model="selectedGoogleFont.alt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('alt')")
+                            option(value="none") Selectionner une font
+                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                    label
+                        div(class="css-panel__label") Title Font
+                        select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
+                            option(value="none") Selectionner une font
+                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                    label
+                        div(class="css-panel__label") Altenative Title Font
+                        select( v-model="selectedGoogleFont.titleAlt" class="css-panel__input" name="fontFamilyTitleAlt" v-on:change="updateCssFont")
+                            option(value="none") Selectionner une font
+                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                    input(type="text" name="id" value=styleSetId)
+
+                fieldset
+                    legend Save
+                    label
+                        div(class="css-panel__label") Config name
+                        input(type="text" class="css-panel__input" name="styleSet" value=styleSetName)
+                    button(formaction='/admin/settings/overwrite') Enregistrer
+                    button(formaction='/admin/settings/new') Enregistrer une nouvelle configuration

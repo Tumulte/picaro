@@ -41,7 +41,7 @@ module.exports = {
 	plugins: [new webpack.HotModuleReplacementPlugin()],
 	resolve: {
 		alias: {
-			vue: 'vue/dist/vue.min.js',
+			vue: 'vue/dist/vue.js',
 		},
 	},
 };

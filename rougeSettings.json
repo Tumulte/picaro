@@ -1,14 +1,15 @@
 {
-    "defaultApp": "Demo",
-    "applications": {
-        "Demo": {
-            "language": "fr",
-            "title": "Mon Application"
-        },
-        "Blog": {
-            "language": "fr",
-            "title": "Mon Blog"
-        }
-    },
-    "googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
+	"defaultApp": "Demo",
+	"applications": {
+		"Demo": {
+			"styleSet": "NwC_bPXtQ6",
+			"language": "fr",
+			"title": "Mon Application"
+		},
+		"Blog": {
+			"language": "fr",
+			"title": "Mon Blog"
+		}
+	},
+	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
 }
