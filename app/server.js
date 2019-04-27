@@ -78,8 +78,8 @@ if (currentApplicationSettings.styleSet !== '') {
 		.get(currentApplicationSettings.applicationName)
 		.find({ id: currentApplicationSettings.styleSet })
 		.value();
-	var colorCombination = appDb
-		.get('colorCombinationTypes')
+	var storedColorSet = appDb
+		.get('colorSets')
 		.find({ id: styleCollection.colorCombinationId })
 		.value();
 }
@@ -94,18 +94,18 @@ app.use('/:app', function(req, res, next) {
 	next();
 });
 app.use(function(req, res, next) {
-	res.locals.cssProperties = cssProperties.render(styleCollection, colorCombination);
+	res.locals.cssProperties = cssProperties.render(styleCollection, storedColorSet);
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
 	res.locals.styleSetName = '';
 
 	res.locals.styleCollection = JSON.stringify(styleCollection);
-	res.locals.colorCombination = JSON.stringify(colorCombination);
+	res.locals.storedColorSet = JSON.stringify(storedColorSet);
 
 	res.locals.styleSetCollection = JSON.stringify(utils.idAsKey(styleSetCollection));
 	res.locals.styleSetName = styleCollection.styleSet;
 	res.locals.styleSetId = currentApplicationSettings.styleSet;
-	res.locals.colorCombinationTypeCollection = JSON.stringify(appDb.get('colorCombinationTypes').value());
+	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSets').value());
 	next();
 });
 
