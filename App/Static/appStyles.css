@@ -85,3 +85,12 @@
 	right: 300px;
 	background: #fff;
 }
+#css-panel .sub-combination {
+	height: 40px;
+	width: 10%;
+	display: inline-block;
+}
+#css-panel input[type='range'] {
+	display: block;
+	width: 100%;
+}

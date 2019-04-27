@@ -40,25 +40,30 @@
 			"fontFamilyAlt": "none",
 			"fontFamilyTitle": "Abhaya Libre",
 			"fontFamilyTitleAlt": "none",
-			"dominantColor": "#10B590",
 			"id": "NwC_bPXtQ6",
+			"colorCombinationId": "4",
+			"dominantColor": "#56A080",
 			"styleSet": "styleSet-gwaRMX3Qy"
 		}
 	],
 	"colorCombinationTypes": [
 		{
+			"id": "1",
 			"name": "Complementary",
 			"combinationCollection": [{ "hueVariation": 180 }]
 		},
 		{
+			"id": "2",
 			"name": "Split-Complementary ",
 			"combinationCollection": [{ "hueVariation": 150 }, { "hueVariation": 210 }]
 		},
 		{
+			"id": "3",
 			"name": "triad",
 			"combinationCollection": [{ "hueVariation": 120 }, { "hueVariation": 240 }]
 		},
 		{
+			"id": "4",
 			"name": "quad",
 			"combinationCollection": [
 				{ "hueVariation": 60 },

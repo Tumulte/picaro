@@ -3,42 +3,57 @@ html(lang=language)
     title #{title}
     each font in cssProperties.fonts
         link(rel="stylesheet" href="https://fonts.googleapis.com/css?family="+font media="all")
-    style #{cssProperties.variables}
+    style !{cssProperties.variables}
 
     link(rel="stylesheet" type="text/css" href="/normalize.css")
 
     script.
-        var currentStyleSet = !{styleSet};
+        var styleCollection = !{styleCollection};
         var styleSetCollection = !{styleSetCollection};
-        var combinationTypeCollection = !{combinationTypeCollection};
-
+        var colorCombinationTypeCollection = !{colorCombinationTypeCollection};
+        var colorCombination = !{colorCombination};
     script(src="/app-bundle.js")
 
     block head
 block body
 block cssPanel
     div(id="css-panel")
-        div(id="css-panel-color")
-            fieldset
-                input(type="color" name="dominant-color" v-model="dominantColor" v-on:change="updateColor()")
-            label
-                div(class="css-panel__label") Color Combination
-                select(v-model="combinationType" class="css-panel__input" name="combinationType"  v-on:change="updateCombinationType")
-                    option(value="none") Selectionner un schéma de couleur
-                    option(v-for="type in combinationTypeCollection" v-bind:value="stringify(type.combinationCollection)") {{type.name}}
-            div(v-for="color in colorSet.combinationCollection" v-bind:style="bgColor(color)")
-                input(type="range" min="0" max="360" v-model="color.hue")
-                input(type="range" min="0" max="255"  v-model="color.light")
-                input(type="range" min="0" max="255"  v-model="color.saturation")
+        css-panel-color( inline-template="" )
+            div(id="css-panel-color" v-on:change="passValuesToStore()")
+
+                label
+                    div(class="css-panel__label") Color Combination
+                    select(v-model="combinationTypeString" class="css-panel__input" name="combinationType"  v-on:change="updateCombinationType")
+                        option(value="none") Selectionner un schéma de couleur
+                        option(v-for="type in colorCombinationTypeCollection" v-bind:value="stringify(type.combinationCollection)") {{type.name}}
+                input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
+                input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
+
+                div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
+                    input(type="range" min="0" max="360" v-model="dominantColor.hue")
+                    input(type="range" min="0" max="100"  v-model="dominantColor.light")
+                    input(type="range" min="0" max="100"  v-model="dominantColor.saturation")
+                div(v-for="(color, index) in colorSet.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
+                    input(type="range" min="0" max="360" v-model="color.hue")
+                    input(type="range" min="0" max="100"  v-model="color.light")
+                    input(type="range" min="0" max="100"  v-model="color.saturation")
+                    div(v-for="subColor in color.subCombination" class="sub-combination" v-bind:style="bgColor(subColor)")
+
+                    button(v-on:click="removeColor(index)") Remove Color
+
+                button(v-on:click="addColor") Add Color
 
 
-        div(id="css-panel-font")
-            form(action="/admin/settings" method="POST")
+
+        css-panel-font(inline-template="" )
+            div(id="css-panel-font")
+                input(type="text" v-for="colorData in $store.getters.getColorDataCollection" v-bind:value="colorData" )
+
                 fieldset
                     legend Style Set
                     select( v-model="selectedGoogleFont.titleAlt" class="css-panel__input" name="fontFamilyTitleAlt" v-on:change="updateCssFont")
                         option(value="none") Select a style set
-                        option(v-for="styleSet in dataCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
+                        option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
                 fieldset
                     legend Fonts
 

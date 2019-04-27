@@ -1,5 +1,4 @@
-var processColor = function(color) {
-	this.color = color;
+var colorUtils = function() {
 	var parseHex = function(hex) {
 		return parseInt(hex, 16);
 	};
@@ -12,9 +11,8 @@ var processColor = function(color) {
 		return hex.toUpperCase();
 	};
 	this.hexToRgb = function(color) {
-		if (color) {
-			this.color = color;
-		}
+		this.color = color;
+
 		if (this.color.red !== undefined) {
 			return this.color;
 		}
@@ -41,9 +39,8 @@ var processColor = function(color) {
 		return this;
 	};
 	this.rgbToHex = function(color) {
-		if (color) {
-			this.color = color;
-		}
+		this.color = color;
+
 		if (typeof this.color.red !== 'undefined') {
 			this.color = '#' + toHex(this.color.red) + toHex(this.color.green) + toHex(this.color.blue);
 		} else {
@@ -55,9 +52,8 @@ var processColor = function(color) {
 	};
 
 	this.rgbToHsl = function(color) {
-		if (color) {
-			this.color = color;
-		}
+		this.color = color;
+
 		var rgbArray = [this.color.red / 255, this.color.green / 255, this.color.blue / 255];
 		rgbArray.sort(function(a, b) {
 			return a - b;
@@ -69,12 +65,13 @@ var processColor = function(color) {
 		var light = Math.round(((min + max) * 100) / 2);
 		//In case on gray
 		if (max === min && mid === min) {
-			return {
+			this.color = {
 				light: light,
 				saturation: 0,
 				hue: 0,
 				type: 'hsl',
 			};
+			return this;
 		}
 		var saturation;
 		if (light > 50) {
@@ -107,9 +104,7 @@ var processColor = function(color) {
 	};
 
 	this.hslToRgb = function(color) {
-		if (color) {
-			this.color = color;
-		}
+		this.color = color;
 		var light = this.color.light / 100;
 		var sat = this.color.saturation / 100;
 		var hue = this.color.hue / 360;
@@ -119,9 +114,11 @@ var processColor = function(color) {
 				red: lightTo255,
 				green: lightTo255,
 				blue: lightTo255,
+				type: 'rgb',
 			};
 			return this;
 		}
+
 		var tempFormula; //I can't find what this is formula is supposed to be.
 		if (light < 0.5) {
 			tempFormula = light * (1 + sat);
@@ -154,22 +151,22 @@ var processColor = function(color) {
 			blue: Math.round(blue * 255),
 			type: 'rgb',
 		};
+
 		return this;
 	};
 	this.hexToHsl = function(color) {
-		if (color) {
-			this.color = color;
-		}
-		this.hexToRgb();
-		this.rgbToHsl();
+		color = this.hexToRgb(color).getValueCollection();
+
+		color = this.rgbToHsl(color).getValueCollection();
+		this.color = color;
+
 		return this;
 	};
 	this.hslToHex = function(color) {
-		if (color) {
-			this.color = color;
-		}
-		this.hslToRgb();
-		this.rgbToHex();
+		color = this.hslToRgb(color).getValueCollection();
+
+		color = this.rgbToHex(color).getValueCollection();
+		this.color = color;
 		return this;
 	};
 	this.getString = function() {
@@ -219,6 +216,7 @@ var processColor = function(color) {
 		}
 	};
 };
+
 module.exports = {
-	processColor: processColor,
+	colorUtils: colorUtils,
 };

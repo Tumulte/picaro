@@ -68,34 +68,44 @@ for (var application in settings.applications) {
 }
 
 //Global template settings
-var currentApplicationName = settings.defaultApp;
 var currentApplicationSettings = settings.applications[settings.defaultApp];
+currentApplicationSettings.applicationName = settings.defaultApp;
+
+//TODO generate a default styleset with any app
+if (currentApplicationSettings.styleSet !== '') {
+	var styleSetCollection = appDb.get(currentApplicationSettings.applicationName).value();
+	var styleCollection = appDb
+		.get(currentApplicationSettings.applicationName)
+		.find({ id: currentApplicationSettings.styleSet })
+		.value();
+	var colorCombination = appDb
+		.get('colorCombinationTypes')
+		.find({ id: styleCollection.colorCombinationId })
+		.value();
+}
+
 app.use('/:app', function(req, res, next) {
 	if (req.params.app in settings.applications) {
 		currentApplicationSettings = settings.applications[req.params.app];
-		currentApplicationName = req.params.app;
+		currentApplicationSettings.applicationName = req.params.app;
 	} else if (req.params.app !== 'admin') {
 		res.status(404).send('This page does not exist');
 	}
 	next();
 });
 app.use(function(req, res, next) {
-	res.locals.cssProperties = cssProperties.render(currentApplicationName, currentApplicationSettings, appDb);
+	res.locals.cssProperties = cssProperties.render(styleCollection, colorCombination);
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
 	res.locals.styleSetName = '';
-	if (currentApplicationSettings.styleSet !== '') {
-		var styleSetCollection = appDb.get(currentApplicationName).value();
-		var styleSet = appDb
-			.get(currentApplicationName)
-			.find({ id: currentApplicationSettings.styleSet })
-			.value();
-		res.locals.styleSet = JSON.stringify(styleSet);
-		res.locals.styleSetCollection = JSON.stringify(utils.idAsKey(styleSetCollection));
-		res.locals.styleSetName = styleSet.styleSet;
-		res.locals.styleSetId = currentApplicationSettings.styleSet;
-	}
-	res.locals.combinationTypeCollection = JSON.stringify(appDb.get('colorCombinationTypes').value());
+
+	res.locals.styleCollection = JSON.stringify(styleCollection);
+	res.locals.colorCombination = JSON.stringify(colorCombination);
+
+	res.locals.styleSetCollection = JSON.stringify(utils.idAsKey(styleSetCollection));
+	res.locals.styleSetName = styleCollection.styleSet;
+	res.locals.styleSetId = currentApplicationSettings.styleSet;
+	res.locals.colorCombinationTypeCollection = JSON.stringify(appDb.get('colorCombinationTypes').value());
 	next();
 });
 
@@ -146,7 +156,7 @@ app.get('/add/:app/:table', function(req, res) {
 
 //TODO add setup. Check initiateApp.js
 app.get('/admin/setup', function() {
-	appDb.set(currentApplicationName, []).write();
+	appDb.set(currentApplicationSettings.applicationName, []).write();
 });
 
 //TODO add put
@@ -156,7 +166,7 @@ app.post('/admin/settings/:type', function(req, res) {
 	}
 	if (req.params.type === 'overwrite') {
 		appDb
-			.get(currentApplicationName)
+			.get(currentApplicationSettings.applicationName)
 			.find({ id: req.body.id })
 			.assign(req.body)
 			.write();
@@ -164,12 +174,12 @@ app.post('/admin/settings/:type', function(req, res) {
 		req.body.id = shortid.generate();
 
 		appDb
-			.get(currentApplicationName)
+			.get(currentApplicationSettings.applicationName)
 			.push(req.body)
 			.write();
 	}
 
-	res.send('settings for ' + currentApplicationName + ' saved');
+	res.send('settings for ' + currentApplicationSettings.applicationName + ' saved');
 });
 
 //Server
