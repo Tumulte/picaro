@@ -1,4 +1,4 @@
-var shortid = require('./node_modules/shortid');
+var shortid = require('shortid');
 var makeTableName = require('./utils').makeTableName;
 
 var filterFromQuery = function filterFromQuery(o, query) {

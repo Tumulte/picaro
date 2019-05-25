@@ -1,9 +1,9 @@
-const express = require('./node_modules/express');
+const express = require('express');
 
 //DB
-const low = require('./node_modules/lowdb');
-const shortid = require('./node_modules/shortid');
-const FileSync = require('./node_modules/lowdb/adapters/FileSync');
+const low = require('lowdb');
+const shortid = require('shortid');
+const FileSync = require('lowdb/adapters/FileSync');
 var appAdapter = new FileSync('./App/Data/appData.json');
 var appDb = low(appAdapter);
 
@@ -11,8 +11,8 @@ var adapter = new FileSync('./App/Data/data.json');
 var db = low(adapter);
 
 //Tools
-const bodyParser = require('./node_modules/body-parser');
-const methodOverride = require('./node_modules/method-override');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 //rougeFramework Settings
 const settings = require('./../rougeSettings.json');
@@ -20,15 +20,15 @@ const settings = require('./../rougeSettings.json');
 const tableToForm = require('./formGenerator').tableToForm;
 const cssProperties = require('./Ui/cssProperties');
 //rougeFramework Back End
-const crud = require('./crud.js.js.js').crud;
-const utils = require('./utils.js.js.js');
+const crud = require('./crud.js').crud;
+const utils = require('./utils.js');
 
 //webpack
-const webpack = require('./node_modules/webpack');
+const webpack = require('webpack');
 const config = require('../webpack.config.dev.js');
 const compiler = webpack(config);
-const webpackHotMiddleware = require('./node_modules/webpack-hot-middleware')(compiler);
-const webpackDevMiddleware = require('./node_modules/webpack-dev-middleware')(compiler, config.devServer);
+const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
 
 //Server Params
 var port = 8080;
