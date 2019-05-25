@@ -1,7 +1,9 @@
 {
-    "source": "./App",
-    "destination": "./Docs",
-    "plugins": [{
-        "name": "esdoc-standard-plugin"
-    }]
+	"source": "./App",
+	"destination": "./Docs",
+	"plugins": [
+		{
+			"name": "esdoc-standard-plugin"
+		}
+	]
 }

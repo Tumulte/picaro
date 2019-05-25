@@ -1,4 +1,4 @@
-var models = require('./../models/models.js');
+var models = require('../models/models.js');
 var createCheckbox = function createCheckbox(optionsList, name) {
 	var html = '';
 	optionsList.forEach(function(option) {

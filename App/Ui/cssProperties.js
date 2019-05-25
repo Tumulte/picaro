@@ -1,4 +1,4 @@
-var colors = require('../Ui/colorGenerator');
+var colors = require('./colorGenerator');
 
 var render = function render(styleSet, colorSet) {
 	var cssParameters = {};
