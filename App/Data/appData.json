@@ -39,37 +39,67 @@
 			"fontFamilyMain": "ZCOOL KuaiLe",
 			"fontFamilyAlt": "none",
 			"fontFamilyTitle": "Abhaya Libre",
-			"fontFamilyTitleAlt": "none",
+			"fontFamilyTitleAlt": ["none", "none"],
 			"id": "NwC_bPXtQ6",
 			"colorCombinationId": "4",
 			"dominantColor": "#56A080",
-			"styleSet": "styleSet-gwaRMX3Qy"
+			"styleSet": "styleSet-gwaRMX3Qy",
+			"dominant": "#56A080",
+			"colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
+			"variationLightAmt": "10",
+			"variationSatAmt": "0"
 		}
 	],
-	"colorSets": [
+	"colorSetPresets": [
 		{
 			"id": "1",
 			"name": "Complementary",
-			"combinationCollection": [{ "hueVariation": 180 }]
+			"combinationCollection": [
+				{
+					"hueVariation": 180
+				}
+			]
 		},
 		{
 			"id": "2",
 			"name": "Split-Complementary ",
-			"combinationCollection": [{ "hueVariation": 150 }, { "hueVariation": 210 }]
+			"combinationCollection": [
+				{
+					"hueVariation": 150
+				},
+				{
+					"hueVariation": 210
+				}
+			]
 		},
 		{
 			"id": "3",
 			"name": "triad",
-			"combinationCollection": [{ "hueVariation": 120 }, { "hueVariation": 240 }]
+			"combinationCollection": [
+				{
+					"hueVariation": 120
+				},
+				{
+					"hueVariation": 240
+				}
+			]
 		},
 		{
 			"id": "4",
 			"name": "quad",
 			"combinationCollection": [
-				{ "hueVariation": 60 },
-				{ "hueVariation": 120 },
-				{ "hueVariation": 240 },
-				{ "hueVariation": 300 }
+				{
+					"hueVariation": 60
+				},
+				{
+					"hueVariation": 120
+				},
+				{
+					"hueVariation": 240
+				},
+				{
+					"hueVariation": 300
+				}
 			]
 		}
 	]

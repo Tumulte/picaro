@@ -169,14 +169,18 @@ var colorUtils = function() {
 		this.color = color;
 		return this;
 	};
-	this.getString = function() {
+	this.getString = function(color, type) {
+		if (color) {
+			this.color = color;
+			this.color.type = type;
+		}
 		if (typeof this.color === 'string') {
 			return this.color;
-		} else if (this.color.type === 'rgb') {
+		} else if (this.color.red === 'rgb') {
 			var rgb = 'rgb(' + this.color.red + ',' + this.color.green + ',' + this.color.blue + ')';
 			return rgb;
 		} else if (this.color.type === 'hsl') {
-			var hsl = 'hsl(' + this.color.light + ',' + this.color.saturation + ',' + this.color.hue + ')';
+			var hsl = 'hsl(' + this.color.hue + ',' + this.color.saturation + '%,' + this.color.light + '%)';
 			return hsl;
 		} else if (this.color.type === 'hex') {
 			var hex = '#' + this.color.red + this.color.green + this.color.blue;

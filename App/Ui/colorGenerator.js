@@ -1,7 +1,6 @@
 var colorUtils = require('./colorHelper').colorUtils;
 colorUtils = new colorUtils();
 
-
 var generateColorSet = function(dominant) {
 	this.hsl = colorUtils.hexToHsl(dominant).getValueCollection();
 	this.colorCollection = {
@@ -48,6 +47,7 @@ var generateColorSet = function(dominant) {
 			hue: combination.hue,
 			light: combination.light,
 			saturation: combination.saturation,
+			targetCollection: combination.targetCollection,
 		});
 		addSubCombination(lightVariation, satVariation);
 	};
@@ -71,11 +71,11 @@ var generateColorSet = function(dominant) {
 				hue: currentEntry.hue,
 				light: lightCollection[i],
 				saturation: satCollection[i],
+				targetCollection: '',
 			};
 		}
 	};
 	this.updateColor = function(newColor) {
-		this.colorCollection.combinationCollection = [];
 		this.colorCollection.dominant = newColor;
 		this.hsl = colorUtils.hexToHsl(newColor).getValueCollection();
 		return this;
@@ -101,6 +101,9 @@ var generateColorSet = function(dominant) {
 	};
 	this.generate = function(colors, lightVariation, satVariation) {
 		var self = this;
+		this.lightVariation = lightVariation;
+		this.satVariation = satVariation;
+
 		this.colorCollection.combinationCollection = [];
 		colors.forEach(function(item) {
 			var saturation = item.saturation ? item.saturation : self.hsl.saturation;
@@ -109,6 +112,7 @@ var generateColorSet = function(dominant) {
 				hue: self.hsl.hue + item.hueVariation,
 				saturation: saturation,
 				light: light,
+				targetCollection: item.targetCollection,
 			};
 			addCombination(combination, lightVariation, satVariation);
 		});

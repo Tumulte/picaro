@@ -10,8 +10,8 @@ html(lang=language)
     script.
         var styleCollection = !{styleCollection};
         var styleSetCollection = !{styleSetCollection};
-        var colorCombinationTypeCollection = !{colorCombinationTypeCollection};
-        var colorCombination = !{colorCombination};
+        var colorSetCollection = !{colorSetCollection};
+        var storedColorSet = !{storedColorSet};
     script(src="/app-bundle.js")
 
     block head
@@ -23,9 +23,9 @@ block cssPanel
 
                 label
                     div(class="css-panel__label") Color Combination
-                    select(v-model="combinationTypeString" class="css-panel__input" name="combinationType"  v-on:change="updateCombinationType")
+                    select(v-model="colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
                         option(value="none") Selectionner un schéma de couleur
-                        option(v-for="type in colorCombinationTypeCollection" v-bind:value="stringify(type.combinationCollection)") {{type.name}}
+                        option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
                 input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
                 input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
 
@@ -37,7 +37,9 @@ block cssPanel
                     input(type="range" min="0" max="360" v-model="color.hue")
                     input(type="range" min="0" max="100"  v-model="color.light")
                     input(type="range" min="0" max="100"  v-model="color.saturation")
+                    input(type="text" v-model="color.targetCollection" v-on:change="generateCSS(color, index)")
                     div(v-for="subColor in color.subCombination" class="sub-combination" v-bind:style="bgColor(subColor)")
+                        //input(type="text" class="color-target" v-model="subColor.targetCollection")
 
                     button(v-on:click="removeColor(index)") Remove Color
 
@@ -46,8 +48,8 @@ block cssPanel
 
 
         css-panel-font(inline-template="" )
-            div(id="css-panel-font")
-                input(type="text" v-for="colorData in $store.getters.getColorDataCollection" v-bind:value="colorData" )
+            form(id="css-panel-font" method="post")
+                input(type="text" v-for="(colorData, name) in $store.getters.getColorDataCollection" v-bind:name="name" v-bind:value="colorData" )
 
                 fieldset
                     legend Style Set

@@ -7,7 +7,7 @@ var render = function render(styleSet, colorSet) {
 		'--font-family-main': styleSet.fontFamilyMain,
 		'--color-dominant': styleSet.dominantColor,
 	};
-	var colorSet = new colors.generateColorSet(styleSet.dominantColor).generate(colorSet.combinationCollection);
+	colorSet = new colors.generateColorSet(styleSet.dominantColor).generate(colorSet.combinationCollection);
 
 	for (var i = 0; i < colorSet.combinationCollection.length; i++) {
 		cssParametersDefault['--color-combination-' + i] = colorSet.combinationCollection[i].hex;
