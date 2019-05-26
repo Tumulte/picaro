@@ -116,6 +116,7 @@ app.use('/:app', function(req, res, next) {
 	next();
 });
 app.use(function(req, res, next) {
+	res.locals.environment = process.env.NODE_ENV;
 	res.locals.cssProperties = cssProperties.render(styleCollection, storedColorSet);
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
