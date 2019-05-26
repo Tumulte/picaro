@@ -1,6 +1,7 @@
 const path = require('path');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const optimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
 	mode: 'production',
@@ -40,7 +41,11 @@ module.exports = {
 			},
 		],
 	},
-	plugins: [new miniCssExtractPlugin(), new optimizeCssAssetsPlugin()],
+	plugins: [
+		new miniCssExtractPlugin(),
+		new optimizeCssAssetsPlugin(),
+		new webpack.DefinePlugin({ ENVIRONMENT: JSON.stringify('production') }),
+	],
 	resolve: {
 		alias: {
 			vue: 'vue/dist/vue.js',

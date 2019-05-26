@@ -1,3 +1,7 @@
+if (ENVIRONMENT === 'development') {
+	require('webpack-hot-middleware/client?reload=true');
+}
+
 var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
 var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
 require('../../App/Static/AppStyles.css');

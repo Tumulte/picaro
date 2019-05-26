@@ -45,7 +45,12 @@ module.exports = {
 			},
 		],
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()],
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.DefinePlugin({
+			ENVIRONMENT: JSON.stringify('development'),
+		}),
+	],
 	resolve: {
 		alias: {
 			vue: 'vue/dist/vue.js',
