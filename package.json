@@ -8,7 +8,7 @@
 	"description": "Initial Json for a Node project",
 	"scripts": {
 		"prestart": "node app/startMessage.js",
-		"start": "set NODE_ENV='development' && node ./App/server.js",
+		"start": "node ./App/server.js",
 		"init": "node ./App/initiateApp.js",
 		"start:dev": "npm-run-all --parallel open:src security-check test:watch dev-server",
 		"open:src": "set NODE_ENV='development' && nodemon --inspect ./App/server.js  --watch App/**/*  --ignore App/Static/*",
