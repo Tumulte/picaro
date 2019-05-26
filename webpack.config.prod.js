@@ -1,9 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const optimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
-	devtool: 'inline-source-map',
-	mode: 'development',
+	mode: 'production',
 	entry: {
 		appDemo: [
 			path.resolve(__dirname, 'static/demo/main.js'),
@@ -14,12 +14,7 @@ module.exports = {
 			path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
 		],
 	},
-	devServer: {
-		contentBase: path.join(__dirname, 'App/Dist'),
-		overlay: true,
-		hot: true,
-		stats: { colors: true },
-	},
+
 	target: 'web',
 	output: {
 		path: path.resolve(__dirname, 'App/Dist'),
@@ -30,11 +25,11 @@ module.exports = {
 			{
 				test: /\.css$/,
 				use: [
-					{ loader: 'style-loader' },
+					{ loader: miniCssExtractPlugin.loader },
 					{
 						loader: 'css-loader',
 						options: {
-							sourceMap: true,
+							minimize: true,
 						},
 					},
 				],
@@ -45,7 +40,7 @@ module.exports = {
 			},
 		],
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()],
+	plugins: [new miniCssExtractPlugin(), new optimizeCssAssetsPlugin()],
 	resolve: {
 		alias: {
 			vue: 'vue/dist/vue.js',

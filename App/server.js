@@ -7,8 +7,8 @@ const FileSync = require('lowdb/adapters/FileSync');
 var appAdapter = new FileSync('./App/Data/appData.json');
 var appDb = low(appAdapter);
 
-var adapter = new FileSync('./App/Data/data.json');
-var db = low(adapter);
+const adapter = new FileSync('./App/Data/data.json');
+const db = low(adapter);
 
 //Tools
 const bodyParser = require('body-parser');
@@ -22,23 +22,23 @@ const cssProperties = require('./Ui/cssProperties');
 //rougeFramework Back End
 const crud = require('./crud.js').crud;
 const utils = require('./utils.js');
-
-//webpack
-const webpack = require('webpack');
-const config = require('../webpack.config.dev.js');
-const compiler = webpack(config);
-const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
-const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
+var isProd = process.env.NODE_ENV === 'production';
 
 //Server Params
 var port = 8080;
 var app = express();
 app.use(methodOverride('_method'));
-
-//webpack
-app.use(webpackDevMiddleware);
-app.use(webpackHotMiddleware);
-
+if (!isProd) {
+	//webpack
+	const webpack = require('webpack');
+	const config = require('../webpack.config.dev.js');
+	const compiler = webpack(config);
+	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
+	//webpack
+	app.use(webpackDevMiddleware);
+	app.use(webpackHotMiddleware);
+}
 //Parser
 app.use(bodyParser.json());
 app.use(

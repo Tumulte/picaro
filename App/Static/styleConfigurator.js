@@ -1,5 +1,6 @@
 var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
 var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
+require('../../App/Static/AppStyles.css');
 
 var Vue = require('vue');
 var Vuex = require('vuex');
