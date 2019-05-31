@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 	// -----------------------------------------------------------------------
 	// authentication middleware
 
-	const auth = { login: '', password: '' }; // change this
+	const auth = { login: settings.auth.id, password: settings.auth.pw }; // change this
 
 	// parse login and password from headers
 	const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
