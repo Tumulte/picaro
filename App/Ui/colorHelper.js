@@ -169,10 +169,16 @@ var colorUtils = function() {
 		this.color = color;
 		return this;
 	};
-	this.getString = function(color, type) {
+	//todo the "type" stuff is dumb it has to be streamlined
+	this.getString = function(color) {
 		if (color) {
 			this.color = color;
-			this.color.type = type;
+		}
+		if (!this.color.type) {
+			//eslint-disable-next-line no-console
+			console.error(
+				'The color needs to have a "type" attribute. It must be one of the following : rgb, hsl, hex'
+			);
 		}
 		if (typeof this.color === 'string') {
 			return this.color;

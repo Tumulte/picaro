@@ -76,7 +76,14 @@
 	color: var(--app-color);
 	margin: 0 var(--app-ratio-xs);
 }
-
+#css-panel-selector {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 300px;
+	right: 600px;
+	background: #fff;
+}
 #css-panel-color {
 	position: fixed;
 	top: 0;
@@ -93,4 +100,19 @@
 #css-panel input[type='range'] {
 	display: block;
 	width: 100%;
+}
+#css-panel .css-panel__target-input {
+	display: none;
+	position: absolute;
+	top: 40px;
+	padding: 10px;
+	right: calc(100% - 30px);
+	border: 3px solid #000;
+}
+#css-panel .css-panel__target-input-radio:checked + .css-panel__target-input {
+	display: block;
+}
+#css-panel .css-panel__target-input-radio {
+	position: absolute;
+	left: -9999px;
 }

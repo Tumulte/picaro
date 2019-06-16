@@ -11,10 +11,10 @@ var generateNewColorSet = function(dominant, combination) {
 	if (parseInt(combination.light) !== parseInt(dominant.light)) {
 		newCombination.light = parseInt(combination.light);
 	}
-	newCombination.targetCollection = combination.targetCollection;
 
 	return newCombination;
 };
+
 /* eslint-disable-next-line no-undef */
 var colorSet = new colors.generateColorSet(styleCollection.dominantColor);
 
@@ -33,12 +33,13 @@ var colorComponent = {
 			colorSetParamString: JSON.stringify(storedColorSet.combinationCollection),
 			variationLightAmt: 10,
 			variationSatAmt: 0,
-			targetCollection: {},
+			selectorCollection: {},
 		};
 	},
 	methods: {
-		bgColor: function(color) {
-			return 'background:' + colorUtils.getString(color, 'hsl');
+		bgColor: function(color, type) {
+			color.type = type;
+			return 'background:' + colorUtils.getString(color);
 		},
 		updateColor: function() {
 			document.documentElement.style.setProperty(
@@ -118,39 +119,8 @@ var colorComponent = {
 
 			this.$store.commit('colorData', dataToBeStored);
 		},
-		generateCSS(color, index) {
-			if (!color.targetCollection) {
-				return;
-			}
-			var targetCollection = color.targetCollection.split('|');
-			var self = this;
-			targetCollection.forEach(function(item) {
-				var targetParameters = item.split(':');
-				if (targetParameters.length < 2) {
-					return;
-				}
-				var target = targetParameters[0];
-				var parameters = targetParameters[1].split(',');
-				var parametersString = '';
-				parameters.forEach(function(item) {
-					if (self.targetCollection[target] && self.targetCollection[target].indexOf(item) > -1) {
-						var length = item.length;
-						var pos = self.targetCollection[target].indexOf(item);
-						var duplicate = self.targetCollection[target].slice(pos, length + pos + 9);
-						self.targetCollection[target] = self.targetCollection[target].replace(duplicate, '');
-					}
-					parametersString += item + ':' + colorUtils.hslToHex(color).getString() + ';';
-				});
-				if (self.targetCollection[target]) {
-					self.targetCollection[target] += parametersString;
-				} else {
-					self.targetCollection[target] = parametersString;
-				}
-				self.colorSetParamCollection[index].targetCollection = item;
-				document.querySelectorAll('#content-container ' + target).forEach(function(el) {
-					el.setAttribute('style', self.targetCollection[target]);
-				});
-			});
+		storeColor: function(color) {
+			this.$store.commit('currentColor', colorUtils.getString(color, 'hsl'));
 		},
 	},
 	mounted: function() {

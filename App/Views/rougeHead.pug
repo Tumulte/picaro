@@ -17,6 +17,13 @@ html(lang=language)
 block body
 block cssPanel
     div(id="css-panel")
+        css-panel-selector( inline-template="" )
+            div(id="css-panel-selector")
+                ul
+                    li(v-for="(propertyCollection, selector) in selectorCollection") {{selector}}
+                        ul
+                            li(v-for="(value, property) in propertyCollection" v-on:click="storeSelectorAndProperty(selector, property)") {{property}} {{value}}
+
         css-panel-color( inline-template="" )
             div(id="css-panel-color" v-on:change="passValuesToStore()")
 
@@ -28,17 +35,15 @@ block cssPanel
                 input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
                 input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
 
-                div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
+                div(v-bind:style="bgColor(dominantColor, 'hsl')" @input="updateColor()")
                     input(type="range" min="0" max="360" v-model="dominantColor.hue")
                     input(type="range" min="0" max="100"  v-model="dominantColor.light")
                     input(type="range" min="0" max="100"  v-model="dominantColor.saturation")
-                div(v-for="(color, index) in colorSet.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
+                div(v-for="(color, index) in colorSet.combinationCollection" v-bind:style="bgColor(color, 'hsl')" v-on:input="updateCombinationColor(index, color)")
                     input(type="range" min="0" max="360" v-model="color.hue")
                     input(type="range" min="0" max="100"  v-model="color.light")
                     input(type="range" min="0" max="100"  v-model="color.saturation")
-                    input(type="text" v-model="color.targetCollection" v-on:change="generateCSS(color, index)")
-                    div(v-for="subColor in color.subCombination" class="sub-combination" v-bind:style="bgColor(subColor)")
-                        //input(type="text" class="color-target" v-model="subColor.targetCollection")
+                    label(v-for="(subColor, subIndex) in color.subCombination" v-on:click="storeColor(subColor)" class="sub-combination" v-bind:style="bgColor(subColor, 'hsl')")
 
                     button(v-on:click="removeColor(index)") Remove Color
 

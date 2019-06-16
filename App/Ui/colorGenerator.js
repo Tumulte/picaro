@@ -47,7 +47,6 @@ var generateColorSet = function(dominant) {
 			hue: combination.hue,
 			light: combination.light,
 			saturation: combination.saturation,
-			targetCollection: combination.targetCollection,
 		});
 		addSubCombination(lightVariation, satVariation);
 	};
@@ -71,7 +70,6 @@ var generateColorSet = function(dominant) {
 				hue: currentEntry.hue,
 				light: lightCollection[i],
 				saturation: satCollection[i],
-				targetCollection: '',
 			};
 		}
 	};
@@ -112,7 +110,6 @@ var generateColorSet = function(dominant) {
 				hue: self.hsl.hue + item.hueVariation,
 				saturation: saturation,
 				light: light,
-				targetCollection: item.targetCollection,
 			};
 			addCombination(combination, lightVariation, satVariation);
 		});

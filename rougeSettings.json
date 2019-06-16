@@ -11,5 +11,6 @@
 			"title": "Mon Blog"
 		}
 	},
-	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
+	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI",
+	"auth": { "id": "tumulte", "pw": "TCHF2lml" }
 }
