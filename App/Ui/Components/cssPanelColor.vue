@@ -24,7 +24,7 @@ var colorComponent = {
 			/* eslint-disable-next-line no-undef */
 			colorSetCollection: colorSetCollection,
 			/* eslint-disable-next-line no-undef */
-			colorSet: colorSet.generate(storedColorSet.combinationCollection),
+			colorSet: this.$store.getters.getColorDataCollection,
 			/* eslint-disable-next-line no-undef */
 			dominantColor: colorUtils.hexToHsl(styleCollection.dominantColor).getValueCollection(),
 			/* eslint-disable-next-line no-undef */
@@ -37,8 +37,7 @@ var colorComponent = {
 		};
 	},
 	methods: {
-		bgColor: function(color, type) {
-			color.type = type;
+		bgColor: function(color) {
 			return 'background:' + colorUtils.getString(color);
 		},
 		updateColor: function() {
@@ -58,7 +57,7 @@ var colorComponent = {
 		generateAllCSS: function() {
 			for (var i = 0; i < this.colorSet.combinationCollection.length; i++) {
 				if (this.colorSet.combinationCollection[i].targetCollection !== '') {
-					this.generateCSS(this.colorSet.combinationCollection[i], i);
+					generateCSS(this.colorSet.combinationCollection[i], i);
 				}
 			}
 		},
@@ -80,9 +79,7 @@ var colorComponent = {
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
 			);
-			if (this.colorSetParamCollection[index].targetCollection !== '') {
-				this.generateCSS(this.colorSet.combinationCollection[index], index);
-			}
+			this.$store.commit('colorCollection', this.colorSet);
 		},
 		updatecolorSetParams: function() {
 			this.colorSetParamCollection = JSON.parse(this.colorSetParamString);
@@ -117,10 +114,10 @@ var colorComponent = {
 				variationSatAmt: this.variationSatAmt,
 			};
 
-			this.$store.commit('colorData', dataToBeStored);
+			this.$store.commit('colorParametersData', dataToBeStored);
 		},
-		storeColor: function(color) {
-			this.$store.commit('currentColor', colorUtils.getString(color, 'hsl'));
+		storeColorCoordinate: function(coordinates) {
+			this.$store.commit('currentColor', coordinates);
 		},
 	},
 	mounted: function() {

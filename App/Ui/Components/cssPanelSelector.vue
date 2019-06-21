@@ -1,70 +1,15 @@
 var colorUtils = require('../colorHelper').colorUtils;
+colorUtils = new colorUtils();
+var generateCss = require('../cssGenerator').generateCss;
 
-var modifyTargetDOMStyle = function(selector, parameters) {
-	document.querySelectorAll('#content-container ' + selector).forEach(function(el) {
-		el.setAttribute('style', parameters);
-	});
-};
-var generateCssString = function(target, parameters, color, self) {
-	var parametersString = '';
-	var targetParameters = self.selectorCollection[target];
-
-	parameters.forEach(function(item) {
-		if (targetParameters && targetParameters.indexOf(item) > -1) {
-			var length = item.length;
-			var pos = targetParameters.indexOf(item);
-			var duplicate = targetParameters.slice(pos, length + pos + 9);
-			targetParameters = targetParameters.replace(duplicate, '');
-		}
-		parametersString += item + ':' + colorUtils.hslToHex(color).getString() + ';';
-	});
-	return parametersString;
-};
-
-var updateVueselectorCollection = function(target, parametersString, self) {
-	if (self.selectorCollection[target]) {
-		self.selectorCollection[target] += parametersString;
-	} else {
-		self.selectorCollection[target] = parametersString;
-	}
-};
-var updateEachVueColorTargets = function(item, coordinates, self) {
-	self.colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].targetCollection = item;
-	self.selectorCollection.currentTarget = {};
-	self.selectorCollection.currentTarget[item] = coordinates;
-};
-var generateCSS = function(color, index, subIndex) {
-	if (!color.targetCollection) {
-		return;
-	}
-	var coordinates = [index, subIndex];
-	var targetCollection = color.targetCollection.split('|');
-	var self = this;
-	targetCollection.forEach(function(item) {
-		var targetParameters = item.split(':');
-		if (targetParameters.length < 2) {
-			return;
-		}
-		var target = targetParameters[0];
-		var parameters = targetParameters[1].split(',');
-		updateEachVueColorTargets(item, coordinates, self);
-
-		var parametersString = generateCssString(target, parameters, color, self);
-		updateVueselectorCollection(target, parametersString, self);
-		modifyTargetDOMStyle(target, self);
-	});
-};
-var generateCss = function(selectorCollection) {
-	for (selector in selectorCollection) {
-		modifyTargetDOMStyle(selector, parameters);
-	}
-};
 var selectorComponent = {
 	data: function() {
 		return {
 			/* eslint-disable-next-line no-undef */
-			selectorCollection: this.$store.getters.getSelectorDataCollection,
 			currentSelectorProperty: {},
+			newSelector: '',
+			newProperty: {},
+			colorMapping: {},
 		};
 	},
 	methods: {
@@ -73,9 +18,46 @@ var selectorComponent = {
 
 			this.$store.commit('currentSelector', { selector: selector, property: property });
 		},
+
+		addSelector: function() {
+			this.selectorCollection[this.newSelector] = {};
+			this.newSelector = '';
+		},
+		addProperty: function(value, selector) {
+			this.selectorCollection[selector][value] = '';
+			this.$store.commit('selectorCollection', this.selectorCollection);
+			this.$store.commit('selectorIndex', value + selector);
+		},
+		getColorFromCoordinates: function(data) {
+			console.debug('stst');
+			if (/^#([0-9a-f]{6})$/i.test(data)) {
+				return '<div style="width:10px; height:10px; background:' + data + '"></div>';
+			} else if (typeof data === 'object') {
+				var selectedColor = this.colorCollection.combinationCollection[data[0]].subCombination[data[1]];
+				selectedColor = colorUtils.hslToHex(selectedColor).getString();
+				this.colorMapping[JSON.stringify(data)] = selectedColor;
+				generateCss(this.selectorCollection, this.colorMapping);
+
+				return '<div style="width:10px; height:10px; background:' + selectedColor + '"></div>';
+			} else {
+				return data;
+			}
+		},
 	},
 	mounted: function() {
 		generateCss(this.selectorCollection);
+	},
+
+	computed: {
+		colorCollection: function() {
+			return this.$store.getters.getColorDataCollection;
+		},
+		selectorCollection: function() {
+			return this.$store.getters.getSelectorDataCollection;
+		},
+		selectorIndex: function() {
+			return this.$store.getters.getSelectorIndex;
+		},
 	},
 };
 module.exports = {

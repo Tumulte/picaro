@@ -1,3 +1,8 @@
+var colors = require('../Ui/colorGenerator');
+var generateCss = require('../Ui/cssGenerator').generateCss;
+var colorUtils = require('../Ui/colorHelper').colorUtils;
+colorUtils = new colorUtils();
+
 /* eslint-disable-next-line no-undef */
 if (ENVIRONMENT === 'development') {
 	require('webpack-hot-middleware/client?reload=true');
@@ -10,34 +15,54 @@ require('../../App/Static/AppStyles.css');
 var Vue = require('vue');
 var Vuex = require('vuex');
 
+/* eslint-disable-next-line no-undef */
+var colorSet = new colors.generateColorSet(styleCollection.dominantColor);
 Vue.use(Vuex);
 var store = new Vuex.Store({
 	state: {
-		colorData: {},
+		colorParametersData: {},
 		currentColor: '',
 		currentSelector: {},
-		selectorCollection: { main: { color: '#676787', 'font-size': '10px' }, body: { background: '#fff' } },
+		selectorCollection: { main: { color: '#676787', 'font-size': '20px' }, body: { background: '#fff' } },
+		/* eslint-disable-next-line no-undef */
+		colorCollection: colorSet.generate(storedColorSet.combinationCollection),
+		selectorIndex: '1',
 	},
 	mutations: {
-		colorData(state, data) {
-			state.colorData = data;
+		colorParametersData(state, data) {
+			state.colorParametersData = data;
 		},
-		currentColor(state, data) {
-			state.currentColor = data;
+		currentColor(state, coordinates) {
 			if (state.currentSelector) {
-				state.selectorCollection[state.currentSelector.selector][state.currentSelector.property] = data;
+				state.selectorCollection[state.currentSelector.selector][state.currentSelector.property] = coordinates;
+				state.selectorIndex = JSON.stringify(coordinates);
 			}
 		},
 		currentSelector(state, data) {
 			state.currentSelector = data;
 		},
+		selectorCollection(state, data) {
+			state.selectorCollection = data;
+		},
+		colorCollection(state, data) {
+			state.colorCollection = data;
+		},
+		selectorIndex(state, data) {
+			state.selectorIndex = data;
+		},
 	},
 	getters: {
-		getColorDataCollection: function(state) {
-			return state.colorData;
+		getColorParametersDataCollection: function(state) {
+			return state.colorParametersData;
 		},
 		getSelectorDataCollection: function(state) {
 			return state.selectorCollection;
+		},
+		getColorDataCollection: function(state) {
+			return state.colorCollection;
+		},
+		getSelectorIndex: function(state) {
+			return state.selectorIndex;
 		},
 	},
 });

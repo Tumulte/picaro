@@ -34,7 +34,6 @@ var colorUtils = function() {
 			red: red,
 			green: green,
 			blue: blue,
-			type: 'rgb',
 		};
 		return this;
 	};
@@ -69,7 +68,6 @@ var colorUtils = function() {
 				light: light,
 				saturation: 0,
 				hue: 0,
-				type: 'hsl',
 			};
 			return this;
 		}
@@ -98,7 +96,6 @@ var colorUtils = function() {
 			light: light,
 			saturation: saturation,
 			hue: hue,
-			type: 'hsl',
 		};
 		return this;
 	};
@@ -114,7 +111,6 @@ var colorUtils = function() {
 				red: lightTo255,
 				green: lightTo255,
 				blue: lightTo255,
-				type: 'rgb',
 			};
 			return this;
 		}
@@ -149,7 +145,6 @@ var colorUtils = function() {
 			red: Math.round(red * 255),
 			green: Math.round(green * 255),
 			blue: Math.round(blue * 255),
-			type: 'rgb',
 		};
 
 		return this;
@@ -174,23 +169,22 @@ var colorUtils = function() {
 		if (color) {
 			this.color = color;
 		}
-		if (!this.color.type) {
-			//eslint-disable-next-line no-console
-			console.error(
-				'The color needs to have a "type" attribute. It must be one of the following : rgb, hsl, hex'
-			);
-		}
+
 		if (typeof this.color === 'string') {
 			return this.color;
-		} else if (this.color.red === 'rgb') {
+		} else if (this.color.red) {
 			var rgb = 'rgb(' + this.color.red + ',' + this.color.green + ',' + this.color.blue + ')';
 			return rgb;
-		} else if (this.color.type === 'hsl') {
+		} else if (this.color.hue) {
 			var hsl = 'hsl(' + this.color.hue + ',' + this.color.saturation + '%,' + this.color.light + '%)';
 			return hsl;
-		} else if (this.color.type === 'hex') {
-			var hex = '#' + this.color.red + this.color.green + this.color.blue;
+		} else if (this.color.hexred) {
+			var hex = '#' + this.color.hexred + this.color.hexgreen + this.color.hexblue;
 			return hex;
+		} else {
+			throw new Error(
+				'The getString method only takes Objects with the following keys : "hue, saturation, light" (with HSL values) - "hexblue, hexgreen, hexred" (with Hexadecimal RGB), "red, green, blue" (with base 256 RGB)'
+			);
 		}
 	};
 	this.getValueCollection = function() {
@@ -199,16 +193,13 @@ var colorUtils = function() {
 		if (typeof this.color === 'object') {
 			return this.color;
 		} else if (this.color.indexOf('rgb(') > -1) {
-			var colorType = this.color.split('(')[0];
 			var colorValues = this.color.split(')')[0].split(',');
-			var colorObject = { type: colorType, red: colorValues[0], green: colorValues[1], blue: colorValues[2] };
+			var colorObject = { red: colorValues[0], green: colorValues[1], blue: colorValues[2] };
 
 			return colorObject;
 		} else if (this.color.indexOf('hsl(') > -1) {
-			colorType = this.color.split('(')[0];
 			colorValues = this.color.split(')')[0].split(',');
 			colorObject = {
-				type: colorType,
 				hue: colorValues[0],
 				saturation: colorValues[1],
 				light: colorValues[2],
@@ -217,10 +208,9 @@ var colorUtils = function() {
 		} else if (re.test(this.color)) {
 			var hex = this.color;
 			colorObject = {
-				type: 'hex',
-				red: hex.substring(1, 3),
-				green: hex.substring(3, 5),
-				blue: hex.substring(5, 7),
+				hexred: hex.substring(1, 3),
+				hexgreen: hex.substring(3, 5),
+				hexblue: hex.substring(5, 7),
 			};
 			return colorObject;
 		}
