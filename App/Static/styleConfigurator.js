@@ -1,7 +1,4 @@
 var colors = require('../Ui/colorGenerator');
-var generateCss = require('../Ui/cssGenerator').generateCss;
-var colorUtils = require('../Ui/colorHelper').colorUtils;
-colorUtils = new colorUtils();
 
 /* eslint-disable-next-line no-undef */
 if (ENVIRONMENT === 'development') {
@@ -10,6 +7,8 @@ if (ENVIRONMENT === 'development') {
 var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selectorComponent;
 var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
 var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
+var messagesComponent = require('../Tools/Components/messages.vue').messagesComponent;
+
 require('../../App/Static/AppStyles.css');
 
 var Vue = require('vue');
@@ -20,17 +19,19 @@ var colorSet = new colors.generateColorSet(styleCollection.dominantColor);
 Vue.use(Vuex);
 var store = new Vuex.Store({
 	state: {
-		colorParametersData: {},
+		colorParameterCollection: {},
 		currentColor: '',
 		currentSelector: {},
-		selectorCollection: { main: { color: '#676787', 'font-size': '20px' }, body: { background: '#fff' } },
+		/* eslint-disable-next-line no-undef */
+		selectorCollection: JSON.parse(styleCollection.selectorSetParamString),
 		/* eslint-disable-next-line no-undef */
 		colorCollection: colorSet.generate(storedColorSet.combinationCollection),
 		selectorIndex: '1',
+		cssPanelIndex: 1,
 	},
 	mutations: {
-		colorParametersData(state, data) {
-			state.colorParametersData = data;
+		colorParameterCollection(state, data) {
+			state.colorParameterCollection = data;
 		},
 		currentColor(state, coordinates) {
 			if (state.currentSelector) {
@@ -50,25 +51,34 @@ var store = new Vuex.Store({
 		selectorIndex(state, data) {
 			state.selectorIndex = data;
 		},
+		cssPanelIndex(state, data) {
+			state.cssPanelIndex = data;
+		},
 	},
 	getters: {
-		getColorParametersDataCollection: function(state) {
-			return state.colorParametersData;
+		colorParameterCollection: function(state) {
+			return state.colorParameterCollection;
 		},
-		getSelectorDataCollection: function(state) {
+		selectorCollection: function(state) {
 			return state.selectorCollection;
 		},
-		getColorDataCollection: function(state) {
+		colorCollection: function(state) {
 			return state.colorCollection;
 		},
-		getSelectorIndex: function(state) {
+		selectorIndex: function(state) {
+			state.cssPanelIndex === 1 ? (state.cssPanelIndex = 0) : (state.cssPanelIndex = 1);
 			return state.selectorIndex;
+		},
+		cssPanelIndex(state) {
+			return state.cssPanelIndex;
 		},
 	},
 });
 Vue.component('css-panel-selector', cssPanelSelector);
 Vue.component('css-panel-color', cssPanelColor);
-Vue.component('css-panel-font', cssPanel);
+Vue.component('css-panel-main', cssPanel);
+Vue.component('warning-component', messagesComponent);
+
 window.addEventListener('load', function() {
 	/* eslint-disable-next-line no-unused-vars */
 	var cssPanel = new Vue({

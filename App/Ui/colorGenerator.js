@@ -70,6 +70,9 @@ var generateColorSet = function(dominant) {
 				hue: currentEntry.hue,
 				light: lightCollection[i],
 				saturation: satCollection[i],
+				hex: colorUtils
+					.hslToHex({ hue: currentEntry.hue, light: lightCollection[i], saturation: satCollection[i] })
+					.getString(),
 			};
 		}
 	};
@@ -103,6 +106,7 @@ var generateColorSet = function(dominant) {
 		this.satVariation = satVariation;
 
 		this.colorCollection.combinationCollection = [];
+
 		colors.forEach(function(item) {
 			var saturation = item.saturation ? item.saturation : self.hsl.saturation;
 			var light = item.light ? item.light : self.hsl.light;

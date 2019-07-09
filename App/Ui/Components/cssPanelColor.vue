@@ -24,7 +24,7 @@ var colorComponent = {
 			/* eslint-disable-next-line no-undef */
 			colorSetCollection: colorSetCollection,
 			/* eslint-disable-next-line no-undef */
-			colorSet: this.$store.getters.getColorDataCollection,
+			colorSet: this.$store.getters.colorCollection,
 			/* eslint-disable-next-line no-undef */
 			dominantColor: colorUtils.hexToHsl(styleCollection.dominantColor).getValueCollection(),
 			/* eslint-disable-next-line no-undef */
@@ -33,7 +33,7 @@ var colorComponent = {
 			colorSetParamString: JSON.stringify(storedColorSet.combinationCollection),
 			variationLightAmt: 10,
 			variationSatAmt: 0,
-			selectorCollection: {},
+            selectorCollection: {},
 		};
 	},
 	methods: {
@@ -52,15 +52,8 @@ var colorComponent = {
 					parseInt(this.variationLightAmt),
 					parseInt(this.variationSatAmt)
 				);
-			this.generateAllCSS();
 		},
-		generateAllCSS: function() {
-			for (var i = 0; i < this.colorSet.combinationCollection.length; i++) {
-				if (this.colorSet.combinationCollection[i].targetCollection !== '') {
-					generateCSS(this.colorSet.combinationCollection[i], i);
-				}
-			}
-		},
+
 		updateCombinationColor: function(index, color) {
 			if (event.target.type === 'text') {
 				return;
@@ -114,7 +107,7 @@ var colorComponent = {
 				variationSatAmt: this.variationSatAmt,
 			};
 
-			this.$store.commit('colorParametersData', dataToBeStored);
+			this.$store.commit('colorParameterCollection', dataToBeStored);
 		},
 		storeColorCoordinate: function(coordinates) {
 			this.$store.commit('currentColor', coordinates);

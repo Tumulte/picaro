@@ -25,7 +25,7 @@ if (styleCollection) {
 		selectedGoogleFont: fontTypes,
 	};
 }
-
+cssPanelData.cssPanelMain = 1;
 var panelComponent = {
 	data: function() {
 		return cssPanelData;
@@ -45,6 +45,9 @@ var panelComponent = {
 			});
 			document.documentElement.style.setProperty('--font-family-' + type, this.selectedGoogleFont[type]);
 		},
+		stringify: function(jsonObject) {
+			return JSON.stringify(jsonObject);
+		},
 	},
 	mounted: function() {
 		var request = new XMLHttpRequest();
@@ -61,6 +64,16 @@ var panelComponent = {
 			}
 		};
 		request.send();
+	},
+
+	computed: {
+		selectorCollection: function() {
+			return this.$store.getters.selectorCollection;
+		},
+
+		cssPanelIndex: function() {
+			return this.$store.getters.cssPanelIndex;
+		},
 	},
 };
 

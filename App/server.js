@@ -18,7 +18,7 @@ const methodOverride = require('method-override');
 const settings = require('./../rougeSettings.json');
 //rougeFramework UI
 const tableToForm = require('./formGenerator').tableToForm;
-const cssProperties = require('./Ui/cssProperties');
+const cssFileGenerator = require('./Ui/cssFileGenerator');
 //rougeFramework Back End
 const crud = require('./crud.js').crud;
 const utils = require('./utils.js');
@@ -117,7 +117,6 @@ app.use('/:app', function(req, res, next) {
 });
 app.use(function(req, res, next) {
 	res.locals.environment = process.env.NODE_ENV;
-	res.locals.cssProperties = cssProperties.render(styleCollection, storedColorSet);
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
 	res.locals.styleSetName = '';
@@ -201,6 +200,7 @@ app.post('/admin/settings/:type', function(req, res) {
 			.push(req.body)
 			.write();
 	}
+	cssFileGenerator.generateCSSFile(currentApplicationSettings.applicationName, req.body);
 
 	res.send('settings for ' + currentApplicationSettings.applicationName + ' saved');
 });

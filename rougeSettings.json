@@ -1,5 +1,6 @@
 {
-	"defaultApp": "Demo",
+    "defaultApp": "Demo",
+    "warningTimeout": 10000,
 	"applications": {
 		"Demo": {
 			"styleSet": "NwC_bPXtQ6",

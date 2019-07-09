@@ -1,3 +1,3 @@
 require('webpack-hot-middleware/client?reload=true');
 
-require('./styles.css');
+require('./baseStyle.css');

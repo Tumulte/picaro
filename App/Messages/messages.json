@@ -1,0 +1,8 @@
+{
+    "warnings": {
+        "duplicateKey" : "%s already exists"
+    },
+    "errors":{
+        "hasError": "Errors occured"
+    }
+}
