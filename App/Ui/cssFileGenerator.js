@@ -1,11 +1,36 @@
 var fs = require('fs');
 var colors = require('./colorGenerator');
+var utils = require('../utils');
+
+/**
+ *
+ * @param {array} coordinates [color number, subcolor number],
+ * @param {Object} colorSet The vueX colorSet object
+ * @param {Object} colorSet.combinationCollection,
+ * @param {string} colorSet.dominant
+ * @returns {string} - the Hex of the color
+ */
 var getColor = function(coordinates, colorSet) {
 	if (/^\[\d,\d\]$/.test(JSON.stringify(coordinates))) {
 		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
 	}
 	return coordinates;
 };
+
+/**
+ *
+ * @param {string} font The name of the google font.
+ */
+var addGoogleFont = function(font) {
+	return '@import url("https://fonts.googleapis.com/css?family=' + encodeURI(font) + '&display=swap");\n';
+};
+
+/**
+ * Writes the CSS file of the application in the corresponding static folder
+ *
+ * @param {string} appName The application name
+ * @param {Object} styleSet The current selected app styleset
+ */
 var generateCSSFile = function(appName, styleSet) {
 	var customCSS = JSON.parse(styleSet.selectorSetParamString);
 	var colorSet = new colors.generateColorSet(styleSet.dominant).generate(
@@ -27,12 +52,32 @@ var generateCSSFile = function(appName, styleSet) {
 	generatedCSS += '  --dominant : ' + styleSet.dominant + ';\n';
 	generatedCSS += colorVariable;
 	generatedCSS += '}\n';
+	generatedCSS += addGoogleFont(styleSet.fontFamilyMain);
+	generatedCSS += addGoogleFont(styleSet.fontFamilyTitle);
 
+	generatedCSS += 'html {\n';
+	generatedCSS += '  font-size: ' + styleSet.fontSize + ';\n';
+	generatedCSS += '  font-family: "' + styleSet.fontFamilyMain + '";\n';
+	generatedCSS += '}\n';
+	generatedCSS += 'h1, h2, h3, h4, h5, h6 {\n';
+	generatedCSS += '  font-family: "' + styleSet.fontFamilyTitle + '";\n';
+	generatedCSS += '}\n';
 	for (var selector in customCSS) {
-		generatedCSS += selector + '{\n';
-		for (var property in customCSS[selector]) {
-			generatedCSS += '  ' + property + ':' + getColor(customCSS[selector][property], colorSet) + ';\n';
+		var prefixId = '#rf-content-container ';
+		var selectorText = utils.toHyphen(selector);
+		var extraParameters = '';
+		if (selector === 'body') {
+			selectorText = '';
+			extraParameters = '  height: 100%;\n';
+		} else if (selector === 'html') {
+			prefixId = '';
 		}
+		generatedCSS += prefixId + selectorText + '{\n';
+		for (var property in customCSS[selector]) {
+			generatedCSS +=
+				'  ' + utils.toHyphen(property) + ':' + getColor(customCSS[selector][property], colorSet) + ';\n';
+		}
+		generatedCSS += extraParameters;
 		generatedCSS += '}\n';
 	}
 	generatedCSS += '/* This is automatically generated CSS, do not edit */';

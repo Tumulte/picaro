@@ -1,23 +1,41 @@
+var utils = require('../utils');
+
 var modifyTargetDOMStyle = function(selector, parameters) {
-	document.querySelectorAll(selector).forEach(function(el) {
+	var prefixId = '#rf-content-container ';
+	if (selector === 'body') {
+		selector = '';
+		parameters += ';height: 100%';
+	} else if (selector === 'html') {
+		prefixId = '';
+	}
+	document.querySelectorAll(prefixId + utils.toHyphen(selector)).forEach(function(el) {
 		el.setAttribute('style', parameters);
 	});
 };
 var removeUnusedStyle = function(removedSelector) {
 	for (var selector in removedSelector) {
-		document.querySelectorAll('#content-container ' + removedSelector[selector]).forEach(function(el) {
+		var prefixId = '#rf-content-container ';
+		if (selector === 'body') {
+			removedSelector[selector] = '';
+		} else if (selector === 'html') {
+			prefixId = '';
+		}
+		document.querySelectorAll(prefixId + removedSelector[utils.toHyphen(selector)]).forEach(function(el) {
 			el.setAttribute('style', '');
 		});
 	}
 };
 var makeCssString = function(parameters, colorMapping) {
+	var HTMLParameters = {};
+
 	for (var parameter in parameters) {
 		parameters = JSON.parse(JSON.stringify(parameters));
 		if (typeof parameters[parameter] === 'object') {
 			parameters[parameter] = colorMapping[JSON.stringify(parameters[parameter])];
 		}
+		HTMLParameters[utils.toHyphen(parameter)] = parameters[parameter];
 	}
-	var string = JSON.stringify(parameters);
+	var string = JSON.stringify(HTMLParameters);
 	return string.replace(/,/g, ';').replace(/["{}]/g, '');
 };
 var extractRemovedSelector = function(selectorCollection, previousSelectorCollection) {

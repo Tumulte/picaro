@@ -3,7 +3,7 @@ colorUtils = new colorUtils();
 var messages = require('../../Messages/messages.json');
 var cssGenerator = require('../cssGenerator');
 var generateCss = false;
-
+var utils = require('../../utils');
 var selectorComponent = {
 	data: function() {
 		return {
@@ -20,6 +20,7 @@ var selectorComponent = {
 		},
 
 		addSelector: function(value) {
+			value = utils.toCamel(value);
 			if (value in this.selectorCollection) {
 				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
 			} else {
@@ -29,10 +30,14 @@ var selectorComponent = {
 			value = '';
 		},
 		addProperty: function(value, selector) {
+			value = utils.toCamel(value);
+			selector = utils.toCamel(selector);
 			if (value in this.selectorCollection[selector]) {
 				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
 			} else {
 				this.selectorCollection[selector][value] = '';
+				this.$store.commit('currentSelector', { selector: selector, property: value });
+
 				this.$store.commit('selectorIndex', value + selector);
 			}
 		},
@@ -43,7 +48,6 @@ var selectorComponent = {
 				var selectedColor = this.colorCollection.combinationCollection[data[0]].subCombination[data[1]];
 				selectedColor = colorUtils.hslToHex(selectedColor).getString();
 				this.colorMapping[JSON.stringify(data)] = selectedColor;
-				generateCss.apply(this.selectorCollection, this.colorMapping);
 				return '<div style="width:10px; height:10px; background:' + selectedColor + '"></div>';
 			} else {
 				return data;
@@ -57,7 +61,6 @@ var selectorComponent = {
 				callback: function() {
 					delete self.selectorCollection[selector][property];
 					self.resetComponent();
-					generateCss.apply(self.selectorCollection, self.colorMapping);
 				},
 			};
 		},
@@ -71,7 +74,6 @@ var selectorComponent = {
 				callback: function() {
 					delete self.selectorCollection[selector];
 					self.resetComponent();
-					generateCss.apply(self.selectorCollection, self.colorMapping);
 				},
 			};
 		},
@@ -79,17 +81,22 @@ var selectorComponent = {
 			var index = this.selectorIndex === 1 ? 0 : 1;
 			this.$store.commit('selectorIndex', index);
 		},
-		saveSelectorEdit: function(selector, event) {
-			this.selectorCollection[event.target.innerHTML] = this.selectorCollection[selector];
-			delete this.selectorCollection[selector];
-			generateCss.apply(this.selectorCollection, this.colorMapping);
-
-			this.resetComponent();
+		toHyphen: function(text) {
+			return utils.toHyphen(text);
 		},
-		savePropertyEdit: function(selector, property, event) {
-			this.selectorCollection[selector][event.target.innerHTML] = this.selectorCollection[selector][property];
-			delete this.selectorCollection[selector][property];
-			generateCss.apply(this.selectorCollection, this.colorMapping);
+		saveEdit: function(coordinates, event) {
+			var value = utils.toCamel(event.target.innerHTML);
+			if (coordinates.value) {
+				this.selectorCollection[coordinates.selector][coordinates.property] = event.target.innerHTML;
+			} else if (coordinates.property) {
+				this.selectorCollection[coordinates.selector][value] = this.selectorCollection[coordinates.selector][
+					coordinates.property
+				];
+				delete this.selectorCollection[coordinates.selector][coordinates.property];
+			} else {
+				this.selectorCollection[value] = this.selectorCollection[coordinates.selector];
+				delete this.selectorCollection[coordinates.selector];
+			}
 
 			this.resetComponent();
 		},
@@ -97,19 +104,23 @@ var selectorComponent = {
 	mounted: function() {
 		generateCss.apply(this.selectorCollection, this.colorMapping);
 	},
-
 	computed: {
 		colorCollection: function() {
 			return this.$store.getters.colorCollection;
 		},
 		selectorCollection: function() {
 			generateCss = new cssGenerator.generateCss(this.$store.getters.selectorCollection);
-
 			return this.$store.getters.selectorCollection;
 		},
 		selectorIndex: function() {
 			return this.$store.getters.selectorIndex;
 		},
+	},
+	updated: function() {
+		var self = this;
+		this.$nextTick(function() {
+			generateCss.apply(self.selectorCollection, self.colorMapping);
+		});
 	},
 };
 module.exports = {

@@ -33,7 +33,7 @@ var colorComponent = {
 			colorSetParamString: JSON.stringify(storedColorSet.combinationCollection),
 			variationLightAmt: 10,
 			variationSatAmt: 0,
-            selectorCollection: {},
+			selectorCollection: {},
 		};
 	},
 	methods: {
@@ -41,27 +41,22 @@ var colorComponent = {
 			return 'background:' + colorUtils.getString(color);
 		},
 		updateColor: function() {
-			document.documentElement.style.setProperty(
-				'--color-dominant',
-				colorUtils.getString(this.dominantColor, 'hsl')
-			);
-			colorSet
+			this.colorSet = colorSet
 				.updateColor(colorUtils.hslToHex(this.dominantColor).getString())
 				.generate(
 					this.colorSetParamCollection,
 					parseInt(this.variationLightAmt),
 					parseInt(this.variationSatAmt)
 				);
+			this.$store.commit('colorCollection', this.colorSet);
 		},
 
-		updateCombinationColor: function(index, color) {
+		updateCombinationColor: function(index) {
+			//only triggers on sliders. TODO : check if necessary
 			if (event.target.type === 'text') {
 				return;
 			}
-			document.documentElement.style.setProperty(
-				'--color-combination-' + index,
-				colorUtils.getString(color, 'hsl')
-			);
+
 			this.colorSetParamCollection[index] = generateNewColorSet(
 				this.dominantColor,
 				this.colorSet.combinationCollection[index]

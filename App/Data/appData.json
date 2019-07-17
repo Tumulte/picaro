@@ -36,7 +36,7 @@
     },
     {
       "fontSize": "25",
-      "fontFamilyMain": "ZCOOL KuaiLe",
+      "fontFamilyMain": "Waiting for the Sunrise",
       "fontFamilyAlt": "none",
       "fontFamilyTitle": "Abhaya Libre",
       "fontFamilyTitleAlt": [
@@ -48,10 +48,10 @@
       "dominantColor": "#56A080",
       "styleSet": "styleSet-gwaRMX3Qy",
       "dominant": "#56A080",
-      "colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":-51,\"light\":52},{\"hueVariation\":300}]",
+      "colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
       "variationLightAmt": "10",
       "variationSatAmt": "0",
-      "selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"font-size\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]}}"
+      "selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{}}"
     }
   ],
   "colorSetPresets": [

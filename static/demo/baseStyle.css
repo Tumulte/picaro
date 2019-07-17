@@ -23,17 +23,17 @@
   --combination1-7:#C9B6D8;
   --combination1-8:#E2D7EA;
   --combination1-9:#FAF8FB;
-  --combination2:#75A960;
-  --combination2-0:#040704;
-  --combination2-1:#1B2815;
-  --combination2-2:#314927;
-  --combination2-3:#476A39;
-  --combination2-4:#5D8B4B;
-  --combination2-5:#75A960;
-  --combination2-6:#92BB81;
-  --combination2-7:#AECDA2;
-  --combination2-8:#CBDFC3;
-  --combination2-9:#E8F1E4;
+  --combination2:#9F7F56;
+  --combination2-0:#1B150E;
+  --combination2-1:#3C3020;
+  --combination2-2:#5D4A32;
+  --combination2-3:#7E6544;
+  --combination2-4:#9F7F56;
+  --combination2-5:#B49874;
+  --combination2-6:#C6B195;
+  --combination2-7:#D8C9B6;
+  --combination2-8:#EAE2D7;
+  --combination2-9:#FBFAF8;
   --combination3:#769F56;
   --combination3-0:#141B0E;
   --combination3-1:#2C3C20;
@@ -46,12 +46,24 @@
   --combination3-8:#DFEAD7;
   --combination3-9:#FAFBF8;
 }
-main{
+@import url("https://fonts.googleapis.com/css?family=Waiting%20for%20the%20Sunrise&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Abhaya%20Libre&display=swap");
+html {
+  font-size: 25;
+  font-family: "Waiting for the Sunrise";
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Abhaya Libre";
+}
+#rf-content-container main{
   color:#676787;
   font-size:20px;
 }
-body{
-  background:#AECDA2;
+#rf-content-container {
+  background:#D8C9B6;
   color:#32455D;
+  height: 100%;
+}
+html{
 }
 /* This is automatically generated CSS, do not edit */

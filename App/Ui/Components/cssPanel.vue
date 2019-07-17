@@ -1,5 +1,6 @@
 var settings = require('../../../rougeSettings.json');
 var WebFont = require('webfontloader');
+
 var fontTypes = { main: 'none', alt: 'none', title: 'none', titleAlt: 'none' };
 
 /* eslint-disable-next-line no-undef */
@@ -31,8 +32,10 @@ var panelComponent = {
 		return cssPanelData;
 	},
 	methods: {
-		updateCssProperty: function() {
-			document.documentElement.style.setProperty('--font-size', this.fontSize + 'px');
+		updateFontSize: function() {
+			this.selectorCollection.html.fontSize = this.fontSize + 'px';
+			var index = 'font' + this.fontSize;
+			this.$store.commit('selectorIndex', index);
 		},
 		updateCssFont: function(type) {
 			if (this.selectedGoogleFont[type] === 'none') {
@@ -43,7 +46,6 @@ var panelComponent = {
 					families: [this.selectedGoogleFont[type]],
 				},
 			});
-			document.documentElement.style.setProperty('--font-family-' + type, this.selectedGoogleFont[type]);
 		},
 		stringify: function(jsonObject) {
 			return JSON.stringify(jsonObject);

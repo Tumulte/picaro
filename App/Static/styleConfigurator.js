@@ -8,7 +8,9 @@ var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selector
 var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
 var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
 var messagesComponent = require('../Tools/Components/messages.vue').messagesComponent;
-
+/* eslint-disable-next-line no-undef */
+var selectorCollection = JSON.parse(styleCollection.selectorSetParamString);
+selectorCollection.html = {};
 require('../../App/Static/AppStyles.css');
 
 var Vue = require('vue');
@@ -22,8 +24,7 @@ var store = new Vuex.Store({
 		colorParameterCollection: {},
 		currentColor: '',
 		currentSelector: {},
-		/* eslint-disable-next-line no-undef */
-		selectorCollection: JSON.parse(styleCollection.selectorSetParamString),
+		selectorCollection: selectorCollection,
 		/* eslint-disable-next-line no-undef */
 		colorCollection: colorSet.generate(storedColorSet.combinationCollection),
 		selectorIndex: '1',
