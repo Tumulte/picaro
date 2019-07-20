@@ -1,7 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = {
+/**
+ * @type {import('webpack').Configuration}
+ * */
+const myWebpackConfig = {
 	devtool: 'inline-source-map',
 	mode: 'development',
 	entry: {
@@ -57,3 +60,4 @@ module.exports = {
 		},
 	},
 };
+module.exports = myWebpackConfig;

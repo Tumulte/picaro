@@ -1,8 +1,18 @@
+/**
+ * @class
+ */
 var colorUtils = function() {
+	/**
+	 *
+	 * @param {string} hex #RRGGBB
+	 */
 	var parseHex = function(hex) {
 		return parseInt(hex, 16);
 	};
-
+	/**
+	 *
+	 * @param {number} number
+	 */
 	var toHex = function(number) {
 		var hex = number.toString(16);
 		if (hex.length === 1) {
@@ -10,6 +20,7 @@ var colorUtils = function() {
 		}
 		return hex.toUpperCase();
 	};
+
 	this.hexToRgb = function(color) {
 		this.color = color;
 
@@ -149,6 +160,9 @@ var colorUtils = function() {
 
 		return this;
 	};
+	/**
+	 *  @returns {colorUtils} this
+	 */
 	this.hexToHsl = function(color) {
 		color = this.hexToRgb(color).getValueCollection();
 
@@ -157,6 +171,9 @@ var colorUtils = function() {
 
 		return this;
 	};
+	/**
+	 *  @returns {colorUtils} this
+	 */
 	this.hslToHex = function(color) {
 		color = this.hslToRgb(color).getValueCollection();
 
@@ -164,7 +181,9 @@ var colorUtils = function() {
 		this.color = color;
 		return this;
 	};
-	//todo the "type" stuff is dumb it has to be streamlined
+	/**
+	 *  @returns {colorUtils} this
+	 */
 	this.getString = function(color) {
 		if (color) {
 			this.color = color;

@@ -11,7 +11,6 @@
 		"start": "node ./App/server.js",
 		"init": "node ./App/initiateApp.js",
 		"start:dev": "npm-run-all --parallel open:src security-check ",
-		"type-check": "tsc --noEmit",
 		"watch": "npm-run-all --parallel test:watch",
 		"open:src": "set NODE_ENV='development' && nodemon --inspect ./App/server.js  --watch App/**/*  --ignore App/Static/*",
 		"security-check": "npm audit",
@@ -42,6 +41,8 @@
 		"webpack": "^4.29.3"
 	},
 	"devDependencies": {
+		"@types/webpack": "^4.4.35",
+		"@types/webpack-dev-server": "^3.1.7",
 		"chalk": "2.4.1",
 		"css-loader": "^1.0.1",
 		"esdoc": "^1.1.0",

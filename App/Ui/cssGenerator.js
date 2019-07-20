@@ -1,5 +1,10 @@
 var utils = require('../utils');
 
+/**
+ *
+ * @param {string} selector
+ * @param {string} parameters
+ */
 var modifyTargetDOMStyle = function(selector, parameters) {
 	var prefixId = '#rf-content-container ';
 	if (selector === 'body') {
@@ -12,6 +17,11 @@ var modifyTargetDOMStyle = function(selector, parameters) {
 		el.setAttribute('style', parameters);
 	});
 };
+
+/**
+ *
+ * @param {object} removedSelector
+ */
 var removeUnusedStyle = function(removedSelector) {
 	for (var selector in removedSelector) {
 		var prefixId = '#rf-content-container ';
@@ -25,7 +35,16 @@ var removeUnusedStyle = function(removedSelector) {
 		});
 	}
 };
+
+/**
+ *
+ * @param {object} parameters The css parameters
+ * @param {object} colorMapping A dictionary with the color corresponding to the position
+ */
 var makeCssString = function(parameters, colorMapping) {
+	/**
+	 * @type {object} an empty object to be filled with the new CSS parameters
+	 */
 	var HTMLParameters = {};
 
 	for (var parameter in parameters) {
@@ -38,6 +57,12 @@ var makeCssString = function(parameters, colorMapping) {
 	var string = JSON.stringify(HTMLParameters);
 	return string.replace(/,/g, ';').replace(/["{}]/g, '');
 };
+/**
+ *
+ * @param {array} selectorCollection current selector collection
+ * @param {array|false} previousSelectorCollection selector collection from the previous call of the method
+ * @returns {array|false}
+ */
 var extractRemovedSelector = function(selectorCollection, previousSelectorCollection) {
 	previousSelectorCollection = JSON.parse(JSON.stringify(previousSelectorCollection));
 
@@ -52,11 +77,26 @@ var extractRemovedSelector = function(selectorCollection, previousSelectorCollec
 	}
 	return removedSelector;
 };
+
+/**
+ *
+ * @param {object} selectorCollection
+ * @class
+ */
 var generateCss = function(selectorCollection) {
 	selectorCollection = JSON.parse(JSON.stringify(selectorCollection));
+
+	/**
+	 * @type {array|false}
+	 */
 	var removedSelector = false;
+
 	this.previousSelectorCollection = selectorCollection ? selectorCollection : false;
 
+	/**
+	 * @param {array} selectorCollection
+	 * @param {object} colorMapping
+	 */
 	this.apply = function(selectorCollection, colorMapping) {
 		removedSelector = extractRemovedSelector(selectorCollection, this.previousSelectorCollection);
 		removeUnusedStyle(removedSelector);

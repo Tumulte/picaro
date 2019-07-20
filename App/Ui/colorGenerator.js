@@ -1,13 +1,30 @@
-var colorUtils = require('./colorHelper').colorUtils;
-colorUtils = new colorUtils();
+var colorHelper = require('./colorHelper');
 
+var colorUtils = new colorHelper.colorUtils();
+
+/**
+ *
+ * @param {string} dominant Hexadecimal of the main color
+ * @class
+ */
 var generateColorSet = function(dominant) {
+	this.lightVariation = 0;
+	this.satVariation = 10;
 	this.hsl = colorUtils.hexToHsl(dominant).getValueCollection();
+	/**
+	 * @type {object}
+	 */
 	this.colorCollection = {
 		dominant: dominant,
 		combinationCollection: [],
 	};
 	var self = this;
+
+	/**
+	 *
+	 * @param {number} angle
+	 * @returns {number}
+	 */
 	var base360 = function(angle) {
 		if (angle > 360) {
 			return angle - 360;
@@ -17,6 +34,13 @@ var generateColorSet = function(dominant) {
 			return angle;
 		}
 	};
+
+	/**
+	 *
+	 * @param {number} baseValue
+	 * @param {number} variation
+	 * @returns {Array}
+	 */
 	var organizedArrayBase100 = function(baseValue, variation) {
 		var offset = 0;
 
@@ -39,6 +63,15 @@ var generateColorSet = function(dominant) {
 		}
 		return valueCollection;
 	};
+	/**
+	 *
+	 * @param {Object} combination
+	 * @param {number} combination.hue
+	 * @param {number} combination.light
+	 * @param {number} combination.saturation
+	 * @param {number} [lightVariation]
+	 * @param {number} [satVariation]
+	 */
 	var addCombination = function(combination, lightVariation, satVariation) {
 		combination.hue = base360(combination.hue);
 		var hex = colorUtils.hslToHex(combination).getString();
@@ -50,6 +83,11 @@ var generateColorSet = function(dominant) {
 		});
 		addSubCombination(lightVariation, satVariation);
 	};
+	/**
+	 *
+	 * @param {number|undefined} lightVariation
+	 * @param {number|undefined} satVariation
+	 */
 	var addSubCombination = function(lightVariation, satVariation) {
 		if (typeof lightVariation !== 'number' || lightVariation > 10) {
 			lightVariation = 10;
@@ -76,6 +114,9 @@ var generateColorSet = function(dominant) {
 			};
 		}
 	};
+	/**
+	 * @param {string} newColor The hex of the nez color
+	 */
 	this.updateColor = function(newColor) {
 		this.colorCollection.dominant = newColor;
 		this.hsl = colorUtils.hexToHsl(newColor).getValueCollection();
@@ -100,8 +141,15 @@ var generateColorSet = function(dominant) {
 
 		return this.colorCollection;
 	};
+	/**
+	 * @param {Array} colors
+	 * @param {number} lightVariation
+	 * @param {number} satVariation
+	 * @returns {object}
+	 */
 	this.generate = function(colors, lightVariation, satVariation) {
 		var self = this;
+
 		this.lightVariation = lightVariation;
 		this.satVariation = satVariation;
 

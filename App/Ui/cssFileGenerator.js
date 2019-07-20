@@ -4,14 +4,14 @@ var utils = require('../utils');
 
 /**
  *
- * @param {array} coordinates [color number, subcolor number],
+ * @param {string} coordinates,
  * @param {Object} colorSet The vueX colorSet object
  * @param {Object} colorSet.combinationCollection,
  * @param {string} colorSet.dominant
  * @returns {string} - the Hex of the color
  */
 var getColor = function(coordinates, colorSet) {
-	if (/^\[\d,\d\]$/.test(JSON.stringify(coordinates))) {
+	if (/^\[\d,\d\]$/.test(coordinates)) {
 		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
 	}
 	return coordinates;
@@ -75,7 +75,11 @@ var generateCSSFile = function(appName, styleSet) {
 		generatedCSS += prefixId + selectorText + '{\n';
 		for (var property in customCSS[selector]) {
 			generatedCSS +=
-				'  ' + utils.toHyphen(property) + ':' + getColor(customCSS[selector][property], colorSet) + ';\n';
+				'  ' +
+				utils.toHyphen(property) +
+				':' +
+				getColor(JSON.stringify(customCSS[selector][property]), colorSet) +
+				';\n';
 		}
 		generatedCSS += extraParameters;
 		generatedCSS += '}\n';
