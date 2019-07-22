@@ -1,32 +1,36 @@
+//app CSS. Will be processed by webpack
+require('../../App/Static/AppStyles.css');
+
 var colors = require('../Ui/colorGenerator');
 
-/* eslint-disable-next-line no-undef */
+/* eslint-disable no-undef */
+// Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
+// @ts-ignore
 if (ENVIRONMENT === 'development') {
+	// @ts-ignore
 	require('webpack-hot-middleware/client?reload=true');
 }
-var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selectorComponent;
-var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
-var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
-var messagesComponent = require('../Tools/Components/messages.vue').messagesComponent;
-/* eslint-disable-next-line no-undef */
-var selectorCollection = JSON.parse(styleCollection.selectorSetParamString);
-selectorCollection.html = {};
-require('../../App/Static/AppStyles.css');
+/* eslint-enable no-undef */
+
+var cssPanelSelector = require('../Ui/Components/cssPanelSelector.js').selectorComponent;
+var cssPanelColor = require('../Ui/Components/cssPanelColor.js').colorComponent;
+var cssPanel = require('../Ui/Components/cssPanel.js').panelComponent;
+var messagesComponent = require('../Tools/Components/messages.js').messagesComponent;
+
+var selectorCollection = {};
 
 var Vue = require('vue');
 var Vuex = require('vuex');
 
-/* eslint-disable-next-line no-undef */
-var colorSet = new colors.generateColorSet(styleCollection.dominantColor);
 Vue.use(Vuex);
 var store = new Vuex.Store({
 	state: {
 		colorParameterCollection: {},
 		currentColor: '',
 		currentSelector: {},
-		selectorCollection: selectorCollection,
+		selectorCollection: { html: {}, h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {} },
 		/* eslint-disable-next-line no-undef */
-		colorCollection: colorSet.generate(storedColorSet.combinationCollection),
+		colorCollection: {},
 		selectorIndex: '1',
 		cssPanelIndex: 1,
 	},

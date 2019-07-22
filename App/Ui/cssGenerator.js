@@ -13,7 +13,7 @@ var modifyTargetDOMStyle = function(selector, parameters) {
 	} else if (selector === 'html') {
 		prefixId = '';
 	}
-	document.querySelectorAll(prefixId + utils.toHyphen(selector)).forEach(function(el) {
+	document.querySelectorAll(prefixId + utils.jsonToCss(selector)).forEach(function(el) {
 		el.setAttribute('style', parameters);
 	});
 };
@@ -30,7 +30,7 @@ var removeUnusedStyle = function(removedSelector) {
 		} else if (selector === 'html') {
 			prefixId = '';
 		}
-		document.querySelectorAll(prefixId + removedSelector[utils.toHyphen(selector)]).forEach(function(el) {
+		document.querySelectorAll(prefixId + removedSelector[utils.jsonToCss(selector)]).forEach(function(el) {
 			el.setAttribute('style', '');
 		});
 	}
@@ -52,7 +52,7 @@ var makeCssString = function(parameters, colorMapping) {
 		if (typeof parameters[parameter] === 'object') {
 			parameters[parameter] = colorMapping[JSON.stringify(parameters[parameter])];
 		}
-		HTMLParameters[utils.toHyphen(parameter)] = parameters[parameter];
+		HTMLParameters[utils.jsonToCss(parameter)] = parameters[parameter];
 	}
 	var string = JSON.stringify(HTMLParameters);
 	return string.replace(/,/g, ';').replace(/["{}]/g, '');

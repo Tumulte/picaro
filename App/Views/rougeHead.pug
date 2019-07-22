@@ -3,12 +3,8 @@ html(lang=language)
     title #{title}
 
     link(rel="stylesheet" type="text/css" href="/normalize.css")
-
     script.
-        var styleCollection = !{styleCollection};
-        var styleSetCollection = !{styleSetCollection};
         var colorSetCollection = !{colorSetCollection};
-        var storedColorSet = !{storedColorSet};
 
     block head
 block body
@@ -20,12 +16,12 @@ block cssPanel
                 warning-component( :warning-message="warningMessage")
                 ul( :key="selectorIndex")
                     li(v-for="(propertyCollection, selector) in selectorCollection")
-                        span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{toHyphen(selector)}}
+                        span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{jsonToCss(selector)}}
                         span(@click="deleteSelector(selector)") [X]
 
                         ul
                             li(v-for="(value, property) in propertyCollection" v-on:click="storeSelectorAndProperty(selector, property)" )
-                                span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{toHyphen(property)}}
+                                span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{jsonToCss(property)}}
                                 div(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
                                 span(@click="deleteProperty(selector,property)") [X]
 
@@ -47,14 +43,26 @@ block cssPanel
                 input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
                 input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
 
-                div(v-bind:style="bgColor(dominantColor, 'hsl')" @input="updateColor()")
-                    input(type="range" class="css-panel__color-range_hue" min="0" max="360" v-model="dominantColor.hue")
-                    input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="dominantColor.light")
-                    input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
+                div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
+                    label
+                        span(class="css-panel__slider-label")  Hue
+                        input(type="range" class="css-panel__color-range_hue" min="0" max="360" v-model="dominantColor.hue")
+                    label
+                        span(class="css-panel__slider-label") Light
+                        input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="dominantColor.light")
+                    label
+                        span(class="css-panel__slider-label") Saturation
+                        input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
                 div(v-for="(color, index) in this.$store.getters.colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
-                    input(type="range"  class="css-panel__color-range_hue" min="0" max="360" v-model="color.hue")
-                    input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="color.light")
-                    input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="color.saturation")
+                    label
+                        span(class="css-panel__slider-label") Hue
+                        input(type="range"  class="css-panel__color-range_hue" min="0" max="360" v-model="color.hue")
+                    label
+                        span(class="css-panel__slider-label") Light
+                        input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="color.light")
+                    label
+                        span(class="css-panel__slider-label") Saturation
+                        input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="color.saturation")
                     label(v-for="(subColor, subIndex) in color.subCombination" v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
 
                     button(v-on:click="removeColor(index)") Remove Color
@@ -70,7 +78,7 @@ block cssPanel
 
                 fieldset
                     legend Style Set
-                    select( v-model="selectedGoogleFont.titleAlt" class="css-panel__input" name="fontFamilyTitleAlt" v-on:change="updateCssFont")
+                    select(class="css-panel__input" )
                         option(value="none") Select a style set
                         option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
                 fieldset
@@ -94,11 +102,7 @@ block cssPanel
                         select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
                             option(value="none") Selectionner une font
                             option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                    label
-                        div(class="css-panel__label") Altenative Title Font
-                        select( v-model="selectedGoogleFont.titleAlt" class="css-panel__input" name="fontFamilyTitleAlt" v-on:change="updateCssFont")
-                            option(value="none") Selectionner une font
-                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+
                     input(type="text" name="id" value=styleSetId)
 
                 fieldset

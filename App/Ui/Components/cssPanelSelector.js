@@ -20,7 +20,7 @@ var selectorComponent = {
 		},
 
 		addSelector: function(value) {
-			value = utils.toCamel(value);
+			value = utils.cssToJson(value);
 			if (value in this.selectorCollection) {
 				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
 			} else {
@@ -30,8 +30,8 @@ var selectorComponent = {
 			value = '';
 		},
 		addProperty: function(value, selector) {
-			value = utils.toCamel(value);
-			selector = utils.toCamel(selector);
+			value = utils.cssToJson(value);
+			selector = utils.cssToJson(selector);
 			if (value in this.selectorCollection[selector]) {
 				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
 			} else {
@@ -81,11 +81,11 @@ var selectorComponent = {
 			var index = this.selectorIndex === 1 ? 0 : 1;
 			this.$store.commit('selectorIndex', index);
 		},
-		toHyphen: function(text) {
-			return utils.toHyphen(text);
+		jsonToCss: function(text) {
+			return utils.jsonToCss(text);
 		},
 		saveEdit: function(coordinates, event) {
-			var value = utils.toCamel(event.target.innerHTML);
+			var value = utils.cssToJson(event.target.innerHTML);
 			if (coordinates.value) {
 				this.selectorCollection[coordinates.selector][coordinates.property] = event.target.innerHTML;
 			} else if (coordinates.property) {

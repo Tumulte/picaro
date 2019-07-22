@@ -15,25 +15,18 @@ var generateNewColorSet = function(dominant, combination) {
 	return newCombination;
 };
 
-/* eslint-disable-next-line no-undef */
-var colorSet = new colors.generateColorSet(styleCollection.dominantColor);
+var colorSet = false;
 
 var colorComponent = {
 	data: function() {
 		return {
-			/* eslint-disable-next-line no-undef */
+			colorSet: {},
 			colorSetCollection: colorSetCollection,
-			/* eslint-disable-next-line no-undef */
-			colorSet: this.$store.getters.colorCollection,
-			/* eslint-disable-next-line no-undef */
-			dominantColor: colorUtils.hexToHsl(styleCollection.dominantColor).getValueCollection(),
-			/* eslint-disable-next-line no-undef */
-			colorSetParamCollection: storedColorSet.combinationCollection,
-			/* eslint-disable-next-line no-undef */
-			colorSetParamString: JSON.stringify(storedColorSet.combinationCollection),
+			dominantColor: { hue: 200, saturation: 0, light: 70 },
+			colorSetParamCollection: [],
+			colorSetParamString: '',
 			variationLightAmt: 10,
 			variationSatAmt: 0,
-			selectorCollection: {},
 		};
 	},
 	methods: {
@@ -108,8 +101,32 @@ var colorComponent = {
 			this.$store.commit('currentColor', coordinates);
 		},
 	},
+	computed: {
+		colorCollection: function() {
+			return this.$store.getters.colorCollection;
+		},
+	},
 	mounted: function() {
-		this.passValuesToStore();
+		var self = this;
+		var styleRequest = new XMLHttpRequest();
+		styleRequest.open('GET', '/appapi', true);
+
+		styleRequest.onreadystatechange = function() {
+			if (styleRequest.readyState === 4) {
+				if (styleRequest.status === 200) {
+					var data = JSON.parse(styleRequest.responseText);
+					colorSet = new colors.generateColorSet(data.dominantColor);
+
+					self.colorSet = colorSet;
+					self.dominantColor = colorUtils.hexToHsl(data.dominantColor).getValueCollection();
+					self.colorSetParamString = data.colorSetParamString;
+					self.colorSetParamCollection = JSON.parse(data.colorSetParamString);
+					self.$store.commit('colorCollection', colorSet.generate(JSON.parse(data.colorSetParamString)));
+					self.passValuesToStore();
+				}
+			}
+		};
+		styleRequest.send();
 	},
 };
 module.exports = {

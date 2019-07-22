@@ -21,6 +21,11 @@ var messagesComponent = {
 		};
 	},
 	methods: {
+		/**
+		 *
+		 * @param {function} callback The callback after the message is valid
+		 * @param {string} index
+		 */
 		confirmCallback: function(callback, index) {
 			this.messageCollectionConfirm.splice(index, 1);
 

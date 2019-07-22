@@ -46,18 +46,18 @@
   --combination3-8:#DFEAD7;
   --combination3-9:#FAFBF8;
 }
-@import url("https://fonts.googleapis.com/css?family=Waiting%20for%20the%20Sunrise&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Abhaya%20Libre&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Zilla%20Slab&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Autour%20One&display=swap");
 html {
   font-size: 25;
-  font-family: "Waiting for the Sunrise";
+  font-family: "Zilla Slab";
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Abhaya Libre";
+  font-family: "Autour One";
 }
 #rf-content-container main{
-  color:#676787;
-  font-size:20px;
+  color:"#676787";
+  font-size:"20px";
 }
 #rf-content-container {
   background:#D8C9B6;
@@ -65,5 +65,9 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
 }
 html{
+  font-family:"Zilla Slab";
+}
+#rf-content-container h1,h2,h3,h4,h5,h6{
+  font-family:"Autour One";
 }
 /* This is automatically generated CSS, do not edit */

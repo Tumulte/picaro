@@ -1,8 +1,11 @@
 const express = require('express');
 
 //DB
+//@ts-ignore
 const low = require('lowdb');
+//@ts-ignore
 const shortid = require('shortid');
+//@ts-ignore
 const FileSync = require('lowdb/adapters/FileSync');
 var appAdapter = new FileSync('./App/Data/appData.json');
 var appDb = low(appAdapter);
@@ -12,15 +15,21 @@ const db = low(adapter);
 
 //Tools
 const bodyParser = require('body-parser');
+//@ts-ignore
 const methodOverride = require('method-override');
 
 //rougeFramework Settings
+/**
+ * @type {Object}
+ */
 const settings = require('./../rougeSettings.json');
 //rougeFramework UI
 const tableToForm = require('./formGenerator').tableToForm;
 const cssFileGenerator = require('./Ui/cssFileGenerator');
 //rougeFramework Back End
 const crud = require('./crud.js').crud;
+const appCrud = require('./appCrud.js').appCrud;
+
 const utils = require('./utils.js');
 var isProd = process.env.NODE_ENV === 'production';
 
@@ -33,7 +42,9 @@ if (!isProd) {
 	const webpack = require('webpack');
 	const config = require('../webpack.config.dev.js');
 	const compiler = webpack(config);
+	//@ts-ignore
 	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+	//@ts-ignore
 	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
 	//webpack
 	app.use(webpackDevMiddleware);
@@ -93,18 +104,11 @@ for (var application in settings.applications) {
 var currentApplicationSettings = settings.applications[settings.defaultApp];
 currentApplicationSettings.applicationName = settings.defaultApp;
 
+//Application Data
+var appApi = appCrud(appDb, currentApplicationSettings);
+app.use('/appapi', appApi);
+
 //TODO generate a default styleset with any app
-if (currentApplicationSettings.styleSet !== '') {
-	var styleSetCollection = appDb.get(currentApplicationSettings.applicationName).value();
-	var styleCollection = appDb
-		.get(currentApplicationSettings.applicationName)
-		.find({ id: currentApplicationSettings.styleSet })
-		.value();
-	var storedColorSet = appDb
-		.get('colorSetPresets')
-		.find({ id: styleCollection.colorCombinationId })
-		.value();
-}
 
 app.use('/:app', function(req, res, next) {
 	if (req.params.app in settings.applications) {
@@ -121,11 +125,6 @@ app.use(function(req, res, next) {
 	res.locals.language = currentApplicationSettings.language;
 	res.locals.styleSetName = '';
 
-	res.locals.styleCollection = JSON.stringify(styleCollection);
-	res.locals.storedColorSet = JSON.stringify(storedColorSet);
-
-	res.locals.styleSetCollection = JSON.stringify(utils.idAsKey(styleSetCollection));
-	res.locals.styleSetName = styleCollection.styleSet;
 	res.locals.styleSetId = currentApplicationSettings.styleSet;
 	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSetPresets').value());
 	next();
@@ -152,6 +151,7 @@ app.use('/edit/:app/:table/:id', function(req, res, next) {
 		.value();
 	req.params.method = 'put';
 	var form = tableToForm(req.params, data);
+	//@ts-ignore
 	req.form = form;
 
 	next();
@@ -159,6 +159,7 @@ app.use('/edit/:app/:table/:id', function(req, res, next) {
 app.use('/add/:app/:table/', function(req, res, next) {
 	req.params.method = 'post';
 	var form = tableToForm(req.params);
+	//@ts-ignore
 	req.form = form;
 
 	next();
@@ -166,12 +167,14 @@ app.use('/add/:app/:table/', function(req, res, next) {
 app.get('/edit/:app/:table/:id', function(req, res) {
 	app.set('views', './app' + req.params.app + '/views');
 	res.render('edit', {
+		//@ts-ignore
 		form: req.form,
 	});
 });
 app.get('/add/:app/:table', function(req, res) {
 	app.set('views', './app' + req.params.app + '/views');
 	res.render('add', {
+		//@ts-ignore
 		form: req.form,
 	});
 });

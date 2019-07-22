@@ -12,6 +12,7 @@ var utils = require('../utils');
  */
 var getColor = function(coordinates, colorSet) {
 	if (/^\[\d,\d\]$/.test(coordinates)) {
+		coordinates = JSON.parse(coordinates);
 		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
 	}
 	return coordinates;
@@ -64,7 +65,7 @@ var generateCSSFile = function(appName, styleSet) {
 	generatedCSS += '}\n';
 	for (var selector in customCSS) {
 		var prefixId = '#rf-content-container ';
-		var selectorText = utils.toHyphen(selector);
+		var selectorText = utils.jsonToCss(selector);
 		var extraParameters = '';
 		if (selector === 'body') {
 			selectorText = '';
@@ -76,7 +77,7 @@ var generateCSSFile = function(appName, styleSet) {
 		for (var property in customCSS[selector]) {
 			generatedCSS +=
 				'  ' +
-				utils.toHyphen(property) +
+				utils.jsonToCss(property) +
 				':' +
 				getColor(JSON.stringify(customCSS[selector][property]), colorSet) +
 				';\n';

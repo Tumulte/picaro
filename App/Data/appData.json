@@ -36,13 +36,9 @@
     },
     {
       "fontSize": "25",
-      "fontFamilyMain": "Waiting for the Sunrise",
+      "fontFamilyMain": "Zilla Slab",
       "fontFamilyAlt": "none",
-      "fontFamilyTitle": "Abhaya Libre",
-      "fontFamilyTitleAlt": [
-        "none",
-        "none"
-      ],
+      "fontFamilyTitle": "Autour One",
       "id": "NwC_bPXtQ6",
       "colorCombinationId": "4",
       "dominantColor": "#56A080",
@@ -51,7 +47,7 @@
       "colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
       "variationLightAmt": "10",
       "variationSatAmt": "0",
-      "selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{}}"
+      "selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{\"fontFamily\":\"Zilla Slab\"},\"h1,h2,h3,h4,h5,h6\":{\"fontFamily\":\"Autour One\"}}"
     }
   ],
   "colorSetPresets": [

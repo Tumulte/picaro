@@ -14,18 +14,29 @@ var parseMessage = function(str) {
 
 	return str.replace(/%s/g, () => args[i++]);
 };
-var toCamel = function(text) {
+var cssToJson = function(text) {
+	if (text.indexOf('.') === 0) {
+		text = text.replace('.', 'mkClss');
+	}
+	text = text.replace(',', '_AND_');
+	text = text.replace(' ', '');
+
 	return text.replace(/-([a-z])/g, function(g) {
 		return g[1].toUpperCase();
 	});
 };
-var toHyphen = function(text) {
+var jsonToCss = function(text) {
+	if (text.indexOf('mkClss') === 0) {
+		text = text.replace('mkClss', '.');
+	}
+	text = text.replace('_AND_', ',');
+
 	return text.replace(/([A-Z])/g, g => `-${g[0].toLowerCase()}`);
 };
 module.exports = {
 	makeTableName: makeTableName,
 	idAsKey: idAsKey,
 	parseMessage: parseMessage,
-	toHyphen: toHyphen,
-	toCamel: toCamel,
+	jsonToCss: jsonToCss,
+	cssToJson: cssToJson,
 };
