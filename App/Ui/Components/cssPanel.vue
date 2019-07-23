@@ -1,6 +1,12 @@
 var settings = require('../../../rougeSettings.json');
 
+/**
+ * @VueComponent
+ */
 var panelComponent = {
+	/**
+	 * @type {function}
+	 */
 	data: function() {
 		return {
 			fontSize: 20,
@@ -21,7 +27,9 @@ var panelComponent = {
 				return;
 			}
 			var fontStyleImports = '';
-
+			var fontStyle = document.createElement('style');
+			fontStyle.type = 'text/css';
+			document.getElementsByTagName('head')[0].appendChild(fontStyle);
 			for (var item in this.selectedGoogleFont) {
 				if (this.selectedGoogleFont[item] !== 'none') {
 					fontStyleImports +=

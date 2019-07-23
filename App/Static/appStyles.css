@@ -179,7 +179,7 @@
 	color: #fff;
 }
 
-.css-panel__color-range_hue::-webkit-slider-runnable-track {
+#css-panel .css-panel__color-range_hue::-webkit-slider-runnable-track {
 	background-image: linear-gradient(
 		90deg,
 		rgba(255, 0, 0, 1) 0%,
@@ -191,10 +191,13 @@
 		rgba(255, 0, 0, 1) 100%
 	);
 }
-.css-panel__color-range_light::-webkit-slider-runnable-track {
+#css-panel .css-panel__color-range_light::-webkit-slider-runnable-track {
 	background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
 }
-.css-panel__color-range_sat::-webkit-slider-runnable-track,
-.css-panel__color-range_sat:focus::-webkit-slider-runnable-track {
+#css-panel .css-panel__color-range_sat::-webkit-slider-runnable-track,
+#css-panel .css-panel__color-range_sat:focus::-webkit-slider-runnable-track {
 	background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+#rf-content-container {
+	overflow: auto;
 }

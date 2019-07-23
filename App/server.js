@@ -30,7 +30,6 @@ const cssFileGenerator = require('./Ui/cssFileGenerator');
 const crud = require('./crud.js').crud;
 const appCrud = require('./appCrud.js').appCrud;
 
-const utils = require('./utils.js');
 var isProd = process.env.NODE_ENV === 'production';
 
 //Server Params

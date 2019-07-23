@@ -21,6 +21,7 @@ var colorComponent = {
 	data: function() {
 		return {
 			colorSet: {},
+			/* eslint-disable-next-line no-undef */
 			colorSetCollection: colorSetCollection,
 			dominantColor: { hue: 200, saturation: 0, light: 70 },
 			colorSetParamCollection: [],

@@ -1,7 +1,6 @@
 //app CSS. Will be processed by webpack
+//@ts-ignore
 require('../../App/Static/AppStyles.css');
-
-var colors = require('../Ui/colorGenerator');
 
 /* eslint-disable no-undef */
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
@@ -10,18 +9,19 @@ if (ENVIRONMENT === 'development') {
 	// @ts-ignore
 	require('webpack-hot-middleware/client?reload=true');
 }
-/* eslint-enable no-undef */
+//@ts-ignore
+var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selectorComponent;
+//@ts-ignore
+var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
+//@ts-ignore
+var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
 
-var cssPanelSelector = require('../Ui/Components/cssPanelSelector.js').selectorComponent;
-var cssPanelColor = require('../Ui/Components/cssPanelColor.js').colorComponent;
-var cssPanel = require('../Ui/Components/cssPanel.js').panelComponent;
-var messagesComponent = require('../Tools/Components/messages.js').messagesComponent;
-
-var selectorCollection = {};
+var messagesComponent = require('../Tools/Components/messages.vue').messagesComponent;
 
 var Vue = require('vue');
 var Vuex = require('vuex');
 
+//@ts-ignore
 Vue.use(Vuex);
 var store = new Vuex.Store({
 	state: {
@@ -38,6 +38,11 @@ var store = new Vuex.Store({
 		colorParameterCollection(state, data) {
 			state.colorParameterCollection = data;
 		},
+		/**
+		 *
+		 * @param {Object} state Vuex state
+		 * @param {String} coordinates color coordinates "[x,y]"
+		 */
 		currentColor(state, coordinates) {
 			if (state.currentSelector) {
 				state.selectorCollection[state.currentSelector.selector][state.currentSelector.property] = coordinates;
@@ -79,16 +84,19 @@ var store = new Vuex.Store({
 		},
 	},
 });
+//@ts-ignore
 Vue.component('css-panel-selector', cssPanelSelector);
+//@ts-ignore
 Vue.component('css-panel-color', cssPanelColor);
+//@ts-ignore
 Vue.component('css-panel-main', cssPanel);
+//@ts-ignore
 Vue.component('warning-component', messagesComponent);
 
 window.addEventListener('load', function() {
-	/* eslint-disable-next-line no-unused-vars */
-	var cssPanel = new Vue({
+	//@ts-ignore
+	new Vue({
 		el: '#css-panel',
 		store,
 	});
-	/* eslint-disable-next-line no-unused-vars */
 });
