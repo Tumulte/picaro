@@ -16,11 +16,13 @@ var selectorComponent = {
 	},
 	methods: {
 		storeSelectorAndProperty: function(selector, property) {
+			selector = utils.cssToJson(selector);
 			this.$store.commit('currentSelector', { selector: selector, property: property });
 		},
 
 		addSelector: function(value) {
 			value = utils.cssToJson(value);
+
 			if (value in this.selectorCollection) {
 				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
 			} else {
@@ -66,7 +68,6 @@ var selectorComponent = {
 		},
 		deleteSelector: function(selector) {
 			var self = this;
-
 			this.warningMessage = {
 				text: "Are you sure you want to delete %s and all it's properties ?",
 				type: 'warning',

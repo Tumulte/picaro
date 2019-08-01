@@ -5,110 +5,115 @@ html(lang=language)
     link(rel="stylesheet" type="text/css" href="/normalize.css")
     script.
         var colorSetCollection = !{colorSetCollection};
-
+        var isLogged = #{isLogged}
     block head
 block body
 block cssPanel
-    div(id="css-panel")
-        css-panel-selector( inline-template="" )
+    if(isLogged)
+        label(id="css-panel__toggle-label" for="css-panel__toggle") Toggle CSS panel
+        input(type="checkbox" id="css-panel__toggle" name="css-panel__toggle")
+        div(id="css-panel")
+            css-panel-selector( inline-template="" )
 
-            div(id="css-panel-selector" class="__panel")
-                warning-component( :warning-message="warningMessage")
-                ul( :key="selectorIndex")
-                    li(v-for="(propertyCollection, selector) in selectorCollection")
-                        span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{jsonToCss(selector)}}
-                        span(@click="deleteSelector(selector)") [X]
+                div(id="css-panel-selector" class="__panel")
+                    warning-component( :warning-message="warningMessage")
+                    ul( :key="selectorIndex")
+                        li(v-for="(propertyCollection, selector) in selectorCollection")
+                            span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{jsonToCss(selector)}}
+                            span(@click="deleteSelector(selector)") [X]
 
-                        ul
-                            li(v-for="(value, property) in propertyCollection" v-on:click="storeSelectorAndProperty(selector, property)" )
-                                span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{jsonToCss(property)}}
-                                div(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
-                                span(@click="deleteProperty(selector,property)") [X]
+                            ul
+                                li(v-for="(value, property) in propertyCollection" v-on:click="storeSelectorAndProperty(selector, property)" )
+                                    span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{jsonToCss(property)}}
+                                    div(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
+                                    span(@click="deleteProperty(selector,property)") [X]
+
+                            label
+                                div(class="css-panel__label") Add new property
+                                input(type="text"  class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
+                    label
+                        div(class="css-panel__label") Add new selector
+                        input(type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")
+
+            css-panel-color( inline-template="" )
+                div(id="css-panel-color" v-on:change="passValuesToStore()"  class="__panel")
+
+                    label
+                        div(class="css-panel__label") Color Combination
+                        select(v-model="colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
+                            option(value="none") Selectionner un schéma de couleur
+                            option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
+                    input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
+                    input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
+
+                    div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
+                        label
+                            span(class="css-panel__slider-label")  Hue
+                            input(type="range" class="css-panel__color-range_hue" min="0" max="360" v-model="dominantColor.hue")
+                        label
+                            span(class="css-panel__slider-label") Light
+                            input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="dominantColor.light")
+                        label
+                            span(class="css-panel__slider-label") Saturation
+                            input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
+                    div(v-for="(color, index) in this.$store.getters.colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
+                        label
+                            span(class="css-panel__slider-label") Hue
+                            input(type="range"  class="css-panel__color-range_hue" min="0" max="360" v-model="color.hue")
+                        label
+                            span(class="css-panel__slider-label") Light
+                            input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="color.light")
+                        label
+                            span(class="css-panel__slider-label") Saturation
+                            input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="color.saturation")
+                        label(v-for="(subColor, subIndex) in color.subCombination" v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
+
+                        button(v-on:click="removeColor(index)") Remove Color
+
+                    button(v-on:click="addColor") Add Color
+
+
+
+            css-panel-main(inline-template="" )
+                form(id="css-panel-font" method="post" :key="cssPanelIndex"  class="__panel" )
+                    warning-component( :warning-message="warningMessage")
+
+                    input(type="text" v-for="(colorData, name) in $store.getters.colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
+                    input(type="hidden"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
+
+                    fieldset
+                        legend Style Set
+                        select(class="css-panel__input" )
+                            option(value="none") Select a style set
+                            option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
+                    fieldset
+                        legend Fonts
 
                         label
-                            div(class="css-panel__label") Add new property
-                            input(type="text"  class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
-                label
-                    div(class="css-panel__label") Add new selector
-                    input(type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")
+                            div(class="css-panel__label") Font size (px)
+                            input(type="number" v-model="fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
+                        label
+                            div(class="css-panel__label") Main Font
+                            select( v-model="selectedGoogleFont.main" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('main')")
+                                option(value="none") Selectionner une font
+                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                        label
+                            div(class="css-panel__label") Alternative Font
+                            select( v-model="selectedGoogleFont.alt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('alt')")
+                                option(value="none") Selectionner une font
+                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                        label
+                            div(class="css-panel__label") Title Font
+                            select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
+                                option(value="none") Selectionner une font
+                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
 
-        css-panel-color( inline-template="" )
-            div(id="css-panel-color" v-on:change="passValuesToStore()"  class="__panel")
+                        input(type="hidden" name="id" value=styleSetId)
 
-                label
-                    div(class="css-panel__label") Color Combination
-                    select(v-model="colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
-                        option(value="none") Selectionner un schéma de couleur
-                        option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
-                input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
-                input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
-
-                div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
-                    label
-                        span(class="css-panel__slider-label")  Hue
-                        input(type="range" class="css-panel__color-range_hue" min="0" max="360" v-model="dominantColor.hue")
-                    label
-                        span(class="css-panel__slider-label") Light
-                        input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="dominantColor.light")
-                    label
-                        span(class="css-panel__slider-label") Saturation
-                        input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
-                div(v-for="(color, index) in this.$store.getters.colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
-                    label
-                        span(class="css-panel__slider-label") Hue
-                        input(type="range"  class="css-panel__color-range_hue" min="0" max="360" v-model="color.hue")
-                    label
-                        span(class="css-panel__slider-label") Light
-                        input(type="range"  class="css-panel__color-range_light" min="0" max="100"  v-model="color.light")
-                    label
-                        span(class="css-panel__slider-label") Saturation
-                        input(type="range"  class="css-panel__color-range_sat" min="0" max="100"  v-model="color.saturation")
-                    label(v-for="(subColor, subIndex) in color.subCombination" v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
-
-                    button(v-on:click="removeColor(index)") Remove Color
-
-                button(v-on:click="addColor") Add Color
-
-
-
-        css-panel-main(inline-template="" )
-            form(id="css-panel-font" method="post" :key="cssPanelIndex"  class="__panel")
-                input(type="text" v-for="(colorData, name) in $store.getters.colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
-                input(type="text"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
-
-                fieldset
-                    legend Style Set
-                    select(class="css-panel__input" )
-                        option(value="none") Select a style set
-                        option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
-                fieldset
-                    legend Fonts
-
-                    label
-                        div(class="css-panel__label") Font size (px)
-                        input(type="number" v-model="fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
-                    label
-                        div(class="css-panel__label") Main Font
-                        select( v-model="selectedGoogleFont.main" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('main')")
-                            option(value="none") Selectionner une font
-                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                    label
-                        div(class="css-panel__label") Alternative Font
-                        select( v-model="selectedGoogleFont.alt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('alt')")
-                            option(value="none") Selectionner une font
-                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-                    label
-                        div(class="css-panel__label") Title Font
-                        select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
-                            option(value="none") Selectionner une font
-                            option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
-
-                    input(type="text" name="id" value=styleSetId)
-
-                fieldset
-                    legend Save
-                    label
-                        div(class="css-panel__label") Config name
-                        input(type="text" class="css-panel__input" name="styleSet" value=styleSetName)
-                    button(formaction='/admin/settings/overwrite') Enregistrer
-                    button(formaction='/admin/settings/new') Enregistrer une nouvelle configuration
+                    fieldset
+                        legend Save
+                        label
+                            div(class="css-panel__label") Config name
+                            input(type="text" class="css-panel__input" name="styleSet" v-bind:value="styleSet.styleSet")
+                        button(v-if="styleSet.styleSet" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Enregistrer
+                        button(formaction='/admin/settings/new') Enregistrer une nouvelle configuration

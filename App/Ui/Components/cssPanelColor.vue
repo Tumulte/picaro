@@ -24,6 +24,7 @@ var colorComponent = {
 			/* eslint-disable-next-line no-undef */
 			colorSetCollection: colorSetCollection,
 			dominantColor: { hue: 200, saturation: 0, light: 70 },
+			dominant: '',
 			colorSetParamCollection: [],
 			colorSetParamString: '',
 			variationLightAmt: 10,
@@ -90,7 +91,7 @@ var colorComponent = {
 		},
 		passValuesToStore: function() {
 			var dataToBeStored = {
-				dominant: this.colorSet.dominant,
+				dominant: this.dominant,
 				colorSetParamString: this.colorSetParamString,
 				variationLightAmt: this.variationLightAmt,
 				variationSatAmt: this.variationSatAmt,
@@ -119,6 +120,7 @@ var colorComponent = {
 					colorSet = new colors.generateColorSet(data.dominantColor);
 
 					self.colorSet = colorSet;
+					self.dominant = data.dominantColor;
 					self.dominantColor = colorUtils.hexToHsl(data.dominantColor).getValueCollection();
 					self.colorSetParamString = data.colorSetParamString;
 					self.colorSetParamCollection = JSON.parse(data.colorSetParamString);

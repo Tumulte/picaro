@@ -1,5 +1,6 @@
 var timeOut = require('../../../rougeSettings.json').warningTimeout;
 var parseMessage = require('../../utils').parseMessage;
+var hash = require('object-hash');
 
 var messagesComponent = {
 	props: ['warningMessage'],
@@ -35,6 +36,20 @@ var messagesComponent = {
 			this.messageCollectionConfirm.splice(index, 1);
 			return;
 		},
+		checkDuplicates: function(messageHash) {
+			var hasDuplicates = false;
+			this.messageCollectionConfirm.forEach(function(item) {
+				if (item.hash === messageHash) {
+					hasDuplicates = true;
+				}
+			});
+			this.messageCollection.forEach(function(item) {
+				if (item.hash === messageHash) {
+					hasDuplicates = true;
+				}
+			});
+			return hasDuplicates;
+		},
 	},
 
 	watch: {
@@ -47,15 +62,23 @@ var messagesComponent = {
 
 		warningMessage: function() {
 			var warningMessage = parseMessage(this.warningMessage.text, this.warningMessage.textVariable);
-
+			var messageHash = hash(this.warningMessage);
+			if (this.checkDuplicates(messageHash)) {
+				return;
+			}
 			if (this.warningMessage.callback) {
 				this.messageCollectionConfirm.push({
 					type: '__' + this.warningMessage.type,
 					text: warningMessage,
 					callback: this.warningMessage.callback,
+					hash: messageHash,
 				});
 			} else {
-				this.messageCollection.push({ type: '__' + this.warningMessage.type, text: warningMessage });
+				this.messageCollection.push({
+					type: '__' + this.warningMessage.type,
+					text: warningMessage,
+					hash: messageHash,
+				});
 			}
 		},
 	},

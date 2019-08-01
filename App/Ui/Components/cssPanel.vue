@@ -1,4 +1,5 @@
 var settings = require('../../../rougeSettings.json');
+var utils = require('../../utils');
 
 /**
  * @VueComponent
@@ -12,9 +13,11 @@ var panelComponent = {
 			fontSize: 20,
 			googleFonts: this.getGoogleFonts,
 			selectedGoogleFont: { main: 'none', alt: 'none', title: 'none' },
-			styleSetCollection: {},
+			styleSetCollection: [],
+			styleSet: {},
 			cssPanelMain: 1,
 			selectorIndex: 1,
+			warningMessage: '',
 		};
 	},
 	methods: {
@@ -43,7 +46,7 @@ var panelComponent = {
 			if (type === 'main') {
 				this.selectorCollection.html.fontFamily = this.selectedGoogleFont[type];
 			} else if (type === 'title') {
-				var header = 'h1,h2,h3,h4,h5,h6';
+				var header = 'h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6';
 				this.selectorCollection[header].fontFamily = this.selectedGoogleFont[type];
 			} else if (type === 'alt') {
 				this.selectorCollection.CLSS__altfont = {};
@@ -57,6 +60,33 @@ var panelComponent = {
 		updateIndex: function() {
 			this.selectorIndex = this.selectorIndex === 1 ? 0 : 1;
 			return 'main' + this.selectorIndex;
+		},
+		checkSave: function(event) {
+			var self = this;
+			this.warningMessage = {
+				text: 'Are you sure you want to overwrite this style set ?',
+				type: 'warning',
+				callback: function() {
+					var form = event.target.form;
+					var formData = new FormData(form);
+					var xhr = new XMLHttpRequest();
+
+					xhr.open('POST', event.target.formAction);
+					xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+					xhr.onload = function() {
+						if (xhr.status !== 200) {
+							self.warningMessage = {
+								type: 'error',
+								text: 'Request failed.  Returned status of ' + xhr.status,
+							};
+						} else {
+							self.warningMessage = { type: 'success', text: 'Saved successfully' };
+						}
+					};
+					xhr.send(utils.urlencodeFormData(formData));
+				},
+			};
 		},
 	},
 	mounted: function() {
@@ -81,7 +111,7 @@ var panelComponent = {
 				if (styleRequest.status === 200) {
 					var data = JSON.parse(styleRequest.responseText);
 
-					self.styleSetCollection = data;
+					self.styleSet = data;
 					self.fontSize = data.fontSize;
 					self.selectedGoogleFont.main = data.fontFamilyMain;
 					self.selectedGoogleFont.title = data.fontFamilyTitle;

@@ -201,3 +201,30 @@
 #rf-content-container {
 	overflow: auto;
 }
+.component-message {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	width: 250px;
+}
+#css-panel-selector {
+	z-index: 20 !important;
+}
+#css-panel__toggle-label {
+	cursor: pointer;
+	position: absolute;
+	z-index: 100000;
+	right: 0;
+	top: 0;
+}
+#css-panel__toggle {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+}
+#css-panel__toggle + #css-panel {
+	display: none;
+}
+#css-panel__toggle:checked + #css-panel {
+	display: block;
+}

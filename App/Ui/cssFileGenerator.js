@@ -33,6 +33,7 @@ var addGoogleFont = function(font) {
  * @param {Object} styleSet The current selected app styleset
  */
 var generateCSSFile = function(appName, styleSet) {
+	console.info('SSSSSSSSTTTTGGGG', styleSet);
 	var customCSS = JSON.parse(styleSet.selectorSetParamString);
 	var colorSet = new colors.generateColorSet(styleSet.dominant).generate(
 		JSON.parse(styleSet.colorSetParamString),

@@ -85,7 +85,6 @@ var extractRemovedSelector = function(selectorCollection, previousSelectorCollec
  */
 var generateCss = function(selectorCollection) {
 	selectorCollection = JSON.parse(JSON.stringify(selectorCollection));
-
 	/**
 	 * @type {array|false}
 	 */

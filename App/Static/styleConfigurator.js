@@ -9,6 +9,7 @@ if (ENVIRONMENT === 'development') {
 	// @ts-ignore
 	require('webpack-hot-middleware/client?reload=true');
 }
+
 //@ts-ignore
 var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selectorComponent;
 //@ts-ignore
@@ -84,19 +85,22 @@ var store = new Vuex.Store({
 		},
 	},
 });
-//@ts-ignore
-Vue.component('css-panel-selector', cssPanelSelector);
-//@ts-ignore
-Vue.component('css-panel-color', cssPanelColor);
-//@ts-ignore
-Vue.component('css-panel-main', cssPanel);
-//@ts-ignore
-Vue.component('warning-component', messagesComponent);
 
-window.addEventListener('load', function() {
+if (isLogged) {
 	//@ts-ignore
-	new Vue({
-		el: '#css-panel',
-		store,
+	Vue.component('css-panel-selector', cssPanelSelector);
+	//@ts-ignore
+	Vue.component('css-panel-color', cssPanelColor);
+	//@ts-ignore
+	Vue.component('css-panel-main', cssPanel);
+	//@ts-ignore
+	Vue.component('warning-component', messagesComponent);
+
+	window.addEventListener('load', function() {
+		//@ts-ignore
+		new Vue({
+			el: '#css-panel',
+			store,
+		});
 	});
-});
+}

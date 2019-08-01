@@ -1,0 +1,11 @@
+if (messages.error)
+    div #{messages.error}
+
+
+form(action="/admin/login" method="post")
+    label Username:
+        input(type="text" name="username")
+    label Password:
+        input(type="password" name="password")
+    label
+        input(type="submit" value="Log In")

@@ -1,49 +1,44 @@
 const express = require('express');
 
-//DB
-//@ts-ignore
+/*DATABASE INITIALISATION */
 const low = require('lowdb');
-//@ts-ignore
 const shortid = require('shortid');
-//@ts-ignore
 const FileSync = require('lowdb/adapters/FileSync');
+//rougeFramework own database (parameters, styles, users…)
 var appAdapter = new FileSync('./App/Data/appData.json');
 var appDb = low(appAdapter);
-
+//Apps database
 const adapter = new FileSync('./App/Data/data.json');
 const db = low(adapter);
 
-//Tools
+/* EXPRESS TOOLS */
 const bodyParser = require('body-parser');
-//@ts-ignore
 const methodOverride = require('method-override');
 
-//rougeFramework Settings
-/**
- * @type {Object}
- */
+/* rougeFramework Settings */
 const settings = require('./../rougeSettings.json');
+
 //rougeFramework UI
-const tableToForm = require('./formGenerator').tableToForm;
+const tableToForm = require('./formGenerator');
 const cssFileGenerator = require('./Ui/cssFileGenerator');
 //rougeFramework Back End
-const crud = require('./crud.js').crud;
-const appCrud = require('./appCrud.js').appCrud;
+const crud = require('./crud.js');
+const appCrud = require('./appCrud.js');
 
 var isProd = process.env.NODE_ENV === 'production';
 
 //Server Params
 var port = 8080;
 var app = express();
+
 app.use(methodOverride('_method'));
 if (!isProd) {
 	//webpack
 	const webpack = require('webpack');
 	const config = require('../webpack.config.dev.js');
 	const compiler = webpack(config);
-	//@ts-ignore
 	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
-	//@ts-ignore
+	// @ts-ignore
 	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
 	//webpack
 	app.use(webpackDevMiddleware);
@@ -51,37 +46,11 @@ if (!isProd) {
 }
 //Parser
 app.use(bodyParser.json());
-app.use(
-	bodyParser.urlencoded({
-		extended: true,
-	})
-);
+app.use(bodyParser.urlencoded());
 
-app.use((req, res, next) => {
-	// -----------------------------------------------------------------------
-	// authentication middleware
-
-	const auth = { login: settings.auth.id, password: settings.auth.pw }; // change this
-
-	// parse login and password from headers
-	const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
-	const [login, password] = new Buffer(b64auth, 'base64').toString().split(':');
-
-	// Verify login and password are set and correct
-	if (login && password && login === auth.login && password === auth.password) {
-		// Access granted...
-		return next();
-	}
-
-	// Access denied...
-	res.set('WWW-Authenticate', 'Basic realm="401"'); // change this
-	res.status(401).send('Authentication required.'); // custom message
-
-	// -----------------------------------------------------------------------
-});
 //API
 var api = crud(db);
-app.use('/api', api);
+app.use('/api', checkAuthenticated, api);
 
 //Template Engine
 app.set('view engine', 'pug');
@@ -92,14 +61,18 @@ app.use(express.static('node_modules/normalize.css'));
 app.use(express.static('App/Dist'));
 app.use('/images', express.static('App/Static/images'));
 //Per apps Static Files
+
 for (var application in settings.applications) {
 	app.use(
+		// @ts-ignore
 		'/' + settings.applications[application] + '/static',
+		// @ts-ignore
 		express.static('app/' + settings.applications[application] + '/static')
 	);
 }
 
 //Global template settings
+// @ts-ignore
 var currentApplicationSettings = settings.applications[settings.defaultApp];
 currentApplicationSettings.applicationName = settings.defaultApp;
 
@@ -110,9 +83,15 @@ app.use('/appapi', appApi);
 //TODO generate a default styleset with any app
 
 app.use('/:app', function(req, res, next) {
-	if (req.params.app in settings.applications) {
-		currentApplicationSettings = settings.applications[req.params.app];
-		currentApplicationSettings.applicationName = req.params.app;
+	/**
+	 * @type {string}
+	 */
+	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
+
+	if (upperCasedApp in settings.applications) {
+		// @ts-ignore
+		currentApplicationSettings = settings.applications[upperCasedApp];
+		currentApplicationSettings.applicationName = upperCasedApp;
 	} else if (req.params.app !== 'admin') {
 		res.status(404).send('This page does not exist');
 	}
@@ -122,60 +101,93 @@ app.use(function(req, res, next) {
 	res.locals.environment = process.env.NODE_ENV;
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
-	res.locals.styleSetName = '';
 
 	res.locals.styleSetId = currentApplicationSettings.styleSet;
 	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSetPresets').value());
 	next();
 });
 
-//Pages
-app.get('/', function(req, res) {
-	app.set('views', __dirname + '/../app' + settings.defaultApp + '/views');
-	res.render('index');
-});
+//Auth
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const initializePassport = require('./passportConfig');
 
-//cssPanel
-app.get('/:app', function(req, res) {
-	app.set('views', __dirname + '/../app' + req.params.app + '/views');
-	res.render('index');
-});
+app.use(flash());
+app.use(
+	session({
+		secret: settings.sessionSecret,
+		resave: true,
+		saveUninitialized: false,
+		cookie: { maxAge: 6000000 },
+	})
+);
 
-app.use('/edit/:app/:table/:id', function(req, res, next) {
-	var data = db
-		.get(req.params.app + '_' + req.params.table)
-		.find({
-			id: req.params.id,
-		})
-		.value();
-	req.params.method = 'put';
-	var form = tableToForm(req.params, data);
-	//@ts-ignore
-	req.form = form;
+/**
+ *
+ * @param {string} value
+ * @param {string} type
+ * @returns {object} The user data
+ */
+var getUser = function(value, type = 'username') {
+	/**
+	 * @type {object}
+	 */
+	var parameters = {};
+	parameters[type] = value;
+	return (
+		appDb
+			.get('users')
+			// @ts-ignore
+			.find(parameters)
+			.value()
+	);
+};
+app.use(passport.initialize());
 
+initializePassport(passport, getUser);
+app.post(
+	'/admin/login',
+	checkNotAuthenticated,
+	passport.authenticate('local', {
+		successRedirect: '/' + currentApplicationSettings.applicationName,
+		failureRedirect: '/admin/login',
+		failureFlash: true,
+	})
+);
+app.use(passport.session());
+/**
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ */
+function checkAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+
+	res.redirect('/' + currentApplicationSettings.applicationName + '/login');
+}
+/**
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ */
+function checkNotAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		return res.redirect('/' + currentApplicationSettings.applicationName);
+	}
 	next();
+}
+app.get('/admin/login', checkNotAuthenticated, function(req, res) {
+	app.set('views', __dirname + '/Views');
+	res.render('login');
 });
-app.use('/add/:app/:table/', function(req, res, next) {
-	req.params.method = 'post';
-	var form = tableToForm(req.params);
-	//@ts-ignore
-	req.form = form;
-
-	next();
-});
-app.get('/edit/:app/:table/:id', function(req, res) {
-	app.set('views', './app' + req.params.app + '/views');
-	res.render('edit', {
-		//@ts-ignore
-		form: req.form,
-	});
-});
-app.get('/add/:app/:table', function(req, res) {
-	app.set('views', './app' + req.params.app + '/views');
-	res.render('add', {
-		//@ts-ignore
-		form: req.form,
-	});
+app.get('/admin/logout', function(req, res) {
+	req.logOut();
+	res.redirect('/');
 });
 
 //TODO add setup. Check initiateApp.js
@@ -191,6 +203,7 @@ app.post('/admin/settings/:type', function(req, res) {
 	if (req.params.type === 'overwrite') {
 		appDb
 			.get(currentApplicationSettings.applicationName)
+			// @ts-ignore
 			.find({ id: req.body.id })
 			.assign(req.body)
 			.write();
@@ -199,12 +212,81 @@ app.post('/admin/settings/:type', function(req, res) {
 
 		appDb
 			.get(currentApplicationSettings.applicationName)
+			// @ts-ignore
 			.push(req.body)
 			.write();
 	}
 	cssFileGenerator.generateCSSFile(currentApplicationSettings.applicationName, req.body);
 
 	res.send('settings for ' + currentApplicationSettings.applicationName + ' saved');
+});
+
+//Pages
+app.get('/', function(req, res) {
+	res.locals.isLogged = req.isAuthenticated();
+	app.set('views', __dirname + '/../app' + settings.defaultApp + '/views');
+	res.render('index');
+});
+
+app.get('/:app', function(req, res) {
+	res.locals.isLogged = req.isAuthenticated();
+	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
+	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
+	res.render('index');
+});
+
+app.get('/:app/:view', function(req, res) {
+	res.locals.isLogged = req.isAuthenticated();
+	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
+	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
+	res.render(req.params.view);
+});
+
+app.use('/edit/:app/:table/:id', function(req, res, next) {
+	var data = db
+		.get(req.params.app + '_' + req.params.table)
+		// @ts-ignore
+		.find({
+			id: req.params.id,
+		})
+		.value();
+	req.params.method = 'put';
+	var form = tableToForm(req.params, data);
+	//@ts-ignore
+	req.form = form;
+
+	next();
+});
+
+app.use(
+	'/add/:app/:table/',
+	/**
+	 *
+	 * @param {express.Request} req
+	 * @param {express.Response} res
+	 * @param {express.NextFunction} next
+	 */
+	function(req, res, next) {
+		req.params.method = 'post';
+		var form = tableToForm(req.params);
+		req.form = form;
+
+		next();
+	}
+);
+app.get('/edit/:app/:table/:id', function(req, res) {
+	app.set('views', './app' + req.params.app + '/views');
+	res.render('edit', {
+		//@ts-ignore
+		form: req.form,
+	});
+});
+app.get('/add/:app/:table', function(req, res) {
+	app.set('views', './app' + req.params.app + '/views');
+	res.render('add', {
+		//@ts-ignore
+		form: req.form,
+	});
 });
 
 //Server

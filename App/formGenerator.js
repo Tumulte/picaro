@@ -45,6 +45,4 @@ var tableToForm = function tableToForm(params, data) {
 	html += '<button>Envoyer</button></form>';
 	return html;
 };
-module.exports = {
-	tableToForm: tableToForm,
-};
+module.exports = tableToForm;

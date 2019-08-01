@@ -49,6 +49,4 @@ var appCrud = function appCrud(appDb, currentApp) {
 
 	return dataRouter;
 };
-module.exports = {
-	appCrud: appCrud,
-};
+module.exports = appCrud;

@@ -69,6 +69,4 @@ var crud = function crud(db) {
 		});
 	return dataRouter;
 };
-module.exports = {
-	crud: crud,
-};
+module.exports = crud;
