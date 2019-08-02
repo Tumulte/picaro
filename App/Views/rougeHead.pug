@@ -88,25 +88,29 @@ block cssPanel
                             option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
                     fieldset
                         legend Fonts
+                        label Google Fonts
+                            input(type="radio" name="font-type" v-model="fontType" value="google")
+                        label Local Fonts
+                            input(type="radio" name="font-type" v-model="fontType" value="local")
 
                         label
                             div(class="css-panel__label") Font size (px)
                             input(type="number" v-model="fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
                         label
                             div(class="css-panel__label") Main Font
-                            select( v-model="selectedGoogleFont.main" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('main')")
+                            select( v-model="selectedFont.main" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('main')")
                                 option(value="none") Selectionner une font
-                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                                option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
                         label
                             div(class="css-panel__label") Alternative Font
-                            select( v-model="selectedGoogleFont.alt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('alt')")
+                            select( v-model="selectedFont.alt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('alt')")
                                 option(value="none") Selectionner une font
-                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                                option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
                         label
                             div(class="css-panel__label") Title Font
-                            select( v-model="selectedGoogleFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
+                            select( v-model="selectedFont.title" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('title')")
                                 option(value="none") Selectionner une font
-                                option(v-for="font in googleFonts" v-bind:value="font.family") {{font.family}}
+                                option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
 
                         input(type="hidden" name="id" value=styleSetId)
 

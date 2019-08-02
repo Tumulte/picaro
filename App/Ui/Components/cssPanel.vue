@@ -11,8 +11,8 @@ var panelComponent = {
 	data: function() {
 		return {
 			fontSize: 20,
-			googleFonts: this.getGoogleFonts,
-			selectedGoogleFont: { main: 'none', alt: 'none', title: 'none' },
+			fontCollection: this.getfontCollection,
+			selectedFont: { main: 'none', alt: 'none', title: 'none' },
 			styleSetCollection: [],
 			styleSet: {},
 			cssPanelMain: 1,
@@ -26,31 +26,31 @@ var panelComponent = {
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
 		updateCssFont: function(type) {
-			if (this.selectedGoogleFont[type] === 'none') {
+			if (this.selectedFont[type] === 'none') {
 				return;
 			}
 			var fontStyleImports = '';
 			var fontStyle = document.createElement('style');
 			fontStyle.type = 'text/css';
 			document.getElementsByTagName('head')[0].appendChild(fontStyle);
-			for (var item in this.selectedGoogleFont) {
-				if (this.selectedGoogleFont[item] !== 'none') {
+			for (var item in this.selectedFont) {
+				if (this.selectedFont[item] !== 'none') {
 					fontStyleImports +=
 						'@import url("https://fonts.googleapis.com/css?family=' +
-						encodeURI(this.selectedGoogleFont[item]) +
+						encodeURI(this.selectedFont[item]) +
 						'&display=swap");\n';
 				}
 			}
 			fontStyle.innerHTML = fontStyleImports;
 
 			if (type === 'main') {
-				this.selectorCollection.html.fontFamily = this.selectedGoogleFont[type];
+				this.selectorCollection.html.fontFamily = this.selectedFont[type];
 			} else if (type === 'title') {
 				var header = 'h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6';
-				this.selectorCollection[header].fontFamily = this.selectedGoogleFont[type];
+				this.selectorCollection[header].fontFamily = this.selectedFont[type];
 			} else if (type === 'alt') {
 				this.selectorCollection.CLSS__altfont = {};
-				this.selectorCollection.CLSS__altfont.fontFamily = this.selectedGoogleFont[type];
+				this.selectorCollection.CLSS__altfont.fontFamily = this.selectedFont[type];
 			}
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
@@ -98,7 +98,7 @@ var panelComponent = {
 				if (request.status === 200) {
 					var data = JSON.parse(request.responseText);
 
-					self.googleFonts = data.items;
+					self.fontCollection = data.items;
 				}
 			}
 		};
@@ -113,9 +113,9 @@ var panelComponent = {
 
 					self.styleSet = data;
 					self.fontSize = data.fontSize;
-					self.selectedGoogleFont.main = data.fontFamilyMain;
-					self.selectedGoogleFont.title = data.fontFamilyTitle;
-					self.selectedGoogleFont.alt = data.fontFamilyAlt;
+					self.selectedFont.main = data.fontFamilyMain;
+					self.selectedFont.title = data.fontFamilyTitle;
+					self.selectedFont.alt = data.fontFamilyAlt;
 					self.$store.commit('selectorCollection', JSON.parse(data.selectorSetParamString));
 				}
 			}

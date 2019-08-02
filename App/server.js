@@ -38,7 +38,6 @@ if (!isProd) {
 	const config = require('../webpack.config.dev.js');
 	const compiler = webpack(config);
 	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
-	// @ts-ignore
 	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
 	//webpack
 	app.use(webpackDevMiddleware);
@@ -138,7 +137,6 @@ var getUser = function(value, type = 'username') {
 	return (
 		appDb
 			.get('users')
-			// @ts-ignore
 			.find(parameters)
 			.value()
 	);
@@ -259,34 +257,30 @@ app.use('/edit/:app/:table/:id', function(req, res, next) {
 });
 
 app.use(
-	'/add/:app/:table/',
+	'/admin/add/:app/:table/',
 	/**
 	 *
-	 * @param {express.Request} req
 	 * @param {express.Response} res
 	 * @param {express.NextFunction} next
+	 * @param {express.Request} req
+	 *
 	 */
 	function(req, res, next) {
 		req.params.method = 'post';
+
 		var form = tableToForm(req.params);
-		req.form = form;
+		res.locals.form = form;
 
 		next();
 	}
 );
 app.get('/edit/:app/:table/:id', function(req, res) {
 	app.set('views', './app' + req.params.app + '/views');
-	res.render('edit', {
-		//@ts-ignore
-		form: req.form,
-	});
+	res.render('edit');
 });
-app.get('/add/:app/:table', function(req, res) {
+app.get('/admin/add/:app/:table', function(req, res) {
 	app.set('views', './app' + req.params.app + '/views');
-	res.render('add', {
-		//@ts-ignore
-		form: req.form,
-	});
+	res.render('add');
 });
 
 //Server
