@@ -3,6 +3,10 @@
  */
 var colorUtils = function() {
 	/**
+	 * @type {import("../Typings/global").Color}
+	 */
+	this.color;
+	/**
 	 *
 	 * @param {string} hex #RRGGBB
 	 */
@@ -20,21 +24,29 @@ var colorUtils = function() {
 		}
 		return hex.toUpperCase();
 	};
-
+	/**
+	 * @param {import("../Typings/global").Color} color
+	 */
 	this.hexToRgb = function(color) {
 		this.color = color;
 
 		if (this.color.red !== undefined) {
-			return this.color;
+			return this;
 		}
 		var hex = this.color.replace('#', '');
 		if (hex.length === 3) {
 			//if 3 digit hex : double each digit
 			hex = hex
 				.split('')
-				.map(function(letter) {
-					return letter + letter + '';
-				})
+				.map(
+					/**
+					 *
+					 * @param {string} letter
+					 */
+					function(letter) {
+						return letter + letter + '';
+					}
+				)
 				.join('');
 		}
 
@@ -48,6 +60,9 @@ var colorUtils = function() {
 		};
 		return this;
 	};
+	/**
+	 * @param  {import("../Typings/global").Color} color
+	 */
 	this.rgbToHex = function(color) {
 		this.color = color;
 
@@ -55,8 +70,7 @@ var colorUtils = function() {
 			this.color = '#' + toHex(this.color.red) + toHex(this.color.green) + toHex(this.color.blue);
 		} else {
 			//TODO generic errors for RBG or HEX
-			/* eslint-disable-next-line no-console */
-			console.error('The rgbToHex method require a "{red: XXX, green: YYY, blue: ZZZ}" object as input value');
+			throw new Error('The rgbToHex method require a "{red: XXX, green: YYY, blue: ZZZ}" object as input value');
 		}
 		return this;
 	};
@@ -165,7 +179,6 @@ var colorUtils = function() {
 	 */
 	this.hexToHsl = function(color) {
 		color = this.hexToRgb(color).getValueCollection();
-
 		color = this.rgbToHsl(color).getValueCollection();
 		this.color = color;
 
@@ -176,7 +189,6 @@ var colorUtils = function() {
 	 */
 	this.hslToHex = function(color) {
 		color = this.hslToRgb(color).getValueCollection();
-
 		color = this.rgbToHex(color).getValueCollection();
 		this.color = color;
 		return this;
@@ -206,7 +218,10 @@ var colorUtils = function() {
 			);
 		}
 	};
-	this.getValueCollection = function() {
+	this.getValueCollection = function(color) {
+		if (typeof color !== 'undefined') {
+			this.color = color;
+		}
 		var re = new RegExp(/^#([0-9a-f]{3}){1,2}$/i);
 
 		if (typeof this.color === 'object') {
@@ -217,11 +232,14 @@ var colorUtils = function() {
 
 			return colorObject;
 		} else if (this.color.indexOf('hsl(') > -1) {
-			colorValues = this.color.split(')')[0].split(',');
+			colorValues = this.color
+				.split('(')[1]
+				.split(')')[0]
+				.split(',');
 			colorObject = {
-				hue: colorValues[0],
-				saturation: colorValues[1],
-				light: colorValues[2],
+				hue: parseInt(colorValues[0]),
+				saturation: parseInt(colorValues[1]),
+				light: parseInt(colorValues[2]),
 			};
 			return colorObject;
 		} else if (re.test(this.color)) {

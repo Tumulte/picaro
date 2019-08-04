@@ -38,6 +38,7 @@ if (!isProd) {
 	const config = require('../webpack.config.dev.js');
 	const compiler = webpack(config);
 	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+	// @ts-ignore
 	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
 	//webpack
 	app.use(webpackDevMiddleware);
@@ -45,7 +46,7 @@ if (!isProd) {
 }
 //Parser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //API
 var api = crud(db);
@@ -137,6 +138,7 @@ var getUser = function(value, type = 'username') {
 	return (
 		appDb
 			.get('users')
+			// @ts-ignore
 			.find(parameters)
 			.value()
 	);

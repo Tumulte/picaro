@@ -18,6 +18,7 @@ var panelComponent = {
 			cssPanelMain: 1,
 			selectorIndex: 1,
 			warningMessage: '',
+			fontType: 'google',
 		};
 	},
 	methods: {
@@ -146,6 +147,4 @@ var panelComponent = {
 	},
 };
 
-module.exports = {
-	panelComponent: panelComponent,
-};
+module.exports = panelComponent;

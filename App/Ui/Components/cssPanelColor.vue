@@ -132,6 +132,4 @@ var colorComponent = {
 		styleRequest.send();
 	},
 };
-module.exports = {
-	colorComponent: colorComponent,
-};
+module.exports = colorComponent;

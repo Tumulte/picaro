@@ -83,6 +83,4 @@ var messagesComponent = {
 		},
 	},
 };
-module.exports = {
-	messagesComponent: messagesComponent,
-};
+module.exports = messagesComponent;

@@ -5,6 +5,7 @@
 	--app-ratio-s: 0.8em !important;
 	--app-ratio-xs: 0.4em !important;
 	--app-color: #333 !important;
+	--app-tonic: #f15e5e !important;
 }
 
 #css-panel {
@@ -19,6 +20,7 @@
 	border-left: solid 4px var(--app-color) !important;
 	box-shadow: 0px -1px 17px rgba(0, 0, 0, 0.7) !important;
 }
+/* Core config */
 #css-panel * {
 	margin: 0 !important;
 	padding: 0 !important;
@@ -26,109 +28,184 @@
 	font-size: 14px !important;
 	line-height: 1.3em !important;
 }
-#css-panel button {
-	width: calc(100% - 2 * var(--app-ratio-s)) !important;
-	padding: var(--app-ratio-s) !important;
-	margin: var(--app-ratio-s) !important;
-	background: #fff !important;
-	border: var(--app-color) var(--app-ratio-xs) solid !important;
-	color: var(--app-color) !important;
+.css-panel_sketchy {
+	position: relative;
+	svg {
+		position: absolute;
+		top: -5px;
+		left: -5px;
+		z-index: -1;
+	}
+	path {
+		transition: stroke 0.2s ease;
+	}
 }
-#css-panel fieldset {
-	padding: 0 !important;
-	border: none !important;
-	margin: 0 !important;
+.css-panel_sketchy:hover path {
+	stroke: rgb(234, 175, 101) !important;
 }
-#css-panel legend {
-	margin: 0 !important;
-	border: none !important;
-	color: #fff !important;
-	background-color: var(--app-color) !important;
-	width: 100% !important;
-	text-transform: uppercase !important;
-	padding: var(--app-ratio-s) !important;
-	position: relative !important;
+/* Components */
+#css-panel {
+	/* Common styling to all sub components */
+	#css-panel__color,
+	#css-panel__selector,
+	#css-panel__main {
+		overflow: auto;
+		height: 100%;
+	}
+	#css-panel__selector {
+		z-index: 20 !important;
+		position: fixed !important;
+		top: 0 !important;
+		bottom: 0 !important;
+		width: 300px !important;
+		right: 600px !important;
+		background: #fff !important;
+	}
+	#css-panel__color {
+		position: fixed !important;
+		top: 0 !important;
+		bottom: 0 !important;
+		width: 300px !important;
+		right: 300px !important;
+		background: #fff !important;
+	}
 }
-#css-panel [contenteditable] {
-	background: #efece5;
-	color: #000;
-}
-#css-panel .css-panel__input {
-	padding: var(--app-ratio) var(--app-ratio-s) calc(var(--app-ratio) / 4) var(--app-ratio-s) !important;
-	width: 100% !important;
-	margin: -1.3em 0 0 0 !important;
-	border: none !important;
-	border-top: 1px solid var(--app-color) !important;
-}
+/* Basic HTML */
+#css-panel {
+	button {
+		width: calc(100% - 2 * var(--app-ratio-s)) !important;
+		padding: var(--app-ratio-s) !important;
+		margin: var(--app-ratio-s) !important;
+		background: #fff !important;
+		border: var(--app-color) var(--app-ratio-xs) solid !important;
+		color: var(--app-color) !important;
+	}
+	fieldset {
+		padding: 0 !important;
+		border: none !important;
+		margin: 0 !important;
+	}
+	legend {
+		margin: 0 !important;
+		border: none !important;
+		color: #fff !important;
+		background-color: var(--app-color) !important;
+		width: 100% !important;
+		text-transform: uppercase !important;
+		padding: var(--app-ratio-s) !important;
+		position: relative !important;
+	}
 
-#css-panel .css-panel__input::after {
-	content: '' !important;
-	background-image: url('/images/seamless_paper_texture.png') !important;
-	opacity: 1 !important;
-	top: 0 !important;
-	left: 0 !important;
-	bottom: 0 !important;
-	right: 0 !important;
-	position: absolute !important;
-}
-#css-panel label {
-	display: block !important;
-	position: relative !important;
-	z-index: 10 !important;
-	text-transform: uppercase !important;
-}
-#css-panel .css-panel__label {
-	position: relative !important;
-	display: inline-block !important;
-	z-index: 10 !important;
-	color: var(--app-color) !important;
-	margin: 0 var(--app-ratio-xs) !important;
-}
-#css-panel .__panel {
-	overflow: auto;
-	height: 100%;
-}
-#css-panel-selector {
-	position: fixed !important;
-	top: 0 !important;
-	bottom: 0 !important;
-	width: 300px !important;
-	right: 600px !important;
-	background: #fff !important;
-}
-#css-panel-selector ul,
-#css-panel-selector li {
-	margin: 0 !important;
-	padding: 0 !important;
-}
-#css-panel-selector li li {
-	background: #fff !important;
-	color: #000 !important;
-}
-#css-panel-selector li div {
-	display: inline-block !important;
-	margin: 0 var(--app-ratio-xs) !important;
-}
+	ul,
+	li {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+	li li {
+		/* background: #fff !important; */
+		color: #000 !important;
+	}
+	li div {
+		display: inline-block !important;
+		margin: 0 var(--app-ratio-xs) !important;
+	}
+	li {
+		list-style: none !important;
+		/*background: #000 !important; */
+		padding: var(--app-ratio-s) !important;
+	}
+	input {
+		padding: var(--app-ratio) var(--app-ratio-s) calc(var(--app-ratio) / 4) var(--app-ratio-s) !important;
+		width: 100% !important;
+		margin: -1.3em 0 0 0 !important;
+		border: none !important;
+		border-top: 1px solid var(--app-color) !important;
+	}
+	input::after {
+		content: '' !important;
+		background-image: url('/images/seamless_paper_texture.png') !important;
+		opacity: 1 !important;
+		top: 0 !important;
+		left: 0 !important;
+		bottom: 0 !important;
+		right: 0 !important;
+		position: absolute !important;
+	}
+	label {
+		position: relative !important;
+		display: inline-block !important;
+		z-index: 10 !important;
+		color: var(--app-color) !important;
+	}
 
-#css-panel-selector li {
-	list-style: none !important;
-	color: #fff !important;
-	background: #000 !important;
-	padding: var(--app-ratio-s) !important;
+	input[type='range'] {
+		width: 100% !important;
+		margin: 10px 0 !important;
+		display: inline-block !important;
+		-webkit-appearance: none;
+		background: #ddd !important;
+	}
+	[contenteditable] {
+		background: #efece5;
+		color: #000;
+	}
+	/* Special styling for WebKit/Blink */
+	input[type='range']::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		height: 16px;
+		width: 16px;
+		background: #ffffff;
+		cursor: pointer;
+		margin-top: -4px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+		background: transparent;
+		border-radius: 100%;
+		border: 2px solid #444;
+		box-shadow: 2px 0px 1px #aaa;
+	}
+
+	input[type='range']::-webkit-slider-runnable-track {
+		height: 8px;
+		cursor: pointer;
+	}
+	input[type='range']:focus::-webkit-slider-runnable-track {
+		outline: none;
+	}
+	.css-panel__slider-label {
+		padding: 0 5px !important;
+		background: #000;
+		color: #fff;
+	}
+	.css-panel__color-range_hue::-webkit-slider-runnable-track {
+		background-image: linear-gradient(
+			90deg,
+			rgba(255, 0, 0, 1) 0%,
+			rgba(255, 255, 0, 1) 16.5%,
+			rgba(0, 255, 0, 1) 33%,
+			rgba(0, 255, 255, 1) 50%,
+			rgba(0, 0, 255, 1) 66%,
+			rgba(255, 0, 255, 1) 83.5%,
+			rgba(255, 0, 0, 1) 100%
+		);
+	}
+	.css-panel__color-range_light::-webkit-slider-runnable-track {
+		background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
+	}
+	.css-panel__color-range_sat::-webkit-slider-runnable-track,
+	.css-panel__color-range_sat:focus::-webkit-slider-runnable-track {
+		background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
+	}
+	.css-panel__selector-container {
+		padding: var(--app-ratio-s) !important;
+	}
 }
-#css-panel-color {
-	position: fixed !important;
-	top: 0 !important;
-	bottom: 0 !important;
-	width: 300px !important;
-	right: 300px !important;
-	background: #fff !important;
+#css-panel__color {
+	.sub-combination {
+		height: 40px !important;
+		width: 10% !important;
+		display: inline-block !important;
+	}
 }
-#css-panel .sub-combination {
-	height: 40px !important;
-	width: 10% !important;
-	display: inline-block !important;
-}
+/* Form Inputs */
 #css-panel .css-panel__target-input {
 	display: none !important;
 	position: absolute !important;
@@ -137,6 +214,7 @@
 	right: calc(100% - 30px) !important;
 	border: 3px solid #000 !important;
 }
+
 #css-panel .css-panel__target-input-radio:checked + .css-panel__target-input {
 	display: block !important;
 }
@@ -144,60 +222,47 @@
 	position: absolute !important;
 	left: -9999px !important;
 }
-#css-panel input[type='range'] {
-	width: 100% !important;
-	margin: 10px 0 !important;
-	display: inline-block !important;
-	-webkit-appearance: none;
-	background: #ddd !important;
+
+/*Independent Elements */
+/* Panels buttons */
+#css-panel__toggle-label {
+	font-family: 'Courier New', Courier, monospace !important;
+	font-size: 14px !important;
+	line-height: 1.3em !important;
+	position: absolute;
+	z-index: 100000;
+	right: var(--app-ratio);
+	top: 0;
+	padding: var(--app-ratio-s);
+	label {
+		background: var(--app-tonic);
+		display: inline-block;
+		cursor: pointer;
+		padding: var(--app-ratio-xs);
+	}
+}
+#css-panel__toggle {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+}
+#css-panel__toggle + #css-panel,
+#css-panel__toggle + #css-panel #css-panel__selector,
+#css-panel__toggle + #css-panel #css-panel__color {
+	left: -9999px;
+	position: relative;
+	overflow: hidden;
+}
+#css-panel__toggle:checked + #css-panel,
+#css-panel__toggle:checked + #css-panel #css-panel__selector,
+#css-panel__toggle:checked + #css-panel #css-panel__color {
+	left: auto;
 }
 
-/* Special styling for WebKit/Blink */
-#css-panel input[type='range']::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	height: 16px;
-	width: 16px;
-	background: #ffffff;
-	cursor: pointer;
-	margin-top: -4px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-	background: transparent;
-	border-radius: 100%;
-	border: 2px solid #444;
-	box-shadow: 2px 0px 1px #aaa;
-}
-
-#css-panel input[type='range']::-webkit-slider-runnable-track {
-	height: 8px;
-	cursor: pointer;
-}
-#css-panel input[type='range']:focus::-webkit-slider-runnable-track {
-	outline: none;
-}
-#css-panel .css-panel__slider-label {
-	padding: 0 5px !important;
-	background: #000;
-	color: #fff;
-}
-
-#css-panel .css-panel__color-range_hue::-webkit-slider-runnable-track {
-	background-image: linear-gradient(
-		90deg,
-		rgba(255, 0, 0, 1) 0%,
-		rgba(255, 255, 0, 1) 16.5%,
-		rgba(0, 255, 0, 1) 33%,
-		rgba(0, 255, 255, 1) 50%,
-		rgba(0, 0, 255, 1) 66%,
-		rgba(255, 0, 255, 1) 83.5%,
-		rgba(255, 0, 0, 1) 100%
-	);
-}
-#css-panel .css-panel__color-range_light::-webkit-slider-runnable-track {
-	background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-}
-#css-panel .css-panel__color-range_sat::-webkit-slider-runnable-track,
-#css-panel .css-panel__color-range_sat:focus::-webkit-slider-runnable-track {
-	background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
+/*
+#########################
+Application Content
+*/
 #rf-content-container {
 	overflow: auto;
 }
@@ -206,25 +271,4 @@
 	right: 0;
 	bottom: 0;
 	width: 250px;
-}
-#css-panel-selector {
-	z-index: 20 !important;
-}
-#css-panel__toggle-label {
-	cursor: pointer;
-	position: absolute;
-	z-index: 100000;
-	right: 0;
-	top: 0;
-}
-#css-panel__toggle {
-	position: absolute;
-	left: -9999px;
-	top: 0;
-}
-#css-panel__toggle + #css-panel {
-	display: none;
-}
-#css-panel__toggle:checked + #css-panel {
-	display: block;
 }

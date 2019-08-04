@@ -40,6 +40,7 @@ const myWebpackConfig = {
 							sourceMap: true,
 						},
 					},
+					'postcss-loader',
 				],
 			},
 			{

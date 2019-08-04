@@ -1,23 +1,26 @@
+rough = require('../../node_modules/roughjs/dist/rough.umd');
+require('wired-elements');
 //app CSS. Will be processed by webpack
 //@ts-ignore
 require('../../App/Static/AppStyles.css');
 
-/* eslint-disable no-undef */
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
+/* eslint-disable no-undef */
 // @ts-ignore
 if (ENVIRONMENT === 'development') {
 	// @ts-ignore
 	require('webpack-hot-middleware/client?reload=true');
 }
+/* eslint-enable no-undef */
 
 //@ts-ignore
-var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue').selectorComponent;
+var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue');
 //@ts-ignore
-var cssPanelColor = require('../Ui/Components/cssPanelColor.vue').colorComponent;
+var cssPanelColor = require('../Ui/Components/cssPanelColor.vue');
 //@ts-ignore
-var cssPanel = require('../Ui/Components/cssPanel.vue').panelComponent;
-
-var messagesComponent = require('../Tools/Components/messages.vue').messagesComponent;
+var cssPanel = require('../Ui/Components/cssPanel.vue');
+//@ts-ignore
+var messagesComponent = require('../Tools/Components/messages.vue');
 
 var Vue = require('vue');
 var Vuex = require('vuex');
@@ -85,7 +88,6 @@ var store = new Vuex.Store({
 		},
 	},
 });
-
 if (isLogged) {
 	//@ts-ignore
 	Vue.component('css-panel-selector', cssPanelSelector);
@@ -101,6 +103,43 @@ if (isLogged) {
 		new Vue({
 			el: '#css-panel',
 			store,
+		});
+		/**
+		 *
+		 * @param {HTMLCollectionOf<Element>} item
+		 * @param {Object} params
+		 */
+		var createSvgSketch = function(item, params) {
+			Array.prototype.forEach.call(item, function(el) {
+				var rect = el.parentNode.getBoundingClientRect();
+
+				var svg = rough.svg(el);
+				el.appendChild(svg.rectangle(5, 5, rect.width, rect.height, params));
+			});
+		};
+		var svgCollectionBox = document.getElementsByClassName('css-panel-svg-box');
+		createSvgSketch(svgCollectionBox, {
+			roughness: 3,
+			strokeWidth: 2,
+		});
+		var svgCollectionHighlight = document.getElementsByClassName('css-panel-svg-highlight');
+		console.debug(svgCollectionHighlight);
+
+		createSvgSketch(svgCollectionHighlight, {
+			fill: '#f15e5e',
+			fillWeight: 3,
+			fillStyle: 'zigzag',
+			roughness: 3,
+			strokeWidth: 1.5,
+		});
+
+		var svgCollection = document.getElementsByClassName('css-panel-svg');
+		createSvgSketch(svgCollection, {
+			fill: '#fff',
+			fillWeight: 3,
+			fillStyle: 'zigzag',
+			roughness: 3,
+			strokeWidth: 2,
 		});
 	});
 }

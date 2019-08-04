@@ -1,3 +1,2 @@
-import { Request } from 'express';
-export type RequestWithForm = Request & { form: any };
-// use it with : 	 * @param {import("./Typings/global").RequestWithForm} req
+export type Color = { red: number; green: number; blue: number; hue: number; replace: Function };
+//interface HSLColor { hue: number; saturation: number; lightness: number } interface RGBColor { red: number; green: number; blue: number } type Color = HSLColor | RGBColor;

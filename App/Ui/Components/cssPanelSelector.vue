@@ -124,6 +124,4 @@ var selectorComponent = {
 		});
 	},
 };
-module.exports = {
-	selectorComponent: selectorComponent,
-};
+module.exports = selectorComponent;
