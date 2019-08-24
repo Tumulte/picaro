@@ -1,32 +1,32 @@
 /* Application styles : edit at you're own risk :) */
 
 :root {
-	--app-ratio: 1.6em !important;
-	--app-ratio-s: 0.8em !important;
-	--app-ratio-xs: 0.4em !important;
-	--app-color: #333 !important;
-	--app-tonic: #f15e5e !important;
+	--app-ratio: 1.6em;
+	--app-ratio-s: 0.8em;
+	--app-ratio-xs: 0.4em;
+	--app-color: #333;
+	--app-tonic: #f15e5e;
 }
 
 #css-panel {
-	box-sizing: border-box !important;
-	width: 300px !important;
-	position: fixed !important;
-	top: 0 !important;
-	bottom: 0 !important;
-	right: 0 !important;
-	background-color: #fff !important;
-	background-image: url('/images/paper.png') !important;
-	border-left: solid 4px var(--app-color) !important;
-	box-shadow: 0px -1px 17px rgba(0, 0, 0, 0.7) !important;
+	box-sizing: border-box;
+	width: 300px;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	background-color: #fff;
+	background-image: url('/images/paper.png');
+	border-left: solid 4px var(--app-color);
+	box-shadow: 0px -1px 17px rgba(0, 0, 0, 0.7);
 }
 /* Core config */
 #css-panel * {
-	margin: 0 !important;
-	padding: 0 !important;
-	font-family: 'Courier New', Courier, monospace !important;
-	font-size: 14px !important;
-	line-height: 1.3em !important;
+	margin: 0;
+	padding: 0;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 14px;
+	line-height: 1.3em;
 }
 .css-panel_sketchy {
 	position: relative;
@@ -35,13 +35,15 @@
 		top: -5px;
 		left: -5px;
 		z-index: -1;
+		height: 125%;
+		width: 125%;
 	}
 	path {
-		transition: stroke 0.2s ease;
+		transition: fill 0.2s ease;
 	}
 }
 .css-panel_sketchy:hover path {
-	stroke: rgb(234, 175, 101) !important;
+	fill: #fff;
 }
 /* Components */
 #css-panel {
@@ -50,100 +52,96 @@
 	#css-panel__selector,
 	#css-panel__main {
 		overflow: auto;
-		height: 100%;
+		width: calc(300px - (var(--app-ratio) * 2));
+		padding: var(--app-ratio);
 	}
 	#css-panel__selector {
-		z-index: 20 !important;
-		position: fixed !important;
-		top: 0 !important;
-		bottom: 0 !important;
-		width: 300px !important;
-		right: 600px !important;
-		background: #fff !important;
+		z-index: 20;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		right: 600px;
+		background: #fff;
 	}
 	#css-panel__color {
-		position: fixed !important;
-		top: 0 !important;
-		bottom: 0 !important;
-		width: 300px !important;
-		right: 300px !important;
-		background: #fff !important;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		right: 300px;
+		background: #fff;
 	}
 }
 /* Basic HTML */
 #css-panel {
 	button {
-		width: calc(100% - 2 * var(--app-ratio-s)) !important;
-		padding: var(--app-ratio-s) !important;
-		margin: var(--app-ratio-s) !important;
-		background: #fff !important;
-		border: var(--app-color) var(--app-ratio-xs) solid !important;
-		color: var(--app-color) !important;
+		width: calc(100% - 2 * var(--app-ratio-s));
+		padding: var(--app-ratio-s);
+		margin: var(--app-ratio-s);
+		background: #fff;
+		border: var(--app-color) var(--app-ratio-xs) solid;
+		color: var(--app-color);
 	}
 	fieldset {
-		padding: 0 !important;
-		border: none !important;
-		margin: 0 !important;
+		padding: 0;
+		border: none;
+		margin: 0;
 	}
 	legend {
-		margin: 0 !important;
-		border: none !important;
-		color: #fff !important;
-		background-color: var(--app-color) !important;
-		width: 100% !important;
-		text-transform: uppercase !important;
-		padding: var(--app-ratio-s) !important;
-		position: relative !important;
+		margin: 0;
+		border: none;
+		color: #fff;
+		background-color: var(--app-color);
+		width: 100%;
+		text-transform: uppercase;
+		padding: var(--app-ratio-s);
+		position: relative;
 	}
 
 	ul,
 	li {
-		margin: 0 !important;
-		padding: 0 !important;
+		margin: 0;
+		padding: 0;
 	}
 	li li {
-		/* background: #fff !important; */
-		color: #000 !important;
+		/* background: #fff ; */
+		color: #000;
+		padding: var(--app-ratio-s);
 	}
 	li div {
-		display: inline-block !important;
-		margin: 0 var(--app-ratio-xs) !important;
+		display: inline-block;
+		margin: 0 var(--app-ratio-xs);
 	}
 	li {
-		list-style: none !important;
-		/*background: #000 !important; */
-		padding: var(--app-ratio-s) !important;
+		list-style: none;
+		/*background: #000 ; */
+		padding: var(--app-ratio-s) 0;
 	}
 	input {
-		padding: var(--app-ratio) var(--app-ratio-s) calc(var(--app-ratio) / 4) var(--app-ratio-s) !important;
-		width: 100% !important;
-		margin: -1.3em 0 0 0 !important;
-		border: none !important;
-		border-top: 1px solid var(--app-color) !important;
-	}
-	input::after {
-		content: '' !important;
-		background-image: url('/images/seamless_paper_texture.png') !important;
-		opacity: 1 !important;
-		top: 0 !important;
-		left: 0 !important;
-		bottom: 0 !important;
-		right: 0 !important;
-		position: absolute !important;
-	}
-	label {
-		position: relative !important;
-		display: inline-block !important;
-		z-index: 10 !important;
-		color: var(--app-color) !important;
+		padding: var(--app-ratio-xs);
+		width: 100%;
+		border: none;
 	}
 
+	label {
+		position: relative;
+		display: inline-block;
+		z-index: 10;
+		color: var(--app-color);
+		width: 100%;
+	}
+	select {
+		width: 100%;
+	}
 	input[type='range'] {
-		width: 100% !important;
-		margin: 10px 0 !important;
-		display: inline-block !important;
+		width: 100%;
+		margin: var(--app-ratio-s) 0;
+		display: inline-block;
 		-webkit-appearance: none;
-		background: #ddd !important;
+		background: transparent;
+	}
+	input.css-panel__color-range {
+		width: 75%;
+		vertical-align: middle;
 	}
 	[contenteditable] {
 		background: #efece5;
@@ -152,30 +150,51 @@
 	/* Special styling for WebKit/Blink */
 	input[type='range']::-webkit-slider-thumb {
 		-webkit-appearance: none;
-		height: 16px;
-		width: 16px;
-		background: #ffffff;
-		cursor: pointer;
-		margin-top: -4px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+		height: 19px;
+		width: 19px;
 		background: transparent;
-		border-radius: 100%;
-		border: 2px solid #444;
-		box-shadow: 2px 0px 1px #aaa;
+		cursor: pointer;
+		margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+		background-image: url('/svg/slider1.svg');
+		background-size: 20px;
+	}
+	input[type='range']:nth-of-type(2n)::-webkit-slider-thumb {
+		background-image: url('/svg/slider2.svg');
+	}
+	label:nth-of-type(2n) input[type='range']::-webkit-slider-thumb,
+	input[type='range']:nth-of-type(3n)::-webkit-slider-thumb {
+		background-image: url('/svg/slider3.svg');
+	}
+	label:nth-of-type(3n) input[type='range']::-webkit-slider-thumb,
+	input[type='range']:nth-of-type(4n)::-webkit-slider-thumb {
+		background-image: url('/svg/slider4.svg');
+	}
+	label:nth-of-type(4n) input[type='range']::-webkit-slider-thumb,
+	input[type='range']:nth-of-type(5n)::-webkit-slider-thumb {
+		background-image: url('/svg/slider5.svg');
+	}
+	label:nth-of-type(6n) input[type='range']::-webkit-slider-thumb,
+	input[type='range']:nth-of-type(6n)::-webkit-slider-thumb {
+		background-image: url('/svg/slider6.svg');
 	}
 
 	input[type='range']::-webkit-slider-runnable-track {
-		height: 8px;
+		height: 3px;
 		cursor: pointer;
+		padding-bottom: 3px;
+		border-bottom: 2px solid #000;
 	}
 	input[type='range']:focus::-webkit-slider-runnable-track {
 		outline: none;
 	}
 	.css-panel__slider-label {
-		padding: 0 5px !important;
+		padding: 0 5px;
 		background: #000;
 		color: #fff;
 	}
+
 	.css-panel__color-range_hue::-webkit-slider-runnable-track {
+		height: 8px;
 		background-image: linear-gradient(
 			90deg,
 			rgba(255, 0, 0, 1) 0%,
@@ -195,40 +214,90 @@
 		background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
 	}
 	.css-panel__selector-container {
-		padding: var(--app-ratio-s) !important;
+		padding: var(--app-ratio-s);
+	}
+	.css-panel__color-button {
+		padding: 0 var(--app-ratio-xs);
+		margin: var(--app-ratio-xs) 0;
+	}
+	.css-panel__container {
+		padding: var(--app-ratio-s);
+	}
+	.css-panel__radio {
+		position: absolute;
+		left: -9999px;
+	}
+	.css-panel__radio-element {
+		display: inline-block;
+		width: 17px;
+		height: 17px;
+		margin: var(--app-ratio-s) 0 var(--app-ratio-s) var(--app-ratio-s);
+		background: url('/svg/slider6.svg');
+	}
+	.css-panel__radio-element::before {
+		content: '';
+		background: transparent;
+		width: 11px;
+		display: inline-block;
+		height: 14px;
+		border-radius: 100%;
+		position: relative;
+		left: 3px;
+		top: 2px;
+	}
+	.css-panel__radio:checked + .css-panel__radio-element::before {
+		content: '';
+		background: var(--app-tonic);
+		width: 16px;
+		display: inline-block;
+		height: 14px;
+		border-radius: 100%;
+		position: relative;
+		left: 0px;
+		top: 1px;
+		z-index: -1;
 	}
 }
 #css-panel__color {
 	.sub-combination {
-		height: 40px !important;
-		width: 10% !important;
-		display: inline-block !important;
+		height: 40px;
+		width: 10%;
+		display: inline-block;
+		margin: var(--app-ratio) 0;
+	}
+}
+.css-panel_sketchy {
+	input {
+		border: none;
+		width: 95%;
+		margin: 2%;
+		background: transparent;
 	}
 }
 /* Form Inputs */
 #css-panel .css-panel__target-input {
-	display: none !important;
-	position: absolute !important;
-	top: 40px !important;
-	padding: 10px !important;
-	right: calc(100% - 30px) !important;
-	border: 3px solid #000 !important;
+	display: none;
+	position: absolute;
+	top: 40px;
+	padding: 10px;
+	right: calc(100% - 30px);
+	border: 3px solid #000;
 }
 
 #css-panel .css-panel__target-input-radio:checked + .css-panel__target-input {
-	display: block !important;
+	display: block;
 }
 #css-panel .css-panel__target-input-radio {
-	position: absolute !important;
-	left: -9999px !important;
+	position: absolute;
+	left: -9999px;
 }
 
 /*Independent Elements */
 /* Panels buttons */
 #css-panel__toggle-label {
-	font-family: 'Courier New', Courier, monospace !important;
-	font-size: 14px !important;
-	line-height: 1.3em !important;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 14px;
+	line-height: 1.3em;
 	position: absolute;
 	z-index: 100000;
 	right: var(--app-ratio);
@@ -250,15 +319,28 @@
 #css-panel__toggle + #css-panel #css-panel__selector,
 #css-panel__toggle + #css-panel #css-panel__color {
 	left: -9999px;
-	position: relative;
-	overflow: hidden;
 }
 #css-panel__toggle:checked + #css-panel,
 #css-panel__toggle:checked + #css-panel #css-panel__selector,
 #css-panel__toggle:checked + #css-panel #css-panel__color {
 	left: auto;
 }
-
+#rf-login {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	/*Elements*/
+	label,
+	input,
+	button {
+		display: block;
+	}
+	button {
+		background: none;
+		border: none;
+	}
+}
 /*
 #########################
 Application Content

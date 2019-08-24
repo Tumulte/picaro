@@ -1,9 +1,7 @@
 var express = require('express');
-var dbUtils = require('./dbUtils');
+var fs = require('fs');
+var path = require('path');
 
-var updateItem = function updateItem(db, req) {
-	db.assign(req.body).write();
-};
 /**
  *
  * @param {Object} appDb
@@ -16,6 +14,9 @@ var appCrud = function appCrud(appDb, currentApp) {
 		res.json(appDb.get(currentApp.applicationName).value());
 	});
 	dataRouter.route('/').get(function(req, res) {
+		/**
+		 * @type {object}
+		 */
 		var data = {};
 		data = appDb
 			.get(currentApp.applicationName)
@@ -30,8 +31,26 @@ var appCrud = function appCrud(appDb, currentApp) {
 			.value();
 		res.json(data);
 	});
-
+	dataRouter.route('/fonts').get(function(req, res) {
+		const directoryPath = path.join(__dirname, '../static/fonts');
+		/**
+		 * @type {array}
+		 */
+		var localFonts = [];
+		fs.readdir(directoryPath, function(err, files) {
+			if (err) {
+				res.status(403).send('The fonts could not be found ' + err);
+			}
+			files.forEach(function(file) {
+				localFonts.push({ family: file });
+			});
+			res.json(localFonts);
+		});
+	});
 	dataRouter.route('/:styleId/').get(function(req, res) {
+		/**
+		 * @type {object}
+		 */
 		var data = {};
 		data = appDb
 			.get(currentApp.applicationName)

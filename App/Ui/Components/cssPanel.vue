@@ -1,6 +1,13 @@
 var settings = require('../../../rougeSettings.json');
-var utils = require('../../utils');
+const axios = require('axios');
+var makeFontFamilyName = function(name) {
+	return name
+		.replace('.otf', '')
+		.replace('.ttf', '')
+		.replace('.woff', '');
+};
 
+var fontTypes = ['fontFamilyMain', 'fontFamilyTitle', 'fontFamilyAlt'];
 /**
  * @VueComponent
  */
@@ -12,13 +19,12 @@ var panelComponent = {
 		return {
 			fontSize: 20,
 			fontCollection: this.getfontCollection,
-			selectedFont: { main: 'none', alt: 'none', title: 'none' },
+
 			styleSetCollection: [],
 			styleSet: {},
 			cssPanelMain: 1,
 			selectorIndex: 1,
 			warningMessage: '',
-			fontType: 'google',
 		};
 	},
 	methods: {
@@ -26,32 +32,49 @@ var panelComponent = {
 			this.selectorCollection.html.fontSize = this.fontSize + 'px';
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
-		updateCssFont: function(type) {
-			if (this.selectedFont[type] === 'none') {
+		updateCssFont: function(fontType) {
+			if (this.styleSet[fontType] === 'none') {
 				return;
 			}
 			var fontStyleImports = '';
+			if (document.getElementById('app-font-style')) {
+				document.getElementById('app-font-style').remove();
+			}
 			var fontStyle = document.createElement('style');
+			fontStyle.id = 'app-font-style';
 			fontStyle.type = 'text/css';
 			document.getElementsByTagName('head')[0].appendChild(fontStyle);
-			for (var item in this.selectedFont) {
-				if (this.selectedFont[item] !== 'none') {
-					fontStyleImports +=
-						'@import url("https://fonts.googleapis.com/css?family=' +
-						encodeURI(this.selectedFont[item]) +
-						'&display=swap");\n';
+			for (var i = 0; i < fontTypes.length; i++) {
+				var currentFontType = fontTypes[i];
+				if (this.styleSet[currentFontType] !== 'none') {
+					if (this.styleSet.fontOrigin === 'google') {
+						fontStyleImports +=
+							'@import url("https://fonts.googleapis.com/css?family=' +
+							encodeURI(this.styleSet[currentFontType]) +
+							'&display=swap");\n';
+					} else if (this.styleSet.fontOrigin === 'local') {
+						fontStyleImports +=
+							'@font-face {\n' +
+							'font-family:"' +
+							makeFontFamilyName(this.styleSet[currentFontType]) +
+							'";\n' +
+							'src:url("/fonts/' +
+							encodeURI(this.styleSet[currentFontType]) +
+							'");\n' +
+							'}\n';
+					}
 				}
 			}
 			fontStyle.innerHTML = fontStyleImports;
 
-			if (type === 'main') {
-				this.selectorCollection.html.fontFamily = this.selectedFont[type];
-			} else if (type === 'title') {
+			if (fontType === 'fontFamilyMain') {
+				this.selectorCollection.html.fontFamily = makeFontFamilyName(this.styleSet[fontType]);
+			} else if (fontType === 'fontFamilyTitle') {
 				var header = 'h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6';
-				this.selectorCollection[header].fontFamily = this.selectedFont[type];
-			} else if (type === 'alt') {
+				this.selectorCollection[header].fontFamily = makeFontFamilyName(this.styleSet[fontType]);
+			} else if (fontType === 'fontFamilyAlt') {
 				this.selectorCollection.CLSS__altfont = {};
-				this.selectorCollection.CLSS__altfont.fontFamily = this.selectedFont[type];
+				this.selectorCollection.CLSS__altfont.fontFamily = makeFontFamilyName(this.styleSet[fontType]);
 			}
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
@@ -62,6 +85,22 @@ var panelComponent = {
 			this.selectorIndex = this.selectorIndex === 1 ? 0 : 1;
 			return 'main' + this.selectorIndex;
 		},
+		updateFontCollection: function() {
+			if (this.styleSet.fontOrigin === 'google') {
+				this.fontCollection = this.getfontCollection;
+			} else if (this.styleSet.fontOrigin === 'local') {
+				var self = this;
+				axios
+					.get('/appapi/fonts')
+					.then(function(response) {
+						self.fontCollection = response.data;
+					})
+					.catch(function(error) {
+						self.fontCollection = [];
+						self.fontCollection.push(error);
+					});
+			}
+		},
 		checkSave: function(event) {
 			var self = this;
 			this.warningMessage = {
@@ -70,22 +109,20 @@ var panelComponent = {
 				callback: function() {
 					var form = event.target.form;
 					var formData = new FormData(form);
-					var xhr = new XMLHttpRequest();
 
-					xhr.open('POST', event.target.formAction);
-					xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-					xhr.onload = function() {
-						if (xhr.status !== 200) {
+					axios
+						.post(event.target.formAction, formData, {
+							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						})
+						.then(function() {
+							self.warningMessage = { type: 'success', text: 'Saved successfully' };
+						})
+						.catch(function(errors) {
 							self.warningMessage = {
 								type: 'error',
-								text: 'Request failed.  Returned status of ' + xhr.status,
+								text: 'Request failed.  Returned status of ' + errors,
 							};
-						} else {
-							self.warningMessage = { type: 'success', text: 'Saved successfully' };
-						}
-					};
-					xhr.send(utils.urlencodeFormData(formData));
+						});
 				},
 			};
 		},
@@ -105,23 +142,18 @@ var panelComponent = {
 		};
 		request.send();
 
-		var styleRequest = new XMLHttpRequest();
-		styleRequest.open('GET', '/appapi');
-		styleRequest.onreadystatechange = function() {
-			if (styleRequest.readyState === 4) {
-				if (styleRequest.status === 200) {
-					var data = JSON.parse(styleRequest.responseText);
-
-					self.styleSet = data;
-					self.fontSize = data.fontSize;
-					self.selectedFont.main = data.fontFamilyMain;
-					self.selectedFont.title = data.fontFamilyTitle;
-					self.selectedFont.alt = data.fontFamilyAlt;
-					self.$store.commit('selectorCollection', JSON.parse(data.selectorSetParamString));
-				}
-			}
-		};
-		styleRequest.send();
+		axios
+			.get('/appapi')
+			.then(function(response) {
+				self.styleSet = response.data;
+				self.$store.commit('selectorCollection', JSON.parse(response.data.selectorSetParamString));
+			})
+			.catch(function(error) {
+				self.warningMessage = {
+					type: 'error',
+					text: 'Request failed.  Returned status of ' + error,
+				};
+			});
 
 		var appDataRequest = new XMLHttpRequest();
 		appDataRequest.open('GET', '/appapi/all', true);

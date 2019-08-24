@@ -60,6 +60,8 @@ app.use(express.static('static'));
 app.use(express.static('node_modules/normalize.css'));
 app.use(express.static('App/Dist'));
 app.use('/images', express.static('App/Static/images'));
+app.use('/svg', express.static('App/Static/svg'));
+
 //Per apps Static Files
 
 for (var application in settings.applications) {
@@ -183,6 +185,9 @@ function checkNotAuthenticated(req, res, next) {
 }
 app.get('/admin/login', checkNotAuthenticated, function(req, res) {
 	app.set('views', __dirname + '/Views');
+	//TODO Put the "islogged" in a use()
+	res.locals.isLogged = req.isAuthenticated();
+
 	res.render('login');
 });
 app.get('/admin/logout', function(req, res) {

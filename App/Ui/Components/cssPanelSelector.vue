@@ -44,9 +44,12 @@ var selectorComponent = {
 			}
 		},
 		getColorFromCoordinates: function(data) {
-			if (/^#([0-9a-f]{6})$/i.test(data)) {
+			if (utils.isHexColor(data)) {
 				return '<div style="width:10px; height:10px; background:' + data + '"></div>';
 			} else if (typeof data === 'object') {
+				if (!data[0] || !data[1] || !this.colorCollection.combinationCollection[data[0]]) {
+					return '';
+				}
 				var selectedColor = this.colorCollection.combinationCollection[data[0]].subCombination[data[1]];
 				selectedColor = colorUtils.hslToHex(selectedColor).getString();
 				this.colorMapping[JSON.stringify(data)] = selectedColor;

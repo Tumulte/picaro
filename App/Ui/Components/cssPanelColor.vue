@@ -80,7 +80,8 @@ var colorComponent = {
 			);
 		},
 		removeColor: function(index) {
-			this.colorSet.combinationCollection.splice(index, 1);
+			this.colorCollection.combinationCollection.splice(index, 1);
+			this.colorSetParamCollection.splice(index, 1);
 		},
 		updateVariationAmt: function() {
 			this.colorSet = colorSet.generate(
@@ -119,12 +120,12 @@ var colorComponent = {
 					var data = JSON.parse(styleRequest.responseText);
 					colorSet = new colors.generateColorSet(data.dominantColor);
 
-					self.colorSet = colorSet;
+					self.colorSet = colorSet.generate(JSON.parse(data.colorSetParamString));
 					self.dominant = data.dominantColor;
 					self.dominantColor = colorUtils.hexToHsl(data.dominantColor).getValueCollection();
 					self.colorSetParamString = data.colorSetParamString;
 					self.colorSetParamCollection = JSON.parse(data.colorSetParamString);
-					self.$store.commit('colorCollection', colorSet.generate(JSON.parse(data.colorSetParamString)));
+					self.$store.commit('colorCollection', self.colorSet);
 					self.passValuesToStore();
 				}
 			}

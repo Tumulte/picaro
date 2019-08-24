@@ -69,10 +69,18 @@ var urlencodeFormData = function(formData) {
 	}
 	return value;
 };
+/**
+ * @param {string} string
+ * @returns {boolean}
+ */
+var isHexColor = function(string) {
+	return /^#([0-9a-f]{6})$/i.test(string);
+};
 module.exports = {
 	makeTableName: makeTableName,
 	parseMessage: parseMessage,
 	jsonToCss: jsonToCss,
 	cssToJson: cssToJson,
 	urlencodeFormData: urlencodeFormData,
+	isHexColor: isHexColor,
 };
