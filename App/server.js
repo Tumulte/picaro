@@ -24,6 +24,8 @@ const cssFileGenerator = require('./Ui/cssFileGenerator');
 //rougeFramework Back End
 const crud = require('./crud.js');
 const appCrud = require('./appCrud.js');
+var multer = require('multer');
+var upload = multer();
 
 var isProd = process.env.NODE_ENV === 'production';
 
@@ -201,7 +203,7 @@ app.get('/admin/setup', function() {
 });
 
 //TODO add put
-app.post('/admin/settings/:type', function(req, res) {
+app.post('/admin/settings/:type', upload.none(), function(req, res) {
 	if (req.body.styleSet === '') {
 		req.body.styleSet = 'styleSet-' + req.body.id;
 	}

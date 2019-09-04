@@ -47,13 +47,13 @@
   --combination3-9:#FAFBF8;
 }
 @import url("https://fonts.googleapis.com/css?family=Zilla%20Slab&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Autour%20One&display=swap");
+@import url("https://fonts.googleapis.com/css?family=undefined&display=swap");
 html {
   font-size: 25;
   font-family: "Zilla Slab";
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Autour One";
+  font-family: "undefined";
 }
 #rf-content-container main{
   color:"#676787";

@@ -109,9 +109,8 @@ var panelComponent = {
 				callback: function() {
 					var form = event.target.form;
 					var formData = new FormData(form);
-
 					axios
-						.post(event.target.formAction, formData, {
+						.post(event.target.getAttribute('formAction'), formData, {
 							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 						})
 						.then(function() {
@@ -125,6 +124,24 @@ var panelComponent = {
 						});
 				},
 			};
+		},
+		saveNew: function(event) {
+			var self = this;
+
+			var form = event.target.form;
+			var formData = new FormData(form);
+
+			axios
+				.post(event.target.getAttribute('formAction'), formData)
+				.then(function() {
+					self.warningMessage = { type: 'success', text: 'Saved successfully' };
+				})
+				.catch(function(errors) {
+					self.warningMessage = {
+						type: 'error',
+						text: 'Request failed.  Returned status of ' + errors,
+					};
+				});
 		},
 	},
 	mounted: function() {

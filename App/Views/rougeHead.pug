@@ -133,6 +133,6 @@ block cssPanel
                             label
                                 div(class="css-panel__label") Config name
                                 input(type="text" class="css-panel__input" name="styleSet" v-bind:value="styleSet.styleSet")
-                            wired-button(class="css-panel__container" v-if="styleSet.styleSet" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
-                            wired-button(class="css-panel__container" formaction='/admin/settings/new') Save a new Style Set
-                            wired-button(class="css-panel__container" formaction='/admin/settings/new') Delete Style Set
+                            button(class="css-panel__container" v-if="styleSet.styleSet" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
+                            button(class="css-panel__container" formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
+                            button(class="css-panel__container" formaction='/admin/settings/new') Delete Style Set

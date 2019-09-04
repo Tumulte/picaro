@@ -1,131 +1,158 @@
 {
-  "appDemo": [
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "NaGb7gBeZ"
-    },
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "f8NR0HLEM"
-    },
-    {
-      "config-name": "#{configName}",
-      "font-size": "20",
-      "id": "kq4oEV0D0"
-    }
-  ],
-  "Demo": [
-    {
-      "fontSize": "20",
-      "configName": "styleSetx51PdBINY",
-      "id": "x51PdBINY"
-    },
-    {
-      "fontSize": "23",
-      "styleSet": "styleSet-gwaRMX3Qy",
-      "id": "gwaRMX3Qy"
-    },
-    {
-      "fontSize": "23",
-      "fontFamilyMain": "Abel",
-      "fontFamilyTitle": "Abhaya Libre",
-      "id": "eQhW3ulOK_",
-      "styleSet": "styleSet-gwaRMX3Qy"
-    },
-    {
-      "fontSize": "25",
-      "fontFamilyMain": "Zilla Slab",
-      "fontFamilyAlt": "none",
-      "fontFamilyTitle": "Autour One",
-      "id": "NwC_bPXtQ6",
-      "colorCombinationId": "4",
-      "dominantColor": "#56A080",
-      "styleSet": "styleSet-NwC_bPXtQ6",
-      "dominant": "#56A080",
-      "colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
-      "variationLightAmt": "10",
-      "variationSatAmt": "0",
-      "selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{\"fontFamily\":\"Zilla Slab\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"Autour One\"}}",
-      "storedColorSet": {
-        "id": "4",
-        "name": "quad",
-        "combinationCollection": [
-          {
-            "hueVariation": 60
-          },
-          {
-            "hueVariation": 120
-          },
-          {
-            "hueVariation": 240
-          },
-          {
-            "hueVariation": 300
-          }
-        ]
-      }
-    }
-  ],
-  "colorSetPresets": [
-    {
-      "id": "1",
-      "name": "Complementary",
-      "combinationCollection": [
-        {
-          "hueVariation": 180
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "name": "Split-Complementary ",
-      "combinationCollection": [
-        {
-          "hueVariation": 150
-        },
-        {
-          "hueVariation": 210
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "name": "triad",
-      "combinationCollection": [
-        {
-          "hueVariation": 120
-        },
-        {
-          "hueVariation": 240
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "name": "quad",
-      "combinationCollection": [
-        {
-          "hueVariation": 60
-        },
-        {
-          "hueVariation": 120
-        },
-        {
-          "hueVariation": 240
-        },
-        {
-          "hueVariation": 300
-        }
-      ]
-    }
-  ],
-  "users": [
-    {
-      "id": "wcABAgJBA",
-      "username": "test",
-      "password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
-    }
-  ]
+	"appDemo": [
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "NaGb7gBeZ"
+		},
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "f8NR0HLEM"
+		},
+		{
+			"config-name": "#{configName}",
+			"font-size": "20",
+			"id": "kq4oEV0D0"
+		}
+	],
+	"Demo": [
+		{
+			"fontSize": "20",
+			"configName": "styleSetx51PdBINY",
+			"id": "x51PdBINY"
+		},
+		{
+			"fontSize": "23",
+			"styleSet": "styleSet-gwaRMX3Qy",
+			"id": "gwaRMX3Qy"
+		},
+		{
+			"fontSize": "23",
+			"fontFamilyMain": "Abel",
+			"fontFamilyTitle": "Abhaya Libre",
+			"id": "eQhW3ulOK_",
+			"styleSet": "styleSet-gwaRMX3Qy"
+		},
+		{
+			"fontSize": "25",
+			"fontFamilyMain": "Zilla Slab",
+			"fontFamilyAlt": "none",
+			"fontFamilyTitle": "Autour One",
+			"id": "NwC_bPXtQ6",
+			"colorCombinationId": "4",
+			"dominantColor": "#56A080",
+			"styleSet": "styleSet-NwC_bPXtQ6",
+			"dominant": "#56A080",
+			"colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
+			"variationLightAmt": "10",
+			"variationSatAmt": "0",
+			"selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{\"fontFamily\":\"Zilla Slab\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"Autour One\"}}",
+			"storedColorSet": {
+				"id": "4",
+				"name": "quad",
+				"combinationCollection": [
+					{
+						"hueVariation": 60
+					},
+					{
+						"hueVariation": 120
+					},
+					{
+						"hueVariation": 240
+					},
+					{
+						"hueVariation": 300
+					}
+				]
+			}
+		},
+		{
+			"dominant": "#56A080",
+			"colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
+			"variationLightAmt": "10",
+			"variationSatAmt": "0",
+			"selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{\"fontFamily\":\"Zilla Slab\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"Autour One\"}}",
+			"fontSize": "25",
+			"fontFamilyMain": "Zilla Slab",
+			"fontFamilyAlt": "none",
+			"styleSet.fontFamilyTitle": "Autour One",
+			"id": "pRzCO_ZG4",
+			"styleSet": "styleSet-NwC_bPXtQ6"
+		},
+		{
+			"dominant": "#56A080",
+			"colorSetParamString": "[{\"hueVariation\":60},{\"hueVariation\":120},{\"hueVariation\":240},{\"hueVariation\":300}]",
+			"variationLightAmt": "10",
+			"variationSatAmt": "0",
+			"selectorSetParamString": "{\"main\":{\"color\":\"#676787\",\"fontSize\":\"20px\"},\"body\":{\"background\":[2,7],\"color\":[0,2]},\"html\":{\"fontFamily\":\"Knile-Regular\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"RivinaTC-PenOutline\"}}",
+			"font-type": "local",
+			"fontSize": "25",
+			"fontFamilyMain": "Knile-Regular.otf",
+			"fontFamilyAlt": "none",
+			"styleSet.fontFamilyTitle": "RivinaTC-PenOutline.otf",
+			"id": "ZYJ0pchgt",
+			"styleSet": "demo"
+		}
+	],
+	"colorSetPresets": [
+		{
+			"id": "1",
+			"name": "Complementary",
+			"combinationCollection": [
+				{
+					"hueVariation": 180
+				}
+			]
+		},
+		{
+			"id": "2",
+			"name": "Split-Complementary ",
+			"combinationCollection": [
+				{
+					"hueVariation": 150
+				},
+				{
+					"hueVariation": 210
+				}
+			]
+		},
+		{
+			"id": "3",
+			"name": "triad",
+			"combinationCollection": [
+				{
+					"hueVariation": 120
+				},
+				{
+					"hueVariation": 240
+				}
+			]
+		},
+		{
+			"id": "4",
+			"name": "quad",
+			"combinationCollection": [
+				{
+					"hueVariation": 60
+				},
+				{
+					"hueVariation": 120
+				},
+				{
+					"hueVariation": 240
+				},
+				{
+					"hueVariation": 300
+				}
+			]
+		}
+	],
+	"users": [
+		{
+			"id": "wcABAgJBA",
+			"username": "test",
+			"password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
+		}
+	]
 }
