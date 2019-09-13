@@ -1,0 +1,12 @@
+{
+	"baseUrl": "http://localhost:8080",
+	"fixturesFolder": "App/Cypress/fixtures",
+	"integrationFolder": "App/Cypress/integration",
+	"screenshotsFolder": "App/Cypress/screenshots",
+	"videosFolder": "App/Cypress/videos",
+	"reporter": "JSON",
+	"reporterOptions": {
+		"mochaFile": "App/Cypress/output.json",
+		"toConsole": true
+	}
+}

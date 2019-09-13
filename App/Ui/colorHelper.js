@@ -218,6 +218,10 @@ var colorUtils = function() {
 			);
 		}
 	};
+	/**
+	 * @returns {Object}
+	 * @param {Object=} color
+	 */
 	this.getValueCollection = function(color) {
 		if (typeof color !== 'undefined') {
 			this.color = color;

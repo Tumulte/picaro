@@ -63,7 +63,9 @@ block cssPanel
                             label
                                 span(class="css-panel__slider-label") Sat.
                                 input(type="range"  class="css-panel__color-range css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
-                    div(v-for="(color, index) in this.$store.getters.colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
+                            div
+                                div(v-for="(subColor, index) in colorCollection.dominantSubCollection" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
+                    div(v-for="(color, index) in colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
                         wired-card
                             label
                                 span(class="css-panel__slider-label") Hue
@@ -91,18 +93,17 @@ block cssPanel
                     wired-card(class="css-panel__container")
                         fieldset
                             legend Style Set
-                            select(class="css-panel__input" )
-                                option(value="none") Select a style set
-                                option(v-for="styleSet in styleSetCollection" v-bind:value="styleSet.id") {{styleSet.configName}}
+
+                            div(v-for="selectedStyleSet in styleSetCollection" v-bind:value="selectedStyleSet.id" @click="updateStyleSet(selectedStyleSet)" ) {{selectedStyleSet.setName}}
                     wired-card(class="css-panel__container")
                         fieldset
                             legend Fonts
                             wired-card(class="css-panel__container")
                                 label Google Fonts
-                                    input(type="radio" class="css-panel__radio" name="font-type" v-model="styleSet.fontOrigin" value="google" @change="updateFontCollection()")
+                                    input(type="radio" class="css-panel__radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="google" @change="updateFontCollection()")
                                     div(class="css-panel__radio-element")
                                 label Local Fonts
-                                    input(type="radio" class="css-panel__radio" name="font-type" v-model="styleSet.fontOrigin" value="local" @change="updateFontCollection()")
+                                    input(type="radio" class="css-panel__radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="local" @change="updateFontCollection()")
                                     div(class="css-panel__radio-element")
                             wired-card(class="css-panel__container")
                                 label
@@ -122,7 +123,7 @@ block cssPanel
                                         option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
                                 label
                                     div(class="css-panel__label") Title Font
-                                    select( v-model="styleSet.fontFamilyTitle" class="css-panel__input"  name="styleSet.fontFamilyTitle" v-on:change="updateCssFont('fontFamilyTitle')")
+                                    select( v-model="styleSet.fontFamilyTitle" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('fontFamilyTitle')")
                                         option(value="none") Selectionner une font
                                         option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
 
@@ -132,7 +133,7 @@ block cssPanel
                             legend Save
                             label
                                 div(class="css-panel__label") Config name
-                                input(type="text" class="css-panel__input" name="styleSet" v-bind:value="styleSet.styleSet")
+                                input(type="text" class="css-panel__input" name="setName" v-model="styleSet.setName" )
                             button(class="css-panel__container" v-if="styleSet.styleSet" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
                             button(class="css-panel__container" formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
                             button(class="css-panel__container" formaction='/admin/settings/new') Delete Style Set

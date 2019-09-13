@@ -236,14 +236,18 @@ app.get('/', function(req, res) {
 });
 
 app.get('/:app', function(req, res) {
-	res.locals.isLogged = req.isAuthenticated();
+	var isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();
+
+	res.locals.isLogged = isLogged;
 	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
 	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
 	res.render('index');
 });
 
 app.get('/:app/:view', function(req, res) {
-	res.locals.isLogged = req.isAuthenticated();
+	var isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();
+
+	res.locals.isLogged = isLogged;
 	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
 	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
 	res.render(req.params.view);

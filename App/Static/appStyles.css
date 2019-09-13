@@ -54,6 +54,7 @@
 		overflow: auto;
 		width: calc(300px - (var(--app-ratio) * 2));
 		padding: var(--app-ratio);
+		height: 100%;
 	}
 	#css-panel__selector {
 		z-index: 20;

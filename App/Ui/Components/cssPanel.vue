@@ -1,6 +1,9 @@
 var settings = require('../../../rougeSettings.json');
 const axios = require('axios');
 var makeFontFamilyName = function(name) {
+	if (!name) {
+		return;
+	}
 	return name
 		.replace('.otf', '')
 		.replace('.ttf', '')
@@ -17,19 +20,21 @@ var panelComponent = {
 	 */
 	data: function() {
 		return {
-			fontSize: 20,
-			fontCollection: this.getfontCollection,
+			fontCollection: {},
 
 			styleSetCollection: [],
 			styleSet: {},
 			cssPanelMain: 1,
 			selectorIndex: 1,
 			warningMessage: '',
+			googleFontCollection: [],
+			localFontCollection: [],
 		};
 	},
+	//TODO : organize that thing
 	methods: {
 		updateFontSize: function() {
-			this.selectorCollection.html.fontSize = this.fontSize + 'px';
+			this.selectorCollection.html.fontSize = this.styleSet.fontSize + 'px';
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
 		updateCssFont: function(fontType) {
@@ -78,6 +83,7 @@ var panelComponent = {
 			}
 			this.$store.commit('selectorIndex', this.updateIndex());
 		},
+		//TODO : remove
 		stringify: function(jsonObject) {
 			return JSON.stringify(jsonObject);
 		},
@@ -87,19 +93,18 @@ var panelComponent = {
 		},
 		updateFontCollection: function() {
 			if (this.styleSet.fontOrigin === 'google') {
-				this.fontCollection = this.getfontCollection;
+				this.fontCollection = this.googleFontCollection;
 			} else if (this.styleSet.fontOrigin === 'local') {
-				var self = this;
-				axios
-					.get('/appapi/fonts')
-					.then(function(response) {
-						self.fontCollection = response.data;
-					})
-					.catch(function(error) {
-						self.fontCollection = [];
-						self.fontCollection.push(error);
-					});
+				this.fontCollection = this.localFontCollection;
 			}
+		},
+		updateStyleSet: function(styleSet) {
+			//TODO put all this in a generic "loadStyleSet" thingie
+			this.styleSet = styleSet;
+			this.updateFontCollection();
+			this.updateCssFont();
+			this.$store.commit('selectorCollection', JSON.parse(styleSet.selectorSetParamString));
+			this.$store.commit('selectorIndex', this.updateIndex());
 		},
 		checkSave: function(event) {
 			var self = this;
@@ -145,6 +150,8 @@ var panelComponent = {
 		},
 	},
 	mounted: function() {
+		// TODO : replace with axios for consistency
+		//Google Fonts
 		var self = this;
 		var request = new XMLHttpRequest();
 		request.open('GET', 'https://www.googleapis.com/webfonts/v1/webfonts?sort=alpha&key=' + settings.googleFontKey);
@@ -153,12 +160,23 @@ var panelComponent = {
 				if (request.status === 200) {
 					var data = JSON.parse(request.responseText);
 
-					self.fontCollection = data.items;
+					self.googleFontCollection = data.items;
+					self.updateFontCollection();
 				}
 			}
 		};
 		request.send();
-
+		//Local Fonts
+		axios
+			.get('/appapi/fonts')
+			.then(function(response) {
+				self.localFontCollection = response.data;
+				self.updateFontCollection();
+			})
+			.catch(function(error) {
+				self.localFontCollection = [];
+				self.warningMessage.push(error);
+			});
 		axios
 			.get('/appapi')
 			.then(function(response) {

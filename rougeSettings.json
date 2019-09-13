@@ -6,7 +6,8 @@
 		"Demo": {
 			"styleSet": "NwC_bPXtQ6",
 			"language": "fr",
-			"title": "Mon Application"
+			"title": "Mon Application",
+			"devMode": true
 		},
 		"Blog": {
 			"language": "fr",

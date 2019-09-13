@@ -111,6 +111,7 @@ var colorComponent = {
 	},
 	mounted: function() {
 		var self = this;
+		//TODO replace by Axios
 		var styleRequest = new XMLHttpRequest();
 		styleRequest.open('GET', '/appapi', true);
 
@@ -119,8 +120,11 @@ var colorComponent = {
 				if (styleRequest.status === 200) {
 					var data = JSON.parse(styleRequest.responseText);
 					colorSet = new colors.generateColorSet(data.dominantColor);
-
-					self.colorSet = colorSet.generate(JSON.parse(data.colorSetParamString));
+					self.colorSet = colorSet.generate(
+						JSON.parse(data.colorSetParamString),
+						parseInt(data.variationLightAmt),
+						parseInt(data.variationSatAmt)
+					);
 					self.dominant = data.dominantColor;
 					self.dominantColor = colorUtils.hexToHsl(data.dominantColor).getValueCollection();
 					self.colorSetParamString = data.colorSetParamString;

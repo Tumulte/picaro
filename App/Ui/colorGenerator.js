@@ -10,6 +10,9 @@ var colorUtils = new colorHelper.colorUtils();
 var generateColorSet = function(dominant) {
 	this.lightVariation = 0;
 	this.satVariation = 10;
+	/**
+	 * @type {import("../Typings/global").Hsl}
+	 */
 	this.hsl = colorUtils.hexToHsl(dominant).getValueCollection();
 	/**
 	 * @type {object}
@@ -37,11 +40,11 @@ var generateColorSet = function(dominant) {
 
 	/**
 	 *
-	 * @param {number} baseValue
-	 * @param {number} variation
-	 * @returns {Array}
+	 * @param {number} baseValue The base value (0-100)
+	 * @param {number} variation The variation from the base value (1-10)
+	 * @returns {Array} Returns an evenly distributed array of numbers (min: 0, max: 100. ordered low to high)
 	 */
-	var organizedArrayBase100 = function(baseValue, variation) {
+	var getSubValues = function(baseValue, variation) {
 		var offset = 0;
 
 		for (var i = 1; i <= 5; i++) {
@@ -69,10 +72,9 @@ var generateColorSet = function(dominant) {
 	 * @param {number} combination.hue
 	 * @param {number} combination.light
 	 * @param {number} combination.saturation
-	 * @param {number} [lightVariation]
-	 * @param {number} [satVariation]
+
 	 */
-	var addCombination = function(combination, lightVariation, satVariation) {
+	var addCombination = function(combination) {
 		combination.hue = base360(combination.hue);
 		var hex = colorUtils.hslToHex(combination).getString();
 		self.colorCollection.combinationCollection.push({
@@ -81,44 +83,45 @@ var generateColorSet = function(dominant) {
 			light: combination.light,
 			saturation: combination.saturation,
 		});
-		addSubCombination(lightVariation, satVariation);
+		addSubCombination();
 	};
 	/**
 	 *
-	 * @param {number|undefined} lightVariation
-	 * @param {number|undefined} satVariation
+	 * @param {Object} combination
+
 	 */
-	var addSubCombination = function(lightVariation, satVariation) {
-		if (typeof lightVariation !== 'number' || lightVariation > 10) {
-			lightVariation = 10;
-		}
-		if (typeof satVariation !== 'number') {
-			satVariation = 0;
-		}
-		if (satVariation > 10) {
-			satVariation = 10;
-		}
-		var currentArrayPosition = self.colorCollection.combinationCollection.length - 1;
-		var currentEntry = self.colorCollection.combinationCollection[currentArrayPosition];
-		var lightCollection = organizedArrayBase100(currentEntry.light, lightVariation);
-		var satCollection = organizedArrayBase100(currentEntry.saturation, satVariation);
-		currentEntry.subCombination = [];
+	var createSubCombinationArray = function(combination) {
+		var lightCollection = getSubValues(combination.light, self.lightVariation);
+		var satCollection = getSubValues(combination.saturation, self.satVariation);
+		var subCombination = [];
 		for (var i = 0; i < 10; i++) {
-			currentEntry.subCombination[i] = {
-				hue: currentEntry.hue,
+			subCombination[i] = {
+				hue: combination.hue,
 				light: lightCollection[i],
 				saturation: satCollection[i],
 				hex: colorUtils
-					.hslToHex({ hue: currentEntry.hue, light: lightCollection[i], saturation: satCollection[i] })
+					.hslToHex({ hue: combination.hue, light: lightCollection[i], saturation: satCollection[i] })
 					.getString(),
 			};
 		}
+
+		return subCombination;
 	};
 	/**
-	 * @param {string} newColor The hex of the nez color
+	 *
+	 */
+	var addSubCombination = function() {
+		var combinationCollection = self.colorCollection.combinationCollection;
+
+		var lastEntry = combinationCollection[combinationCollection.length - 1];
+		lastEntry.subCombination = createSubCombinationArray(lastEntry);
+	};
+	/**
+	 * @param {string} newColor The hex of the new color
 	 */
 	this.updateColor = function(newColor) {
 		this.colorCollection.dominant = newColor;
+
 		this.hsl = colorUtils.hexToHsl(newColor).getValueCollection();
 		return this;
 	};
@@ -141,6 +144,7 @@ var generateColorSet = function(dominant) {
 
 		return this.colorCollection;
 	};
+	// TODO : remove "object" types
 	/**
 	 * @param {Array} colors
 	 * @param {number} lightVariation
@@ -152,9 +156,9 @@ var generateColorSet = function(dominant) {
 
 		this.lightVariation = lightVariation;
 		this.satVariation = satVariation;
+		this.colorCollection.dominantSubCollection = createSubCombinationArray(this.hsl);
 
 		this.colorCollection.combinationCollection = [];
-
 		colors.forEach(function(item) {
 			var saturation = item.saturation ? item.saturation : self.hsl.saturation;
 			var light = item.light ? item.light : self.hsl.light;
@@ -163,7 +167,7 @@ var generateColorSet = function(dominant) {
 				saturation: saturation,
 				light: light,
 			};
-			addCombination(combination, lightVariation, satVariation);
+			addCombination(combination);
 		});
 		return this.colorCollection;
 	};

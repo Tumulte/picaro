@@ -4,6 +4,19 @@ var messages = require('../../Messages/messages.json');
 var cssGenerator = require('../cssGenerator');
 var generateCss = false;
 var utils = require('../../utils');
+var getColorFromCollection = function(instance, data) {
+	if (data[0] === 'dominant') {
+		return instance.colorCollection.dominantSubCollection[data[1]];
+	} else if (
+		data[0] === undefined ||
+		data[1] === undefined ||
+		!instance.colorCollection.combinationCollection[data[0]] // important for when you reduce the number of colors
+	) {
+		return '';
+	} else {
+		return instance.colorCollection.combinationCollection[data[0]].subCombination[data[1]];
+	}
+};
 var selectorComponent = {
 	data: function() {
 		return {
@@ -45,12 +58,10 @@ var selectorComponent = {
 		},
 		getColorFromCoordinates: function(data) {
 			if (utils.isHexColor(data)) {
+				// if it's already an hex
 				return '<div style="width:10px; height:10px; background:' + data + '"></div>';
 			} else if (typeof data === 'object') {
-				if (!data[0] || !data[1] || !this.colorCollection.combinationCollection[data[0]]) {
-					return '';
-				}
-				var selectedColor = this.colorCollection.combinationCollection[data[0]].subCombination[data[1]];
+				var selectedColor = getColorFromCollection(this, data);
 				selectedColor = colorUtils.hslToHex(selectedColor).getString();
 				this.colorMapping[JSON.stringify(data)] = selectedColor;
 				return '<div style="width:10px; height:10px; background:' + selectedColor + '"></div>';
@@ -120,6 +131,7 @@ var selectorComponent = {
 			return this.$store.getters.selectorIndex;
 		},
 	},
+	//TODO : that's confusing to have the master style updater here
 	updated: function() {
 		var self = this;
 		this.$nextTick(function() {
