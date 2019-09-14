@@ -6,4 +6,4 @@ npm-debug.log
 .history
 rougeSettings.json
 static/fonts/*
-App/Cypress/videos
+App/Cypress/videos/*
