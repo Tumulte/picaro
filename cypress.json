@@ -4,9 +4,11 @@
 	"integrationFolder": "App/Cypress/integration",
 	"screenshotsFolder": "App/Cypress/screenshots",
 	"videosFolder": "App/Cypress/videos",
-	"reporter": "JSON",
+	"reporter": "mochawesome",
 	"reporterOptions": {
-		"mochaFile": "App/Cypress/output.json",
-		"toConsole": true
+		"reportDir": "App",
+		"overwrite": true,
+		"html": false,
+		"json": true
 	}
 }
