@@ -11,6 +11,14 @@ block body
 
 block cssPanel
     if(isLogged)
+        if(isDev)
+            div(id="app-status")
+                if(integrationReport.stats.failures === 0)
+                    span ok
+                else
+                    span not ok
+        div(id="app-status")
+
         label(id="css-panel__toggle-label" class="css-panel_sketchy" for="css-panel__toggle")
             div Panel
             svg(class="css-panel-svg-highlight")
