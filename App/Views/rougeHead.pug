@@ -12,11 +12,16 @@ block body
 block cssPanel
     if(isLogged)
         if(isDev)
-            div(id="app-status")
+            div(id="app-status") Integration
                 if(integrationReport.stats.failures === 0)
                     span ok
                 else
-                    span not ok
+                    span #{integrationReport.stats.failures} failed
+            div(id="app-status") Unit tests
+                if(unitReport.numFailedTests === 0)
+                    span ok
+                else
+                    span #{unitReport.numFailedTests} failed
         div(id="app-status")
 
         label(id="css-panel__toggle-label" class="css-panel_sketchy" for="css-panel__toggle")

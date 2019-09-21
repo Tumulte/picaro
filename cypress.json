@@ -1,9 +1,9 @@
 {
 	"baseUrl": "http://localhost:8080",
-	"fixturesFolder": "App/Cypress/fixtures",
-	"integrationFolder": "App/Cypress/integration",
-	"screenshotsFolder": "App/Cypress/screenshots",
-	"videosFolder": "App/Cypress/videos",
+	"fixturesFolder": "App/Tests/Cypress/fixtures",
+	"integrationFolder": "App/Tests/Cypress/integration",
+	"screenshotsFolder": "App/Tests/Cypress/screenshots",
+	"videosFolder": "App/Tests/Cypress/videos",
 	"reporter": "mochawesome",
 	"reporterOptions": {
 		"reportDir": "App",

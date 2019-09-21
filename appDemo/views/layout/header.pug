@@ -1,9 +1,11 @@
 
 extends ../../../App/Views/rougeHead.pug
 block  head
-    script(src="/appDemo-bundle.js")
     if environment === 'production'
         link(rel='stylesheet', href='/appDemo.css')
+    else
+        script var ENVIRONMENT = "development";
+    script(src="/appDemo-bundle.js")
 
 
 block body

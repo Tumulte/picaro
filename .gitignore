@@ -6,4 +6,12 @@ npm-debug.log
 .history
 rougeSettings.json
 static/fonts/*
-App/Cypress/videos/*
+App/Tests/Cypress/videos/*
+App/mochawesome.json
+App/Tests/css/*
+App/Tests/js/*
+App/Tests/index.html
+App/Tests/jest-results.json
+
+App/Tests/Cypress/screenshots/*
+coverage

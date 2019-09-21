@@ -37,6 +37,7 @@ app.set('view engine', 'pug');
 app.use(express.static('static'));
 app.use(express.static('node_modules/normalize.css'));
 app.use(express.static('App/Dist'));
+
 app.use('/images', express.static('App/Static/images'));
 app.use('/svg', express.static('App/Static/svg'));
 
@@ -204,6 +205,20 @@ app.use(function(req, res, next) {
 
 	next();
 });
+//Development specific stuffs
+var isProd = process.env.NODE_ENV === 'production';
+if (!isProd) {
+	app.use(function(req, res, next) {
+		const integrationReport = require('./mochawesome.json');
+		const unitReport = require('./Tests/jest-results.json');
+
+		res.locals.isDev = true;
+		res.locals.integrationReport = integrationReport;
+		res.locals.unitReport = unitReport;
+
+		next();
+	});
+}
 
 //TODO add setup. Check initiateApp.js
 app.get('/admin/setup', function() {
@@ -252,11 +267,11 @@ app.get('/:app', function(req, res) {
 		// @ts-ignore
 		currentApplicationSettings = settings.applications[upperCasedApp];
 		currentApplicationSettings.applicationName = upperCasedApp;
-	} else if (req.params.app !== 'admin') {
+		app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
+		res.render('index');
+	} else if (req.params.app !== 'admin' || req.params.app !== '__webpack_hmr') {
 		res.status(404).send('This page does not exist');
 	}
-	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
-	res.render('index');
 });
 
 app.get('/:app/:view', function(req, res) {
@@ -264,9 +279,6 @@ app.get('/:app/:view', function(req, res) {
 	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
 	res.render(req.params.view);
 });
-
-//Development specific stuffs
-var isProd = process.env.NODE_ENV === 'production';
 
 if (!isProd) {
 	//webpack
@@ -279,22 +291,7 @@ if (!isProd) {
 	//webpack
 	app.use(webpackDevMiddleware);
 	app.use(webpackHotMiddleware);
-
-	//Test reporting
-	/**
-	 * @param {express.Response} res
-	 * @param {express.Request} req
-	 * @param {express.NextFunction} next
-	 */
-	const integrationReport = require('./mochawesome.json');
-	app.use(function(req, res, next) {
-		res.locals.isDev = true;
-		res.locals.integrationReport = integrationReport;
-
-		next();
-	});
 }
-
 //Server
 /* eslint-disable no-console */
 app.listen(port, function(err) {
