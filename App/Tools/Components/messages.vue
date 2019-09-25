@@ -5,15 +5,17 @@ var hash = require('object-hash');
 var messagesComponent = {
 	props: ['warningMessage'],
 	template:
+		'<div class="component-message-container">' +
 		'<ul class="component-message">' +
-		'<li v-for="message in messageCollection" :class="message.type">' +
+		'<li v-for="message in messageCollection" class="__message" :class="message.type">' +
 		'{{ message.text }}' +
 		'</li>' +
-		'<li v-for="(message, index) in messageCollectionConfirm" :class="message.type">' +
+		'<li v-for="(message, index) in messageCollectionConfirm"  class="__message" :class="message.type">' +
 		'{{ message.text }}' +
 		'<div><button v-on:click="confirmCallback(message.callback, index)">Continue</button><button v-on:click="cancelCallback(index)">Cancel</button></div>' +
 		'</li>' +
-		'</ul>',
+		'</ul>' +
+		'</div>',
 
 	data: function() {
 		return {

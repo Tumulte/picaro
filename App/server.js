@@ -33,10 +33,25 @@ var app = express();
 //Template Engine
 app.set('view engine', 'pug');
 
+var isProd = process.env.NODE_ENV === 'production';
+if (!isProd) {
+	//webpack
+	const webpack = require('webpack');
+	const config = require('../webpack.config.dev.js');
+	const compiler = webpack(config);
+	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+	// @ts-ignore
+	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
+	//webpack
+	app.use(webpackDevMiddleware);
+	app.use(webpackHotMiddleware);
+}
+
 //Static Files
-app.use(express.static('static'));
-app.use(express.static('node_modules/normalize.css'));
-app.use(express.static('App/Dist'));
+app.use('/static', express.static('static'));
+app.use('/static', express.static('node_modules/normalize.css'));
+app.use('/static', express.static('App/Dist'));
+app.use('/fonts', express.static('static/fonts'));
 
 app.use('/images', express.static('App/Static/images'));
 app.use('/svg', express.static('App/Static/svg'));
@@ -197,7 +212,6 @@ app.use(function(req, res, next) {
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
 
-	res.locals.styleSetId = currentApplicationSettings.styleSet;
 	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSetPresets').value());
 
 	var isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();
@@ -206,7 +220,6 @@ app.use(function(req, res, next) {
 	next();
 });
 //Development specific stuffs
-var isProd = process.env.NODE_ENV === 'production';
 if (!isProd) {
 	app.use(function(req, res, next) {
 		const integrationReport = require('./mochawesome.json');
@@ -226,6 +239,7 @@ app.get('/admin/setup', function() {
 });
 
 //TODO add put
+//TODO should be in appApi
 app.post('/admin/settings/:type', upload.none(), function(req, res) {
 	if (req.body.styleSet === '') {
 		req.body.styleSet = 'styleSet-' + req.body.id;
@@ -280,18 +294,6 @@ app.get('/:app/:view', function(req, res) {
 	res.render(req.params.view);
 });
 
-if (!isProd) {
-	//webpack
-	const webpack = require('webpack');
-	const config = require('../webpack.config.dev.js');
-	const compiler = webpack(config);
-	const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
-	// @ts-ignore
-	const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, config.devServer);
-	//webpack
-	app.use(webpackDevMiddleware);
-	app.use(webpackHotMiddleware);
-}
 //Server
 /* eslint-disable no-console */
 app.listen(port, function(err) {

@@ -2,7 +2,7 @@ html(lang=language)
   head
     title #{title}
 
-    link(rel="stylesheet" type="text/css" href="/normalize.css")
+    link(rel="stylesheet" type="text/css" href="/static/normalize.css")
     script.
         var colorSetCollection = !{colorSetCollection};
         var isLogged = #{isLogged}
@@ -52,18 +52,18 @@ block cssPanel
                         wired-input(type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")
 
             css-panel-color( inline-template="" )
-                div(id="css-panel__color" v-on:change="passValuesToStore()")
+                div(id="css-panel__color" v-if="$store.getters.loaded")
 
                     wired-card(class="css-panel__container")
                         label
                             div(class="css-panel__label") Combination Presets
-                            select(v-model="colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
+                            select(v-model="colorParameterCollection.colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
                                 option(value="none") Selectionner un schéma de couleur
                                 option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
                     wired-card(class="css-panel__container")
                         label Light variation
                             input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
-                        label Saturatiion variation
+                        label Saturation variation
                             input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
                     div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
                         wired-card(class="css-panel__container")
@@ -77,7 +77,7 @@ block cssPanel
                                 span(class="css-panel__slider-label") Sat.
                                 input(type="range"  class="css-panel__color-range css-panel__color-range_sat" min="0" max="100"  v-model="dominantColor.saturation")
                             div
-                                div(v-for="(subColor, index) in colorCollection.dominantSubCollection" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
+                                div(v-for="(subColor, index) in colorCollection.dominantSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
                     div(v-for="(color, index) in colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
                         wired-card
                             label
@@ -91,7 +91,7 @@ block cssPanel
                                 input(type="range"  class="css-panel__color-range css-panel__color-range_sat" min="0" max="100"  v-model="color.saturation")
 
                             div
-                                div(v-for="(subColor, subIndex) in color.subCombination" v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
+                                div(v-for="(subColor, subIndex) in color.subCombination" :class="{'__main':isMainColor(bgColor(subColor), bgColor(color))}"  v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
                             wired-button(v-on:click="removeColor(index)" class="css-panel__color-button") Remove Color
 
                     wired-button(v-on:click="addColor" class="css-panel__color-button") Add Color
@@ -104,10 +104,9 @@ block cssPanel
                     input(type="hidden" v-for="(colorData, name) in $store.getters.colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
                     input(type="hidden"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
                     wired-card(class="css-panel__container")
-                        fieldset
+                        fieldset(class="style-set-list")
                             legend Style Set
-
-                            div(v-for="selectedStyleSet in styleSetCollection" v-bind:value="selectedStyleSet.id" @click="updateStyleSet(selectedStyleSet)" ) {{selectedStyleSet.setName}}
+                            div(v-for="selectedStyleSet in styleSetCollection" class="_item" :class="{'__current-style-set': isCurrentSet(selectedStyleSet.id)}" @click="updateStyleSet(selectedStyleSet)" ) {{selectedStyleSet.setName}}
                     wired-card(class="css-panel__container")
                         fieldset
                             legend Fonts
@@ -140,13 +139,13 @@ block cssPanel
                                         option(value="none") Selectionner une font
                                         option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
 
-                            input(type="hidden" name="id" value=styleSetId)
+                            input(type="text" name="id" v-bind:value="styleSet.id")
                     wired-card(class="css-panel__container")
                         fieldset
                             legend Save
                             label
                                 div(class="css-panel__label") Config name
                                 input(type="text" class="css-panel__input" name="setName" v-model="styleSet.setName" )
-                            button(class="css-panel__container" v-if="styleSet.styleSet" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
+                            button(class="css-panel__container" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
                             button(class="css-panel__container" formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
-                            button(class="css-panel__container" formaction='/admin/settings/new') Delete Style Set
+                            button(class="css-panel__container"  @click.prevent="checkDelete(styleSet.id)" type="button") Delete Style Set

@@ -1,5 +1,7 @@
 var settings = require('../../../rougeSettings.json');
+var colors = require('../colorGenerator');
 const axios = require('axios');
+
 var makeFontFamilyName = function(name) {
 	if (!name) {
 		return;
@@ -21,7 +23,6 @@ var panelComponent = {
 	data: function() {
 		return {
 			fontCollection: {},
-
 			styleSetCollection: [],
 			styleSet: {},
 			cssPanelMain: 1,
@@ -101,6 +102,7 @@ var panelComponent = {
 		updateStyleSet: function(styleSet) {
 			//TODO put all this in a generic "loadStyleSet" thingie
 			this.styleSet = styleSet;
+
 			this.updateFontCollection();
 			this.updateCssFont();
 			this.$store.commit('selectorCollection', JSON.parse(styleSet.selectorSetParamString));
@@ -129,6 +131,29 @@ var panelComponent = {
 						});
 				},
 			};
+		},
+		checkDelete: function(id) {
+			var self = this;
+			this.warningMessage = {
+				text: 'Are you sure you want to delete this style set ?',
+				type: 'warning',
+				callback: function() {
+					axios
+						.delete('/appapi/' + id)
+						.then(function() {
+							self.warningMessage = { type: 'success', text: 'This style set  was deleted' };
+						})
+						.catch(function(errors) {
+							self.warningMessage = {
+								type: 'error',
+								text: errors,
+							};
+						});
+				},
+			};
+		},
+		isCurrentSet: function(id) {
+			return id === this.styleSet.id;
 		},
 		saveNew: function(event) {
 			var self = this;
@@ -181,7 +206,28 @@ var panelComponent = {
 			.get('/appapi')
 			.then(function(response) {
 				self.styleSet = response.data;
+
 				self.$store.commit('selectorCollection', JSON.parse(response.data.selectorSetParamString));
+
+				var colorSet = new colors.generateColorSet(response.data.dominant);
+
+				var colorCollection = colorSet.generate(
+					JSON.parse(response.data.colorSetParamString),
+					parseInt(response.data.variationLightAmt),
+					parseInt(response.data.variationSatAmt)
+				);
+				self.$store.commit('loaded', true);
+				self.$store.commit('colorSet', colorSet);
+
+				self.$store.commit('colorCollection', colorCollection);
+				self.$store.commit('styleSet', response.data);
+
+				self.$store.commit('colorParameterCollection', {
+					dominant: response.data.dominant,
+					colorSetParamString: response.data.colorSetParamString,
+					variationLightAmt: response.data.variationLightAmt,
+					variationSatAmt: response.data.variationSatAmt,
+				});
 			})
 			.catch(function(error) {
 				self.warningMessage = {
@@ -210,6 +256,9 @@ var panelComponent = {
 
 		cssPanelIndex: function() {
 			return this.$store.getters.cssPanelIndex;
+		},
+		colorParameterCollection: function() {
+			return this.$store.getters.colorParameterCollection;
 		},
 	},
 };

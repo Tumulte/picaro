@@ -1,4 +1,3 @@
-var colors = require('../colorGenerator');
 var colorUtils = require('../colorHelper').colorUtils;
 colorUtils = new colorUtils();
 
@@ -15,20 +14,11 @@ var generateNewColorSet = function(dominant, combination) {
 	return newCombination;
 };
 
-var colorSet = false;
-
 var colorComponent = {
 	data: function() {
 		return {
-			colorSet: {},
-			/* eslint-disable-next-line no-undef */
+			//TODO call that with axios
 			colorSetCollection: colorSetCollection,
-			dominantColor: { hue: 200, saturation: 0, light: 70 },
-			dominant: '',
-			colorSetParamCollection: [],
-			colorSetParamString: '',
-			variationLightAmt: 10,
-			variationSatAmt: 0,
 		};
 	},
 	methods: {
@@ -36,14 +26,15 @@ var colorComponent = {
 			return 'background:' + colorUtils.getString(color);
 		},
 		updateColor: function() {
-			this.colorSet = colorSet
-				.updateColor(colorUtils.hslToHex(this.dominantColor).getString())
+			this.colorCollection.dominant = colorUtils.hslToHex(this.dominantColor).getString();
+			this.colorParameterCollection.dominant = this.colorCollection.dominant;
+			this.colorCollection = this.colorSet
+				.updateColor(this.colorCollection.dominant)
 				.generate(
 					this.colorSetParamCollection,
 					parseInt(this.variationLightAmt),
 					parseInt(this.variationSatAmt)
 				);
-			this.$store.commit('colorCollection', this.colorSet);
 		},
 
 		updateCombinationColor: function(index) {
@@ -54,26 +45,28 @@ var colorComponent = {
 
 			this.colorSetParamCollection[index] = generateNewColorSet(
 				this.dominantColor,
-				this.colorSet.combinationCollection[index]
+				this.colorCollection.combinationCollection[index]
 			);
-			this.colorSetParamString = JSON.stringify(this.colorSetParamCollection);
-			this.colorSet = colorSet.generate(
+			this.colorParameterCollection.colorSetParamString = JSON.stringify(this.colorSetParamCollection);
+			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
 			);
-			this.$store.commit('colorCollection', this.colorSet);
 		},
 		updatecolorSetParams: function() {
-			this.colorSetParamCollection = JSON.parse(this.colorSetParamString);
-			this.colorSet = colorSet.generate(this.colorSetParamCollection);
+			this.colorSetParamCollection = JSON.parse(this.colorParameterCollection.colorSetParamString);
+			this.colorCollection = this.colorSet.generate(this.colorSetParamCollection);
+		},
+		isMainColor: function(color, subColor) {
+			return color === subColor;
 		},
 		stringify: function(item) {
 			return JSON.stringify(item);
 		},
 		addColor: function() {
 			this.colorSetParamCollection.push({ hueVariation: this.dominantColor.hue });
-			this.colorSet = colorSet.generate(
+			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
@@ -84,57 +77,69 @@ var colorComponent = {
 			this.colorSetParamCollection.splice(index, 1);
 		},
 		updateVariationAmt: function() {
-			this.colorSet = colorSet.generate(
+			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
 			);
 		},
-		passValuesToStore: function() {
-			var dataToBeStored = {
-				dominant: this.dominant,
-				colorSetParamString: this.colorSetParamString,
-				variationLightAmt: this.variationLightAmt,
-				variationSatAmt: this.variationSatAmt,
-			};
 
-			this.$store.commit('colorParameterCollection', dataToBeStored);
-		},
 		storeColorCoordinate: function(coordinates) {
 			this.$store.commit('currentColor', coordinates);
 		},
 	},
 	computed: {
-		colorCollection: function() {
-			return this.$store.getters.colorCollection;
+		colorCollection: {
+			get() {
+				return this.$store.getters.colorCollection;
+			},
+			set(newValue) {
+				this.$store.commit('colorCollection', newValue);
+			},
 		},
-	},
-	mounted: function() {
-		var self = this;
-		//TODO replace by Axios
-		var styleRequest = new XMLHttpRequest();
-		styleRequest.open('GET', '/appapi', true);
+		colorSet: function() {
+			return this.$store.getters.colorSet;
+		},
 
-		styleRequest.onreadystatechange = function() {
-			if (styleRequest.readyState === 4) {
-				if (styleRequest.status === 200) {
-					var data = JSON.parse(styleRequest.responseText);
-					colorSet = new colors.generateColorSet(data.dominantColor);
-					self.colorSet = colorSet.generate(
-						JSON.parse(data.colorSetParamString),
-						parseInt(data.variationLightAmt),
-						parseInt(data.variationSatAmt)
-					);
-					self.dominant = data.dominantColor;
-					self.dominantColor = colorUtils.hexToHsl(data.dominantColor).getValueCollection();
-					self.colorSetParamString = data.colorSetParamString;
-					self.colorSetParamCollection = JSON.parse(data.colorSetParamString);
-					self.$store.commit('colorCollection', self.colorSet);
-					self.passValuesToStore();
-				}
+		dominantColor: function() {
+			if (this.$store.getters.colorCollection.dominant) {
+				return colorUtils.hexToHsl(this.$store.getters.colorCollection.dominant).getValueCollection();
+			} else {
+				return {};
 			}
-		};
-		styleRequest.send();
+		},
+
+		colorSetParamCollection: function() {
+			return JSON.parse(this.colorParameterCollection.colorSetParamString);
+		},
+		colorParameterCollection: {
+			get() {
+				return this.$store.getters.colorParameterCollection;
+			},
+			set(newValue) {
+				this.$store.commit('colorParameterCollection', newValue);
+			},
+		},
+		variationLightAmt: {
+			get() {
+				return this.colorParameterCollection.variationLightAmt;
+			},
+			set(newValue) {
+				var colorParameterCollection = this.colorParameterCollection;
+				colorParameterCollection.variationLightAmt = newValue;
+				this.$store.commit('colorParameterCollection', colorParameterCollection);
+			},
+		},
+		variationSatAmt: {
+			get() {
+				return this.colorParameterCollection.variationSatAmt;
+			},
+			set(newValue) {
+				var colorParameterCollection = this.colorParameterCollection;
+				colorParameterCollection.variationSatAmt = newValue;
+				this.$store.commit('colorParameterCollection', colorParameterCollection);
+			},
+		},
 	},
 };
 module.exports = colorComponent;

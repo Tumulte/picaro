@@ -18,9 +18,11 @@ const myWebpackConfig = {
 		],
 	},
 	devServer: {
+		publicPath: '/static/',
 		contentBase: path.join(__dirname, 'App/Dist'),
 		overlay: true,
 		hot: true,
+
 		stats: { colors: true },
 	},
 	target: 'web',

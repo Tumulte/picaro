@@ -92,7 +92,9 @@ var generateColorSet = function(dominant) {
 	 */
 	var createSubCombinationArray = function(combination) {
 		var lightCollection = getSubValues(combination.light, self.lightVariation);
+
 		var satCollection = getSubValues(combination.saturation, self.satVariation);
+
 		var subCombination = [];
 		for (var i = 0; i < 10; i++) {
 			subCombination[i] = {
@@ -104,7 +106,6 @@ var generateColorSet = function(dominant) {
 					.getString(),
 			};
 		}
-
 		return subCombination;
 	};
 	/**

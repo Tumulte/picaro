@@ -11,6 +11,7 @@ var makeTableName = function(req) {
  * @returns {string}
  */
 var parseMessage = function(str) {
+	console.debug(str);
 	/**
 	 * @type {Array}
 	 */

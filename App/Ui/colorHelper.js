@@ -29,7 +29,6 @@ var colorUtils = function() {
 	 */
 	this.hexToRgb = function(color) {
 		this.color = color;
-
 		if (this.color.red !== undefined) {
 			return this;
 		}
@@ -191,6 +190,7 @@ var colorUtils = function() {
 		color = this.hslToRgb(color).getValueCollection();
 		color = this.rgbToHex(color).getValueCollection();
 		this.color = color;
+
 		return this;
 	};
 	/**

@@ -2,7 +2,7 @@ rough = require('../../node_modules/roughjs/dist/rough.umd');
 require('wired-elements');
 //app CSS. Will be processed by webpack
 //@ts-ignore
-require('../../App/Static/AppStyles.css');
+require('../../App/Static/appStyles.css');
 
 // TODO SPLIT logics of this file : it's not just style config
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
@@ -12,6 +12,7 @@ if (ENVIRONMENT === 'development') {
 	// @ts-ignore
 	require('webpack-hot-middleware/client?reload=true');
 }
+
 /* eslint-enable no-undef */
 
 //@ts-ignore
@@ -38,6 +39,9 @@ var store = new Vuex.Store({
 		colorCollection: {},
 		selectorIndex: '1',
 		cssPanelIndex: 1,
+		colorSet: {},
+		styleSet: {},
+		loaded: false,
 	},
 	mutations: {
 		colorParameterCollection(state, data) {
@@ -60,6 +64,12 @@ var store = new Vuex.Store({
 		selectorCollection(state, data) {
 			state.selectorCollection = data;
 		},
+		colorSet(state, data) {
+			state.colorSet = data;
+		},
+		styleSet(state, data) {
+			state.styleSet = data;
+		},
 		colorCollection(state, data) {
 			state.colorCollection = data;
 		},
@@ -68,6 +78,9 @@ var store = new Vuex.Store({
 		},
 		cssPanelIndex(state, data) {
 			state.cssPanelIndex = data;
+		},
+		loaded(state, data) {
+			state.loaded = data;
 		},
 	},
 	getters: {
@@ -86,6 +99,15 @@ var store = new Vuex.Store({
 		},
 		cssPanelIndex(state) {
 			return state.cssPanelIndex;
+		},
+		colorSet(state) {
+			return state.colorSet;
+		},
+		styleSet(state) {
+			return state.styleSet;
+		},
+		loaded(state) {
+			return state.loaded;
 		},
 	},
 });
