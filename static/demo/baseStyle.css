@@ -1,74 +1,55 @@
 /* This is automatically generated CSS, do not edit */
 :root {
-  --dominant : #56A080;
-  --combination0:#56769F;
-  --combination0-0:#0E141B;
-  --combination0-1:#202C3C;
-  --combination0-2:#32455D;
-  --combination0-3:#445D7E;
-  --combination0-4:#56769F;
-  --combination0-5:#7490B4;
-  --combination0-6:#95AAC6;
-  --combination0-7:#B6C5D8;
-  --combination0-8:#D7DFEA;
-  --combination0-9:#F8FAFB;
-  --combination1:#7F569F;
-  --combination1-0:#150E1B;
-  --combination1-1:#30203C;
-  --combination1-2:#4A325D;
-  --combination1-3:#65447E;
-  --combination1-4:#7F569F;
-  --combination1-5:#9874B4;
-  --combination1-6:#B195C6;
-  --combination1-7:#C9B6D8;
-  --combination1-8:#E2D7EA;
-  --combination1-9:#FAF8FB;
-  --combination2:#9F7F56;
-  --combination2-0:#1B150E;
-  --combination2-1:#3C3020;
-  --combination2-2:#5D4A32;
-  --combination2-3:#7E6544;
-  --combination2-4:#9F7F56;
-  --combination2-5:#B49874;
-  --combination2-6:#C6B195;
-  --combination2-7:#D8C9B6;
-  --combination2-8:#EAE2D7;
-  --combination2-9:#FBFAF8;
-  --combination3:#769F56;
-  --combination3-0:#141B0E;
-  --combination3-1:#2C3C20;
-  --combination3-2:#455D32;
-  --combination3-3:#5D7E44;
-  --combination3-4:#769F56;
-  --combination3-5:#90B474;
-  --combination3-6:#AAC695;
-  --combination3-7:#C5D8B6;
-  --combination3-8:#DFEAD7;
-  --combination3-9:#FAFBF8;
+  --dominant : #569F97;
+  --combination0:#B87A88;
+  --combination0-0:#46393C;
+  --combination0-1:#5D464B;
+  --combination0-2:#755259;
+  --combination0-3:#8F5B67;
+  --combination0-4:#A66875;
+  --combination0-5:#B87A88;
+  --combination0-6:#C78E9B;
+  --combination0-7:#D6A4AE;
+  --combination0-8:#E3BAC3;
+  --combination0-9:#EED2D8;
+  --combination1:#404377;
+  --combination1-0:#020203;
+  --combination1-1:#121217;
+  --combination1-2:#1F202D;
+  --combination1-3:#2C2D44;
+  --combination1-4:#37395D;
+  --combination1-5:#404377;
+  --combination1-6:#484C93;
+  --combination1-7:#4F54B0;
+  --combination1-8:#6368BF;
+  --combination1-9:#797DCD;
 }
-@import url("https://fonts.googleapis.com/css?family=Zilla%20Slab&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Autour%20One&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Andika&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Alef&display=swap");
 html {
   font-size: 25;
-  font-family: "Zilla Slab";
+  font-family: "Andika";
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Autour One";
+  font-family: "Alef";
 }
 #rf-content-container main{
-  color:"#676787";
+  color:["dominant",3];
   font-size:"20px";
 }
 #rf-content-container {
-  background:#D8C9B6;
-  color:#32455D;
+  background:#E3BAC3;
+  color:#121217;
   height: 100%;
 }
 html{
-  font-family:"Zilla Slab";
+  font-family:"Andika";
   font-size:"20px";
 }
 #rf-content-container h1,h2,h3,h4,h5,h6{
-  font-family:"Autour One";
+  font-family:"Alef";
+}
+#rf-content-container -c-l-s-s__altfont{
+  font-family:"Alegreya SC";
 }
 /* This is automatically generated CSS, do not edit */

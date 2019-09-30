@@ -5,9 +5,9 @@
     "passes": 2,
     "pending": 0,
     "failures": 0,
-    "start": "2019-09-17T20:50:26.437Z",
-    "end": "2019-09-17T20:50:26.549Z",
-    "duration": 112,
+    "start": "2019-09-28T18:26:23.295Z",
+    "end": "2019-09-28T18:26:23.399Z",
+    "duration": 104,
     "testsRegistered": 2,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "163ac44e-ef81-499f-8b6a-71facabc58cf",
+      "uuid": "9a984c57-ed39-4fce-9c03-e2ccdab6f2d5",
       "title": "",
       "fullFile": "",
       "file": "",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "bbf7e8ca-ef93-4749-a684-3b5be0beab15",
+          "uuid": "46b94e6c-59e3-4c40-b685-9c3b6b966bf6",
           "title": "My First Test",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "Does not do much!",
               "fullTitle": "My First Test Does not do much!",
               "timedOut": null,
-              "duration": 62,
+              "duration": 57,
               "state": "passed",
               "speed": "medium",
               "pass": true,
@@ -47,8 +47,8 @@
               "context": null,
               "code": "expect(true).to.equal(true);",
               "err": {},
-              "uuid": "06737a8b-5b94-4c42-b5bd-8c17451203e8",
-              "parentUUID": "bbf7e8ca-ef93-4749-a684-3b5be0beab15",
+              "uuid": "01e49e8c-2999-4b4c-bcc4-db87f3b67ff7",
+              "parentUUID": "46b94e6c-59e3-4c40-b685-9c3b6b966bf6",
               "isHook": false,
               "skipped": false
             },
@@ -56,7 +56,7 @@
               "title": "Does not do much!",
               "fullTitle": "My First Test Does not do much!",
               "timedOut": null,
-              "duration": 16,
+              "duration": 22,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -65,21 +65,21 @@
               "context": null,
               "code": "expect(true).to.equal(true);",
               "err": {},
-              "uuid": "69d0e227-9b8e-477f-855a-b155d04ccd9a",
-              "parentUUID": "bbf7e8ca-ef93-4749-a684-3b5be0beab15",
+              "uuid": "6e6eb64b-2424-4737-bf3f-fc6b5451ba05",
+              "parentUUID": "46b94e6c-59e3-4c40-b685-9c3b6b966bf6",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "06737a8b-5b94-4c42-b5bd-8c17451203e8",
-            "69d0e227-9b8e-477f-855a-b155d04ccd9a"
+            "01e49e8c-2999-4b4c-bcc4-db87f3b67ff7",
+            "6e6eb64b-2424-4737-bf3f-fc6b5451ba05"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 78,
+          "duration": 79,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
