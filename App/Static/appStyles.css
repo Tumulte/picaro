@@ -7,73 +7,87 @@
 	--app-color: #333;
 	--app-tonic: #f15e5e;
 }
-
-#css-panel {
-	box-sizing: border-box;
-	width: 300px;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	background-color: #fff;
-	background-image: url('/images/paper.png');
-	border-left: solid 4px var(--app-color);
-	box-shadow: 0px -1px 17px rgba(0, 0, 0, 0.7);
+#rf-admin-panel-toggle,
+#rf-css-panel-toggle,
+#rf-css-panel {
+	/*Design elements*/
+	&.--sketchy,
+	.--sketchy {
+		position: relative;
+		svg {
+			position: absolute;
+			top: -5px;
+			left: -5px;
+			z-index: -1;
+			height: 125%;
+			width: 125%;
+		}
+		path {
+			transition: fill 0.2s ease;
+		}
+	}
+	&.--sketchy:hover path,
+	.--sketchy:hover path {
+		fill: #fff;
+	}
 }
+
 /* Core config */
-#css-panel * {
+#rf-css-panel * {
+	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 14px;
 	line-height: 1.3em;
 }
-.css-panel_sketchy {
-	position: relative;
-	svg {
-		position: absolute;
-		top: -5px;
-		left: -5px;
-		z-index: -1;
-		height: 125%;
-		width: 125%;
-	}
-	path {
-		transition: fill 0.2s ease;
-	}
-}
-.css-panel_sketchy:hover path {
-	fill: #fff;
-}
+
 /* Components */
-#css-panel {
+#rf-admin-panel,
+#rf-css-panel {
 	/* Common styling to all sub components */
-	#css-panel__color,
-	#css-panel__selector,
-	#css-panel__main {
-		overflow: auto;
-		width: calc(300px - (var(--app-ratio) * 2));
-		padding: var(--app-ratio);
-		height: 100%;
-	}
-	#css-panel__selector {
+	#_admin,
+	#_color,
+	#_selector,
+	#_main {
 		z-index: 20;
 		position: fixed;
-		top: 0;
-		bottom: 0;
-		right: 600px;
 		background: #fff;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		overflow: auto;
+		width: 300px;
+		padding: var(--app-ratio);
+		height: 100%;
+		.style-set-list {
+			._item {
+				cursor: pointer;
+				&.__current-style-set {
+					color: #fff;
+					background: #000;
+				}
+			}
+		}
 	}
-	#css-panel__color {
-		position: fixed;
-		top: 0;
-		bottom: 0;
+	#_selector {
+		right: 600px;
+	}
+	#_color {
 		right: 300px;
-		background: #fff;
+		.sub-combination {
+			height: 40px;
+			width: 10%;
+			display: inline-block;
+			&.__main {
+				border-top: 2px solid #000;
+				box-shadow: 0px -1px #fff;
+			}
+		}
 	}
 }
 /* Basic HTML */
-#css-panel {
+#rf-css-panel {
 	button {
 		width: calc(100% - 2 * var(--app-ratio-s));
 		padding: var(--app-ratio-s);
@@ -140,7 +154,12 @@
 		-webkit-appearance: none;
 		background: transparent;
 	}
-	input.css-panel__color-range {
+	#_range-light-container {
+		input[type='range'] {
+			margin: 0;
+		}
+	}
+	input._color-range {
 		width: 75%;
 		vertical-align: middle;
 	}
@@ -188,54 +207,57 @@
 	input[type='range']:focus::-webkit-slider-runnable-track {
 		outline: none;
 	}
-	.css-panel__slider-label {
+	._slider-label {
 		padding: 0 5px;
 		background: #000;
 		color: #fff;
 	}
 
-	.css-panel__color-range_hue::-webkit-slider-runnable-track {
-		height: 8px;
-		background-image: linear-gradient(
-			90deg,
-			rgba(255, 0, 0, 1) 0%,
-			rgba(255, 255, 0, 1) 16.5%,
-			rgba(0, 255, 0, 1) 33%,
-			rgba(0, 255, 255, 1) 50%,
-			rgba(0, 0, 255, 1) 66%,
-			rgba(255, 0, 255, 1) 83.5%,
-			rgba(255, 0, 0, 1) 100%
-		);
+	._color-range {
+		&.-hue::-webkit-slider-runnable-track {
+			height: 8px;
+			background-image: linear-gradient(
+				90deg,
+				rgba(255, 0, 0, 1) 0%,
+				rgba(255, 255, 0, 1) 16.5%,
+				rgba(0, 255, 0, 1) 33%,
+				rgba(0, 255, 255, 1) 50%,
+				rgba(0, 0, 255, 1) 66%,
+				rgba(255, 0, 255, 1) 83.5%,
+				rgba(255, 0, 0, 1) 100%
+			);
+		}
+		&.-light::-webkit-slider-runnable-track {
+			background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
+		}
+		&.-sat::-webkit-slider-runnable-track,
+		&.-sat:focus::-webkit-slider-runnable-track {
+			background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
+		}
 	}
-	.css-panel__color-range_light::-webkit-slider-runnable-track {
-		background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-	}
-	.css-panel__color-range_sat::-webkit-slider-runnable-track,
-	.css-panel__color-range_sat:focus::-webkit-slider-runnable-track {
-		background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
-	}
-	.css-panel__selector-container {
+
+	._selector-container {
 		padding: var(--app-ratio-s);
 	}
-	.css-panel__color-button {
+	._color-button {
 		padding: 0 var(--app-ratio-xs);
 		margin: var(--app-ratio-xs) 0;
 	}
-	.css-panel__container {
+	._container {
 		padding: var(--app-ratio-s);
 	}
-	.css-panel__radio {
+	._radio {
 		position: absolute;
 		left: -9999px;
 	}
-	.css-panel__radio-element {
+	._radio-element {
 		display: inline-block;
 		width: 17px;
 		height: 17px;
 		margin: var(--app-ratio-s) 0 var(--app-ratio-s) var(--app-ratio-s);
 		background: url('/svg/slider6.svg');
 	}
-	.css-panel__radio-element::before {
+	._radio-element::before {
 		content: '';
 		background: transparent;
 		width: 11px;
@@ -246,7 +268,7 @@
 		left: 3px;
 		top: 2px;
 	}
-	.css-panel__radio:checked + .css-panel__radio-element::before {
+	._radio:checked + ._radio-element::before {
 		content: '';
 		background: var(--app-tonic);
 		width: 16px;
@@ -258,89 +280,104 @@
 		top: 1px;
 		z-index: -1;
 	}
-}
-#css-panel__main {
-	.style-set-list {
-		._item {
-			cursor: pointer;
-			&.__current-style-set {
-				color: #fff;
-				background: #000;
-			}
-		}
+	/* Form Inputs */
+	._target-input {
+		display: none;
+		position: absolute;
+		top: 40px;
+		padding: 10px;
+		right: calc(100% - 30px);
+		border: 3px solid #000;
 	}
-}
-#css-panel__color {
-	.sub-combination {
-		height: 40px;
-		width: 10%;
-		display: inline-block;
-		margin: var(--app-ratio) 0;
-		&.__main {
-			border-top: 2px solid #000;
-			box-shadow: 0px -1px #fff;
-		}
-	}
-}
-.css-panel_sketchy {
-	input {
-		border: none;
-		width: 95%;
-		margin: 2%;
-		background: transparent;
-	}
-}
-/* Form Inputs */
-#css-panel .css-panel__target-input {
-	display: none;
-	position: absolute;
-	top: 40px;
-	padding: 10px;
-	right: calc(100% - 30px);
-	border: 3px solid #000;
-}
 
-#css-panel .css-panel__target-input-radio:checked + .css-panel__target-input {
-	display: block;
-}
-#css-panel .css-panel__target-input-radio {
-	position: absolute;
-	left: -9999px;
+	._target-input-radio:checked + ._target-input {
+		display: block;
+	}
+	._container {
+		width: 100%;
+	}
+	._color-fold,
+	._target-input-radio {
+		position: absolute;
+		left: -9999px;
+	}
+	._color-fold:checked ~ label {
+		display: none;
+	}
 }
 
 /*Independent Elements */
 /* Panels buttons */
-#css-panel__toggle-label {
-	font-family: 'Courier New', Courier, monospace;
-	font-size: 14px;
-	line-height: 1.3em;
-	position: absolute;
-	z-index: 100000;
-	right: var(--app-ratio);
-	top: 0;
-	padding: var(--app-ratio-s);
-	label {
+#rf-admin-panel-toggle,
+#rf-css-panel-toggle {
+	&._label {
+		font-family: 'Courier New', Courier, monospace;
+		font-size: 14px;
+		line-height: 1.3em;
+		position: absolute;
+		z-index: 100000;
+		right: var(--app-ratio);
+		top: 0;
+		padding: var(--app-ratio-s);
 		background: var(--app-tonic);
 		display: inline-block;
 		cursor: pointer;
 		padding: var(--app-ratio-xs);
 	}
 }
-#css-panel__toggle {
+#rf-admin-panel-toggle {
+	&._label {
+		right: calc(75px + var(--app-ratio));
+	}
+}
+#__rf-admin-panel-toggle-check,
+#__rf-css-panel-toggle-check {
 	position: absolute;
 	left: -9999px;
 	top: 0;
 }
-#css-panel__toggle + #css-panel,
-#css-panel__toggle + #css-panel #css-panel__selector,
-#css-panel__toggle + #css-panel #css-panel__color {
-	left: -9999px;
+#__rf-admin-panel-toggle-check + #rf-admin-panel,
+#__rf-css-panel-toggle-check + #rf-css-panel {
+	#_selector,
+	#_main,
+	#_color,
+	#_admin {
+		left: -9999px;
+	}
 }
-#css-panel__toggle:checked + #css-panel,
-#css-panel__toggle:checked + #css-panel #css-panel__selector,
-#css-panel__toggle:checked + #css-panel #css-panel__color {
-	left: auto;
+
+#__rf-admin-panel-toggle-check:checked + #rf-admin-panel,
+#__rf-css-panel-toggle-check:checked + #rf-css-panel {
+	#_selector,
+	#_color,
+	#_main,
+	#_admin {
+		left: auto;
+	}
 }
+#rf-app-status {
+	position: fixed;
+	top: 0;
+	right: 159px;
+	font-size: 0.6em;
+	background: #fff;
+	border: 1px solid #000;
+	._status {
+		display: inline-block;
+		margin: 0 10px;
+	}
+	.-failure,
+	.-success {
+		font-weight: bold;
+	}
+	.-success {
+		color: forestgreen;
+	}
+	.-failure {
+		color: red;
+	}
+}
+
 #rf-login {
 	display: flex;
 	align-items: center;
@@ -372,7 +409,7 @@ Application Content
 
 	text-align: center;
 	z-index: 10000;
-	.__message {
+	._message {
 		background: #fff;
 		border: 4px solid;
 		padding: 12px !important;

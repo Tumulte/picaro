@@ -4,7 +4,7 @@
 	"warningTimeout": 10000,
 	"applications": {
 		"Demo": {
-			"styleSet": "VwXDBELJK",
+			"styleSet": "default",
 			"language": "fr",
 			"title": "Mon Application",
 			"devMode": true
@@ -14,6 +14,5 @@
 			"title": "Mon Blog"
 		}
 	},
-	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI",
-	"auth": { "id": "tumulte", "pw": "TCHF2lml" }
+	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
 }

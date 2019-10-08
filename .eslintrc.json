@@ -16,7 +16,7 @@
 		"eqeqeq": 1
 	},
 	"globals": {
-		"cssPanel": true,
-		"expect": true
+		"expect": true,
+		"cy": true
 	}
 }

@@ -1,6 +1,7 @@
 var settings = require('../../../rougeSettings.json');
 var colors = require('../colorGenerator');
 const axios = require('axios');
+const shortid = require('shortid');
 
 var makeFontFamilyName = function(name) {
 	if (!name) {
@@ -11,7 +12,47 @@ var makeFontFamilyName = function(name) {
 		.replace('.ttf', '')
 		.replace('.woff', '');
 };
+var getAllStyleSet = function(instance) {
+	axios
+		.get('/appapi/all')
+		.then(response => {
+			instance.styleSetCollection = response.data;
+		})
+		.catch(error => {
+			instance.warningMessage = {
+				type: 'error',
+				text: 'Request failed.  Returned status of ' + error,
+			};
+		});
+};
+var applyStyleSet = function(data, instance) {
+	instance.styleSet = data;
 
+	instance.$store.commit('selectorCollection', JSON.parse(data.selectorSetParamString));
+
+	var colorSet = new colors.generateColorSet(data.dominant);
+
+	var colorCollection = colorSet.generate(
+		JSON.parse(data.colorSetParamString),
+		parseInt(data.variationLightAmt),
+		parseInt(data.variationSatAmt)
+	);
+	instance.$store.commit('loaded', true);
+	instance.$store.commit('colorSet', colorSet);
+
+	instance.$store.commit('colorCollection', colorCollection);
+	instance.$store.commit('styleSet', data);
+
+	instance.$store.commit('colorParameterCollection', {
+		dominant: data.dominant,
+		colorSetParamString: data.colorSetParamString,
+		variationLightAmt: data.variationLightAmt,
+		variationSatAmt: data.variationSatAmt,
+	});
+	instance.updateFontCollection();
+	instance.updateAllCssFont();
+	instance.toggleIndex('cssPanelIndex');
+};
 var fontTypes = ['fontFamilyMain', 'fontFamilyTitle', 'fontFamilyAlt'];
 /**
  * @VueComponent
@@ -25,8 +66,6 @@ var panelComponent = {
 			fontCollection: {},
 			styleSetCollection: [],
 			styleSet: {},
-			cssPanelMain: 1,
-			selectorIndex: 1,
 			warningMessage: '',
 			googleFontCollection: [],
 			localFontCollection: [],
@@ -36,7 +75,12 @@ var panelComponent = {
 	methods: {
 		updateFontSize: function() {
 			this.selectorCollection.html.fontSize = this.styleSet.fontSize + 'px';
-			this.$store.commit('selectorIndex', this.updateIndex());
+			this.toggleIndex('selectorIndex');
+		},
+		updateAllCssFont: function() {
+			for (var i = 0; i < fontTypes.length; i++) {
+				this.updateCssFont(fontTypes[i]);
+			}
 		},
 		updateCssFont: function(fontType) {
 			if (this.styleSet[fontType] === 'none') {
@@ -82,15 +126,17 @@ var panelComponent = {
 				this.selectorCollection.CLSS__altfont = {};
 				this.selectorCollection.CLSS__altfont.fontFamily = makeFontFamilyName(this.styleSet[fontType]);
 			}
-			this.$store.commit('selectorIndex', this.updateIndex());
+			this.toggleIndex('selectorIndex');
 		},
 		//TODO : remove
 		stringify: function(jsonObject) {
 			return JSON.stringify(jsonObject);
 		},
 		updateIndex: function() {
-			this.selectorIndex = this.selectorIndex === 1 ? 0 : 1;
-			return 'main' + this.selectorIndex;
+			this.cssPanelIndex = this.cssPanelIndex === 1 ? 0 : 1;
+		},
+		toggleIndex: function(index) {
+			this[index] = this[index] === 1 ? 0 : 1;
 		},
 		updateFontCollection: function() {
 			if (this.styleSet.fontOrigin === 'google') {
@@ -100,31 +146,26 @@ var panelComponent = {
 			}
 		},
 		updateStyleSet: function(styleSet) {
-			//TODO put all this in a generic "loadStyleSet" thingie
-			this.styleSet = styleSet;
-
-			this.updateFontCollection();
-			this.updateCssFont();
-			this.$store.commit('selectorCollection', JSON.parse(styleSet.selectorSetParamString));
-			this.$store.commit('selectorIndex', this.updateIndex());
+			applyStyleSet(styleSet, this);
 		},
 		checkSave: function(event) {
-			var self = this;
 			this.warningMessage = {
 				text: 'Are you sure you want to overwrite this style set ?',
 				type: 'warning',
-				callback: function() {
+				callback: () => {
 					var form = event.target.form;
 					var formData = new FormData(form);
 					axios
 						.post(event.target.getAttribute('formAction'), formData, {
 							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 						})
-						.then(function() {
-							self.warningMessage = { type: 'success', text: 'Saved successfully' };
+						.then(() => {
+							this.warningMessage = { type: 'success', text: 'Saved successfully' };
+							getAllStyleSet(this);
+							this.toggleIndex('cssPanelIndex');
 						})
-						.catch(function(errors) {
-							self.warningMessage = {
+						.catch(errors => {
+							this.warningMessage = {
 								type: 'error',
 								text: 'Request failed.  Returned status of ' + errors,
 							};
@@ -133,18 +174,20 @@ var panelComponent = {
 			};
 		},
 		checkDelete: function(id) {
-			var self = this;
 			this.warningMessage = {
 				text: 'Are you sure you want to delete this style set ?',
 				type: 'warning',
-				callback: function() {
+				callback: () => {
 					axios
 						.delete('/appapi/' + id)
-						.then(function() {
-							self.warningMessage = { type: 'success', text: 'This style set  was deleted' };
+						.then(() => {
+							this.warningMessage = { type: 'success', text: 'This style set  was deleted' };
+
+							getAllStyleSet(this);
+							applyStyleSet(this.styleSetCollection[0], this);
 						})
-						.catch(function(errors) {
-							self.warningMessage = {
+						.catch(errors => {
+							this.warningMessage = {
 								type: 'error',
 								text: errors,
 							};
@@ -156,22 +199,26 @@ var panelComponent = {
 			return id === this.styleSet.id;
 		},
 		saveNew: function(event) {
-			var self = this;
-
+			var id = shortid.generate();
+			var previousID = this.styleSet.id;
+			this.styleSet.id = id;
 			var form = event.target.form;
 			var formData = new FormData(form);
+			formData.set('id', id);
 
 			axios
 				.post(event.target.getAttribute('formAction'), formData)
-				.then(function() {
-					self.warningMessage = { type: 'success', text: 'Saved successfully' };
+				.then(() => {
+					this.warningMessage = { type: 'success', text: this.styleSet.setName + ' saved successfully' };
 				})
-				.catch(function(errors) {
-					self.warningMessage = {
+				.catch(errors => {
+					this.warningMessage = {
 						type: 'error',
 						text: 'Request failed.  Returned status of ' + errors,
 					};
+					this.styleSet.id = previousID;
 				});
+			getAllStyleSet(this);
 		},
 	},
 	mounted: function() {
@@ -194,59 +241,26 @@ var panelComponent = {
 		//Local Fonts
 		axios
 			.get('/appapi/fonts')
-			.then(function(response) {
-				self.localFontCollection = response.data;
-				self.updateFontCollection();
+			.then(response => {
+				this.localFontCollection = response.data;
+				this.updateFontCollection();
 			})
 			.catch(function(error) {
-				self.localFontCollection = [];
-				self.warningMessage.push(error);
+				this.localFontCollection = [];
+				this.warningMessage.push(error);
 			});
 		axios
 			.get('/appapi')
-			.then(function(response) {
-				self.styleSet = response.data;
-
-				self.$store.commit('selectorCollection', JSON.parse(response.data.selectorSetParamString));
-
-				var colorSet = new colors.generateColorSet(response.data.dominant);
-
-				var colorCollection = colorSet.generate(
-					JSON.parse(response.data.colorSetParamString),
-					parseInt(response.data.variationLightAmt),
-					parseInt(response.data.variationSatAmt)
-				);
-				self.$store.commit('loaded', true);
-				self.$store.commit('colorSet', colorSet);
-
-				self.$store.commit('colorCollection', colorCollection);
-				self.$store.commit('styleSet', response.data);
-
-				self.$store.commit('colorParameterCollection', {
-					dominant: response.data.dominant,
-					colorSetParamString: response.data.colorSetParamString,
-					variationLightAmt: response.data.variationLightAmt,
-					variationSatAmt: response.data.variationSatAmt,
-				});
+			.then(response => {
+				applyStyleSet(response.data, this);
 			})
-			.catch(function(error) {
-				self.warningMessage = {
+			.catch(error => {
+				this.warningMessage = {
 					type: 'error',
 					text: 'Request failed.  Returned status of ' + error,
 				};
 			});
-
-		var appDataRequest = new XMLHttpRequest();
-		appDataRequest.open('GET', '/appapi/all', true);
-
-		appDataRequest.onreadystatechange = function() {
-			if (appDataRequest.readyState === 4) {
-				if (appDataRequest.status === 200) {
-					self.styleSetCollection = JSON.parse(appDataRequest.responseText);
-				}
-			}
-		};
-		appDataRequest.send();
+		getAllStyleSet(this);
 	},
 
 	computed: {
@@ -254,8 +268,21 @@ var panelComponent = {
 			return this.$store.getters.selectorCollection;
 		},
 
-		cssPanelIndex: function() {
-			return this.$store.getters.cssPanelIndex;
+		cssPanelIndex: {
+			get() {
+				return this.$store.getters.cssPanelIndex;
+			},
+			set(newValue) {
+				this.$store.commit('cssPanelIndex', newValue);
+			},
+		},
+		selectorIndex: {
+			get() {
+				return this.$store.getters.selectorIndex;
+			},
+			set(newValue) {
+				this.$store.commit('selectorIndex', newValue);
+			},
 		},
 		colorParameterCollection: function() {
 			return this.$store.getters.colorParameterCollection;

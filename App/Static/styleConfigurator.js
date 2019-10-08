@@ -27,6 +27,13 @@ var messagesComponent = require('../Tools/Components/messages.vue');
 var Vue = require('vue');
 var Vuex = require('vuex');
 
+/**
+ * @param {number} index
+ * @returns {number}
+ */
+var toggleIndex = function(index) {
+	return index === 0 ? 1 : 0;
+};
 //@ts-ignore
 Vue.use(Vuex);
 var store = new Vuex.Store({
@@ -55,7 +62,7 @@ var store = new Vuex.Store({
 		currentColor(state, coordinates) {
 			if (state.currentSelector) {
 				state.selectorCollection[state.currentSelector.selector][state.currentSelector.property] = coordinates;
-				state.selectorIndex = JSON.stringify(coordinates);
+				state.selectorIndex = toggleIndex(state.selectorIndex);
 			}
 		},
 		currentSelector(state, data) {
@@ -94,7 +101,6 @@ var store = new Vuex.Store({
 			return state.colorCollection;
 		},
 		selectorIndex: function(state) {
-			state.cssPanelIndex === 1 ? (state.cssPanelIndex = 0) : (state.cssPanelIndex = 1);
 			return state.selectorIndex;
 		},
 		cssPanelIndex(state) {
@@ -123,7 +129,7 @@ if (typeof isLogged !== 'undefined' && isLogged) {
 	window.addEventListener('load', function() {
 		//@ts-ignore
 		new Vue({
-			el: '#css-panel',
+			el: '#rf-css-panel',
 			store,
 		});
 	});

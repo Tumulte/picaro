@@ -2,7 +2,6 @@ const express = require('express');
 
 /*DATABASE INITIALISATION */
 const low = require('lowdb');
-const shortid = require('shortid');
 const FileSync = require('lowdb/adapters/FileSync');
 //rougeFramework own database (parameters, styles, users…)
 var appAdapter = new FileSync('./App/Data/appData.json');
@@ -14,7 +13,11 @@ const db = low(adapter);
 /* rougeFramework Settings */
 const settings = require('./../rougeSettings.json');
 // @ts-ignore
-var currentApplicationSettings = settings.applications[settings.defaultApp];
+var currentApplicationSettings = appDb
+	.get('config')
+	// @ts-ignore
+	.find({ name: settings.defaultApp })
+	.value();
 currentApplicationSettings.applicationName = settings.defaultApp;
 
 //rougeFramework UI
@@ -29,7 +32,13 @@ var upload = multer();
 //Server Params
 var port = 8080;
 var app = express();
+/* API TOOLS */
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 //Template Engine
 app.set('view engine', 'pug');
 
@@ -65,14 +74,6 @@ for (var application in settings.applications) {
 		express.static('app/' + settings.applications[application] + '/static')
 	);
 }
-
-/* API TOOLS */
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const methodOverride = require('method-override');
-app.use(methodOverride('_method'));
 
 var api = crud(db);
 app.use('/api', checkAuthenticated, api);
@@ -211,7 +212,7 @@ app.use(function(req, res, next) {
 	res.locals.environment = process.env.NODE_ENV;
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
-
+	res.locals.settings = currentApplicationSettings;
 	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSetPresets').value());
 
 	var isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();
@@ -224,7 +225,27 @@ if (!isProd) {
 	app.use(function(req, res, next) {
 		const integrationReport = require('./mochawesome.json');
 		const unitReport = require('./Tests/jest-results.json');
+		var unitEndDate = new Date(unitReport.testResults[0].perfStats.end);
+		var unitEnd =
+			unitEndDate.getDate() +
+			'/' +
+			(unitEndDate.getMonth() + 1) +
+			' - ' +
+			unitEndDate.getHours() +
+			':' +
+			unitEndDate.getMinutes();
+		var intEndDate = new Date(integrationReport.stats.end);
+		var intEnd =
+			intEndDate.getDate() +
+			'/' +
+			(intEndDate.getMonth() + 1) +
+			' - ' +
+			intEndDate.getHours() +
+			':' +
+			intEndDate.getMinutes();
 
+		res.locals.unitEnd = unitEnd;
+		res.locals.intEnd = intEnd;
 		res.locals.isDev = true;
 		res.locals.integrationReport = integrationReport;
 		res.locals.unitReport = unitReport;
@@ -252,8 +273,6 @@ app.post('/admin/settings/:type', upload.none(), function(req, res) {
 			.assign(req.body)
 			.write();
 	} else {
-		req.body.id = shortid.generate();
-
 		appDb
 			.get(currentApplicationSettings.applicationName)
 			// @ts-ignore

@@ -1,0 +1,48 @@
+css-panel-color( inline-template="" )
+    div(id="_color" v-if="$store.getters.loaded")
+        wired-card(class="_container")
+            label
+                div(class="css-panel__label") Combination Presets
+                select(v-model="colorParameterCollection.colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
+                    option(value="none") Selectionner un schéma de couleur
+                    option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
+        wired-card(class="_container" id="_range-light-container")
+            label Light variation
+                input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
+            label Saturation variation
+                input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
+        div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
+            div(class="_container")
+                label(class="_fold-color" for="_dominant-color-fold") [-]
+                input(type="checkbox"  class="_color-fold"  id="_dominant-color-fold")
+                label
+                    span(class="_slider-label")  Hue
+                    input(type="range" class="_color-range -hue" min="0" max="360" v-model="dominantColor.hue")
+                    input(type="number"  v-model="dominantColor.hue")
+                label
+                    span(class="_slider-label") Light
+                    input(type="range"  class="_color-range -light" min="0" max="100"  v-model="dominantColor.light")
+                label
+                    span(class="_slider-label") Sat.
+                    input(type="range"  class="_color-range -sat" min="0" max="100"  v-model="dominantColor.saturation")
+                div
+                    div(v-for="(subColor, index) in colorCollection.dominantSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
+        div(v-for="(color, index) in colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
+            div(class="_container")
+                label(class="_fold-color" :for="'_color-fold-' + index") [-]
+                input(type="checkbox" class="_color-fold" :id="'_color-fold-' + index")
+                label
+                    span(class="_slider-label") Hue
+                    input(type="range"  class="_color-range -hue" min="0" max="360" v-model="color.hue")
+                label
+                    span(class="_slider-label") Light
+                    input(type="range"  class="_color-range -light" min="0" max="100"  v-model="color.light")
+                label
+                    span(class="_slider-label") Sat.
+                    input(type="range"  class="_color-range -sat" min="0" max="100"  v-model="color.saturation")
+
+                div
+                    div(v-for="(subColor, subIndex) in color.subCombination" :class="{'__main':isMainColor(bgColor(subColor), bgColor(color))}"  v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
+                wired-button(v-on:click="removeColor(index)" class="_color-button") Remove Color
+
+        wired-button(v-on:click="addColor" class="_color-button") Add Color

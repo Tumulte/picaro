@@ -4,6 +4,9 @@
 	"integrationFolder": "App/Tests/Cypress/integration",
 	"screenshotsFolder": "App/Tests/Cypress/screenshots",
 	"videosFolder": "App/Tests/Cypress/videos",
+	"pluginsFile": "App/Tests/Cypress/plugins/index.js",
+	"supportFile": "App/Tests/Cypress/support/index.js",
+
 	"reporter": "mochawesome",
 	"reporterOptions": {
 		"reportDir": "App",

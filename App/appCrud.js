@@ -13,6 +13,15 @@ var appCrud = function appCrud(appDb, currentApp) {
 	dataRouter.route('/all').get(function(req, res) {
 		res.json(appDb.get(currentApp.applicationName).value());
 	});
+	dataRouter.route('/config/:id').put(function(req, res) {
+		appDb
+			.get('config')
+			// @ts-ignore
+			.find({ id: req.body.id })
+			.assign(req.body)
+			.write();
+		res.send('Config modified successfully');
+	});
 	dataRouter.route('/').get(function(req, res) {
 		/**
 		 * @type {object}
@@ -79,6 +88,7 @@ var appCrud = function appCrud(appDb, currentApp) {
 					.get(currentApp.applicationName)
 					.remove({ id: req.params.styleId })
 					.write();
+				res.send('styleset ' + req.params.styleId + ' DELETE');
 			} else {
 				res.status(500).send('This style set does not exist or has already been deleted');
 				return;

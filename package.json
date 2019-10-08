@@ -15,7 +15,7 @@
 		"security-check": "npm audit",
 		"test": "node App/Tests/testCron.js",
 		"jest": "jest --coverage",
-		"test:int": "nightwatch",
+		"test:int": "cypress run",
 		"test:watch": "npm run test -- --watch",
 		"build": "webpack --mode=production --config webpack.config.prod.js",
 		"build:dev": "webpack --mode=development --config webpack.config.dev.js"
@@ -81,7 +81,7 @@
 		"google-auth-library": "1.6.1",
 		"googleapis": "^43.0.0",
 		"html-webpack-plugin": "^3.2.0",
-		"jest": "^24.8.0",
+		"jest": "^24.9.0",
 		"jest-stare": "^1.18.1",
 		"mocha": "^5.2.0",
 		"mocha-spec-json-output-reporter": "^1.1.7",
