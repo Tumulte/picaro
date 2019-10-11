@@ -1,6 +1,9 @@
 var express = require('express');
 var fs = require('fs');
 var path = require('path');
+var multer = require('multer');
+
+var upload = multer();
 
 /**
  *
@@ -13,7 +16,7 @@ var appCrud = function appCrud(appDb, currentApp) {
 	dataRouter.route('/all').get(function(req, res) {
 		res.json(appDb.get(currentApp.applicationName).value());
 	});
-	dataRouter.route('/config/:id').put(function(req, res) {
+	dataRouter.route('/config/:id').put(upload.none(), function(req, res) {
 		appDb
 			.get('config')
 			// @ts-ignore

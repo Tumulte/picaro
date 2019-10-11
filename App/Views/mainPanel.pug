@@ -1,5 +1,5 @@
 css-panel-main(inline-template="" )
-    form(id="_main" method="post" :key="cssPanelIndex")
+    form(id="_main" method="post" :key="cssPanelIndex" @submit.prevent="submit($event)")
         warning-component( :warning-message="warningMessage")
         input(type="hidden" v-for="(colorData, name) in $store.getters.colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
         input(type="hidden"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
@@ -22,7 +22,6 @@ css-panel-main(inline-template="" )
                         div(class="css-panel__label") Font size (px)
                         input(type="number" v-model="styleSet.fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
                 wired-card(class="_container")
-
                     label
                         div(class="css-panel__label") Main Font
                         select( v-model="styleSet.fontFamilyMain" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('fontFamilyMain')")

@@ -85,6 +85,9 @@
 			}
 		}
 	}
+	#_admin-form-ext-submit {
+		display: none;
+	}
 }
 /* Basic HTML */
 #rf-css-panel {

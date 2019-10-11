@@ -1,28 +1,28 @@
 /* This is automatically generated CSS, do not edit */
 :root {
-  --dominant : #569F97;
-  --combination0:#B87A88;
-  --combination0-0:#46393C;
-  --combination0-1:#5D464B;
-  --combination0-2:#755259;
-  --combination0-3:#8F5B67;
-  --combination0-4:#A66875;
-  --combination0-5:#B87A88;
-  --combination0-6:#C78E9B;
-  --combination0-7:#D6A4AE;
-  --combination0-8:#E3BAC3;
-  --combination0-9:#EED2D8;
-  --combination1:#404377;
-  --combination1-0:#020203;
-  --combination1-1:#121217;
-  --combination1-2:#1F202D;
-  --combination1-3:#2C2D44;
-  --combination1-4:#37395D;
-  --combination1-5:#404377;
-  --combination1-6:#484C93;
-  --combination1-7:#4F54B0;
-  --combination1-8:#6368BF;
-  --combination1-9:#797DCD;
+  --dominant : #96ABD4;
+  --combination0:#C4896E;
+  --combination0-0:#4E3B32;
+  --combination0-1:#674A3C;
+  --combination0-2:#815946;
+  --combination0-3:#9D674D;
+  --combination0-4:#B5765A;
+  --combination0-5:#C4896E;
+  --combination0-6:#D29D84;
+  --combination0-7:#DEB19C;
+  --combination0-8:#E9C5B4;
+  --combination0-9:#F2DACF;
+  --combination1:#D4B796;
+  --combination1-0:#705D48;
+  --combination1-1:#8A7051;
+  --combination1-2:#A68259;
+  --combination1-3:#B7946C;
+  --combination1-4:#C6A680;
+  --combination1-5:#D4B796;
+  --combination1-6:#E1C9AD;
+  --combination1-7:#ECDAC6;
+  --combination1-8:#F6EBE0;
+  --combination1-9:#FEFDFB;
 }
 @import url("https://fonts.googleapis.com/css?family=Andika&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Alef&display=swap");
@@ -38,8 +38,8 @@ h1, h2, h3, h4, h5, h6 {
   font-size:"20px";
 }
 #rf-content-container {
-  background:#E3BAC3;
-  color:#121217;
+  background:#E9C5B4;
+  color:#8A7051;
   height: 100%;
 }
 html{

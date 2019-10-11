@@ -42,17 +42,4 @@ block cssPanel
             include mainPanel.pug
         input(type="checkbox" id="__rf-admin-panel-toggle-check" )
         div(id="rf-admin-panel")
-            div(id="_admin")
-                form(action="/appapi/config/" + settings.id + "?_method=PUT" method="POST")
-                    input(type="text" name="id" value=settings.id)
-                    input(type="text" name="name" value=settings.name)
-                    input(type="text" name="styleSet" value=settings.styleSet)
-                    input(type="text" name="language" value=settings.language)
-                    input(type="text" name="title" value=settings.title)
-                    if settings.devMode
-                        input(type="checkbox" checked="checked")
-                    else
-                        input(type="checkbox")
-                    input(type="text" value=settings.messageTimeOut)
-
-                    button submit
+            include configPanel.pug

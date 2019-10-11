@@ -203,13 +203,13 @@ var colorUtils = function() {
 
 		if (typeof this.color === 'string') {
 			return this.color;
-		} else if (this.color.red) {
+		} else if (typeof this.color.red !== 'undefined') {
 			var rgb = 'rgb(' + this.color.red + ',' + this.color.green + ',' + this.color.blue + ')';
 			return rgb;
-		} else if (this.color.hue) {
+		} else if (typeof this.color.hue !== 'undefined') {
 			var hsl = 'hsl(' + this.color.hue + ',' + this.color.saturation + '%,' + this.color.light + '%)';
 			return hsl;
-		} else if (this.color.hexred) {
+		} else if (typeof this.color.hexred !== 'undefined') {
 			var hex = '#' + this.color.hexred + this.color.hexgreen + this.color.hexblue;
 			return hex;
 		} else {

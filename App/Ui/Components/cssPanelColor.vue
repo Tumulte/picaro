@@ -25,6 +25,13 @@ var colorComponent = {
 		bgColor: function(color) {
 			return 'background:' + colorUtils.getString(color);
 		},
+		checkNum: function(number, min, max) {
+			min = min ? min : 0;
+			number = number < min ? min : number;
+			number = number > max ? max : number;
+
+			return isNaN(parseInt(number)) ? min : number;
+		},
 		updateColor: function() {
 			this.colorCollection.dominant = colorUtils.hslToHex(this.dominantColor).getString();
 			this.colorParameterCollection.dominant = this.colorCollection.dominant;
@@ -38,11 +45,6 @@ var colorComponent = {
 		},
 
 		updateCombinationColor: function(index) {
-			//only triggers on sliders. TODO : check if necessary
-			if (event.target.type === 'text') {
-				return;
-			}
-
 			this.colorSetParamCollection[index] = generateNewColorSet(
 				this.dominantColor,
 				this.colorCollection.combinationCollection[index]

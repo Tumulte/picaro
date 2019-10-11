@@ -1,0 +1,17 @@
+//TODO rename all "config" into admin
+config-panel(inline-template="")
+    div(id="_admin")
+        warning-component( :warning-message="warningMessage")
+        form(action="/appapi/config/" + settings.id +"?_method=PUT"  id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
+            input(type="text" name="id" value=settings.id)
+            input(type="text" name="name" value=settings.name)
+            input(type="text" name="styleSet" v-model="setName")
+            input(type="text" name="language" value=settings.language)
+            input(type="text" name="title" value=settings.title)
+            if settings.devMode
+                input(type="checkbox" checked="checked")
+            else
+                input(type="checkbox")
+            input(type="text" value=settings.messageTimeOut)
+            button() submit
+            button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit

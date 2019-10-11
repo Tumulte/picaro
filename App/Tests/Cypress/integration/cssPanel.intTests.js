@@ -1,10 +1,21 @@
 //@ts-nocheck
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 
-describe('Testing color generation', function() {
+var appAdapter = new FileSync('./App/Data/appData.json');
+var appDb = low(appAdapter);
+
+var currentApplicationSettings = appDb
+	.get('config')
+	.find({ name: 'Demo' })
+	.value();
+
+describe('Testing styleset modifications', function() {
+	it('switches styleset when clicking styleset', function() {});
 	it('changes all colors when the dominant is changed', function() {
 		cy.visit('/');
 		cy.get('#rf-css-panel-toggle').click();
-		cy.get('._container > :nth-child(1) > ._color-range')
+		cy.get(':nth-child(3) > ._container > :nth-child(3) > ._color-range')
 			.invoke('val', 10)
 			.trigger('input');
 		cy.get('#_color > :nth-child(3)').should('have.css', 'background-color', 'rgb(159, 98, 86)');

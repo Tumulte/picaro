@@ -14,13 +14,14 @@ if (ENVIRONMENT === 'development') {
 }
 
 /* eslint-enable no-undef */
-
+//@ts-ignore
+var configPanel = require('../Ui/Components/configPanel.vue');
 //@ts-ignore
 var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue');
 //@ts-ignore
 var cssPanelColor = require('../Ui/Components/cssPanelColor.vue');
 //@ts-ignore
-var cssPanel = require('../Ui/Components/cssPanel.vue');
+var cssPanel = require('../Ui/Components/cssPanelMain.vue');
 //@ts-ignore
 var messagesComponent = require('../Tools/Components/messages.vue');
 
@@ -119,6 +120,8 @@ var store = new Vuex.Store({
 });
 if (typeof isLogged !== 'undefined' && isLogged) {
 	//@ts-ignore
+	Vue.component('config-panel', configPanel);
+	//@ts-ignore
 	Vue.component('css-panel-selector', cssPanelSelector);
 	//@ts-ignore
 	Vue.component('css-panel-color', cssPanelColor);
@@ -130,6 +133,10 @@ if (typeof isLogged !== 'undefined' && isLogged) {
 		//@ts-ignore
 		new Vue({
 			el: '#rf-css-panel',
+			store,
+		});
+		new Vue({
+			el: '#rf-admin-panel',
 			store,
 		});
 	});

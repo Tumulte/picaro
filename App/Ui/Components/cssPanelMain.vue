@@ -25,7 +25,7 @@ var getAllStyleSet = function(instance) {
 			};
 		});
 };
-var applyStyleSet = function(data, instance) {
+var applyStyleSet = function(data, instance, callback) {
 	instance.styleSet = data;
 
 	instance.$store.commit('selectorCollection', JSON.parse(data.selectorSetParamString));
@@ -52,6 +52,9 @@ var applyStyleSet = function(data, instance) {
 	instance.updateFontCollection();
 	instance.updateAllCssFont();
 	instance.toggleIndex('cssPanelIndex');
+	if (callback) {
+		callback();
+	}
 };
 var fontTypes = ['fontFamilyMain', 'fontFamilyTitle', 'fontFamilyAlt'];
 /**
@@ -146,7 +149,16 @@ var panelComponent = {
 			}
 		},
 		updateStyleSet: function(styleSet) {
-			applyStyleSet(styleSet, this);
+			applyStyleSet(styleSet, this, function() {
+				document.getElementById('_admin-form-ext-submit').click();
+			});
+		},
+		submit: function(event) {
+			if (this.styleSet.id != 'default') {
+				this.checkSave(event);
+			} else {
+				this.saveNew(event);
+			}
 		},
 		checkSave: function(event) {
 			this.warningMessage = {
