@@ -15,7 +15,7 @@ if (ENVIRONMENT === 'development') {
 
 /* eslint-enable no-undef */
 //@ts-ignore
-var configPanel = require('../Ui/Components/configPanel.vue');
+var adminPanel = require('../Ui/Components/adminPanel.vue');
 //@ts-ignore
 var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue');
 //@ts-ignore
@@ -120,7 +120,7 @@ var store = new Vuex.Store({
 });
 if (typeof isLogged !== 'undefined' && isLogged) {
 	//@ts-ignore
-	Vue.component('config-panel', configPanel);
+	Vue.component('admin-panel', adminPanel);
 	//@ts-ignore
 	Vue.component('css-panel-selector', cssPanelSelector);
 	//@ts-ignore

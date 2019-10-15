@@ -1,5 +1,7 @@
 var settings = require('../../../rougeSettings.json');
 var colors = require('../colorGenerator');
+var template = require('./cssPanelMain.pug').default;
+
 const axios = require('axios');
 const shortid = require('shortid');
 
@@ -74,6 +76,7 @@ var panelComponent = {
 			localFontCollection: [],
 		};
 	},
+	template: template,
 	//TODO : organize that thing
 	methods: {
 		updateFontSize: function() {

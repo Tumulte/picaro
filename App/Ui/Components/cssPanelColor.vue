@@ -1,4 +1,5 @@
 var colorUtils = require('../colorHelper').colorUtils;
+var template = require('./cssPanelColor.pug').default;
 colorUtils = new colorUtils();
 
 var generateNewColorSet = function(dominant, combination) {
@@ -21,6 +22,7 @@ var colorComponent = {
 			colorSetCollection: colorSetCollection,
 		};
 	},
+	template: template,
 	methods: {
 		bgColor: function(color) {
 			return 'background:' + colorUtils.getString(color);

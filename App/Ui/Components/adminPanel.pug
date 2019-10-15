@@ -1,5 +1,4 @@
-//TODO rename all "config" into admin
-config-panel(inline-template="")
+admin-panel(inline-template="")
     div(id="_admin")
         warning-component( :warning-message="warningMessage")
         form(action="/appapi/config/" + settings.id +"?_method=PUT"  id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")

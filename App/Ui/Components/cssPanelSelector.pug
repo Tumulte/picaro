@@ -1,0 +1,19 @@
+div(id="_selector")
+    warning-component( :warning-message="warningMessage")
+    ul( :key="selectorIndex" )
+        li(v-for="(propertyCollection, selector) in selectorCollection" )
+            wired-card(class="_selector-container")
+                span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{jsonToCss(selector)}}
+                span(@click="deleteSelector(selector)") [X]
+            ul(class="_selector-box")
+                wired-card
+                    li(v-for="(value, property) in propertyCollection"  v-on:click="storeSelectorAndProperty(selector, property)" )
+                        span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{jsonToCss(property)}}
+                        div(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
+                        span(@click="deleteProperty(selector,property)") [X]
+                    label
+                        div(class="css-panel__label") Add new property
+                        wired-input(type="text"  class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
+    label
+        div(class="css-panel__label") Add new selector
+        wired-input(type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")

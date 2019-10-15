@@ -165,11 +165,11 @@ app.use(flash());
  * @param {express.NextFunction} next
  */
 function checkAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
+	if (req.isAuthenticated() || currentApplicationSettings.devMode) {
 		return next();
 	}
 
-	res.redirect('/' + currentApplicationSettings.applicationName + '/login');
+	res.redirect('/login');
 }
 /**
  *

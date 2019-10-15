@@ -1,4 +1,6 @@
 var colorUtils = require('../colorHelper').colorUtils;
+var template = require('./cssPanelSelector.pug').default;
+
 colorUtils = new colorUtils();
 var messages = require('../../Messages/messages.json');
 var cssGenerator = require('../cssGenerator');
@@ -27,6 +29,7 @@ var selectorComponent = {
 			warningMessage: '',
 		};
 	},
+	template: template,
 	methods: {
 		storeSelectorAndProperty: function(selector, property) {
 			selector = utils.cssToJson(selector);
