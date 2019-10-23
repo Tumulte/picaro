@@ -1,45 +1,45 @@
 /* This is automatically generated CSS, do not edit */
 :root {
-  --dominant : #96ABD4;
-  --combination0:#C4896E;
-  --combination0-0:#4E3B32;
-  --combination0-1:#674A3C;
-  --combination0-2:#815946;
-  --combination0-3:#9D674D;
-  --combination0-4:#B5765A;
-  --combination0-5:#C4896E;
-  --combination0-6:#D29D84;
-  --combination0-7:#DEB19C;
-  --combination0-8:#E9C5B4;
-  --combination0-9:#F2DACF;
-  --combination1:#D4B796;
-  --combination1-0:#705D48;
-  --combination1-1:#8A7051;
-  --combination1-2:#A68259;
-  --combination1-3:#B7946C;
-  --combination1-4:#C6A680;
-  --combination1-5:#D4B796;
-  --combination1-6:#E1C9AD;
-  --combination1-7:#ECDAC6;
-  --combination1-8:#F6EBE0;
-  --combination1-9:#FEFDFB;
+  --dominant : #96A3D4;
+  --combination0:#C4936E;
+  --combination0-0:#3E3228;
+  --combination0-1:#5A4535;
+  --combination0-2:#775840;
+  --combination0-3:#966B4A;
+  --combination0-4:#B37E56;
+  --combination0-5:#C4936E;
+  --combination0-6:#D3A888;
+  --combination0-7:#E0BEA3;
+  --combination0-8:#ECD3C0;
+  --combination0-9:#F6E9DF;
+  --combination1:#D4BE96;
+  --combination1-0:#483F2E;
+  --combination1-1:#64553A;
+  --combination1-2:#816C46;
+  --combination1-3:#A1844F;
+  --combination1-4:#B89961;
+  --combination1-5:#C8AD79;
+  --combination1-6:#D7BF93;
+  --combination1-7:#E4D1AF;
+  --combination1-8:#F0E3CC;
+  --combination1-9:#FAF4EB;
 }
 @import url("https://fonts.googleapis.com/css?family=Andika&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Alef&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Over%20the%20Rainbow&display=swap");
 html {
   font-size: 25;
   font-family: "Andika";
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Alef";
+  font-family: "Over the Rainbow";
 }
 #rf-content-container main{
   color:["dominant",3];
   font-size:"20px";
 }
 #rf-content-container {
-  background:#E9C5B4;
-  color:#8A7051;
+  background:["dominant",0];
+  color:#E0BEA3;
   height: 100%;
 }
 html{
@@ -47,7 +47,8 @@ html{
   font-size:"20px";
 }
 #rf-content-container h1,h2,h3,h4,h5,h6{
-  font-family:"Alef";
+  font-family:"Over the Rainbow";
+  color:"";
 }
 #rf-content-container -c-l-s-s__altfont{
   font-family:"Alegreya SC";

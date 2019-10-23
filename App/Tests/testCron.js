@@ -1,9 +1,9 @@
-const process = require('child_process');
+const shell = require('shelljs');
 var schedule = require('node-schedule');
 
 schedule.scheduleJob('*/15 * * * *', function() {
 	console.log('Testing start…');
-	process.exec('cypress run');
-	process.exec('npm run jest --coverage');
+	shell.exec('npx cypress run');
+	shell.exec('npm run jest --coverage');
 	console.log('Testing done !');
 });

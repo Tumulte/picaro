@@ -6,6 +6,15 @@ var createCheckbox = function createCheckbox(optionsList, name) {
 	});
 	return html;
 };
+var createTags = function createCheckbox(optionsList, name) {
+	var html =
+		'<span v-for="(tag, index) in tagCollection">{{tag}}<span @click="removeTag(index)">(remove)</span></span>';
+
+	html += '<input type="text"  @keypress.enter.stop.prevent="addTag($event)">';
+	html += '<input type="text" name="new_tag_" v-model="tagStringCollection">';
+
+	return html;
+};
 var makeAttribute = function makeAttribute(attributesList) {
 	var html = '';
 	for (var attribute in attributesList) {
@@ -26,7 +35,15 @@ var tableToForm = function tableToForm(params, data) {
 	var method = params.method ? '?_method=' + params.method : '';
 
 	var html =
-		'<form method="post" action="/api/' + params.app + '/' + params.table + id + method + '" class="' + '' + '">';
+		'<form @submit.prevent="sendForm($event)" method="post" action="/api/' +
+		params.app +
+		'/' +
+		params.table +
+		id +
+		method +
+		'" class="' +
+		'' +
+		'">';
 	var currentTable = models[params.app][params.table];
 
 	for (var row in currentTable) {
@@ -37,8 +54,20 @@ var tableToForm = function tableToForm(params, data) {
 
 		if (tableRow.type === 'checkbox') {
 			html += createCheckbox(tableRow.options, row);
+		}
+		if (tableRow.type === 'tags') {
+			html += createTags(tableRow.options, row);
 		} else {
-			html += '<input name="' + row + '" type="' + tableRow.type + '"' + value + '>';
+			html +=
+				'<input ' +
+				makeAttribute(tableRow.attributes) +
+				' name="' +
+				row +
+				'" type="' +
+				tableRow.type +
+				'"' +
+				value +
+				'>';
 		}
 		html += '</label>';
 	}

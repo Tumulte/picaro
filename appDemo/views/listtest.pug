@@ -1,0 +1,10 @@
+extends layout/header.pug
+block content
+    h1 Hello
+    rf-form(rf-model="testData")
+
+    rf-list(rf-model="testData"  v-slot="{ item }")
+        span {{item.firstname}} {{item.lastname}}
+    rf-link(v-slot="{ item }")
+        span {{item.firstname}} {{item.lastname}}
+    rf-tags(tag-name="job")

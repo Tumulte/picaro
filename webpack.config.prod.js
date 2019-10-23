@@ -6,14 +6,8 @@ const webpack = require('webpack');
 module.exports = {
 	mode: 'production',
 	entry: {
-		appDemo: [
-			path.resolve(__dirname, 'static/demo/main.js'),
-			path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
-		],
-		appBlog: [
-			path.resolve(__dirname, 'static/demo/main.js'),
-			path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
-		],
+		appDemo: [path.resolve(__dirname, 'static/demo/main.js'), path.resolve(__dirname, 'App/Static/main.js')],
+		appBlog: [path.resolve(__dirname, 'static/demo/main.js'), path.resolve(__dirname, 'App/Static/main.js')],
 	},
 
 	target: 'web',

@@ -1,0 +1,9 @@
+extends layout/header.pug
+block content
+    h1 mes films
+    rf-form(rf-model="films")
+    rf-list(rf-model="films"  v-slot="{ item }")
+        span {{item.title}} {{item.director}}
+    rf-link(v-slot="{ item }")
+        span {{item.title}}
+    rf-tags(tag-name="director")

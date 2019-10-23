@@ -4,6 +4,9 @@ var dbUtils = require('./dbUtils');
 var RelationHandler = dbUtils.RelationHandler;
 var DataWriteHandler = dbUtils.DataWriteHandler;
 var makeTableName = require('./utils').makeTableName;
+var multer = require('multer');
+
+var upload = multer();
 
 var updateItem = function updateItem(db, req) {
 	db.assign(req.body).write();
@@ -35,7 +38,7 @@ var crud = function crud(db) {
 				res.status(404).send('There is no table named ' + makeTableName(req));
 			}
 		})
-		.post(function(req, res) {
+		.post(upload.none(), function(req, res) {
 			var data = new DataWriteHandler(db, req);
 			data.save();
 			res.send('Sauvegardé');

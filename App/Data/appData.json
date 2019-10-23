@@ -97,6 +97,34 @@
       "fontFamilyTitle": "Alef",
       "id": "ZrhyOZytu",
       "setName": "default"
+    },
+    {
+      "dominant": "#96A3D4",
+      "colorSetParamString": "[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]",
+      "variationLightAmt": "8",
+      "variationSatAmt": "4",
+      "selectorSetParamString": "{\"main\":{\"color\":[\"dominant\",3],\"fontSize\":\"20px\"},\"body\":{\"background\":[\"dominant\",0],\"color\":[0,7]},\"html\":{\"fontFamily\":\"Andika\",\"fontSize\":\"20px\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"Over the Rainbow\",\"color\":\"\"},\"CLSS__altfont\":{\"fontFamily\":\"Alegreya SC\"}}",
+      "fontOrigin": "google",
+      "fontSize": "25",
+      "fontFamilyMain": "Andika",
+      "fontFamilyAlt": "Alegreya SC",
+      "fontFamilyTitle": "Over the Rainbow",
+      "id": "8_l6o4OZP",
+      "setName": "default"
+    },
+    {
+      "dominant": "#96A3D4",
+      "colorSetParamString": "[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]",
+      "variationLightAmt": "8",
+      "variationSatAmt": "4",
+      "selectorSetParamString": "{\"main\":{\"color\":[\"dominant\",3],\"fontSize\":\"20px\"},\"body\":{\"background\":[\"dominant\",0],\"color\":[0,7]},\"html\":{\"fontFamily\":\"Andika\",\"fontSize\":\"20px\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"Over the Rainbow\",\"color\":\"\"},\"CLSS__altfont\":{\"fontFamily\":\"Alegreya SC\"}}",
+      "fontOrigin": "google",
+      "fontSize": "25",
+      "fontFamilyMain": "Andika",
+      "fontFamilyAlt": "Alegreya SC",
+      "fontFamilyTitle": "Over the Rainbow",
+      "id": "hrvCku8E2",
+      "setName": "flims"
     }
   ],
   "colorSetPresets": [
@@ -156,7 +184,7 @@
     {
       "id": "1",
       "name": "Demo",
-      "styleSet": "default",
+      "styleSet": "hrvCku8E2",
       "language": "fr",
       "title": "App Demo",
       "devMode": true,

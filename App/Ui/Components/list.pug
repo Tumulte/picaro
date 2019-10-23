@@ -1,0 +1,6 @@
+div
+
+    div(v-for="item in list" v-if="checkFilters(item)")
+        slot(v-bind:item="item")
+
+    warning-component( :warning-message="warningMessage")

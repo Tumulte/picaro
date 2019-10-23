@@ -76,6 +76,7 @@ for (var application in settings.applications) {
 }
 
 var api = crud(db);
+//TODO bah non en fait… juste pour les "post/put/delete"
 app.use('/api', checkAuthenticated, api);
 app.use('/edit/:app/:table/:id', function(req, res, next) {
 	var data = db
@@ -213,6 +214,7 @@ app.use(function(req, res, next) {
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
 	res.locals.settings = currentApplicationSettings;
+	res.locals.appName = currentApplicationSettings.applicationName;
 	res.locals.colorSetCollection = JSON.stringify(appDb.get('colorSetPresets').value());
 
 	var isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();

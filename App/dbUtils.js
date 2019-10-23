@@ -25,6 +25,7 @@ var trimAroundComma = function(data) {
  */
 var RelationHandler = function RelationHandler(db, req) {
 	this.data = {};
+	var appName = req.params.app;
 
 	var relationEndMarker = '_';
 	var replaceIDByData = function(data, item, db) {
@@ -33,8 +34,9 @@ var RelationHandler = function RelationHandler(db, req) {
 			return dbQuery;
 		} else if (typeof data[item] === 'string') {
 			var table = item.replace('_', 's');
+
 			dbQuery = db
-				.get(table)
+				.get(appName + '_' + table)
 				.find({
 					id: data[item],
 				})
@@ -42,7 +44,7 @@ var RelationHandler = function RelationHandler(db, req) {
 		} else if (typeof data[item] !== 'undefined') {
 			table = item.replace('_', '');
 			dbQuery = db
-				.get(table)
+				.get(appName + '_' + table)
 				.filter(function(o) {
 					return data[item].indexOf(o.id) !== -1;
 				})
@@ -98,11 +100,12 @@ var RelationHandler = function RelationHandler(db, req) {
 
 //POST HANDLER
 var DataWriteHandler = function DataWriteHandler(db, req) {
-	var saveNewRelations = function(db, data) {
+	var saveNewRelations = function(db, data, appname) {
 		data.forEach(function(element) {
 			var table = element.type.replace('_', '');
+
 			if (element.hasOwnProperty('id') && element.id) {
-				db.get(table)
+				db.get(appname + '_' + table)
 					.push({
 						id: element.id,
 						name: element.name,
@@ -130,18 +133,19 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 				this.data[item] = this.data[item].split(',');
 			}
 
-			var newRelationsID = '';
+			var newRelationsID = [];
 
 			this.data[item].forEach(function(element) {
 				var id = shortid.generate();
-				newRelationsID += ',' + id;
+				newRelationsID.push(id);
 				this.relations.push({
 					id: id,
 					name: element.trim(),
 					type: item.replace('new_', ''),
 				});
 			});
-			return newRelationsID;
+
+			return newRelationsID.join();
 		};
 		var standardizeIdList = function(list) {
 			if (list.charAt(0) === ',') {
@@ -160,6 +164,8 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 			for (item in data) {
 				if (item.indexOf('new_') !== -1) {
 					var attributeName = item.replace('new_', '');
+					console.info('eeeeeeeeeeeeeeeeee', item, 'iei..i.i', attributeName);
+
 					if (!this.data[attributeName] && this.data[item] === '') {
 						this.data[attributeName] = false;
 					} else {
@@ -183,7 +189,7 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 		db.get(makeTableName(req))
 			.push(data.data)
 			.write();
-		saveNewRelations(db, data.relations);
+		saveNewRelations(db, data.relations, req.params.app);
 		return data;
 	};
 };

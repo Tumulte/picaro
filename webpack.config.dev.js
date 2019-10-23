@@ -1,3 +1,5 @@
+//TODO Créer un "common"
+
 const path = require('path');
 const webpack = require('webpack');
 
@@ -8,14 +10,8 @@ const myWebpackConfig = {
 	devtool: 'inline-source-map',
 	mode: 'development',
 	entry: {
-		appDemo: [
-			path.resolve(__dirname, 'static/demo/main.js'),
-			path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
-		],
-		appBlog: [
-			path.resolve(__dirname, 'static/demo/main.js'),
-			path.resolve(__dirname, 'App/Static/styleConfigurator.js'),
-		],
+		appDemo: [path.resolve(__dirname, 'static/demo/main.js'), path.resolve(__dirname, 'App/Static/main.js')],
+		appBlog: [path.resolve(__dirname, 'static/demo/main.js'), path.resolve(__dirname, 'App/Static/main.js')],
 	},
 	devServer: {
 		publicPath: '/static/',

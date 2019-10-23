@@ -2,7 +2,6 @@ rough = require('../../node_modules/roughjs/dist/rough.umd');
 require('wired-elements');
 //app CSS. Will be processed by webpack
 //@ts-ignore
-require('../../App/Static/appStyles.css');
 
 // TODO SPLIT logics of this file : it's not just style config
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
