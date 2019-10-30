@@ -6,16 +6,19 @@ var Vuex = require('vuex');
 var VRuntimeTemplate = require('v-runtime-template').default;
 
 var VueRouter = require('vue-router').default;
-var tagsComponent = require('../Ui/Components/tags.vue');
+var tagsListComponent = require('../Ui/Components/tagsList.vue');
 var listComponent = require('../Ui/Components/list.vue');
 var linkComponent = require('../Ui/Components/link.vue');
 var formComponent = require('../Ui/Components/form.vue');
+var tagsComponent = require('../Ui/Components/tags.vue');
 
 Vue.component('rf-list', listComponent);
 Vue.component('rf-tags', tagsComponent);
+Vue.component('rf-tags-list', tagsListComponent);
 Vue.component('rf-link', linkComponent);
 Vue.component('rf-form', formComponent);
 Vue.component('v-runtime-template', VRuntimeTemplate);
+var event = new Event('formloaded');
 
 Vue.use(VueRouter);
 var router = new VueRouter({
@@ -33,22 +36,30 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
 	state: {
 		list: {},
-		tags: {},
+		tagCollection: {},
 	},
 	mutations: {
 		list(state, data) {
 			state.list = data;
 		},
-		tags(state, data) {
-			state.tags = data;
+		tagCollection(state, data) {
+			state.tagCollection = data;
+		},
+		formType(state, data) {
+			if (data === 'hasTags') {
+				new Vue({
+					el: 'rf-tags',
+					store,
+				});
+			}
 		},
 	},
 	getters: {
 		list: function(state) {
 			return state.list;
 		},
-		tags: function(state) {
-			return state.tags;
+		tagCollection: function(state) {
+			return state.tagCollection;
 		},
 	},
 });
@@ -61,7 +72,7 @@ window.addEventListener('load', function() {
 		store,
 	});
 	new Vue({
-		el: 'rf-tags',
+		el: 'rf-tags-list',
 		router,
 		store,
 	});
@@ -70,9 +81,10 @@ window.addEventListener('load', function() {
 		router,
 		store,
 	});
-	new Vue({
-		el: 'rf-form',
-		router,
-		store,
-	});
+	if (document.getElementsByTagName('rf-form').length > 0) {
+		new Vue({
+			el: 'rf-form',
+			store,
+		});
+	}
 });

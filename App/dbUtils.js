@@ -42,7 +42,8 @@ var RelationHandler = function RelationHandler(db, req) {
 				})
 				.value();
 		} else if (typeof data[item] !== 'undefined') {
-			table = item.replace('_', '');
+			table = item.replace('_', 's');
+
 			dbQuery = db
 				.get(appName + '_' + table)
 				.filter(function(o) {
@@ -58,7 +59,7 @@ var RelationHandler = function RelationHandler(db, req) {
 			if (data[item] !== null && typeof data[item] === 'object' && data[item].hasOwnProperty('id')) {
 				data[item] = findRelationnalProperties(data[item], db);
 			} else if (lastChar === relationEndMarker) {
-				var table = item.replace('_', '');
+				var table = item.replace('_', 's');
 
 				data[table] = replaceIDByData(data, item, db);
 			}
@@ -102,13 +103,13 @@ var RelationHandler = function RelationHandler(db, req) {
 var DataWriteHandler = function DataWriteHandler(db, req) {
 	var saveNewRelations = function(db, data, appname) {
 		data.forEach(function(element) {
-			var table = element.type.replace('_', '');
-
+			var table = element.type.replace('_', 's');
 			if (element.hasOwnProperty('id') && element.id) {
 				db.get(appname + '_' + table)
 					.push({
 						id: element.id,
 						name: element.name,
+						model: element.model,
 					})
 					.write();
 			}
@@ -130,7 +131,8 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 			if (this.data[item] === '') {
 				return false;
 			} else if (typeof this.data[item] === 'string') {
-				this.data[item] = this.data[item].split(',');
+				var relationCollection = this.data[item].split('__');
+				this.data[item] = relationCollection[1].split(',');
 			}
 
 			var newRelationsID = [];
@@ -142,6 +144,7 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 					id: id,
 					name: element.trim(),
 					type: item.replace('new_', ''),
+					model: relationCollection[0],
 				});
 			});
 
@@ -164,14 +167,12 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 			for (item in data) {
 				if (item.indexOf('new_') !== -1) {
 					var attributeName = item.replace('new_', '');
-					console.info('eeeeeeeeeeeeeeeeee', item, 'iei..i.i', attributeName);
 
 					if (!this.data[attributeName] && this.data[item] === '') {
 						this.data[attributeName] = false;
 					} else {
 						var relations = handleNewRelations(item);
-						var idList = (this.data[attributeName] += relations);
-						this.data[attributeName] = standardizeIdList(idList);
+						this.data[attributeName] = standardizeIdList(relations);
 					}
 
 					delete this.data[item];

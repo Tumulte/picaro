@@ -1,5 +1,11 @@
-div( :key="$route.fullPath")
-    div(v-for="(item, index) in list")
-        ul
-            router-link(:to="makeTagList('/tag/'+ tagName +'/', index)" @click.native="appendTagList(index)" tag="li")
-                a {{item}}
+div(:key="index" class="tags-form")
+    span( v-for="(tag, index) in currentExistingTagCollection") {{tag.name}}
+        span(@click="removeExistingTag(index)") (remove)
+    span( v-for="(tag, index) in currentTagCollection") {{tag}}
+        span(@click="removeTag(index)") (remove)
+
+    input(type="text" v-model="currentTag" @keyup="detectKeyUp" @keydown="detectKeyPress")
+    input(type="text" name="new_tag_" v-model="tagStringCollection")
+    input(type="text" name="existing_tag_" v-model="existingTagStringCollection")
+
+    div(v-for="(tag, index) in matchingTagCollection" class="__matching-tags" :class="{ '--selected': matchingIndex(index)}" @click="addExistingTag(tag)") {{tag.name}}

@@ -1,6 +1,8 @@
 div
 
-    div(v-for="item in list" v-if="checkFilters(item)")
+    div(v-for="(item, index) in list" v-if="checkFilters(item)")
         slot(v-bind:item="item")
+        div(@click="editItem(index)") edit
+        rf-form(v-if="edit === index" :rf-model="rfModel" :rf-data="listItemData")
 
     warning-component( :warning-message="warningMessage")

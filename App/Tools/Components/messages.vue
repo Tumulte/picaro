@@ -7,8 +7,8 @@ var messagesComponent = {
 	template:
 		'<div class="component-message-container">' +
 		'<ul class="component-message">' +
-		'<li v-for="message in messageCollection" class="_message" :class="message.type">' +
-		'{{ message.text }}' +
+		'<li v-for="(message, index) in messageCollection" class="_message" :class="message.type">' +
+		'{{ message.text }} <span @click="deleteMessage(index)">[X]</span>' +
 		'</li>' +
 		'<li v-for="(message, index) in messageCollectionConfirm"  class="_message" :class="message.type">' +
 		'{{ message.text }}' +
@@ -37,6 +37,9 @@ var messagesComponent = {
 		cancelCallback: function(index) {
 			this.messageCollectionConfirm.splice(index, 1);
 			return;
+		},
+		deleteMessage: function(index) {
+			this.messageCollection.splice(index, 1);
 		},
 		checkDuplicates: function(messageHash) {
 			var hasDuplicates = false;

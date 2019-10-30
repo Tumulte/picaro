@@ -1,21 +1,24 @@
 var models = require('../models/models.js');
-var createCheckbox = function createCheckbox(optionsList, name) {
+var createCheckbox = function(optionsList, name) {
 	var html = '';
 	optionsList.forEach(function(option) {
-		html += '<input name="' + name + '" type="checkbox" value="' + option.value + '">' + option.text;
+		html +=
+			'<input @focus="createInput(\'name\')" v-model="inputData[\'' +
+			name +
+			'\']" name="' +
+			name +
+			'" type="checkbox" value="' +
+			option.value +
+			'">' +
+			option.text;
 	});
 	return html;
 };
-var createTags = function createCheckbox(optionsList, name) {
-	var html =
-		'<span v-for="(tag, index) in tagCollection">{{tag}}<span @click="removeTag(index)">(remove)</span></span>';
-
-	html += '<input type="text"  @keypress.enter.stop.prevent="addTag($event)">';
-	html += '<input type="text" name="new_tag_" v-model="tagStringCollection">';
-
+var createTags = function(optionsList, table) {
+	var html = '<rf-tags rf-model="' + table + '" :rf-data="rfData"></rf-tags>';
 	return html;
 };
-var makeAttribute = function makeAttribute(attributesList) {
+var makeAttribute = function(attributesList) {
 	var html = '';
 	for (var attribute in attributesList) {
 		html += ' ' + attribute + '="' + attributesList[attribute] + '"';
@@ -33,7 +36,7 @@ var populateValue = function populateValue(data, row) {
 var tableToForm = function tableToForm(params, data) {
 	var id = params.id ? '/' + params.id : '';
 	var method = params.method ? '?_method=' + params.method : '';
-
+	var type = '';
 	var html =
 		'<form @submit.prevent="sendForm($event)" method="post" action="/api/' +
 		params.app +
@@ -56,10 +59,15 @@ var tableToForm = function tableToForm(params, data) {
 			html += createCheckbox(tableRow.options, row);
 		}
 		if (tableRow.type === 'tags') {
-			html += createTags(tableRow.options, row);
+			html += createTags(tableRow.options, params.table);
+			type = 'hasTags';
 		} else {
 			html +=
-				'<input ' +
+				'<input @focus="createInput(\'' +
+				row +
+				'\')"  v-model="inputData[\'' +
+				row +
+				'\']"' +
 				makeAttribute(tableRow.attributes) +
 				' name="' +
 				row +
@@ -72,6 +80,6 @@ var tableToForm = function tableToForm(params, data) {
 		html += '</label>';
 	}
 	html += '<button>Envoyer</button></form>';
-	return html;
+	return { template: html, type: type };
 };
 module.exports = tableToForm;

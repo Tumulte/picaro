@@ -2,36 +2,28 @@ var formGenerator = require('../../formGenerator');
 const axios = require('axios');
 
 var linkComponent = {
-	props: ['rfModel'],
+	props: ['rfModel', 'rfData'],
 	data: function() {
 		return {
 			form: '',
 			template: '',
 			tagStringCollection: '',
-			tagCollection: [],
+			matchingTagCollection: [],
 			warningMessage: [],
+			inputData: {},
+			formData: {},
 		};
 	},
 	template:
-		'<div><v-runtime-template :template="template"/><warning-component :warningMessage="warningMessage"/>></div>',
-	computed: {
-		list: function() {
-			return this.$store.getters.list;
-		},
-	},
-	methods: {
-		addTag: function(event) {
-			if (!event.target.value) {
-				return;
-			}
-			this.tagCollection.push(event.target.value);
-			this.tagStringCollection = this.tagCollection.join();
-		},
-		removeTag: function(index) {
-			this.tagCollection.splice(index, 1);
+		'<div><v-runtime-template :template="formData.template"/><warning-component :warningMessage="warningMessage"/></div>',
 
-			this.tagStringCollection = this.tagCollection.join();
+	methods: {
+		createInput: function(name) {
+			if (!this.inputData.hasOwnProperty(name)) {
+				this.inputData[name] = '';
+			}
 		},
+
 		sendForm: function(event) {
 			this.$nextTick(() => {
 				var form = event.target;
@@ -57,12 +49,38 @@ var linkComponent = {
 			});
 		},
 	},
+	computed: {
+		tagCollection: function() {
+			return this.$store.getters.tagCollection;
+		},
+		formType: {
+			get() {
+				return this.$store.getters.formType;
+			},
+			set(newValue) {
+				this.$store.commit('formType', newValue);
+			},
+		},
+		list: function() {
+			return this.$store.getters.list;
+		},
+	},
+	watch: {
+		template: function() {
+			this.formType = this.formData.type;
+		},
+	},
 	mounted: function() {
-		this.template = formGenerator({
+		var formData = formGenerator({
 			/* eslint-disable no-undef */
 			app: appName.toLowerCase(),
 			table: this.rfModel,
 		});
+
+		if (this.rfData) {
+			this.inputData = this.rfData;
+		}
+		this.formData = formData;
 	},
 };
 module.exports = linkComponent;

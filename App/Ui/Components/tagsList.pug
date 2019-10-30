@@ -1,0 +1,5 @@
+div( :key="$route.fullPath")
+    div(v-for="(item, index) in tagCollection")
+        ul
+            router-link(:to="makeTagList('/tag/'+ tagName +'/', item.id)" @click.native="appendTagList(item.id)" tag="li")
+                a {{item.name}}

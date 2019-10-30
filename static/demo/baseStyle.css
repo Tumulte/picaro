@@ -53,4 +53,7 @@ html{
 #rf-content-container -c-l-s-s__altfont{
   font-family:"Alegreya SC";
 }
+#rf-content-container a{
+  color:["dominant",8];
+}
 /* This is automatically generated CSS, do not edit */

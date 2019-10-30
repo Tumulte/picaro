@@ -7,6 +7,8 @@ var listComponent = {
 			warningMessage: [],
 			appName: appName,
 			filterCollection: false,
+			edit: false,
+			listItemData: {},
 		};
 	},
 	template: template,
@@ -18,12 +20,21 @@ var listComponent = {
 			if (!this.filterCollection) {
 				return true;
 			}
-			for (filter in this.filterCollection) {
+			for (var filter in this.filterCollection) {
 				if (this.filterCollection[filter] === item[filter]) {
 					return true;
 				}
 			}
 			return false;
+		},
+		editItem: function(index) {
+			if (this.edit !== index) {
+				this.edit = index;
+				this.listItemData = this.list[index];
+			} else {
+				this.edit = false;
+				this.listItemData = {};
+			}
 		},
 	},
 	mounted: function() {

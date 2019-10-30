@@ -85,6 +85,9 @@
 			}
 		}
 	}
+	#_main {
+		z-index: 19;
+	}
 	#_admin-form-ext-submit {
 		display: none;
 	}

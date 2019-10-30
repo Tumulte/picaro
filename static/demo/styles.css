@@ -13,3 +13,18 @@ html {
 	border: 5px solid var(--color-combination-3);
 	padding: 20px;
 }
+label {
+	display: block;
+	margin: 10px 0;
+}
+input {
+	margin: 10px;
+	display: inline-block;
+}
+.tags-form {
+	.__matching-tags {
+		&.--selected {
+			background: #fff;
+		}
+	}
+}

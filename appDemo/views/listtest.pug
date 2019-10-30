@@ -5,6 +5,8 @@ block content
 
     rf-list(rf-model="testData"  v-slot="{ item }")
         span {{item.firstname}} {{item.lastname}}
-    rf-link(v-slot="{ item }")
-        span {{item.firstname}} {{item.lastname}}
-    rf-tags(tag-name="job")
+    h2 links
+        rf-link(v-slot="{ item }")
+            span {{item.firstname}} {{item.lastname}}
+    h2 tags
+        rf-tags-list
