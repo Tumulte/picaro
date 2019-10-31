@@ -87,7 +87,6 @@ var linkComponent = {
 			} else {
 				this.addTag(e);
 			}
-			this.currentTag = '';
 		},
 		setExistingTag: function() {
 			if (this.currentMatchingTagIndex - 1 >= 0) {
@@ -105,6 +104,7 @@ var linkComponent = {
 		populateMatchingTags: function() {
 			for (var tag in this.tagCollection) {
 				if (
+					this.tagCollection[tag] &&
 					this.tagCollection[tag].name.indexOf(this.currentTag) > -1 &&
 					this.existingTagStringCollection.indexOf(this.tagCollection[tag].id) === -1
 				) {
@@ -125,6 +125,8 @@ var linkComponent = {
 					return this.tagCollection[tag];
 				}
 			}
+			this.currentTag = '';
+
 			return false;
 		},
 		addTag: function(event) {
@@ -139,6 +141,7 @@ var linkComponent = {
 				this.currentTagCollection.push(event.target.value);
 				this.tagStringCollection = this.rfModel + '__' + this.currentTagCollection.join();
 			}
+			this.currentTag = '';
 		},
 
 		addExistingTag: function(tag) {
@@ -156,6 +159,7 @@ var linkComponent = {
 					})
 					.join(',');
 			this.selectedExistingTag = '';
+			this.currentTag = '';
 		},
 		matchingIndex: function(index) {
 			return this.currentMatchingTagIndex === index + 1;

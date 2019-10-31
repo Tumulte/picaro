@@ -1,12 +1,14 @@
 var template = require('./tagsList.pug').default;
+const axios = require('axios');
 
 var tagsListComponent = {
-	props: ['customTagName'],
+	props: ['customTagName', 'rfModel'],
 	data: function() {
 		return {
 			warningMessage: [],
 			tagIndexCollection: [],
 			tagName: '',
+			appName: appName,
 		};
 	},
 	template: template,
@@ -30,19 +32,18 @@ var tagsListComponent = {
 	},
 	computed: {
 		tagCollection: function() {
-			var tags = [];
-			this.tagName = this.customTagName ? this.customTagName : 'tags';
-			for (var item in this.$store.getters.list) {
-				item = this.$store.getters.list[item][this.tagName];
-				for (var tag in item) {
-					if (!tags.includes(item)) {
-						tags.push(item[tag]);
-					}
-				}
-			}
-			this.$store.commit('tagCollection', tags);
-			return tags;
+			return this.$store.getters.tagCollection;
 		},
+	},
+	mounted: function() {
+		axios
+			.get('/api/' + this.appName.toLowerCase() + '/tags?model=' + this.$props.rfModel)
+			.then(response => {
+				this.$store.commit('tagCollection', response.data);
+			})
+			.catch(error => {
+				this.warningMessage.push(error);
+			});
 	},
 };
 module.exports = tagsListComponent;

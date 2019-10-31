@@ -23,6 +23,12 @@ var trimAroundComma = function(data) {
  * Any field like foo_: bar (mind the "_") will be replaced by object
  * identified by the id "bar" from this table "foo"
  */
+/**
+ *
+ * @param {*} db
+ * @param {*} req
+ * @class
+ */
 var RelationHandler = function RelationHandler(db, req) {
 	this.data = {};
 	var appName = req.params.app;
@@ -123,7 +129,11 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 
 		var addExistingID = function(item) {
 			var attributeName = item.replace('existing_', '');
-			this.data[attributeName] = this.data[item];
+			var idCollection = this.data[item].split('__')[1];
+			if (idCollection.indexOf(',') !== -1) {
+				idCollection = idCollection.split(',');
+			}
+			this.data[attributeName] = idCollection;
 			delete this.data[item];
 			return this;
 		};
@@ -157,10 +167,21 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 			list = trimAroundComma(list);
 			return list.split(',');
 		};
+		var concatenate = function(existingData, newData) {
+			if (!existingData) {
+				return newData;
+			} else if (!newData) {
+				return existingData;
+			}
+			if (typeof existingData === 'string') {
+				existingData = existingData.split(',');
+			}
 
+			return existingData.concat(newData);
+		};
 		var populateRelations = function() {
 			for (var item in data) {
-				if (item.indexOf('existing_') !== -1) {
+				if (item.indexOf('existing_') !== -1 && this.data[item] !== '') {
 					addExistingID(item);
 				}
 			}
@@ -170,9 +191,9 @@ var DataWriteHandler = function DataWriteHandler(db, req) {
 
 					if (!this.data[attributeName] && this.data[item] === '') {
 						this.data[attributeName] = false;
-					} else {
+					} else if (this.data[item] !== '') {
 						var relations = handleNewRelations(item);
-						this.data[attributeName] = standardizeIdList(relations);
+						this.data[attributeName] = concatenate(this.data[attributeName], standardizeIdList(relations));
 					}
 
 					delete this.data[item];
