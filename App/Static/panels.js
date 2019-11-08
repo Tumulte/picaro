@@ -23,6 +23,8 @@ var cssPanelColor = require('../Ui/Components/cssPanelColor.vue');
 var cssPanel = require('../Ui/Components/cssPanelMain.vue');
 //@ts-ignore
 var messagesComponent = require('../Tools/Components/messages.vue');
+//@ts-ignore
+var navPanel = require('../Ui/Components/navPanel.vue');
 
 var Vue = require('vue');
 var Vuex = require('vuex');
@@ -127,6 +129,9 @@ if (typeof isLogged !== 'undefined' && isLogged) {
 	//@ts-ignore
 	Vue.component('css-panel-main', cssPanel);
 	//@ts-ignore
+	Vue.component('nav-panel', navPanel);
+
+	//@ts-ignore
 	Vue.component('warning-component', messagesComponent);
 	window.addEventListener('load', function() {
 		//@ts-ignore
@@ -136,6 +141,10 @@ if (typeof isLogged !== 'undefined' && isLogged) {
 		});
 		new Vue({
 			el: '#rf-admin-panel',
+			store,
+		});
+		new Vue({
+			el: 'nav-panel',
 			store,
 		});
 	});

@@ -1,4 +1,4 @@
-div(id="_color" v-if="$store.getters.loaded")
+div(id="_color" class="_panel" v-if="$store.getters.loaded")
     wired-card(class="_container")
         label
             div(class="css-panel__label") Combination Presets
@@ -10,6 +10,8 @@ div(id="_color" v-if="$store.getters.loaded")
             input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
         label Saturation variation
             input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
+
+
     div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
         div(class="_container")
             label(class="_fold-color" for="_dominant-color-fold") [-]
@@ -28,6 +30,9 @@ div(id="_color" v-if="$store.getters.loaded")
                 input(type="number" :value="dominantColor.saturation"  v-on:input="dominantColor.saturation = checkNum($event.target.value, 0,100)")
             div
                 div(v-for="(subColor, index) in colorCollection.dominantSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
+    div
+        div(v-for="(subColor, index) in colorCollection.graySubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['gray', index])" class="sub-combination"  v-bind:style="bgColor(subColor)" )
+
     div(v-for="(color, index) in colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
         div(class="_container")
             label(class="_fold-color" :for="'_color-fold-' + index") [-]
@@ -51,5 +56,13 @@ div(id="_color" v-if="$store.getters.loaded")
             div
                 div(v-for="(subColor, subIndex) in color.subCombination" :class="{'__main':isMainColor(bgColor(subColor), bgColor(color))}"  v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
             wired-button(v-on:click="removeColor(index)" class="_color-button") Remove Color
+    div
+        div(v-for="(subColor, index) in colorCollection.alertSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['alert', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
+    div
+        div(v-for="(subColor, index) in colorCollection.warningSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['warning', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
+    div
+        div(v-for="(subColor, index) in colorCollection.successSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['success', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
+    div
+        div(v-for="(subColor, index) in colorCollection.infoSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
 
     wired-button(v-on:click="addColor" class="_color-button") Add Color

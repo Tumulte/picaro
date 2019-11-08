@@ -1,0 +1,10 @@
+div(:key="componentKey")
+    input(type="text" v-model="JSON.stringify(navStructure)" v-if="showInput")
+    ul
+        li(v-for="(file, index) in navStructure"  class="_list-item" :class="{'-hidden': file.hidden}" @click.stop="moveItem(file, index)") {{index}}
+            span(v-if="index === movingFile.name" @click.stop="cancelSelection()")  (cancel)
+
+            label
+                input(type="checkbox" v-bind:checked="file.hidden" @change="toggleItem(index)" class="_list-item-check")
+                | display
+            nav-panel(:views="file.children" v-if="Object.keys(file.children).length > 0")

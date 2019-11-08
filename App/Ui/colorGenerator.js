@@ -88,23 +88,39 @@ var generateColorSet = function(dominant) {
 	/**
 	 *
 	 * @param {Object} combination
+     * @param {boolean=} gray
 
 	 */
-	var createSubCombinationArray = function(combination) {
+	var createSubCombinationArray = function(combination, gray) {
 		var lightCollection = getSubValues(combination.light, self.lightVariation);
 
 		var satCollection = getSubValues(combination.saturation, self.satVariation);
 
 		var subCombination = [];
+
 		for (var i = 0; i < 10; i++) {
 			subCombination[i] = {
 				hue: combination.hue,
 				light: lightCollection[i],
-				saturation: satCollection[i],
+				saturation: gray ? 0 : satCollection[i],
 				hex: colorUtils
 					.hslToHex({ hue: combination.hue, light: lightCollection[i], saturation: satCollection[i] })
 					.getString(),
 			};
+		}
+		if (gray) {
+			subCombination.push({
+				hue: 0,
+				light: 0,
+				saturation: 0,
+				hex: '#000',
+			});
+			subCombination.push({
+				hue: 0,
+				light: 100,
+				saturation: 0,
+				hex: '#fff',
+			});
 		}
 		return subCombination;
 	};
@@ -169,6 +185,34 @@ var generateColorSet = function(dominant) {
 				light: light,
 			};
 			addCombination(combination);
+		});
+		this.colorCollection.graySubCollection = createSubCombinationArray(
+			{
+				hue: this.hsl.hue,
+				saturation: 0,
+				light: this.hsl.light,
+			},
+			true
+		);
+		this.colorCollection.alertSubCollection = createSubCombinationArray({
+			hue: 0,
+			saturation: this.hsl.saturation,
+			light: this.hsl.light,
+		});
+		this.colorCollection.warningSubCollection = createSubCombinationArray({
+			hue: 60,
+			saturation: this.hsl.saturation,
+			light: this.hsl.light,
+		});
+		this.colorCollection.successSubCollection = createSubCombinationArray({
+			hue: 120,
+			saturation: this.hsl.saturation,
+			light: this.hsl.light,
+		});
+		this.colorCollection.infoSubCollection = createSubCombinationArray({
+			hue: 240,
+			saturation: this.hsl.saturation,
+			light: this.hsl.light,
 		});
 		return this.colorCollection;
 	};

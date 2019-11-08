@@ -44,6 +44,8 @@ app.set('view engine', 'pug');
 
 var isProd = process.env.NODE_ENV === 'production';
 if (!isProd) {
+	const fs = require('fs');
+	app.locals.views = fs.readdirSync(__dirname + '/../app' + currentApplicationSettings.applicationName + '/views/');
 	//webpack
 	const webpack = require('webpack');
 	const config = require('../webpack.config.dev.js');

@@ -35,7 +35,9 @@ block cssPanel
         label(id="rf-admin-panel-toggle" class="_label --sketchy" for="__rf-admin-panel-toggle-check")
             div Admin
             svg(class="css-panel-svg-highlight")
-
+        label(id="rf-nav-panel-toggle" class="_label --sketchy" for="__rf-nav-panel-toggle-check")
+            div Nav
+            svg(class="css-panel-svg-highlight")
         input(type="checkbox" id="__rf-css-panel-toggle-check" )
         div(id="rf-css-panel")
             css-panel-selector
@@ -43,4 +45,10 @@ block cssPanel
             css-panel-main
         input(type="checkbox" id="__rf-admin-panel-toggle-check" )
         div(id="rf-admin-panel")
+            //TODO pass as prop
+            //it has variable in it, has to be include
             include ../Ui/Components/adminPanel.pug
+        input(type="checkbox" id="__rf-nav-panel-toggle-check" )
+        div(id="rf-nav-panel")
+            div(id="_nav" class="_panel" )
+                nav-panel(views=views )

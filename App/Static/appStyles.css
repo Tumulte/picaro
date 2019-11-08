@@ -7,6 +7,7 @@
 	--app-color: #333;
 	--app-tonic: #f15e5e;
 }
+#rf-nav-panel-toggle,
 #rf-admin-panel-toggle,
 #rf-css-panel-toggle,
 #rf-css-panel {
@@ -44,12 +45,10 @@
 
 /* Components */
 #rf-admin-panel,
+#rf-nav-panel,
 #rf-css-panel {
 	/* Common styling to all sub components */
-	#_admin,
-	#_color,
-	#_selector,
-	#_main {
+	._panel {
 		z-index: 20;
 		position: fixed;
 		background: #fff;
@@ -311,10 +310,18 @@
 		display: none;
 	}
 }
-
+#rf-nav-panel {
+	input[type='text'] {
+		width: 100%;
+	}
+	._list-item.-hidden {
+		text-decoration: line-through;
+	}
+}
 /*Independent Elements */
 /* Panels buttons */
 #rf-admin-panel-toggle,
+#rf-nav-panel-toggle,
 #rf-css-panel-toggle {
 	&._label {
 		font-family: 'Courier New', Courier, monospace;
@@ -336,28 +343,29 @@
 		right: calc(75px + var(--app-ratio));
 	}
 }
+#rf-nav-panel-toggle {
+	&._label {
+		right: calc(150px + var(--app-ratio));
+	}
+}
 #__rf-admin-panel-toggle-check,
+#__rf-nav-panel-toggle-check,
 #__rf-css-panel-toggle-check {
 	position: absolute;
 	left: -9999px;
 	top: 0;
 }
+#__rf-nav-panel-toggle-check + #rf-nav-panel,
 #__rf-admin-panel-toggle-check + #rf-admin-panel,
 #__rf-css-panel-toggle-check + #rf-css-panel {
-	#_selector,
-	#_main,
-	#_color,
-	#_admin {
+	._panel {
 		left: -9999px;
 	}
 }
-
+#__rf-nav-panel-toggle-check:checked + #rf-nav-panel,
 #__rf-admin-panel-toggle-check:checked + #rf-admin-panel,
 #__rf-css-panel-toggle-check:checked + #rf-css-panel {
-	#_selector,
-	#_color,
-	#_main,
-	#_admin {
+	._panel {
 		left: auto;
 	}
 }

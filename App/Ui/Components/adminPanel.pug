@@ -1,16 +1,25 @@
 admin-panel(inline-template="")
-    div(id="_admin")
+    div(id="_main" class="_panel")
         warning-component( :warning-message="warningMessage")
         form(action="/appapi/config/" + settings.id +"?_method=PUT"  id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
-            input(type="text" name="id" value=settings.id)
-            input(type="text" name="name" value=settings.name)
-            input(type="text" name="styleSet" v-model="setName")
-            input(type="text" name="language" value=settings.language)
-            input(type="text" name="title" value=settings.title)
-            if settings.devMode
-                input(type="checkbox" checked="checked")
-            else
-                input(type="checkbox")
-            input(type="text" value=settings.messageTimeOut)
+            label
+                input(type="text" name="id" value=settings.id)
+            label App name
+                input(type="text" name="name" value=settings.name)
+            input(type="hidden" name="styleSet" v-model="setName")
+            label App language
+                input(type="text" name="language" value=settings.language)
+            label App title
+                input(type="text" name="title" value=settings.title)
+            label Dev Mode
+                if settings.devMode
+                    input(type="checkbox" checked="checked")
+                else
+                    input(type="checkbox")
+            label Message Timeout (in ms)
+                input(type="text" value=settings.messageTimeOut)
             button() submit
             button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit
+        div
+            each file in views
+                div  #{file}

@@ -7,8 +7,9 @@ var cssGenerator = require('../cssGenerator');
 var generateCss = false;
 var utils = require('../../utils');
 var getColorFromCollection = function(instance, data) {
-	if (data[0] === 'dominant') {
-		return instance.colorCollection.dominantSubCollection[data[1]];
+	if (['dominant', 'warning', 'alert', 'info', 'gray', 'success'].includes(data[0])) {
+		var index = data[0] + 'SubCollection';
+		return instance.colorCollection[index][data[1]];
 	} else if (
 		data[0] === undefined ||
 		data[1] === undefined ||
@@ -134,7 +135,7 @@ var selectorComponent = {
 			return this.$store.getters.selectorIndex;
 		},
 	},
-	//TODO : that's confusing to have the master style updater here
+	//TODO : that's confusing to have the master style updater here
 	updated: function() {
 		var self = this;
 		this.$nextTick(function() {

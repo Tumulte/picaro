@@ -66,21 +66,27 @@ var store = new Vuex.Store({
 
 window.addEventListener('load', function() {
 	//@ts-ignore
-	new Vue({
-		el: 'rf-list',
-		router,
-		store,
-	});
-	new Vue({
-		el: 'rf-tags-list',
-		router,
-		store,
-	});
-	new Vue({
-		el: 'rf-link',
-		router,
-		store,
-	});
+	if (document.getElementsByTagName('rf-list').length > 0) {
+		new Vue({
+			el: 'rf-list',
+			router,
+			store,
+		});
+	}
+	if (document.getElementsByTagName('rf-tags-list').length > 0) {
+		new Vue({
+			el: 'rf-tags-list',
+			router,
+			store,
+		});
+	}
+	if (document.getElementsByTagName('rf-link').length > 0) {
+		new Vue({
+			el: 'rf-link',
+			router,
+			store,
+		});
+	}
 	if (document.getElementsByTagName('rf-form').length > 0) {
 		new Vue({
 			el: 'rf-form',
