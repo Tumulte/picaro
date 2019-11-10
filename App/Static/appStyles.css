@@ -91,6 +91,9 @@
 		display: none;
 	}
 }
+#rf-nav-panel ._panel {
+	width: 600px;
+}
 /* Basic HTML */
 #rf-css-panel {
 	button {
@@ -316,6 +319,10 @@
 	}
 	._list-item.-hidden {
 		text-decoration: line-through;
+	}
+	._list-item-reorder-trigger {
+		background: #aaa;
+		height: 30px;
 	}
 }
 /*Independent Elements */

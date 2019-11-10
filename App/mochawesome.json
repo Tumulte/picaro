@@ -5,9 +5,9 @@
     "passes": 4,
     "pending": 0,
     "failures": 2,
-    "start": "2019-11-07T14:15:15.289Z",
-    "end": "2019-11-07T14:15:30.013Z",
-    "duration": 14724,
+    "start": "2019-11-10T15:15:26.393Z",
+    "end": "2019-11-10T15:15:43.696Z",
+    "duration": 17303,
     "testsRegistered": 6,
     "passPercent": 66.66666666666666,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "586d4d9b-cab7-48d1-a653-5017d96dc061",
+      "uuid": "ac6de53c-a73d-454c-a0ac-24b2bb036a5e",
       "title": "",
       "fullFile": "",
       "file": "",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+          "uuid": "40b6bbe8-e481-4458-885d-8a88741fd440",
           "title": "Testing styleset modifications",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "switches styleset when clicking styleset",
               "fullTitle": "Testing styleset modifications switches styleset when clicking styleset",
               "timedOut": null,
-              "duration": 5156,
+              "duration": 4611,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -47,8 +47,8 @@
               "context": null,
               "code": "//Todo\ncy.visit('/');\ncy.get('.__current-style-set').as('currentStyle');",
               "err": {},
-              "uuid": "527b36ed-a1ee-4dbe-83ec-7d55df1df52f",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "406318bf-727d-4292-912a-2dcdbebae785",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             },
@@ -56,7 +56,7 @@
               "title": "changes all colors when the dominant is changed",
               "fullTitle": "Testing styleset modifications changes all colors when the dominant is changed",
               "timedOut": null,
-              "duration": 4997,
+              "duration": 7020,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -69,8 +69,8 @@
                 "estack": "CypressError: Timed out retrying: expected '<div>' to have CSS property 'background-color' with the value 'rgb(110, 196, 180)', but the value was 'rgba(0, 0, 0, 0)'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "17d1a786-d553-4432-b9e0-e4a455d3cb04",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "23465246-f004-4f14-91f9-6a05d917976b",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             },
@@ -78,7 +78,7 @@
               "title": "generates proper color subcombinations",
               "fullTitle": "Testing styleset modifications generates proper color subcombinations",
               "timedOut": null,
-              "duration": 4364,
+              "duration": 4964,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -91,8 +91,8 @@
                 "estack": "CypressError: Timed out retrying: expected '<div.sub-combination>' to have CSS property 'background-color' with the value 'rgb(39, 62, 58)', but the value was 'rgb(58, 58, 58)'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "693ad834-4c19-4b27-a42a-e61a9239e484",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "00c2e678-9b9c-4c8a-a633-073547cb1e1c",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             },
@@ -100,7 +100,7 @@
               "title": "changes colors on the selector panel",
               "fullTitle": "Testing styleset modifications changes colors on the selector panel",
               "timedOut": null,
-              "duration": 110,
+              "duration": 239,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -109,8 +109,8 @@
               "context": null,
               "code": "cy.get('#_selector ._selector-box:first div div').should('have.css', 'background-color', 'rgb(161, 93, 79)');\ncy.get('#_selector li:nth-of-type(2) ._selector-box div div').should('have.css', 'background-color', 'rgb(192, 236, 228)');\ncy.get('#_selector li:nth-of-type(2) :nth-child(2) > div[contenteditable=\"true\"] > div').should('have.css', 'background-color', 'rgb(58, 98, 100)');",
               "err": {},
-              "uuid": "fe552922-2f1c-4f3f-a3de-b591bc2137c0",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "0cd4291e-7a7c-4c64-a4b5-a95997fc6c10",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             },
@@ -118,7 +118,7 @@
               "title": "changes the DOM when the dominant is changed",
               "fullTitle": "Testing styleset modifications changes the DOM when the dominant is changed",
               "timedOut": null,
-              "duration": 13,
+              "duration": 21,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -127,8 +127,8 @@
               "context": null,
               "code": "cy.get('#rf-content-container').should('have.css', 'background-color', 'rgb(192, 236, 228)');",
               "err": {},
-              "uuid": "7792e3b6-6c54-4da3-9676-c8d64efdc2a5",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "923b7c0a-5f10-4223-ab62-ec335718d821",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             },
@@ -136,7 +136,7 @@
               "title": "updates the input of the form with the new values",
               "fullTitle": "Testing styleset modifications updates the input of the form with the new values",
               "timedOut": null,
-              "duration": 15,
+              "duration": 25,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -145,26 +145,26 @@
               "context": null,
               "code": "cy.get('[name=dominant]').should('have.value', '#D4A096');\ncy.get('[name=colorSetParamString]').should('have.value', '[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]');",
               "err": {},
-              "uuid": "7a576892-466d-45f0-9399-ecd750e1b7e9",
-              "parentUUID": "b8fb2a3a-edbc-498f-a290-0ba967678b3d",
+              "uuid": "3e8671c6-190c-437f-af63-de79092f3671",
+              "parentUUID": "40b6bbe8-e481-4458-885d-8a88741fd440",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "527b36ed-a1ee-4dbe-83ec-7d55df1df52f",
-            "fe552922-2f1c-4f3f-a3de-b591bc2137c0",
-            "7792e3b6-6c54-4da3-9676-c8d64efdc2a5",
-            "7a576892-466d-45f0-9399-ecd750e1b7e9"
+            "406318bf-727d-4292-912a-2dcdbebae785",
+            "0cd4291e-7a7c-4c64-a4b5-a95997fc6c10",
+            "923b7c0a-5f10-4223-ab62-ec335718d821",
+            "3e8671c6-190c-437f-af63-de79092f3671"
           ],
           "failures": [
-            "17d1a786-d553-4432-b9e0-e4a455d3cb04",
-            "693ad834-4c19-4b27-a42a-e61a9239e484"
+            "23465246-f004-4f14-91f9-6a05d917976b",
+            "00c2e678-9b9c-4c8a-a633-073547cb1e1c"
           ],
           "pending": [],
           "skipped": [],
-          "duration": 14655,
+          "duration": 16880,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000

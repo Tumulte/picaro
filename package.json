@@ -29,6 +29,7 @@
 		"bcrypt": "^3.0.6",
 		"body-parser": "1.18.3",
 		"compression": "1.7.3",
+		"deep-sort-object": "^1.0.2",
 		"express": "4.16.3",
 		"express-flash": "0.0.2",
 		"express-session": "^1.16.2",
