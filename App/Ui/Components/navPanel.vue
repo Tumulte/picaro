@@ -1,89 +1,10 @@
 var sortobject = require('deep-sort-object');
+var sortNumberLowToHigh = function(a, b) {
+	a = a.split('__')[0];
+	b = b.split('__')[0];
 
-//TODO simplify ALL
-var generateHiddenCheck = function(createElement, vue, index, collection) {
-	return createElement('input', {
-		attrs: {
-			type: 'checkbox',
-			checked: collection[index].hidden,
-			id: collection[index].hidden,
-		},
-		on: {
-			change: () => vue.toggleItem(index),
-		},
-		class: '_list-item-check',
-	});
+	return a < b;
 };
-var generateParametersInput = function(createElement, vue, index, collection) {
-	return createElement('input', {
-		attrs: {
-			type: 'text',
-		},
-		domProps: {
-			value: collection[index].parameters,
-		},
-		on: {
-			click: event => {
-				event.stopPropagation();
-			},
-			change: event => {
-				vue.$emit('change', vue.updateItemData(index, 'parameters', event.target.value));
-			},
-		},
-		class: '_list-item-parameters',
-	});
-};
-var generateNameInput = function(createElement, vue, index, collection) {
-	return createElement('input', {
-		attrs: {
-			type: 'text',
-		},
-		domProps: {
-			value: collection[index].name,
-		},
-		on: {
-			click: event => {
-				event.stopPropagation();
-			},
-			change: event => {
-				event.stopPropagation();
-				vue.$emit('change', vue.updateItemData(index, 'name', event.target.value));
-			},
-		},
-		class: '_list-item-name',
-	});
-};
-var generateReorderTrigger = function(createElement, vue, collection, index) {
-	return createElement('div', {
-		on: {
-			click: event => {
-				event.stopPropagation();
-
-				vue.reorderTrigger(collection[index], index);
-			},
-		},
-		class: '_list-item-reorder-trigger',
-	});
-};
-var generateStructure = function(views) {
-	var structure = {};
-
-	var parsedFiles = JSON.parse(views);
-	var indexOffset = 0;
-	parsedFiles.forEach(function(e, index) {
-		if (e.indexOf('.pug') !== -1) {
-			structure[index - indexOffset + '__' + e.replace('.pug', '')] = {
-				hidden: false,
-				children: {},
-				name: e.replace('.pug', ''),
-				parameters: '',
-			};
-		} else indexOffset += 1;
-	});
-
-	return structure;
-};
-//TODO figure out why this works
 var updateChildren = function(node, parents, name, previousFileName) {
 	parents = JSON.parse(JSON.stringify(parents));
 	if (node.file) {
@@ -109,21 +30,23 @@ var updateChildren = function(node, parents, name, previousFileName) {
 
 	return node;
 };
-//TODO this shouldn't have 5 params
-var generateListItem = function(createElement, vue, index, childrenArray, collection) {
-	return createElement(
-		'li',
-		{
-			on: {
-				click: e => {
-					e.stopPropagation();
-					vue.moveItem(collection[index], index);
-				},
-			},
-			class: ['_list-item', { '-hidden': collection[index].hidden }],
-		},
-		childrenArray
-	);
+var generateStructure = function(views) {
+	var structure = {};
+
+	var parsedFiles = JSON.parse(views);
+	var indexOffset = 0;
+	parsedFiles.forEach(function(e, index) {
+		if (e.indexOf('.pug') !== -1) {
+			structure[index - indexOffset + '__' + e.replace('.pug', '')] = {
+				hidden: false,
+				children: {},
+				name: e.replace('.pug', ''),
+				parameters: '',
+			};
+		} else indexOffset += 1;
+	});
+
+	return structure;
 };
 var navPanelComponent = {
 	/**
@@ -136,7 +59,7 @@ var navPanelComponent = {
 			componentKey: 1,
 			movingFile: false,
 			showInput: true,
-			navStructure: generateStructure(this.views),
+			navStructure: {},
 		};
 	},
 
@@ -152,21 +75,24 @@ var navPanelComponent = {
 	},
 
 	methods: {
-		updateItemData: function(item, parameter, data) {
-			this.navStructure[item][parameter] = data;
+		updateItemData: function(collection, item, parameter, data) {
+			var node = this.getSubNode(collection[item], item);
+			node[parameter] = data;
 			this.toggleKey();
 		},
 		toggleKey: function() {
 			this.componentKey = this.componentKey === 1 ? 0 : 1;
 		},
-		toggleItem: function(item) {
-			this.navStructure[item].hidden = !this.navStructure[item].hidden;
+		toggleItem: function(collection, item) {
+			var node = this.getSubNode(collection[item], item);
+
+			node.hidden = !node.hidden;
 			this.toggleKey();
 		},
 		cancelSelection: function() {
 			this.movingFile = false;
 		},
-		moveItem(file, index) {
+		changeItemLevel(file, index) {
 			this.$children.forEach(e => {
 				if (e.movingFile) {
 					this.movingFile = e.movingFile;
@@ -190,6 +116,91 @@ var navPanelComponent = {
 			this.toggleKey();
 		},
 		getSubNode: function(file, index) {
+			return this.getSubBranch(file, index)[index];
+		},
+		generateHiddenCheck: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'checkbox',
+					checked: collection[index].hidden,
+					id: collection[index].hidden,
+				},
+				on: {
+					change: () => this.toggleItem(collection, index),
+				},
+				class: '_list-item-check',
+			});
+		},
+		generateParametersInput: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'text',
+				},
+				domProps: {
+					value: collection[index].parameters,
+				},
+				on: {
+					click: event => {
+						event.stopPropagation();
+					},
+					change: event => {
+						this.$emit('change', this.updateItemData(collection, index, 'parameters', event.target.value));
+					},
+				},
+				class: '_list-item-parameters',
+			});
+		},
+		generateListItem: function(createElement, index, childrenArray, collection) {
+			return createElement(
+				'li',
+				{
+					on: {
+						click: e => {
+							e.stopPropagation();
+							this.changeItemLevel(collection[index], index);
+						},
+					},
+					class: ['_list-item', { '-hidden': collection[index].hidden }],
+				},
+				childrenArray
+			);
+		},
+		generateNameInput: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'text',
+				},
+				domProps: {
+					value: collection[index].name,
+				},
+				on: {
+					click: event => {
+						event.stopPropagation();
+					},
+					change: event => {
+						event.stopPropagation();
+						this.$emit('change', this.updateItemData(collection, index, 'name', event.target.value));
+					},
+				},
+				class: '_list-item-name',
+			});
+		},
+		generateReorderTrigger: function(createElement, collection, index) {
+			return createElement('div', {
+				on: {
+					click: event => {
+						event.stopPropagation();
+
+						this.moveItem(collection[index], index);
+					},
+				},
+				class: '_list-item-reorder-trigger',
+			});
+		},
+		getSubBranch: function(file, index) {
+			if (file.parents.length === 0) {
+				return this.navStructure[index];
+			}
 			var detachedParents = JSON.parse(JSON.stringify(file.parents));
 			var selectedDestinationFile = this.navStructure;
 			var firstItem = detachedParents.splice(0, 1);
@@ -202,8 +213,7 @@ var navPanelComponent = {
 					selectedDestinationFile = selectedDestinationFile[e].children;
 				});
 			}
-
-			return selectedDestinationFile[index];
+			return selectedDestinationFile;
 		},
 		targetIsNotAlreadyParent: function(file, index) {
 			if (file.parents && file.parents.length !== 0) {
@@ -218,13 +228,23 @@ var navPanelComponent = {
 			var listItemCollection = [];
 
 			for (var file in collection) {
-				var hiddenCheck = generateHiddenCheck(createElement, this, file, collection);
-				var hiddenLabel = createElement('label', [hiddenCheck, 'display']);
-				var nameInput = generateNameInput(createElement, this, file, collection);
+				var hiddenCheck = this.generateHiddenCheck(createElement, file, collection);
+				var hiddenLabel = createElement(
+					'label',
+					{
+						on: {
+							click: event => {
+								event.stopPropagation();
+							},
+						},
+					},
+					[hiddenCheck, 'display']
+				);
+				var nameInput = this.generateNameInput(createElement, file, collection);
 				var nameLabel = createElement('label', ['Name', nameInput]);
-				var parametersInput = generateParametersInput(createElement, this, file, collection);
+				var parametersInput = this.generateParametersInput(createElement, file, collection);
 				var parametersLabel = createElement('label', ['Parameters', parametersInput]);
-				var reorderTrigger = generateReorderTrigger(createElement, this, collection, file);
+				var reorderTrigger = this.generateReorderTrigger(createElement, collection, file);
 				var cancel = '';
 				if (file === this.movingFile.name) {
 					cancel = createElement(
@@ -244,18 +264,19 @@ var navPanelComponent = {
 				if (Object.keys(collection[file].children).length > 0) {
 					children = this.createList(createElement, collection[file].children);
 				}
+
+				//Todo replace parents and display name
 				if (collection[file].parents) {
-					parents = ' - ' + collection[file].parents.join(',');
+					var parents = ' - ' + collection[file].parents.join(',');
 				} else {
 					parents = '';
 				}
 
 				//var displayFileName = file.split('__')[1];
-				displayFileName = file;
+				var displayFileName = file;
 				listItemCollection.push(
-					generateListItem(
+					this.generateListItem(
 						createElement,
-						this,
 						file,
 						[
 							reorderTrigger,
@@ -273,18 +294,17 @@ var navPanelComponent = {
 			}
 			return createElement('ul', listItemCollection);
 		},
-		reorderTrigger: function(file, index) {
+		moveItem: function(file, index) {
 			if (this.movingFile) {
-				var oldPosition = this.movingFile.name.split('__')[0];
 				var newPosition = index.split('__')[0];
 				var name = this.movingFile.name.split('__')[1];
-
-				this.navStructure[newPosition + '__' + name] = this.navStructure[this.movingFile.name];
-				delete this.navStructure[this.movingFile.name];
+				var branch = this.getSubBranch(file, index);
+				branch[newPosition + '__' + name] = branch[this.movingFile.name];
+				delete branch[this.movingFile.name];
 				this.movingFile = false;
 
 				var pastMovedItem = false;
-				for (var item in this.navStructure) {
+				for (var item in branch) {
 					var itemPosition = item.split('__')[0];
 					var itemName = item.split('__')[1];
 
@@ -296,10 +316,10 @@ var navPanelComponent = {
 
 					if (itemPosition >= newPosition && pastMovedItem) {
 						var offsetPosition = parseInt(itemPosition) + 1;
-						this.navStructure[offsetPosition + '__' + itemName] = this.navStructure[item];
-						delete this.navStructure[item];
+						branch[offsetPosition + '__' + itemName] = branch[item];
+						delete branch[item];
 					} else {
-						this.navStructure = sortobject(this.navStructure);
+						this.navStructure = sortobject(this.navStructure, sortNumberLowToHigh);
 						this.toggleKey();
 					}
 				}
@@ -328,6 +348,9 @@ var navPanelComponent = {
 			}
 			this.movingFile = false;
 		},
+	},
+	created: function() {
+		this.navStructure = generateStructure(this.views);
 	},
 };
 

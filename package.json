@@ -11,7 +11,7 @@
 		"start": "node ./App/server.js",
 		"init": "node ./App/initiateApp.js",
 		"start:dev": "npm-run-all --parallel open:src security-check test",
-		"open:src": "set NODE_ENV='development' && nodemon --inspect ./App/server.js  --watch App/**/*  --ignore App/Static/*",
+		"open:src": "set NODE_ENV='development' && nodemon  --watch App/**/*  --ignore App/Static/*",
 		"security-check": "npm audit",
 		"test": "node App/Tests/testCron.js",
 		"jest": "jest --coverage",
