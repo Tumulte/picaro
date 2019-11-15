@@ -5,17 +5,17 @@ var sortNumberLowToHigh = function(a, b) {
 
 	return a < b;
 };
-var updateChildren = function(node, parents, name, previousFileName) {
+var recursiveUpdateParentCollection = function(node, parents, name, previousFileName) {
+	console.debug(node, parents, name, previousFileName);
 	parents = JSON.parse(JSON.stringify(parents));
-	if (node.file) {
-		node = JSON.parse(JSON.stringify(node.file));
+	if (node.node) {
+		node = JSON.parse(JSON.stringify(node.node));
 	}
 	node.parents = parents;
 
 	if (typeof node.name !== 'undefined') {
-		var movingFileName = node.name;
-	} else {
-		movingFileName = previousFileName;
+		var movingNodeName = node.name;
+		movingNodeName = previousFileName;
 	}
 	if (name) {
 		node.parents.push(name);
@@ -24,13 +24,13 @@ var updateChildren = function(node, parents, name, previousFileName) {
 	if (node && Object.keys(node.children).length > 0) {
 		for (var item in node.children) {
 			previousFileName = item;
-			updateChildren(node.children[item], parents, movingFileName, previousFileName);
+			recursiveUpdateParentCollection(node.children[item], parents, movingNodeName, previousFileName);
 		}
 	}
 
 	return node;
 };
-var generateStructure = function(views) {
+var generateStructureFromFileList = function(views) {
 	var structure = {};
 
 	var parsedFiles = JSON.parse(views);
@@ -40,6 +40,7 @@ var generateStructure = function(views) {
 			structure[index - indexOffset + '__' + e.replace('.pug', '')] = {
 				hidden: false,
 				children: {},
+				parents: [],
 				name: e.replace('.pug', ''),
 				parameters: '',
 			};
@@ -48,6 +49,8 @@ var generateStructure = function(views) {
 
 	return structure;
 };
+
+//THE COMPONENT
 var navPanelComponent = {
 	/**
 	 * @type {function}
@@ -57,7 +60,7 @@ var navPanelComponent = {
 	data: function() {
 		return {
 			componentKey: 1,
-			movingFile: false,
+			movingNode: false,
 			showInput: true,
 			navStructure: {},
 		};
@@ -67,164 +70,16 @@ var navPanelComponent = {
 		var stuctureStringInput = createElement('input', {
 			domProps: {
 				type: 'text',
-				value: JSON.stringify(this.navStructure),
+				value: this.navStructureString,
 			},
 		});
-		var listContainer = this.createList(createElement, this.navStructure);
+		var listContainer = this.generateMainRender(createElement, this.navStructure);
 		return createElement('div', { key: this.componentKey }, [stuctureStringInput, listContainer]);
 	},
 
 	methods: {
-		updateItemData: function(collection, item, parameter, data) {
-			var node = this.getSubNode(collection[item], item);
-			node[parameter] = data;
-			this.toggleKey();
-		},
-		toggleKey: function() {
-			this.componentKey = this.componentKey === 1 ? 0 : 1;
-		},
-		toggleItem: function(collection, item) {
-			var node = this.getSubNode(collection[item], item);
-
-			node.hidden = !node.hidden;
-			this.toggleKey();
-		},
-		cancelSelection: function() {
-			this.movingFile = false;
-		},
-		changeItemLevel(file, index) {
-			this.$children.forEach(e => {
-				if (e.movingFile) {
-					this.movingFile = e.movingFile;
-					return;
-				}
-			});
-			if (!this.movingFile) {
-				var newChild = {};
-				newChild.name = index;
-				newChild.file = file;
-				this.movingFile = newChild;
-			} else {
-				var targetIsNotAlreadyParent = this.targetIsNotAlreadyParent(file, index);
-				var targetIsNotItself = this.navStructure[index] !== this.movingFile.file;
-
-				if (targetIsNotAlreadyParent && targetIsNotItself) {
-					this.iterateStructure(file, index);
-				}
-			}
-
-			this.toggleKey();
-		},
-		getSubNode: function(file, index) {
-			return this.getSubBranch(file, index)[index];
-		},
-		generateHiddenCheck: function(createElement, index, collection) {
-			return createElement('input', {
-				attrs: {
-					type: 'checkbox',
-					checked: collection[index].hidden,
-					id: collection[index].hidden,
-				},
-				on: {
-					change: () => this.toggleItem(collection, index),
-				},
-				class: '_list-item-check',
-			});
-		},
-		generateParametersInput: function(createElement, index, collection) {
-			return createElement('input', {
-				attrs: {
-					type: 'text',
-				},
-				domProps: {
-					value: collection[index].parameters,
-				},
-				on: {
-					click: event => {
-						event.stopPropagation();
-					},
-					change: event => {
-						this.$emit('change', this.updateItemData(collection, index, 'parameters', event.target.value));
-					},
-				},
-				class: '_list-item-parameters',
-			});
-		},
-		generateListItem: function(createElement, index, childrenArray, collection) {
-			return createElement(
-				'li',
-				{
-					on: {
-						click: e => {
-							e.stopPropagation();
-							this.changeItemLevel(collection[index], index);
-						},
-					},
-					class: ['_list-item', { '-hidden': collection[index].hidden }],
-				},
-				childrenArray
-			);
-		},
-		generateNameInput: function(createElement, index, collection) {
-			return createElement('input', {
-				attrs: {
-					type: 'text',
-				},
-				domProps: {
-					value: collection[index].name,
-				},
-				on: {
-					click: event => {
-						event.stopPropagation();
-					},
-					change: event => {
-						event.stopPropagation();
-						this.$emit('change', this.updateItemData(collection, index, 'name', event.target.value));
-					},
-				},
-				class: '_list-item-name',
-			});
-		},
-		generateReorderTrigger: function(createElement, collection, index) {
-			return createElement('div', {
-				on: {
-					click: event => {
-						event.stopPropagation();
-
-						this.moveItem(collection[index], index);
-					},
-				},
-				class: '_list-item-reorder-trigger',
-			});
-		},
-		getSubBranch: function(file, index) {
-			if (file.parents.length === 0) {
-				return this.navStructure[index];
-			}
-			var detachedParents = JSON.parse(JSON.stringify(file.parents));
-			var selectedDestinationFile = this.navStructure;
-			var firstItem = detachedParents.splice(0, 1);
-
-			firstItem = firstItem.join();
-
-			selectedDestinationFile = selectedDestinationFile[firstItem].children;
-			if (detachedParents.length > 0) {
-				detachedParents.forEach(function(e) {
-					selectedDestinationFile = selectedDestinationFile[e].children;
-				});
-			}
-			return selectedDestinationFile;
-		},
-		targetIsNotAlreadyParent: function(file, index) {
-			if (file.parents && file.parents.length !== 0) {
-				var selectedDestinationFile = this.getSubNode(file, index);
-
-				return !selectedDestinationFile.children.hasOwnProperty(this.movingFile.name);
-			} else {
-				return !this.navStructure[index].children.hasOwnProperty(this.movingFile.name);
-			}
-		},
-		createList: function(createElement, collection) {
+		//RENDER METHODS
+		generateMainRender: function(createElement, collection) {
 			var listItemCollection = [];
 
 			for (var file in collection) {
@@ -246,7 +101,7 @@ var navPanelComponent = {
 				var parametersLabel = createElement('label', ['Parameters', parametersInput]);
 				var reorderTrigger = this.generateReorderTrigger(createElement, collection, file);
 				var cancel = '';
-				if (file === this.movingFile.name) {
+				if (file === this.movingNode.name) {
 					cancel = createElement(
 						'span',
 						{
@@ -262,7 +117,7 @@ var navPanelComponent = {
 				}
 				var children = '';
 				if (Object.keys(collection[file].children).length > 0) {
-					children = this.createList(createElement, collection[file].children);
+					children = this.generateMainRender(createElement, collection[file].children);
 				}
 
 				//Todo replace parents and display name
@@ -294,63 +149,226 @@ var navPanelComponent = {
 			}
 			return createElement('ul', listItemCollection);
 		},
-		moveItem: function(file, index) {
-			if (this.movingFile) {
-				var newPosition = index.split('__')[0];
-				var name = this.movingFile.name.split('__')[1];
-				var branch = this.getSubBranch(file, index);
-				branch[newPosition + '__' + name] = branch[this.movingFile.name];
-				delete branch[this.movingFile.name];
-				this.movingFile = false;
+		generateHiddenCheck: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'checkbox',
+					checked: collection[index].hidden,
+					id: collection[index].hidden,
+				},
+				on: {
+					change: () => this.toggleNodeData(collection, index),
+				},
+				class: '_list-item-check',
+			});
+		},
+		generateParametersInput: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'text',
+				},
+				domProps: {
+					value: collection[index].parameters,
+				},
+				on: {
+					click: event => {
+						event.stopPropagation();
+					},
+					change: event => {
+						this.$emit('change', this.updateNodeData(collection, index, 'parameters', event.target.value));
+					},
+				},
+				class: '_list-item-parameters',
+			});
+		},
+		generateListItem: function(createElement, index, childrenArray, collection) {
+			return createElement(
+				'li',
+				{
+					on: {
+						click: e => {
+							e.stopPropagation();
+							this.selectNode(collection[index], index);
+						},
+					},
+					class: ['_list-item', { '-hidden': collection[index].hidden }],
+				},
+				childrenArray
+			);
+		},
+		generateNameInput: function(createElement, index, collection) {
+			return createElement('input', {
+				attrs: {
+					type: 'text',
+				},
+				domProps: {
+					value: collection[index].name,
+				},
+				on: {
+					click: event => {
+						event.stopPropagation();
+					},
+					change: event => {
+						event.stopPropagation();
+						this.$emit('change', this.updateNodeData(collection, index, 'name', event.target.value));
+					},
+				},
+				class: '_list-item-name',
+			});
+		},
+		generateReorderTrigger: function(createElement, collection, index) {
+			return createElement('div', {
+				on: {
+					click: event => {
+						event.stopPropagation();
+						this.moveNode(collection[index], index);
+					},
+				},
+				class: '_list-item-reorder-trigger',
+			});
+		},
 
-				var pastMovedItem = false;
-				for (var item in branch) {
-					var itemPosition = item.split('__')[0];
-					var itemName = item.split('__')[1];
+		toggleKey: function() {
+			this.componentKey = this.componentKey === 0 ? 1 : 0;
+		},
+		updateNodeData: function(collection, item, parameter, data) {
+			var node = this.getSubNode(collection[item], item);
+			node[parameter] = data;
+			this.toggleKey();
+		},
 
-					if (itemPosition === newPosition && !pastMovedItem) {
-						pastMovedItem = true;
-					} else if (itemPosition === newPosition && pastMovedItem) {
-						pastMovedItem = false;
-					}
+		toggleNodeData: function(collection, item) {
+			var node = this.getSubNode(collection[item], item);
+			node.hidden = !node.hidden;
+			this.toggleKey();
+		},
+		selectNode(node, index) {
+			if (!this.movingNode) {
+				var newChild = {};
+				newChild.name = index;
+				newChild.node = node;
+				this.movingNode = newChild;
+			} else {
+				this.changeNodeLevel(node, index);
+				this.cancelSelection();
+			}
+		},
+		cancelSelection: function() {
+			this.movingNode = false;
+		},
+		getSubBranch: function(file) {
+			if (file.parents.length === 0) {
+				return this.navStructure;
+			}
+			var detachedParents = JSON.parse(JSON.stringify(file.parents));
+			var selectedDestinationFile = this.navStructure;
+			var firstItem = detachedParents.splice(0, 1);
 
-					if (itemPosition >= newPosition && pastMovedItem) {
-						var offsetPosition = parseInt(itemPosition) + 1;
-						branch[offsetPosition + '__' + itemName] = branch[item];
-						delete branch[item];
-					} else {
-						this.navStructure = sortobject(this.navStructure, sortNumberLowToHigh);
-						this.toggleKey();
-					}
+			firstItem = firstItem.join();
+
+			selectedDestinationFile = selectedDestinationFile[firstItem].children;
+			if (detachedParents.length > 0) {
+				detachedParents.forEach(function(e) {
+					selectedDestinationFile = selectedDestinationFile[e].children;
+				});
+			}
+			return selectedDestinationFile;
+		},
+		getSubNode: function(file, index) {
+			return this.getSubBranch(file)[index];
+		},
+		targetIsNotAlreadyParent: function(node, index) {
+			if (node.parents && node.parents.length !== 0) {
+				var selectedDestinationFile = this.getSubNode(node, index);
+				return !selectedDestinationFile.children.hasOwnProperty(this.movingNode.name);
+			} else {
+				return !this.navStructure[index].children.hasOwnProperty(this.movingNode.name);
+			}
+		},
+		canMoveAtDestination: function(node, index) {
+			var targetIsNotAlreadyParent = this.targetIsNotAlreadyParent(node, index);
+			var targetIsNotItself = this.getSubNode(node, index) !== this.movingNode.data;
+
+			if (targetIsNotAlreadyParent && targetIsNotItself) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		changeNodeLevel: function(destinationNode, index, destinationIsRootLevel) {
+			if (!this.canMoveAtDestination(destinationNode, index)) {
+				return;
+			}
+			var selectedDestinationNode = this.getSubNode(destinationNode, index);
+
+			if (destinationIsRootLevel) {
+				var parents = [];
+			} else {
+				parents = destinationNode.parents;
+				parents.push(index);
+			}
+			selectedDestinationNode.children[this.movingNode.name] = recursiveUpdateParentCollection(
+				this.movingNode,
+				parents
+			);
+
+			var selectedmovingNode = this.getSubBranch(this.movingNode.data, this.movingNode.name);
+			delete selectedmovingNode[this.movingNode.name];
+		},
+		moveNode: function(destinationNode, index) {
+			if (!this.movingNode) {
+				return;
+			}
+			var newPosition = index.split('__')[0];
+			var destinationBranch = this.getSubBranch(destinationNode);
+			var originBranch = this.getSubBranch(this.movingNode.data);
+
+			if (destinationBranch !== originBranch) {
+				var isRootLevel = false;
+				if (destinationBranch === this.navStructure) {
+					isRootLevel = true;
+				}
+				this.changeNodeLevel(destinationNode, index, isRootLevel);
+			}
+
+			this.changeSubsequentNumbering(destinationBranch, originBranch, newPosition);
+
+			this.cancelSelection();
+		},
+		changeSubsequentNumbering: function(destinationBranch, originBranch, newPosition) {
+			var name = this.movingNode.name.split('__')[1];
+
+			destinationBranch[newPosition + '__' + name] = this.movingNode.data;
+			delete originBranch[this.movingNode.name];
+
+			var pastMovedItem = false;
+			for (var node in destinationBranch) {
+				var nodePosition = node.split('__')[0];
+				var nodeName = node.split('__')[1];
+
+				if (nodePosition === newPosition && !pastMovedItem) {
+					pastMovedItem = true;
+				} else if (nodePosition === newPosition && pastMovedItem) {
+					pastMovedItem = false;
+				}
+
+				if (nodePosition >= newPosition && pastMovedItem) {
+					var offsetPosition = parseInt(nodePosition) + 1;
+					destinationBranch[offsetPosition + '__' + nodeName] = destinationBranch[node];
+					delete destinationBranch[node];
+				} else {
+					this.navStructure = sortobject(this.navStructure, sortNumberLowToHigh);
 				}
 			}
 		},
-		iterateStructure: function(file, index) {
-			if (file.parents && file.parents.length !== 0) {
-				var selectedDestinationFile = this.getSubNode(file, index);
-				var parents = JSON.parse(JSON.stringify(file.parents));
-				parents.push(index);
-
-				selectedDestinationFile.children[this.movingFile.name] = updateChildren(this.movingFile, parents);
-			} else {
-				var children = this.navStructure[index].children;
-				children[this.movingFile.name] = updateChildren(this.movingFile, [index]);
-			}
-			if (this.movingFile.file.parents && this.movingFile.file.parents.length > 0) {
-				var selectedMovingFile = this.navStructure;
-				var lastItem = this.movingFile.file.parents.splice(-1, 1);
-				this.movingFile.file.parents.forEach(function(e) {
-					selectedMovingFile = selectedMovingFile[e];
-				});
-				delete selectedMovingFile[lastItem].children[this.movingFile.name];
-			} else {
-				delete this.navStructure[this.movingFile.name];
-			}
-			this.movingFile = false;
+	},
+	computed: {
+		navStructureString: function() {
+			return JSON.stringify(this.navStructure);
 		},
 	},
 	created: function() {
-		this.navStructure = generateStructure(this.views);
+		this.navStructure = generateStructureFromFileList(this.views);
 	},
 };
 
