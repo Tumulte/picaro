@@ -50,6 +50,7 @@ var store = new Vuex.Store({
 		cssPanelIndex: 1,
 		colorSet: {},
 		styleSet: {},
+		navStructure: {},
 		loaded: false,
 	},
 	mutations: {
@@ -75,6 +76,9 @@ var store = new Vuex.Store({
 		},
 		colorSet(state, data) {
 			state.colorSet = data;
+		},
+		navStructure(state, data) {
+			state.navStructure = data;
 		},
 		styleSet(state, data) {
 			state.styleSet = data;
@@ -111,6 +115,10 @@ var store = new Vuex.Store({
 		colorSet(state) {
 			return state.colorSet;
 		},
+		navStructure(state) {
+			return state.navStructure;
+		},
+
 		styleSet(state) {
 			return state.styleSet;
 		},

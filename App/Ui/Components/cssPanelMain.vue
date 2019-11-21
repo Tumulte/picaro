@@ -9,10 +9,7 @@ var makeFontFamilyName = function(name) {
 	if (!name) {
 		return;
 	}
-	return name
-		.replace('.otf', '')
-		.replace('.ttf', '')
-		.replace('.woff', '');
+	return name.replace('.otf', '').replace('.ttf', '').replace('.woff', '');
 };
 var getAllStyleSet = function(instance) {
 	axios
@@ -157,7 +154,7 @@ var panelComponent = {
 			});
 		},
 		submit: function(event) {
-			if (this.styleSet.id != 'default') {
+			if (this.styleSet.id !== 'default') {
 				this.checkSave(event);
 			} else {
 				this.saveNew(event);

@@ -16,31 +16,30 @@ var appCrud = function appCrud(appDb, currentApp) {
 	dataRouter.route('/all').get(function(req, res) {
 		res.json(appDb.get(currentApp.applicationName).value());
 	});
-	dataRouter.route('/config/:id').put(upload.none(), function(req, res) {
-		appDb
-			.get('config')
-			// @ts-ignore
-			.find({ id: req.body.id })
-			.assign(req.body)
-			.write();
-		res.send('Config modified successfully');
-	});
+	dataRouter
+		.route('/settings/')
+		.get(function(req, res) {
+			res.json(currentApp);
+		})
+		.put(upload.none(), function(req, res) {
+			appDb
+				.get('config')
+				// @ts-ignore
+				.find({ id: currentApp.id })
+				.assign(req.body)
+				.write();
+			res.send('Config modified successfully');
+		});
 	dataRouter.route('/').get(function(req, res) {
 		/**
 		 * @type {object}
 		 */
 		var data = {};
-		data = appDb
-			.get(currentApp.applicationName)
-			.find({ id: currentApp.styleSet })
-			.value();
+		data = appDb.get(currentApp.applicationName).find({ id: currentApp.styleSet }).value();
 		if (!data) {
 			res.status(404).send('No style collection named ' + req.params.styleId);
 		}
-		data.storedColorSet = appDb
-			.get('colorSetPresets')
-			.find({ id: data.colorCombinationId })
-			.value();
+		data.storedColorSet = appDb.get('colorSetPresets').find({ id: data.colorCombinationId }).value();
 		res.json(data);
 	});
 	dataRouter.route('/fonts').get(function(req, res) {
@@ -66,10 +65,7 @@ var appCrud = function appCrud(appDb, currentApp) {
 			 * @type {object}
 			 */
 			var data = {};
-			data = appDb
-				.get(currentApp.applicationName)
-				.find({ id: req.params.styleId })
-				.value();
+			data = appDb.get(currentApp.applicationName).find({ id: req.params.styleId }).value();
 			if (!data.styleCollection) {
 				res.status(404).send('No style collection named ' + req.params.styleId);
 			}
@@ -81,16 +77,8 @@ var appCrud = function appCrud(appDb, currentApp) {
 		})
 		.delete(function(req, res) {
 			//TODO double check this can't be done without being logged
-			if (
-				appDb
-					.get(currentApp.applicationName)
-					.find({ id: req.params.styleId })
-					.value()
-			) {
-				appDb
-					.get(currentApp.applicationName)
-					.remove({ id: req.params.styleId })
-					.write();
+			if (appDb.get(currentApp.applicationName).find({ id: req.params.styleId }).value()) {
+				appDb.get(currentApp.applicationName).remove({ id: req.params.styleId }).write();
 				res.send('styleset ' + req.params.styleId + ' DELETE');
 			} else {
 				res.status(500).send('This style set does not exist or has already been deleted');

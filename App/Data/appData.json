@@ -147,7 +147,8 @@
       "title": "App Demo",
       "devMode": true,
       "messageTimeOut": 10000,
-      "applicationName": "Demo"
+      "applicationName": "Demo",
+      "navStructureString": "{\"0__add\":{\"hidden\":true,\"children\":{\"2__edit\":{\"hidden\":false,\"children\":{},\"parents\":[\"0__add\"],\"name\":\"2__edit\",\"displayName\":\"2__edit\",\"parameters\":\"\",\"custom\":false},\"1__books\":{\"hidden\":false,\"children\":{},\"parents\":[\"0__add\"],\"name\":\"1__books\",\"displayName\":\"1__books\",\"parameters\":\"\",\"custom\":false}},\"parents\":[],\"name\":\"0__add\",\"displayName\":\"0__add\",\"parameters\":\"\",\"custom\":false},\"3__films\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"3__films\",\"displayName\":\"3__films\",\"parameters\":\"\",\"custom\":false},\"4__index\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"4__index\",\"displayName\":\"4__index\",\"parameters\":\"\",\"custom\":false},\"5__listtest\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"5__listtest\",\"displayName\":\"5__listtest\",\"parameters\":\"\",\"custom\":false}}"
     },
     {
       "id": "2",

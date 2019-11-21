@@ -33,15 +33,7 @@
 	}
 }
 
-/* Core config */
-#rf-css-panel * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	font-family: 'Courier New', Courier, monospace;
-	font-size: 14px;
-	line-height: 1.3em;
-}
+
 
 /* Components */
 #rf-admin-panel,
@@ -95,7 +87,16 @@
 	width: 600px;
 }
 /* Basic HTML */
+#rf-nav-panel,
 #rf-css-panel {
+
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 14px;
+	line-height: 1.3em;
+
 	button {
 		width: calc(100% - 2 * var(--app-ratio-s));
 		padding: var(--app-ratio-s);
@@ -142,7 +143,6 @@
 	input {
 		padding: var(--app-ratio-xs);
 		width: 100%;
-		border: none;
 	}
 
 	label {
@@ -321,9 +321,47 @@
 		text-decoration: line-through;
 	}
 	._list-item-reorder-trigger {
-		background: #aaa;
-		height: 30px;
-	}
+		height: 0;
+        display: block;
+        background: #fff;
+        transition: all 0.2s ease;
+        &.-show{
+            height: 30px;
+		    background: #aaa;
+            cursor: pointer;
+        }
+    }
+    ._list-item{
+        list-style: none;
+    }
+    ._nav-item-key{
+        display: block;
+    }
+    ._name-label,
+    ._hidden-label,
+    ._parameter-label{
+        input{
+            margin: 0;
+        }
+    }
+    ._name-label,
+    ._parameter-label{
+        width: 30%;
+        margin: 0 10px;
+    }
+    ._hidden-label{
+        width: 10%;
+        margin: 0 10px;
+    }
+    li {
+        border: 1px solid #000;
+    }
+    li li {
+        border: 1px solid #000;
+        border-left: var(--app-ratio-xs) solid #000;
+        margin: var(--app-ratio-xs);
+    }
+
 }
 /*Independent Elements */
 /* Panels buttons */
@@ -415,6 +453,7 @@
 		border: none;
 	}
 }
+
 /*
 #########################
 Application Content

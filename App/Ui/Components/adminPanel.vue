@@ -4,6 +4,14 @@ var configComponent = {
 	data: function() {
 		return {
 			warningMessage: '',
+			settings: {
+				id: '',
+				name: '',
+				language: '',
+				title: '',
+				devMode: false,
+				messageTimeOut: 10000,
+			},
 		};
 	},
 	methods: {
@@ -44,9 +52,27 @@ var configComponent = {
 			}
 		},
 	},
+	created: function() {
+		axios
+			.get('/appapi/settings/')
+			.then(response => {
+				this.settings = response.data;
+				this.$store.commit('navStructure', JSON.parse(response.data.navStructureString));
+			})
+			.catch(error => {
+				this.warningMessage = {
+					type: 'error',
+					text: 'Request failed.  Returned status of ' + error,
+				};
+			});
+	},
+
 	computed: {
 		setName: function() {
 			return this.$store.getters.styleSet.id;
+		},
+		navStructureString: function() {
+			return JSON.stringify(this.$store.getters.navStructure);
 		},
 	},
 };
