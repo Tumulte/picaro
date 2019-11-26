@@ -23,14 +23,16 @@ var generateStructureFromFileList = function(views) {
 	var indexOffset = 0;
 	parsedFiles.forEach(function(e, index) {
 		if (e.indexOf('.pug') !== -1) {
-			var name = index - indexOffset + '__' + e.replace('.pug', '');
+			var displayName = e.replace('.pug', '');
+			var name = index - indexOffset + '__' + displayName;
+
 			structure[name] = {
 				hidden: false,
 				children: {},
 				parents: [],
 				name: name,
-				displayName: name,
-				parameters: '',
+				displayName: displayName,
+				url: '/' + displayName,
 				custom: false,
 			};
 		} else indexOffset += 1;
@@ -110,13 +112,13 @@ var navPanelComponent = {
 					},
 					['Name', nameInput]
 				);
-				var parametersInput = this.generateParametersInput(createElement, node, collection);
-				var parametersLabel = createElement(
+				var urlInput = this.generateUrlInput(createElement, node, collection);
+				var urlLabel = createElement(
 					'label',
 					{
 						class: '_parameter-label',
 					},
-					['Parameters', parametersInput]
+					['Url', urlInput]
 				);
 				var reorderTrigger = this.generateReorderTrigger(createElement, collection, node);
 				var cancel = '';
@@ -174,7 +176,7 @@ var navPanelComponent = {
 					this.generateListItem(
 						createElement,
 						node,
-						[reorderTrigger, nodeKey, parents, nameLabel, parametersLabel, hiddenLabel, remove, children],
+						[reorderTrigger, nodeKey, parents, nameLabel, urlLabel, hiddenLabel, remove, children],
 						collection
 					)
 				);
@@ -201,23 +203,23 @@ var navPanelComponent = {
 				class: '_list-item-check',
 			});
 		},
-		generateParametersInput: function(createElement, index, collection) {
+		generateUrlInput: function(createElement, index, collection) {
 			return createElement('input', {
 				attrs: {
 					type: 'text',
 				},
 				domProps: {
-					value: collection[index].parameters,
+					value: collection[index].url,
 				},
 				on: {
 					click: event => {
 						event.stopPropagation();
 					},
 					change: event => {
-						this.$emit('change', this.updateNodeData(collection, index, 'parameters', event.target.value));
+						this.$emit('change', this.updateNodeData(collection, index, 'url', event.target.value));
 					},
 				},
-				class: '_list-item-parameters',
+				class: '_list-item-url',
 			});
 		},
 		generateListItem: function(createElement, index, childrenArray, collection) {
@@ -396,8 +398,8 @@ var navPanelComponent = {
 				children: {},
 				parents: [],
 				name: name,
-				displayName: name,
-				parameters: '',
+				displayName: '',
+				url: '',
 				custom: true,
 			});
 		},
@@ -424,7 +426,11 @@ var navPanelComponent = {
 
 	computed: {
 		navStructure: function() {
-			return this.$store.getters.navStructure;
+			if (Object.keys(this.$store.getters.navStructure).length !== 0) {
+				return this.$store.getters.navStructure;
+			} else {
+				return generateStructureFromFileList(this.$props.views);
+			}
 		},
 	},
 };

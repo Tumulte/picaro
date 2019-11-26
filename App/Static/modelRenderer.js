@@ -11,14 +11,16 @@ var listComponent = require('../Ui/Components/list.vue');
 var linkComponent = require('../Ui/Components/link.vue');
 var formComponent = require('../Ui/Components/form.vue');
 var tagsComponent = require('../Ui/Components/tags.vue');
+var navComponent = require('../Ui/Components/nav.vue');
 
 Vue.component('rf-list', listComponent);
 Vue.component('rf-tags', tagsComponent);
 Vue.component('rf-tags-list', tagsListComponent);
 Vue.component('rf-link', linkComponent);
 Vue.component('rf-form', formComponent);
+Vue.component('rf-nav', navComponent);
+
 Vue.component('v-runtime-template', VRuntimeTemplate);
-var event = new Event('formloaded');
 
 Vue.use(VueRouter);
 var router = new VueRouter({
@@ -83,6 +85,13 @@ window.addEventListener('load', function() {
 	if (document.getElementsByTagName('rf-link').length > 0) {
 		new Vue({
 			el: 'rf-link',
+			router,
+			store,
+		});
+	}
+	if (document.getElementsByTagName('rf-nav').length > 0) {
+		new Vue({
+			el: 'rf-nav',
 			router,
 			store,
 		});

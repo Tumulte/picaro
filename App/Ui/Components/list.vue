@@ -12,9 +12,7 @@ var listComponent = {
 		};
 	},
 	template: template,
-	props: {
-		rfModel: '',
-	},
+	props: ['rfModel'],
 	methods: {
 		checkFilters: function(item) {
 			if (!this.filterCollection) {
