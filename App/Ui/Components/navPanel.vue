@@ -1,11 +1,11 @@
 var sortobject = require('deep-sort-object');
 var Vue = require('vue');
-var sortNumberLowToHigh = function(a, b) {
+var sortNumberLowToHigh = function (a, b) {
 	a = a.split('__')[0];
 	b = b.split('__')[0];
 	return a - b;
 };
-var recursiveUpdateParentCollection = function(destinationNode, movingNode, index) {
+var recursiveUpdateParentCollection = function (destinationNode, movingNode, index) {
 	movingNode.parents = JSON.parse(JSON.stringify(destinationNode.parents));
 	if (index !== false) {
 		movingNode.parents.push(index);
@@ -16,12 +16,12 @@ var recursiveUpdateParentCollection = function(destinationNode, movingNode, inde
 		}
 	}
 };
-var generateStructureFromFileList = function(views) {
+var generateStructureFromFileList = function (views) {
 	var structure = {};
 
 	var parsedFiles = JSON.parse(views);
 	var indexOffset = 0;
-	parsedFiles.forEach(function(e, index) {
+	parsedFiles.forEach(function (e, index) {
 		if (e.indexOf('.pug') !== -1) {
 			var displayName = e.replace('.pug', '');
 			var name = index - indexOffset + '__' + displayName;
@@ -40,6 +40,20 @@ var generateStructureFromFileList = function(views) {
 
 	return structure;
 };
+var renameChildren = function (node, oldName, newName) {
+	node.parents.forEach(function (item, index) {
+
+		if (item === oldName) {
+			node.parents[index] = newName
+		}
+	})
+
+	if (Object.keys(node.children).length > 0) {
+		for (var child in node.children) {
+			renameChildren(node.children[child], oldName, newName)
+		}
+	}
+}
 
 //THE COMPONENT
 var navPanelComponent = {
@@ -48,7 +62,7 @@ var navPanelComponent = {
 	 */
 	props: ['views'],
 
-	data: function() {
+	data: function () {
 		return {
 			movingNode: false,
 			showInput: true,
@@ -56,10 +70,9 @@ var navPanelComponent = {
 		};
 	},
 
-	render: function(createElement) {
+	render: function (createElement) {
 		var saveButton = createElement(
-			'Button',
-			{
+			'Button', {
 				on: {
 					click: () => {
 						this.saveNavEntry();
@@ -70,8 +83,7 @@ var navPanelComponent = {
 		);
 
 		var addButton = createElement(
-			'Button',
-			{
+			'Button', {
 				on: {
 					click: () => {
 						this.addNavEntry();
@@ -80,6 +92,16 @@ var navPanelComponent = {
 			},
 			'Add'
 		);
+		var refreshButton = createElement(
+			'Button', {
+				on: {
+					click: () => {
+						this.refreshFiles();
+					},
+				},
+			},
+			'Refresh files'
+		);
 
 		var listContainer = this.generateMainRender(createElement, this.navStructure);
 		return createElement('div', [saveButton, listContainer, addButton, saveButton]);
@@ -87,14 +109,13 @@ var navPanelComponent = {
 
 	methods: {
 		//RENDER METHODS
-		generateMainRender: function(createElement, collection) {
+		generateMainRender: function (createElement, collection) {
 			var listItemCollection = [];
 
 			for (var node in collection) {
 				var hiddenCheck = this.generateHiddenCheck(createElement, node, collection);
 				var hiddenLabel = createElement(
-					'label',
-					{
+					'label', {
 						class: '_hidden-label',
 						on: {
 							click: event => {
@@ -106,16 +127,14 @@ var navPanelComponent = {
 				);
 				var nameInput = this.generateNameInput(createElement, node, collection);
 				var nameLabel = createElement(
-					'label',
-					{
+					'label', {
 						class: '_name-label',
 					},
 					['Name', nameInput]
 				);
 				var urlInput = this.generateUrlInput(createElement, node, collection);
 				var urlLabel = createElement(
-					'label',
-					{
+					'label', {
 						class: '_parameter-label',
 					},
 					['Url', urlInput]
@@ -124,8 +143,7 @@ var navPanelComponent = {
 				var cancel = '';
 				if (node === this.movingNode.name) {
 					cancel = createElement(
-						'span',
-						{
+						'span', {
 							on: {
 								click: e => {
 									e.stopPropagation();
@@ -139,8 +157,7 @@ var navPanelComponent = {
 				var remove = '';
 				if (collection[node].custom) {
 					remove = createElement(
-						'span',
-						{
+						'span', {
 							on: {
 								click: e => {
 									e.stopPropagation();
@@ -165,8 +182,7 @@ var navPanelComponent = {
 				var displayNodeKey = node;
 
 				var nodeKey = createElement(
-					'div',
-					{
+					'div', {
 						class: '_nav-item-key',
 					},
 					[displayNodeKey, cancel]
@@ -190,7 +206,7 @@ var navPanelComponent = {
 			listItemCollection.push(warningMessages);
 			return createElement('ul', listItemCollection);
 		},
-		generateHiddenCheck: function(createElement, index, collection) {
+		generateHiddenCheck: function (createElement, index, collection) {
 			return createElement('input', {
 				attrs: {
 					type: 'checkbox',
@@ -203,7 +219,7 @@ var navPanelComponent = {
 				class: '_list-item-check',
 			});
 		},
-		generateUrlInput: function(createElement, index, collection) {
+		generateUrlInput: function (createElement, index, collection) {
 			return createElement('input', {
 				attrs: {
 					type: 'text',
@@ -222,22 +238,23 @@ var navPanelComponent = {
 				class: '_list-item-url',
 			});
 		},
-		generateListItem: function(createElement, index, childrenArray, collection) {
+		generateListItem: function (createElement, index, childrenArray, collection) {
 			return createElement(
-				'li',
-				{
+				'li', {
 					on: {
 						click: e => {
 							e.stopPropagation();
 							this.selectNode(collection[index], index);
 						},
 					},
-					class: ['_list-item', { '-hidden': collection[index].hidden }],
+					class: ['_list-item', {
+						'-hidden': collection[index].hidden
+					}],
 				},
 				childrenArray
 			);
 		},
-		generateNameInput: function(createElement, index, collection) {
+		generateNameInput: function (createElement, index, collection) {
 			return createElement('input', {
 				attrs: {
 					type: 'text',
@@ -257,7 +274,7 @@ var navPanelComponent = {
 				class: '_list-item-name',
 			});
 		},
-		generateReorderTrigger: function(createElement, collection, index) {
+		generateReorderTrigger: function (createElement, collection, index) {
 			return createElement('div', {
 				on: {
 					click: event => {
@@ -265,15 +282,17 @@ var navPanelComponent = {
 						this.moveNode(collection[index], index);
 					},
 				},
-				class: ['_list-item-reorder-trigger', { '-show': !!this.movingNode }],
+				class: ['_list-item-reorder-trigger', {
+					'-show': !!this.movingNode
+				}],
 			});
 		},
-		updateNodeData: function(collection, item, parameter, data) {
+		updateNodeData: function (collection, item, parameter, data) {
 			var node = this.getSubNode(collection[item]);
 			Vue.set(node, parameter, data);
 		},
 
-		toggleNodeData: function(collection, item) {
+		toggleNodeData: function (collection, item) {
 			var node = this.getSubNode(collection[item]);
 			Vue.set(node, 'hidden', !node.hidden);
 		},
@@ -288,10 +307,10 @@ var navPanelComponent = {
 				this.cancelSelection();
 			}
 		},
-		cancelSelection: function() {
+		cancelSelection: function () {
 			this.movingNode = false;
 		},
-		getSubBranch: function(node) {
+		getSubBranch: function (node) {
 			if (node.parents.length === 0) {
 				return this.navStructure;
 			}
@@ -300,24 +319,23 @@ var navPanelComponent = {
 			var firstItem = detachedParents.splice(0, 1);
 
 			firstItem = firstItem.join();
-
 			selectedDestinationFile = selectedDestinationFile[firstItem].children;
 			if (detachedParents.length > 0) {
-				detachedParents.forEach(function(e) {
+				detachedParents.forEach(function (e) {
 					selectedDestinationFile = selectedDestinationFile[e].children;
 				});
 			}
 			return selectedDestinationFile;
 		},
-		getSubNode: function(node) {
+		getSubNode: function (node) {
 			var nodeBranch = this.getSubBranch(node);
 			return nodeBranch[node.name];
 		},
-		targetIsNotAlreadyParent: function(node) {
+		targetIsNotAlreadyParent: function (node) {
 			var selectedDestinationFile = this.getSubNode(node);
 			return !selectedDestinationFile.children.hasOwnProperty(this.movingNode.name);
 		},
-		canMoveAtDestination: function(node, index) {
+		canMoveAtDestination: function (node, index) {
 			var targetIsNotAlreadyParent = this.targetIsNotAlreadyParent(node, index);
 			var targetIsNotItself = this.getSubNode(node) !== this.movingNode.data;
 			if (targetIsNotAlreadyParent && targetIsNotItself) {
@@ -326,7 +344,7 @@ var navPanelComponent = {
 				return false;
 			}
 		},
-		changeNodeLevel: function(destinationNode, index) {
+		changeNodeLevel: function (destinationNode, index) {
 			if (!this.canMoveAtDestination(destinationNode, index)) {
 				return;
 			}
@@ -335,24 +353,23 @@ var navPanelComponent = {
 			var movingNodeBranch = this.getSubBranch(this.movingNode.data);
 			delete movingNodeBranch[this.movingNode.name];
 
-			if (destinationNode.parents.length < this.movingNode.data.parents.length) {
-				index = false;
-			}
+
 			recursiveUpdateParentCollection(destinationNode, this.movingNode.data, index);
 		},
-		moveNode: function(destinationNode, index) {
+		moveNode: function (destinationNode, index) {
 			if (!this.movingNode) {
 				return;
 			}
 			var newPosition = index.split('__')[0];
 			var destinationBranch = this.getSubBranch(destinationNode);
 			var originBranch = this.getSubBranch(this.movingNode.data);
-
-			var name = this.movingNode.name.split('__')[1];
+			var oldKey = this.movingNode.name;
+			var name = oldKey.split('__')[1];
 			var newKey = newPosition + '__' + name;
 			Vue.set(destinationBranch, newKey, this.movingNode.data);
 			destinationBranch[newKey].name = newKey;
 			delete originBranch[this.movingNode.name];
+			renameChildren(destinationBranch[newKey], oldKey, newKey);
 
 			if (destinationBranch[index].parents.length < this.movingNode.data.parents.length) {
 				var movementUpward = this.movingNode.data.parents.length - destinationBranch[index].parents.length;
@@ -366,7 +383,7 @@ var navPanelComponent = {
 			this.changeSubsequentNumbering(destinationBranch, newPosition);
 			this.cancelSelection();
 		},
-		changeSubsequentNumbering: function(destinationBranch, newPosition) {
+		changeSubsequentNumbering: function (destinationBranch, newPosition) {
 			var pastMovedItem = false;
 			for (var nodeKey in destinationBranch) {
 				var nodePosition = nodeKey.split('__')[0];
@@ -379,16 +396,18 @@ var navPanelComponent = {
 
 				if (nodePosition >= newPosition && pastMovedItem) {
 					var offsetPosition = parseInt(nodePosition) + 1;
-					var newName = offsetPosition + '__' + nodeName;
-					destinationBranch[newName] = destinationBranch[nodeKey];
-					destinationBranch[newName].name = newName;
+					var newKey = offsetPosition + '__' + nodeName;
+					destinationBranch[newKey] = destinationBranch[nodeKey];
+					destinationBranch[newKey].name = newKey;
 
 					delete destinationBranch[nodeKey];
+					renameChildren(destinationBranch[newKey], nodeKey, newKey);
+
 				}
 			}
 			destinationBranch = sortobject(destinationBranch, sortNumberLowToHigh);
 		},
-		addNavEntry: function() {
+		addNavEntry: function () {
 			var keyArray = Object.keys(this.navStructure);
 			var index = parseInt(keyArray[keyArray.length - 1].split('__')[0]) + 1;
 
@@ -403,7 +422,7 @@ var navPanelComponent = {
 				custom: true,
 			});
 		},
-		removeCustom: function(node) {
+		removeCustom: function (node) {
 			this.warningMessage = {
 				text: 'Are you sure you want to remove this navigation entry ?',
 				type: 'warning',
@@ -413,7 +432,7 @@ var navPanelComponent = {
 				},
 			};
 		},
-		saveNavEntry: function() {
+		saveNavEntry: function () {
 			this.warningMessage = {
 				text: 'Are you sure you want to save that navigation ?',
 				type: 'warning',
@@ -425,11 +444,13 @@ var navPanelComponent = {
 	},
 
 	computed: {
-		navStructure: function() {
+		navStructure: function () {
 			if (Object.keys(this.$store.getters.navStructure).length !== 0) {
 				return this.$store.getters.navStructure;
 			} else {
-				return generateStructureFromFileList(this.$props.views);
+				this.$store.commit('navStructure', generateStructureFromFileList(this.$props.views));
+
+				return this.$store.getters.navStructure;
 			}
 		},
 	},

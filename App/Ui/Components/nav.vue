@@ -1,12 +1,17 @@
 const axios = require('axios');
 
 var navComponent = {
-	data: function() {
+	data: function () {
 		return {
-			navStructure: {},
-		};
+			currentNavStructure: {}
+		}
 	},
-	render: function(createElement) {
+	computed: {
+		navStructure() {
+			return this.$store.getters.navStructure
+		},
+	},
+	render: function (createElement) {
 		var mainRender = listData => {
 			var listItem = [];
 
@@ -19,38 +24,28 @@ var navComponent = {
 				} else {
 					children = '';
 				}
-				createElement(
-					'a',
-					{
+				var link = createElement(
+					'a', {
 						attrs: {
-							href: listData[item].url,
+							href: '/' + appName + listData[item].url,
 						},
 					},
 					[listData[item].displayName]
 				);
-				listItem.push(createElement('li', [children]));
+				listItem.push(createElement('li', [link, children]));
 			}
-			console.debug(listItem);
 			return createElement('ul', [listItem]);
 		};
 
 		return createElement('div', [mainRender(this.navStructure)]);
 	},
-	method: {
-		generateRecursiveList: function(listData, createElement) {
-			var listItem = [];
 
-			for (var item in listData) {
-				listItem.push(createElement('li', this.navStructure[item].displayName));
-			}
-			var list = createElement('ul', listItem);
-		},
-	},
-	created: function() {
+	created: function () {
+
 		axios
 			.get('/appapi/settings/')
 			.then(response => {
-				this.navStructure = JSON.parse(response.data.navStructureString);
+				this.$store.commit('navStructure', JSON.parse(response.data.navStructureString));
 			})
 			.catch(error => {
 				this.warningMessage = {

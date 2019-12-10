@@ -8,47 +8,47 @@ html(lang=language)
         var isLogged = #{isLogged}
         var appName = "#{appName}"
     block head
-block body
+div(id="rf-vue-container")
+    block body
+    block cssPanel
+        if(isLogged)
+            if(isDev)
+                div(id="rf-app-status")
 
-block cssPanel
-    if(isLogged)
-        if(isDev)
-            div(id="rf-app-status")
+                    span(class="_status") Integration :
+                        if(integrationReport.stats.failures === 0)
+                            span(class="-success") &nbsp;ok
+                        else
+                            span(class="-failure") &nbsp;#{integrationReport.stats.failures} failed
+                        | &nbsp;(#{intEnd})
+                    span(class="_status") Unit tests :
+                        if(unitReport.numFailedTests === 0)
+                            span(class="-success") &nbsp;ok
+                        else
+                            span(class="-failure") &nbsp;#{unitReport.numFailedTests} failed
+                        | &nbsp;(#{unitEnd})
 
-                span(class="_status") Integration :
-                    if(integrationReport.stats.failures === 0)
-                        span(class="-success") &nbsp;ok
-                    else
-                        span(class="-failure") &nbsp;#{integrationReport.stats.failures} failed
-                    | &nbsp;(#{intEnd})
-                span(class="_status") Unit tests :
-                    if(unitReport.numFailedTests === 0)
-                        span(class="-success") &nbsp;ok
-                    else
-                        span(class="-failure") &nbsp;#{unitReport.numFailedTests} failed
-                    | &nbsp;(#{unitEnd})
+            label(id="rf-css-panel-toggle" class="_label --sketchy" for="__rf-css-panel-toggle-check")
+                div Panel
+                svg(class="css-panel-svg-highlight")
 
-        label(id="rf-css-panel-toggle" class="_label --sketchy" for="__rf-css-panel-toggle-check")
-            div Panel
-            svg(class="css-panel-svg-highlight")
-
-        label(id="rf-admin-panel-toggle" class="_label --sketchy" for="__rf-admin-panel-toggle-check")
-            div Admin
-            svg(class="css-panel-svg-highlight")
-        label(id="rf-nav-panel-toggle" class="_label --sketchy" for="__rf-nav-panel-toggle-check")
-            div Nav
-            svg(class="css-panel-svg-highlight")
-        input(type="checkbox" id="__rf-css-panel-toggle-check" )
-        div(id="rf-css-panel")
-            css-panel-selector
-            css-panel-color
-            css-panel-main
-        input(type="checkbox" id="__rf-admin-panel-toggle-check" )
-        div(id="rf-admin-panel")
-            //TODO pass as prop
-            //it has variable in it, has to be include
-            include ../Ui/Components/adminPanel.pug
-        input(type="checkbox" id="__rf-nav-panel-toggle-check" )
-        div(id="rf-nav-panel")
-            div(id="_nav" class="_panel" )
-                nav-panel(views=views )
+            label(id="rf-admin-panel-toggle" class="_label --sketchy" for="__rf-admin-panel-toggle-check")
+                div Admin
+                svg(class="css-panel-svg-highlight")
+            label(id="rf-nav-panel-toggle" class="_label --sketchy" for="__rf-nav-panel-toggle-check")
+                div Nav
+                svg(class="css-panel-svg-highlight")
+            input(type="checkbox" id="__rf-css-panel-toggle-check" )
+            div(id="rf-css-panel")
+                css-panel-selector
+                css-panel-color
+                css-panel-main
+            input(type="checkbox" id="__rf-admin-panel-toggle-check" )
+            div(id="rf-admin-panel")
+                //TODO pass as prop
+                //it has variable in it, has to be include
+                include ../Ui/Components/adminPanel.pug
+            input(type="checkbox" id="__rf-nav-panel-toggle-check" )
+            div(id="rf-nav-panel")
+                div(id="_nav" class="_panel" )
+                    nav-panel(views=views )
