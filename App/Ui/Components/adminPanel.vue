@@ -1,12 +1,15 @@
 const axios = require('axios');
+var template = require('./adminPanel.pug').default;
+
 
 var configComponent = {
+	template: template,
 	data: function () {
 		return {
 			warningMessage: '',
 			settings: {
 				id: '',
-				name: '',
+				applicationName: '',
 				language: '',
 				title: '',
 				devMode: false,
@@ -57,7 +60,17 @@ var configComponent = {
 			}
 		},
 	},
-
+	created: function () {
+		axios.get('/appapi/settings/').then(response => {
+				this.settings = response.data;
+			})
+			.catch(errors => {
+				this.warningMessage = {
+					type: 'error',
+					text: 'Request failed.  Returned status of ' + errors,
+				};
+			});
+	},
 	computed: {
 		setName: function () {
 			return this.$store.getters.styleSet.id;

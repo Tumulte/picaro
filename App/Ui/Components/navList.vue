@@ -3,11 +3,11 @@ var template = require('./navList.pug').default;
 
 var navComponent = {
 	template: template,
-	data: function() {},
+	data: function () {},
 	props: ['recursiveNavStructure'],
-	created: function() {
+	created: function () {
 		axios
-			.get('/appapi/settings/')
+			.get('s')
 			.then(response => {
 				this.navStructure = JSON.parse(response.data.navStructureString);
 			})

@@ -114,36 +114,21 @@ var navPanelComponent = {
 
 			for (var node in collection) {
 				var hiddenCheck = this.generateHiddenCheck(createElement, node, collection);
-				var hiddenLabel = createElement(
-					'label', {
-						class: '_hidden-label',
-						on: {
-							click: event => {
-								event.stopPropagation();
-							},
-						},
-					},
-					[hiddenCheck, 'display']
-				);
+
 				var nameInput = this.generateNameInput(createElement, node, collection);
-				var nameLabel = createElement(
-					'label', {
-						class: '_name-label',
-					},
-					['Name', nameInput]
-				);
+
 				var urlInput = this.generateUrlInput(createElement, node, collection);
-				var urlLabel = createElement(
-					'label', {
-						class: '_parameter-label',
-					},
-					['Url', urlInput]
-				);
+
 				var reorderTrigger = this.generateReorderTrigger(createElement, collection, node);
 				var cancel = '';
 				if (node === this.movingNode.name) {
 					cancel = createElement(
-						'span', {
+						'v-card', {
+							attrs: {
+								color: 'error',
+								dark: true
+							},
+							class: "text-center",
 							on: {
 								click: e => {
 									e.stopPropagation();
@@ -151,7 +136,7 @@ var navPanelComponent = {
 								},
 							},
 						},
-						'(cancel)'
+						'cancel'
 					);
 				}
 				var remove = '';
@@ -175,24 +160,33 @@ var navPanelComponent = {
 
 				//Todo replace parents and display name
 				if (collection[node].parents) {
-					var parents = ' - ' + collection[node].parents.join(',');
+					var parents = collection[node].parents.join(',');
 				} else {
 					parents = '';
 				}
 				var displayNodeKey = node;
 
 				var nodeKey = createElement(
-					'div', {
-						class: '_nav-item-key',
+					'v-card-title', {
+						class: 'py-1 body-2'
 					},
-					[displayNodeKey, cancel]
+					[displayNodeKey]
 				);
-				//var displayFileName = file.split('__')[1];
+				var accordionHeader = createElement('v-expansion-panel-header', {
+					class: "caption py-1"
+				}, ['Parameters'])
+				var accordionContent = createElement('v-expansion-panel-content', [nameInput, urlInput, hiddenCheck])
+				var accordion = createElement('v-expansion-panel', [accordionHeader, accordionContent])
+				var accordionContainer = createElement('v-expansion-panels', {
+					class: 'my-1'
+				}, [accordion])
+
+				parents = createElement('v-card-subtitle', [parents]);
 				listItemCollection.push(
 					this.generateListItem(
 						createElement,
 						node,
-						[reorderTrigger, nodeKey, parents, nameLabel, urlLabel, hiddenLabel, remove, children],
+						[reorderTrigger, nodeKey, parents, accordionContainer, remove, cancel, children],
 						collection
 					)
 				);
@@ -202,27 +196,34 @@ var navPanelComponent = {
 					warningMessage: this.warningMessage,
 				},
 			});
-
 			listItemCollection.push(warningMessages);
-			return createElement('ul', listItemCollection);
+
+			return createElement('div', listItemCollection);
 		},
 		generateHiddenCheck: function (createElement, index, collection) {
-			return createElement('input', {
+			return createElement('v-switch', {
 				attrs: {
-					type: 'checkbox',
-					checked: collection[index].hidden,
-					id: collection[index].hidden,
+					label: 'hide',
+					value: collection[index].hidden
 				},
 				on: {
 					change: () => this.toggleNodeData(collection, index),
+					click: event => {
+						collection[index].hidden = !collection[index].hidden;
+						event.stopPropagation()
+					}
 				},
 				class: '_list-item-check',
 			});
 		},
 		generateUrlInput: function (createElement, index, collection) {
-			return createElement('input', {
+			return createElement('v-text-field', {
 				attrs: {
 					type: 'text',
+					label: 'url',
+					outlined: true,
+					dense: true
+
 				},
 				domProps: {
 					value: collection[index].url,
@@ -239,25 +240,43 @@ var navPanelComponent = {
 			});
 		},
 		generateListItem: function (createElement, index, childrenArray, collection) {
-			return createElement(
-				'li', {
-					on: {
-						click: e => {
-							e.stopPropagation();
-							this.selectNode(collection[index], index);
-						},
+
+			var moveButtonText = 'Move'
+			if (this.movingNode) {
+				moveButtonText = 'Insert Inside'
+			}
+			var moveButton = createElement('v-card', {
+				class: 'text-center',
+				on: {
+					click: e => {
+						e.stopPropagation();
+						this.selectNode(collection[index], index);
 					},
-					class: ['_list-item', {
-						'-hidden': collection[index].hidden
-					}],
+				},
+			}, [moveButtonText])
+			if (index === this.movingNode.name) {
+				moveButton = ''
+			}
+
+			childrenArray.splice(childrenArray.length - 1, 0, moveButton);
+
+			return createElement(
+				'v-card', {
+					class: "my-3 mx-3 px-3 py-3",
+					attrs: {
+						dark: collection[index].hidden
+					},
 				},
 				childrenArray
 			);
 		},
 		generateNameInput: function (createElement, index, collection) {
-			return createElement('input', {
+			return createElement('v-text-field', {
 				attrs: {
 					type: 'text',
+					label: 'Display name',
+					outlined: true,
+					dense: true
 				},
 				domProps: {
 					value: collection[index].displayName,
@@ -275,17 +294,18 @@ var navPanelComponent = {
 			});
 		},
 		generateReorderTrigger: function (createElement, collection, index) {
-			return createElement('div', {
-				on: {
-					click: event => {
-						event.stopPropagation();
-						this.moveNode(collection[index], index);
-					},
+			if (!this.movingNode) {
+				return ''
+			}
+			return createElement('v-card', {
+				attrs: {
+					dark: true
 				},
-				class: ['_list-item-reorder-trigger', {
-					'-show': !!this.movingNode
-				}],
-			});
+				class: "text-center",
+				on: {
+					click: () => this.moveNode(collection[index], index)
+				},
+			}, ['move here'])
 		},
 		updateNodeData: function (collection, item, parameter, data) {
 			var node = this.getSubNode(collection[item]);

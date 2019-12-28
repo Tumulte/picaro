@@ -1,5 +1,6 @@
 {
-  "Demo": [{
+  "Demo": [
+    {
       "dominant": "#96ABD4",
       "colorSetParamString": "[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]",
       "variationLightAmt": "8",
@@ -84,17 +85,21 @@
       "setName": "flims"
     }
   ],
-  "colorSetPresets": [{
+  "colorSetPresets": [
+    {
       "id": "1",
       "name": "Complementary",
-      "combinationCollection": [{
-        "hueVariation": 180
-      }]
+      "combinationCollection": [
+        {
+          "hueVariation": 180
+        }
+      ]
     },
     {
       "id": "2",
       "name": "Split-Complementary ",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 150
         },
         {
@@ -105,7 +110,8 @@
     {
       "id": "3",
       "name": "triad",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 120
         },
         {
@@ -116,7 +122,8 @@
     {
       "id": "4",
       "name": "quad",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 60
         },
         {
@@ -131,16 +138,17 @@
       ]
     }
   ],
-  "config": [{
-      "id": "1",
-      "name": "Demo",
+  "config": [
+    {
+      "id": "",
+      "name": "",
       "styleSet": "default",
-      "language": "fr",
-      "title": "App Demo",
+      "language": "",
+      "title": "",
       "devMode": true,
       "messageTimeOut": 10000,
       "applicationName": "Demo",
-      "navStructureString": "{}"
+      "navStructureString": "{\"0__add\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"0__add\",\"displayName\":\"add\",\"url\":\"/add\",\"custom\":false},\"1__books\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"1__books\",\"displayName\":\"books\",\"url\":\"/books\",\"custom\":false},\"2__edit\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"2__edit\",\"displayName\":\"edit\",\"url\":\"/edit\",\"custom\":false},\"3__films\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"3__films\",\"displayName\":\"films\",\"url\":\"/films\",\"custom\":false},\"4__index\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"4__index\",\"displayName\":\"index\",\"url\":\"/index\",\"custom\":false},\"5__listtest\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"5__listtest\",\"displayName\":\"listtest\",\"url\":\"/listtest\",\"custom\":false}}"
     },
     {
       "id": "2",
@@ -150,9 +158,11 @@
       "messageTimeOut": 10000
     }
   ],
-  "users": [{
-    "id": "wcABAgJBA",
-    "username": "test",
-    "password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
-  }]
+  "users": [
+    {
+      "id": "wcABAgJBA",
+      "username": "test",
+      "password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
+    }
+  ]
 }

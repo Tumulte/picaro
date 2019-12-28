@@ -1,17 +1,71 @@
 // @ts-ignore
-rough = require('roughjs/dist/rough.umd');
-require('wired-elements');
+rough = require("roughjs/dist/rough.umd");
+require("wired-elements");
 
 /**
  * @type {VueApp}
  */
-var Vue = require('vue');
-var Vuex = require('vuex');
-var VueRouter = require('vue-router').default;
+var Vue = require("vue");
+var Vuex = require("vuex");
+var vuetify = require("vuetify");
+var VueRouter = require("vue-router").default;
+var vuetifyLib = require("vuetify/lib");
+var vInput = vuetifyLib.VInput;
+var vButton = vuetifyLib.VBtn;
+var vExpansionPanel = vuetifyLib.VExpansionPanel;
+var vExpansionPanels = vuetifyLib.VExpansionPanels;
+var vExpansionPanelHeader = vuetifyLib.VExpansionPanelHeader;
+var vExpansionPanelContent = vuetifyLib.VExpansionPanelContent;
+var vToolbar = vuetifyLib.VToolbar;
+var vToolbarItems = vuetifyLib.VToolbarItems;
+var vNavDrawer = vuetifyLib.VNavigationDrawer;
+var vCard = vuetifyLib.VCard;
+var vApp = vuetifyLib.VApp
+var vNavigationDrawer = vuetifyLib.VNavigationDrawer;
+var vBtn = vuetifyLib.VBtn
+var vLabel = vuetifyLib.VLabel
+var vTextField = vuetifyLib.VTextField
+var vSwitch = vuetifyLib.VSwitch
+var vForm = vuetifyLib.VForm;
+var vCardTitle = vuetifyLib.VCardTitle
+var vCardSubtitle = vuetifyLib.VCardSubtitle
+var vCardText = vuetifyLib.VCardText
+var vDivider = vuetifyLib.VDivider
+var vListItem = vuetifyLib.VListItem
+var vListItemGroup = vuetifyLib.VListItemGroup
+
+
+
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
-
+Vue.use(vuetify, {
+	components: {
+		vInput,
+		vTextField,
+		vListItem,
+		vListItemGroup,
+		vDivider,
+		vButton,
+		vSwitch,
+		vLabel,
+		vExpansionPanels,
+		vExpansionPanel,
+		vExpansionPanelHeader,
+		vExpansionPanelContent,
+		vToolbar,
+		vToolbarItems,
+		vNavDrawer,
+		vCard,
+		vCardTitle,
+		vCardSubtitle,
+		vCardText,
+		vApp,
+		vNavigationDrawer,
+		vBtn,
+		vForm
+	}
+});
 
 //app CSS. Will be processed by webpack
 //@ts-ignore
@@ -20,48 +74,49 @@ Vue.use(Vuex);
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
 /* eslint-disable no-undef */
 // @ts-ignore
-if (ENVIRONMENT === 'development') {
+if (ENVIRONMENT === "development") {
 	// @ts-ignore
-	require('webpack-hot-middleware/client?reload=true');
+	require("webpack-hot-middleware/client?reload=true");
 }
 
 /* user components */
-var VRuntimeTemplate = require('v-runtime-template').default;
+var VRuntimeTemplate = require("v-runtime-template").default;
 // @ts-ignore
-var tagsListComponent = require('../Ui/Components/tagsList.vue');
+var tagsListComponent = require("../Ui/Components/tagsList.vue");
 // @ts-ignore
-var listComponent = require('../Ui/Components/list.vue');
+var listComponent = require("../Ui/Components/list.vue");
 // @ts-ignore
-var linkComponent = require('../Ui/Components/link.vue');
+var linkComponent = require("../Ui/Components/link.vue");
 // @ts-ignore
-var formComponent = require('../Ui/Components/form.vue');
+var formComponent = require("../Ui/Components/form.vue");
 // @ts-ignore
-var tagsComponent = require('../Ui/Components/tags.vue');
+var tagsComponent = require("../Ui/Components/tags.vue");
 // @ts-ignore
-var navComponent = require('../Ui/Components/nav.vue');
+var navComponent = require("../Ui/Components/nav.vue");
 
-Vue.component('rf-list', listComponent);
-Vue.component('rf-tags', tagsComponent);
-Vue.component('rf-tags-list', tagsListComponent);
-Vue.component('rf-link', linkComponent);
-Vue.component('rf-form', formComponent);
-Vue.component('rf-nav', navComponent);
-Vue.component('v-runtime-template', VRuntimeTemplate);
+
+Vue.component("rf-list", listComponent);
+Vue.component("rf-tags", tagsComponent);
+Vue.component("rf-tags-list", tagsListComponent);
+Vue.component("rf-link", linkComponent);
+Vue.component("rf-form", formComponent);
+Vue.component("rf-nav", navComponent);
+Vue.component("v-runtime-template", VRuntimeTemplate);
 
 var router = new VueRouter({
 	routes: [{
-			path: '/tag/:type/:tag',
+			path: "/tag/:type/:tag"
 		},
 		{
-			path: '/link/:id',
-		},
-	],
+			path: "/link/:id"
+		}
+	]
 });
 
 var userStore = {
 	state: {
 		list: {},
-		tagCollection: {},
+		tagCollection: {}
 	},
 	mutations: {
 		// @ts-ignore
@@ -74,13 +129,13 @@ var userStore = {
 		},
 		// @ts-ignore
 		formType(state, data) {
-			if (data === 'hasTags') {
+			if (data === "hasTags") {
 				new Vue({
-					el: 'rf-tags',
-					store,
+					el: "rf-tags",
+					store
 				});
 			}
-		},
+		}
 	},
 	getters: {
 		// @ts-ignore
@@ -90,13 +145,9 @@ var userStore = {
 		// @ts-ignore
 		tagCollection: function (state) {
 			return state.tagCollection;
-		},
-	},
+		}
+	}
 };
-
-
-
-
 
 /**
  * @param {number} index
@@ -106,36 +157,43 @@ var toggleIndex = function (index) {
 	return index === 0 ? 1 : 0;
 };
 //@ts-ignore
-if (ENVIRONMENT === 'development' || (typeof isLogged !== 'undefined' && isLogged)) {
+if (
+	ENVIRONMENT === "development" ||
+	(typeof isLogged !== "undefined" && isLogged)
+) {
 	/* eslint-enable no-undef */
 	// @ts-ignore
-	var adminPanel = require('../Ui/Components/adminPanel.vue');
+	var adminPanel = require("../Ui/Components/adminPanel.vue");
 	// @ts-ignore
-	var cssPanelSelector = require('../Ui/Components/cssPanelSelector.vue');
+	var cssPanelSelector = require("../Ui/Components/cssPanelSelector.vue");
 	// @ts-ignore
-	var cssPanelColor = require('../Ui/Components/cssPanelColor.vue');
+	var cssPanelColor = require("../Ui/Components/cssPanelColor.vue");
 	// @ts-ignore
-	var cssPanel = require('../Ui/Components/cssPanelMain.vue');
+	var cssPanel = require("../Ui/Components/cssPanelMain.vue");
 	// @ts-ignore
-	var messagesComponent = require('../Tools/Components/messages.vue');
+	var messagesComponent = require("../Tools/Components/messages.vue");
 	// @ts-ignore
-	var navPanel = require('../Ui/Components/navPanel.vue');
+	var navPanel = require("../Ui/Components/navPanel.vue");
+	// @ts-ignore
+	var adminToolBar = require("../Ui/Components/adminToolBar.vue");
 	//@ts-ignore
-	Vue.component('admin-panel', adminPanel);
+	Vue.component("admin-panel", adminPanel);
 	//@ts-ignore
-	Vue.component('css-panel-selector', cssPanelSelector);
+	Vue.component("admin-tool-bar", adminToolBar)
 	//@ts-ignore
-	Vue.component('css-panel-color', cssPanelColor);
+	Vue.component("css-panel-selector", cssPanelSelector);
 	//@ts-ignore
-	Vue.component('css-panel-main', cssPanel);
+	Vue.component("css-panel-color", cssPanelColor);
 	//@ts-ignore
-	Vue.component('nav-panel', navPanel);
+	Vue.component("css-panel-main", cssPanel);
 	//@ts-ignore
-	Vue.component('warning-component', messagesComponent);
+	Vue.component("nav-panel", navPanel);
+	//@ts-ignore
+	Vue.component("warning-component", messagesComponent);
 	var adminStore = {
 		state: {
 			colorParameterCollection: {},
-			currentColor: '',
+			currentColor: "",
 			currentSelector: {},
 			selectorCollection: {
 				html: {},
@@ -143,12 +201,12 @@ if (ENVIRONMENT === 'development' || (typeof isLogged !== 'undefined' && isLogge
 			},
 			/* eslint-disable-next-line no-undef */
 			colorCollection: {},
-			selectorIndex: '1',
+			selectorIndex: "1",
 			cssPanelIndex: 1,
 			colorSet: {},
 			styleSet: {},
 			navStructure: {},
-			loaded: false,
+			loaded: false
 		},
 		mutations: {
 			// @ts-ignore
@@ -162,7 +220,9 @@ if (ENVIRONMENT === 'development' || (typeof isLogged !== 'undefined' && isLogge
 			 */
 			currentColor(state, coordinates) {
 				if (state.currentSelector) {
-					state.selectorCollection[state.currentSelector.selector][state.currentSelector.property] = coordinates;
+					state.selectorCollection[state.currentSelector.selector][
+						state.currentSelector.property
+					] = coordinates;
 					state.selectorIndex = toggleIndex(state.selectorIndex);
 				}
 			},
@@ -201,7 +261,7 @@ if (ENVIRONMENT === 'development' || (typeof isLogged !== 'undefined' && isLogge
 			// @ts-ignore
 			loaded(state, data) {
 				state.loaded = data;
-			},
+			}
 		},
 		getters: {
 			// @ts-ignore
@@ -240,23 +300,25 @@ if (ENVIRONMENT === 'development' || (typeof isLogged !== 'undefined' && isLogge
 			// @ts-ignore
 			loaded(state) {
 				return state.loaded;
-			},
+			}
 		}
-	}
+	};
 } else {
-	adminStore = {}
+	adminStore = {};
 }
 var store = new Vuex.Store({
 	modules: {
 		user: userStore,
 		admin: adminStore
 	}
-})
-window.addEventListener('load', function () {
+});
+
+window.addEventListener("load", function () {
 	new Vue({
-		el: '#rf-vue-container',
+		el: "#rf-vue-container",
 		store,
-		router
+		router,
+		vuetify: new vuetify()
 	});
 
 	/**
@@ -273,27 +335,29 @@ window.addEventListener('load', function () {
 			el.appendChild(svg.rectangle(5, 5, rect.width, rect.height, params));
 		});
 	};
-	var svgCollectionBox = document.getElementsByClassName('css-panel-svg-box');
+	var svgCollectionBox = document.getElementsByClassName("css-panel-svg-box");
 	createSvgSketch(svgCollectionBox, {
 		roughness: 3,
-		strokeWidth: 2,
+		strokeWidth: 2
 	});
-	var svgCollectionHighlight = document.getElementsByClassName('css-panel-svg-highlight');
+	var svgCollectionHighlight = document.getElementsByClassName(
+		"css-panel-svg-highlight"
+	);
 
 	createSvgSketch(svgCollectionHighlight, {
-		fill: '#f15e5e',
+		fill: "#f15e5e",
 		fillWeight: 3,
-		fillStyle: 'solid',
+		fillStyle: "solid",
 		roughness: 3,
-		strokeWidth: 1.5,
+		strokeWidth: 1.5
 	});
 
-	var svgCollection = document.getElementsByClassName('css-panel-svg');
+	var svgCollection = document.getElementsByClassName("css-panel-svg");
 	createSvgSketch(svgCollection, {
-		fill: '#fff',
+		fill: "#fff",
 		fillWeight: 3,
-		fillStyle: 'zigzag',
+		fillStyle: "zigzag",
 		roughness: 3,
-		strokeWidth: 2,
+		strokeWidth: 2
 	});
 });

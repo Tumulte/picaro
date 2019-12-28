@@ -3,6 +3,7 @@
  */
 var Vue = require('vue');
 var Vuex = require('vuex');
+
 var VRuntimeTemplate = require('v-runtime-template').default;
 
 var VueRouter = require('vue-router').default;
@@ -23,9 +24,10 @@ Vue.component('rf-nav', navComponent);
 Vue.component('v-runtime-template', VRuntimeTemplate);
 
 Vue.use(VueRouter);
+
+
 var router = new VueRouter({
-	routes: [
-		{
+	routes: [{
 			path: '/tag/:type/:tag',
 		},
 		{
@@ -57,21 +59,21 @@ var store = new Vuex.Store({
 		},
 	},
 	getters: {
-		list: function(state) {
+		list: function (state) {
 			return state.list;
 		},
-		tagCollection: function(state) {
+		tagCollection: function (state) {
 			return state.tagCollection;
 		},
 	},
 });
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
 	//@ts-ignore
-		new Vue({
-			el: '#rf-cont',
-			router,
-			store,
-		});
+	new Vue({
+		el: '#rf-cont',
+		router,
+		store,
+	});
 
 });

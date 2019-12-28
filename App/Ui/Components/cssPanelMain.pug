@@ -11,7 +11,7 @@ form(class="_panel" method="post" :key="cssPanelIndex" @submit.prevent="submit($
             legend Fonts
             wired-card(class="_container")
                 label Google Fonts
-                    input(type="radio" class="_radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="google" @change="updateFontCollection()")
+                    v-input(type="radio" class="_radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="google" @change="updateFontCollection()")
                     div(class="_radio-element")
                 label Local Fonts
                     input(type="radio" class="_radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="local" @change="updateFontCollection()")
@@ -45,5 +45,5 @@ form(class="_panel" method="post" :key="cssPanelIndex" @submit.prevent="submit($
                 div(class="css-panel__label") Config name
                 input(type="text" class="css-panel__input" name="setName" v-model="styleSet.setName" )
             button(class="_container"  v-if="styleSet.id != 'default'" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
-            button(class="_container" formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
+            v-button(formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
             button(class="_container"  @click.prevent="checkDelete(styleSet.id)"  v-if="styleSet.id != 'default'" type="button") Delete Style Set

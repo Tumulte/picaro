@@ -16,7 +16,9 @@ const settings = require('./../rougeSettings.json');
 var currentApplicationSettings = appDb
 	.get('config')
 	// @ts-ignore
-	.find({ name: settings.defaultApp })
+	.find({
+		applicationName: settings.defaultApp
+	})
 	.value();
 currentApplicationSettings.applicationName = settings.defaultApp;
 
@@ -35,7 +37,9 @@ var app = express();
 /* API TOOLS */
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
@@ -80,7 +84,7 @@ for (var application in settings.applications) {
 var api = crud(db);
 //TODO bah non en fait… juste pour les "post/put/delete"
 app.use('/api', checkAuthenticated, api);
-app.use('/edit/:app/:table/:id', function(req, res, next) {
+app.use('/edit/:app/:table/:id', function (req, res, next) {
 	var data = db
 		.get(req.params.app + '_' + req.params.table)
 		// @ts-ignore
@@ -105,7 +109,7 @@ app.use(
 	 * @param {express.Request} req
 	 *
 	 */
-	function(req, res, next) {
+	function (req, res, next) {
 		req.params.method = 'post';
 
 		var form = tableToForm(req.params);
@@ -114,11 +118,11 @@ app.use(
 		next();
 	}
 );
-app.get('/edit/:app/:table/:id', function(req, res) {
+app.get('/edit/:app/:table/:id', function (req, res) {
 	app.set('views', './app' + req.params.app + '/views');
 	res.render('edit');
 });
-app.get('/admin/add/:app/:table', function(req, res) {
+app.get('/admin/add/:app/:table', function (req, res) {
 	app.set('views', './app' + req.params.app + '/views');
 	res.render('add');
 });
@@ -145,7 +149,7 @@ app.use(passport.session());
  * @param {string} type
  * @returns {object} The user data
  */
-var getUser = function(value, type = 'username') {
+var getUser = function (value, type = 'username') {
 	/**
 	 * @type {object}
 	 */
@@ -153,10 +157,10 @@ var getUser = function(value, type = 'username') {
 	parameters[type] = value;
 	return (
 		appDb
-			.get('users')
-			// @ts-ignore
-			.find(parameters)
-			.value()
+		.get('users')
+		// @ts-ignore
+		.find(parameters)
+		.value()
 	);
 };
 app.use(flash());
@@ -196,11 +200,11 @@ app.post(
 		failureFlash: true,
 	})
 );
-app.get('/admin/login', checkNotAuthenticated, function(req, res) {
+app.get('/admin/login', checkNotAuthenticated, function (req, res) {
 	app.set('views', __dirname + '/Views');
 	res.render('login');
 });
-app.get('/admin/logout', function(req, res) {
+app.get('/admin/logout', function (req, res) {
 	req.logOut();
 	res.redirect('/');
 });
@@ -211,7 +215,7 @@ app.use('/appapi', appApi);
 
 //TODO generate a default styleset with any app
 //All apps middleware
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.locals.environment = process.env.NODE_ENV;
 	res.locals.title = currentApplicationSettings.title;
 	res.locals.language = currentApplicationSettings.language;
@@ -226,7 +230,7 @@ app.use(function(req, res, next) {
 });
 //Development specific stuffs
 if (!isProd) {
-	app.use(function(req, res, next) {
+	app.use(function (req, res, next) {
 		const integrationReport = require('./mochawesome.json');
 		const unitReport = require('./Tests/jest-results.json');
 		var unitEndDate = new Date(unitReport.testResults[0].perfStats.end);
@@ -259,13 +263,13 @@ if (!isProd) {
 }
 
 //TODO add setup. Check initiateApp.js
-app.get('/admin/setup', function() {
+app.get('/admin/setup', function () {
 	appDb.set(currentApplicationSettings.applicationName, []).write();
 });
 
 //TODO add put
 //TODO should be in appApi
-app.post('/admin/settings/:type', upload.none(), function(req, res) {
+app.post('/admin/settings/:type', upload.none(), function (req, res) {
 	if (req.body.styleSet === '') {
 		req.body.styleSet = 'styleSet-' + req.body.id;
 	}
@@ -273,7 +277,9 @@ app.post('/admin/settings/:type', upload.none(), function(req, res) {
 		appDb
 			.get(currentApplicationSettings.applicationName)
 			// @ts-ignore
-			.find({ id: req.body.id })
+			.find({
+				id: req.body.id
+			})
 			.assign(req.body)
 			.write();
 	} else {
@@ -289,12 +295,12 @@ app.post('/admin/settings/:type', upload.none(), function(req, res) {
 });
 
 //Pages
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 	app.set('views', __dirname + '/../app' + settings.defaultApp + '/views');
 	res.render('index');
 });
 
-app.get('/:app', function(req, res) {
+app.get('/:app', function (req, res) {
 	/**
 	 * @type {string}
 	 */
@@ -311,7 +317,7 @@ app.get('/:app', function(req, res) {
 	}
 });
 
-app.get('/:app/:view', function(req, res) {
+app.get('/:app/:view', function (req, res) {
 	var upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
 	app.set('views', __dirname + '/../app' + upperCasedApp + '/views');
 	res.render(req.params.view);
@@ -319,7 +325,7 @@ app.get('/:app/:view', function(req, res) {
 
 //Server
 /* eslint-disable no-console */
-app.listen(port, function(err) {
+app.listen(port, function (err) {
 	if (err) {
 		console.log(err);
 	} else {

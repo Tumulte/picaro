@@ -1,0 +1,16 @@
+div
+    v-toolbar(dense=true fixed=true)
+        v-btn(@click="togglePanel('admin')" :dark="!panels.admin" :outlined="panels.admin" :depressed="panels.admin" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Admin
+        v-btn(@click="togglePanel('nav')" :dark="!panels.nav" :outlined="panels.nav" :depressed="panels.nav" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Nav
+        v-btn(@click="togglePanel('css')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(150, 171, 212)" class="ml-2" x-small=true) CSS
+
+
+
+    v-navigation-drawer(v-model="panels.css" absolute=true right=true class="px-3")
+        css-panel-selector
+        css-panel-color
+        css-panel-main
+    v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")
+        admin-panel
+    v-navigation-drawer(v-model="panels.nav" right=true fixed=true width="300")
+        nav-panel(:views="views")

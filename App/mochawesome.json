@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 5,
-    "start": "2019-12-09T21:15:15.904Z",
-    "end": "2019-12-09T21:15:40.567Z",
-    "duration": 24663,
+    "start": "2019-12-21T20:00:33.024Z",
+    "end": "2019-12-21T20:01:04.805Z",
+    "duration": 31781,
     "testsRegistered": 6,
     "passPercent": 16.666666666666664,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "406418f1-25ba-496a-8f29-257cbd67e195",
+      "uuid": "20b9e219-6946-43e9-bae8-55b1ffa1a203",
       "title": "",
       "fullFile": "",
       "file": "",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+          "uuid": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
           "title": "Testing styleset modifications",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "switches styleset when clicking styleset",
               "fullTitle": "Testing styleset modifications switches styleset when clicking styleset",
               "timedOut": null,
-              "duration": 2789,
+              "duration": 7203,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -47,8 +47,8 @@
               "context": null,
               "code": "//Todo\ncy.visit('/');\ncy.get('.__current-style-set').as('currentStyle');",
               "err": {},
-              "uuid": "83e08607-189f-4ccd-ac1d-1e3bd0fa0c4c",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "394fbfc7-fbf8-4081-858d-8adf31647644",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             },
@@ -56,7 +56,7 @@
               "title": "changes all colors when the dominant is changed",
               "fullTitle": "Testing styleset modifications changes all colors when the dominant is changed",
               "timedOut": null,
-              "duration": 4508,
+              "duration": 4901,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -65,12 +65,12 @@
               "context": null,
               "code": "cy.get('#rf-css-panel-toggle').click();\ncy.get('.__current-style-set').click();\ncy.get('#_color ._slider-label:first').should('not.be.visible');\ncy.get('#_color ._container ._fold-color').each(function ($el) {\n  cy.wrap($el).click();\n});\ncy.get(':nth-child(3) > ._container > :nth-child(3) > ._color-range').invoke('val', 10).trigger('input');\ncy.get('#_color > :nth-child(3)').should('have.css', 'background-color', 'rgb(212, 160, 150)');\ncy.get('#_color > :nth-child(4)').should('have.css', 'background-color', 'rgb(110, 196, 180)');\ncy.get('#_color > :nth-child(5)').should('have.css', 'background-color', 'rgb(150, 210, 212)');",
               "err": {
-                "message": "CypressError: Timed out retrying: cy.click() failed because this element is not visible:\n\n<div class=\"_item __current-style-set\">default</div>\n\nThis element '<div._item.__current-style-set>' is not visible because it has CSS property: 'position: fixed' and its being covered by another element:\n\n<svg class=\"css-panel-svg-highlight\">...</svg>\n\nFix this problem, or use {force: true} to disable error checking.\n\nhttps://on.cypress.io/element-cannot-be-interacted-with",
-                "estack": "CypressError: Timed out retrying: cy.click() failed because this element is not visible:\n\n<div class=\"_item __current-style-set\">default</div>\n\nThis element '<div._item.__current-style-set>' is not visible because it has CSS property: 'position: fixed' and its being covered by another element:\n\n<svg class=\"css-panel-svg-highlight\">...</svg>\n\nFix this problem, or use {force: true} to disable error checking.\n\nhttps://on.cypress.io/element-cannot-be-interacted-with\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at Object.retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at retryActionability (http://localhost:8080/__cypress/runner/cypress_runner.js:68070:19)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Function.Promise.attempt.Promise.try (http://localhost:8080/__cypress/runner/cypress_runner.js:116237:29)\n    at tryFn (http://localhost:8080/__cypress/runner/cypress_runner.js:77770:21)\n    at whenStable (http://localhost:8080/__cypress/runner/cypress_runner.js:77805:12)\n    at http://localhost:8080/__cypress/runner/cypress_runner.js:77364:16\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117079:18)\n    at Promise._fulfill (http://localhost:8080/__cypress/runner/cypress_runner.js:117024:18)",
+                "message": "CypressError: Timed out retrying: Expected to find element: '#rf-css-panel-toggle', but never found it.",
+                "estack": "CypressError: Timed out retrying: Expected to find element: '#rf-css-panel-toggle', but never found it.\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "3f81fadf-fffd-44b6-a5ca-95d48814150e",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "1c9acb05-9a9d-42ba-8e79-27e4e3f2172c",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             },
@@ -78,7 +78,7 @@
               "title": "generates proper color subcombinations",
               "fullTitle": "Testing styleset modifications generates proper color subcombinations",
               "timedOut": null,
-              "duration": 4300,
+              "duration": 4808,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -91,8 +91,8 @@
                 "estack": "CypressError: Timed out retrying: expected '<div.sub-combination>' to have CSS property 'background-color' with the value 'rgb(240, 210, 204)', but the value was 'rgb(204, 216, 240)'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "bab9ac03-a698-4793-b830-399513e9da9d",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "34b5e297-aff1-4bf4-9427-7e47484133aa",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             },
@@ -100,7 +100,7 @@
               "title": "changes colors on the selector panel",
               "fullTitle": "Testing styleset modifications changes colors on the selector panel",
               "timedOut": null,
-              "duration": 4321,
+              "duration": 4652,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -113,8 +113,8 @@
                 "estack": "CypressError: Timed out retrying: expected '<div>' to have CSS property 'background-color' with the value 'rgb(161, 93, 79)', but the value was 'rgb(79, 106, 161)'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "cea1bc8f-32d5-4f0e-9d86-43c2bc720e18",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "a9e9ef78-f2ab-4889-ad50-4f74e853b152",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             },
@@ -122,7 +122,7 @@
               "title": "changes the DOM when the dominant is changed",
               "fullTitle": "Testing styleset modifications changes the DOM when the dominant is changed",
               "timedOut": null,
-              "duration": 4200,
+              "duration": 4677,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -135,8 +135,8 @@
                 "estack": "CypressError: Timed out retrying: expected '<div#rf-content-container>' to have CSS property 'background-color' with the value 'rgb(192, 236, 228)', but the value was 'rgb(236, 206, 192)'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "b02696fd-45cb-4093-ba59-5f73ea544a5d",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "655315cf-248b-466b-be79-9bf281e782fb",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             },
@@ -144,7 +144,7 @@
               "title": "updates the input of the form with the new values",
               "fullTitle": "Testing styleset modifications updates the input of the form with the new values",
               "timedOut": null,
-              "duration": 4440,
+              "duration": 4702,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -157,26 +157,26 @@
                 "estack": "CypressError: Timed out retrying: expected '<input>' to have value '#D4A096', but the value was '#96ABD4'\n    at Object.cypressErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85348:11)\n    at Object.throwErr (http://localhost:8080/__cypress/runner/cypress_runner.js:85303:18)\n    at Object.throwErrByPath (http://localhost:8080/__cypress/runner/cypress_runner.js:85335:17)\n    at retry (http://localhost:8080/__cypress/runner/cypress_runner.js:77321:16)\n    at onFailFn (http://localhost:8080/__cypress/runner/cypress_runner.js:68422:16)\n    at tryCatcher (http://localhost:8080/__cypress/runner/cypress_runner.js:118962:23)\n    at Promise._settlePromiseFromHandler (http://localhost:8080/__cypress/runner/cypress_runner.js:116898:31)\n    at Promise._settlePromise (http://localhost:8080/__cypress/runner/cypress_runner.js:116955:18)\n    at Promise._settlePromise0 (http://localhost:8080/__cypress/runner/cypress_runner.js:117000:10)\n    at Promise._settlePromises (http://localhost:8080/__cypress/runner/cypress_runner.js:117075:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:8080/__cypress/runner/cypress_runner.js:113687:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113697:10)\n    at Async.drainQueues (http://localhost:8080/__cypress/runner/cypress_runner.js:113571:14)\n    at <anonymous>",
                 "diff": null
               },
-              "uuid": "f30f39dd-7ad6-4177-a7e1-44e14316f8bf",
-              "parentUUID": "11bdb740-3845-4b1f-aa9e-7cb9c98fd1b9",
+              "uuid": "23052f23-f6fd-4567-8e49-e0fb8b505a45",
+              "parentUUID": "0f4dd801-2ec8-4dcb-b731-8780212f8adc",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "83e08607-189f-4ccd-ac1d-1e3bd0fa0c4c"
+            "394fbfc7-fbf8-4081-858d-8adf31647644"
           ],
           "failures": [
-            "3f81fadf-fffd-44b6-a5ca-95d48814150e",
-            "bab9ac03-a698-4793-b830-399513e9da9d",
-            "cea1bc8f-32d5-4f0e-9d86-43c2bc720e18",
-            "b02696fd-45cb-4093-ba59-5f73ea544a5d",
-            "f30f39dd-7ad6-4177-a7e1-44e14316f8bf"
+            "1c9acb05-9a9d-42ba-8e79-27e4e3f2172c",
+            "34b5e297-aff1-4bf4-9427-7e47484133aa",
+            "a9e9ef78-f2ab-4889-ad50-4f74e853b152",
+            "655315cf-248b-466b-be79-9bf281e782fb",
+            "23052f23-f6fd-4567-8e49-e0fb8b505a45"
           ],
           "pending": [],
           "skipped": [],
-          "duration": 24558,
+          "duration": 30943,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
