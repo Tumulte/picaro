@@ -115,6 +115,7 @@
 		"supertest": "4.0.2",
 		"typescript": "^3.7.4",
 		"url-loader": "^3.0.0",
+		"vue-cli": "^2.9.6",
 		"vue-typescript": "^0.7.0",
 		"webpack-cli": "^3.3.10",
 		"webpack-dev-middleware": "^3.7.2",
