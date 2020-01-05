@@ -10,7 +10,7 @@ var utils = require('../utils');
  * @param {string} colorSet.dominant
  * @returns {string} - the Hex of the color
  */
-var getColor = function(coordinates, colorSet) {
+var getColor = function (coordinates, colorSet) {
 	if (/^\[\d,\d\]$/.test(coordinates)) {
 		coordinates = JSON.parse(coordinates);
 		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
@@ -22,7 +22,7 @@ var getColor = function(coordinates, colorSet) {
  *
  * @param {string} font The name of the google font.
  */
-var addGoogleFont = function(font) {
+var addGoogleFont = function (font) {
 	return '@import url("https://fonts.googleapis.com/css?family=' + encodeURI(font) + '&display=swap");\n';
 };
 
@@ -32,7 +32,7 @@ var addGoogleFont = function(font) {
  * @param {string} appName The application name
  * @param {Object} styleSet The current selected app styleset
  */
-var generateCSSFile = function(appName, styleSet) {
+var generateCSSFile = function (appName, styleSet) {
 	var customCSS = JSON.parse(styleSet.selectorSetParamString);
 	var colorSet = new colors.generateColorSet(styleSet.dominant).generate(
 		JSON.parse(styleSet.colorSetParamString),
@@ -64,7 +64,7 @@ var generateCSSFile = function(appName, styleSet) {
 	generatedCSS += '  font-family: "' + styleSet.fontFamilyTitle + '";\n';
 	generatedCSS += '}\n';
 	for (var selector in customCSS) {
-		var prefixId = '#rf-content-container ';
+		var prefixId = '.rf-content-container ';
 		var selectorText = utils.jsonToCss(selector);
 		var extraParameters = '';
 		if (selector === 'body') {
@@ -87,7 +87,7 @@ var generateCSSFile = function(appName, styleSet) {
 	}
 	generatedCSS += '/* This is automatically generated CSS, do not edit */';
 
-	fs.writeFile(__dirname + '../../../static/' + appName + '/baseStyle.css', generatedCSS, function(err) {
+	fs.writeFile(__dirname + '../../../static/' + appName + '/baseStyle.css', generatedCSS, function (err) {
 		throw err;
 	});
 };

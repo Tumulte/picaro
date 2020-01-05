@@ -61,7 +61,9 @@
 		"wired-elements": "^2.0.0"
 	},
 	"devDependencies": {
+		"@mdi/font": "^4.7.95",
 		"@nuxtjs/vuetify": "^1.9.1",
+		"@types/bcryptjs": "^2.4.2",
 		"@types/express-flash": "0.0.1",
 		"@types/express-session": "^1.15.16",
 		"@types/jest": "^24.0.25",
@@ -86,7 +88,6 @@
 		"cypress": "^3.8.1",
 		"deepmerge": "^4.2.2",
 		"fibers": "^4.0.2",
-		"file-loader": "^5.0.2",
 		"filesystem": "^1.0.1",
 		"fs": "0.0.1-security",
 		"google-auth-library": "5.7.0",
@@ -115,7 +116,6 @@
 		"supertest": "4.0.2",
 		"typescript": "^3.7.4",
 		"url-loader": "^3.0.0",
-		"vue-cli": "^2.9.6",
 		"vue-typescript": "^0.7.0",
 		"webpack-cli": "^3.3.10",
 		"webpack-dev-middleware": "^3.7.2",

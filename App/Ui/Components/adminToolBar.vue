@@ -10,7 +10,8 @@ var adminToolBarComponent = {
 			panels: {
 				css: false,
 				admin: false,
-				nav: false
+				nav: false,
+				styleSet: false
 			}
 
 		};

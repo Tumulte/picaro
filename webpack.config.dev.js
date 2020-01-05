@@ -35,11 +35,9 @@ const myWebpackConfig = {
     filename: "[name]-bundle.js"
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.css$/,
-        use: [
-          {
+        use: [{
             loader: "style-loader"
           },
           {
@@ -67,11 +65,9 @@ const myWebpackConfig = {
       },
       {
         test: /\.(jpg|png)$/,
-        use: [
-          {
-            loader: "url-loader"
-          }
-        ]
+        use: [{
+          loader: "url-loader"
+        }]
       },
       {
         test: /\.s(c|a)ss$/,

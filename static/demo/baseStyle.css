@@ -1,0 +1,67 @@
+/* This is automatically generated CSS, do not edit */
+:root {
+  --dominant: #85a3e5;
+  --combination0: #db8357;
+  --combination0-0: #705243;
+  --combination0-1: #885b44;
+  --combination0-2: #a26344;
+  --combination0-3: #be6b41;
+  --combination0-4: #ce764b;
+  --combination0-5: #db8357;
+  --combination0-6: #e79065;
+  --combination0-7: #f09e75;
+  --combination0-8: #f8ac87;
+  --combination0-9: #fdbc9b;
+  --combination1: #e5ba85;
+  --combination1-0: #937858;
+  --combination1-1: #ab8659;
+  --combination1-2: #bd9361;
+  --combination1-3: #cca06b;
+  --combination1-4: #daad77;
+  --combination1-5: #e5ba85;
+  --combination1-6: #eec695;
+  --combination1-7: #f6d2a7;
+  --combination1-8: #fbdebc;
+  --combination1-9: #feead2;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Knile-Regular.otf&display=swap");
+@import url("https://fonts.googleapis.com/css?family=TallAbbeyRg.otf&display=swap");
+
+html {
+  font-size: 18;
+  font-family: "Knile-Regular";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "TallAbbeyRg";
+}
+
+.rf-content-container main {
+  color: [ "dominant", 3];
+  font-size: "20px";
+}
+
+.rf-content-container {
+  background: [ "gray", 11];
+  color: #ab8659;
+  font-size: "18px";
+  font-family: "Knile-Regular.otf";
+  height: 100%;
+}
+
+html {
+  font-family: "Andika";
+  font-size: "20px";
+}
+
+.rf-content-container .__altfont {
+  font-family: "";
+}
+
+/* This is automatically generated CSS, do not edit */

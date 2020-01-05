@@ -6,7 +6,7 @@ var messages = require('../../Messages/messages.json');
 var cssGenerator = require('../cssGenerator');
 var generateCss = false;
 var utils = require('../../utils');
-var getColorFromCollection = function(instance, data) {
+var getColorFromCollection = function (instance, data) {
 	if (['dominant', 'warning', 'alert', 'info', 'gray', 'success'].includes(data[0])) {
 		var index = data[0] + 'SubCollection';
 		return instance.colorCollection[index][data[1]];
@@ -21,7 +21,7 @@ var getColorFromCollection = function(instance, data) {
 	}
 };
 var selectorComponent = {
-	data: function() {
+	data: function () {
 		return {
 			currentSelectorProperty: {},
 			newSelector: '',
@@ -32,35 +32,51 @@ var selectorComponent = {
 	},
 	template: template,
 	methods: {
-		storeSelectorAndProperty: function(selector, property) {
+		storeSelectorAndProperty: function (selector, property) {
 			selector = utils.cssToJson(selector);
-			this.$store.commit('currentSelector', { selector: selector, property: property });
+			this.$store.commit('currentSelector', {
+				selector: selector,
+				property: property
+			});
 		},
 
-		addSelector: function(value) {
+		addSelector: function (value) {
 			value = utils.cssToJson(value);
 
 			if (value in this.selectorCollection) {
-				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
+				this.warningMessage = {
+					text: messages.warnings.duplicateKey,
+					type: 'warning',
+					textVariable: value
+				};
 			} else {
-				this.selectorCollection[value] = {};
-				this.resetComponent();
+				this.$store.dispatch("addSelector", value);
 			}
 			value = '';
 		},
-		addProperty: function(value, selector) {
+		addProperty: function (value, selector) {
 			value = utils.cssToJson(value);
 			selector = utils.cssToJson(selector);
 			if (value in this.selectorCollection[selector]) {
-				this.warningMessage = { text: messages.warnings.duplicateKey, type: 'warning', textVariable: value };
+				this.warningMessage = {
+					text: messages.warnings.duplicateKey,
+					type: 'warning',
+					textVariable: value
+				};
 			} else {
-				this.selectorCollection[selector][value] = '';
-				this.$store.commit('currentSelector', { selector: selector, property: value });
+				this.$store.dispatch("addProperty", {
+					selector: selector,
+					property: value
+				})
+				this.$store.commit('currentSelector', {
+					selector: selector,
+					property: value
+				});
 
 				this.$store.commit('selectorIndex', value + selector);
 			}
 		},
-		getColorFromCoordinates: function(data) {
+		getColorFromCoordinates: function (data) {
 			if (utils.isHexColor(data)) {
 				// if it's already an hex
 				return '<div style="width:10px; height:10px; background:' + data + '"></div>';
@@ -73,72 +89,63 @@ var selectorComponent = {
 				return data;
 			}
 		},
-		deleteProperty: function(selector, property) {
-			var self = this;
+		deleteProperty: function (selector, property) {
 			this.warningMessage = {
 				text: 'Are you sure you want to delete ?',
 				type: 'warning',
-				callback: function() {
-					delete self.selectorCollection[selector][property];
-					self.resetComponent();
+				callback: () => {
+					this.$delete(this.selectorCollection[selector], property);
 				},
 			};
 		},
-		deleteSelector: function(selector) {
-			var self = this;
+		deleteSelector: function (selector) {
 			this.warningMessage = {
 				text: "Are you sure you want to delete %s and all it's properties ?",
 				type: 'warning',
 				textVariable: selector,
-				callback: function() {
-					delete self.selectorCollection[selector];
-					self.resetComponent();
+				callback: () => {
+					this.$delete(this.selectorCollection, selector)
 				},
 			};
 		},
-		resetComponent: function() {
-			var index = this.selectorIndex === 1 ? 0 : 1;
-			this.$store.commit('selectorIndex', index);
-		},
-		jsonToCss: function(text) {
+		jsonToCss: function (text) {
 			return utils.jsonToCss(text);
 		},
-		saveEdit: function(coordinates, event) {
+		saveEdit: function (coordinates, event) {
 			var value = utils.cssToJson(event.target.innerHTML);
 			if (coordinates.value) {
-				this.selectorCollection[coordinates.selector][coordinates.property] = event.target.innerHTML;
+				this.$set(this.selectorCollection[coordinates.selector], coordinates.property, event.target.innerHTML);
 			} else if (coordinates.property) {
-				this.selectorCollection[coordinates.selector][value] = this.selectorCollection[coordinates.selector][
+				this.$set(this.selectorCollection[coordinates.selector], value, this.selectorCollection[coordinates.selector][
 					coordinates.property
-				];
-				delete this.selectorCollection[coordinates.selector][coordinates.property];
+				]);
+				this.$delete(this.selectorCollection[coordinates.selector], coordinates.property);
 			} else {
-				this.selectorCollection[value] = this.selectorCollection[coordinates.selector];
-				delete this.selectorCollection[coordinates.selector];
+				this.$set(this.selectorCollection, value, this.selectorCollection[coordinates.selector]);
+				this.$delete(this.selectorCollection, coordinates.selector);
 			}
 
-			this.resetComponent();
 		},
 	},
-	mounted: function() {
+	mounted: function () {
 		generateCss.apply(this.selectorCollection, this.colorMapping);
 	},
 	computed: {
-		colorCollection: function() {
+		colorCollection: function () {
 			return this.$store.getters.colorCollection;
 		},
-		selectorCollection: function() {
+		selectorCollection: function () {
 			generateCss = new cssGenerator.generateCss(this.$store.getters.selectorCollection);
 			return this.$store.getters.selectorCollection;
 		},
-		selectorIndex: function() {
+		selectorIndex: function () {
 			return this.$store.getters.selectorIndex;
 		},
 	},
 	//TODO : that's confusing to have the master style updater here
-	updated: function() {
+	updated: function () {
 		var self = this;
-		this.$nextTick(function() {
+		this.$nextTick(function () {
 			generateCss.apply(self.selectorCollection, self.colorMapping);
 		});
 	},

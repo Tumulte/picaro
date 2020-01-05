@@ -5,15 +5,16 @@ var utils = require('../utils');
  * @param {string} selector
  * @param {string} parameters
  */
-var modifyTargetDOMStyle = function(selector, parameters) {
-	var prefixId = '#rf-content-container ';
+var modifyTargetDOMStyle = function (selector, parameters) {
+	var prefixId = '.rf-content-container ';
 	if (selector === 'body') {
 		selector = '';
 		parameters += ';height: 100%';
 	} else if (selector === 'html') {
 		prefixId = '';
 	}
-	document.querySelectorAll(prefixId + utils.jsonToCss(selector)).forEach(function(el) {
+	parameters = utils.makeFontFamilyName(parameters);
+	document.querySelectorAll(prefixId + utils.jsonToCss(selector)).forEach(function (el) {
 		el.setAttribute('style', parameters);
 	});
 };
@@ -22,15 +23,15 @@ var modifyTargetDOMStyle = function(selector, parameters) {
  *
  * @param {object} removedSelector
  */
-var removeUnusedStyle = function(removedSelector) {
+var removeUnusedStyle = function (removedSelector) {
 	for (var selector in removedSelector) {
-		var prefixId = '#rf-content-container ';
+		var prefixId = '.rf-content-container ';
 		if (selector === 'body') {
 			removedSelector[selector] = '';
 		} else if (selector === 'html') {
 			prefixId = '';
 		}
-		document.querySelectorAll(prefixId + removedSelector[utils.jsonToCss(selector)]).forEach(function(el) {
+		document.querySelectorAll(prefixId + removedSelector[utils.jsonToCss(selector)]).forEach(function (el) {
 			el.setAttribute('style', '');
 		});
 	}
@@ -41,7 +42,7 @@ var removeUnusedStyle = function(removedSelector) {
  * @param {object} parameters The css parameters
  * @param {object} colorMapping A dictionary with the color corresponding to the position
  */
-var makeCssString = function(parameters, colorMapping) {
+var makeCssString = function (parameters, colorMapping) {
 	/**
 	 * @type {object} an empty object to be filled with the new CSS parameters
 	 */
@@ -63,7 +64,7 @@ var makeCssString = function(parameters, colorMapping) {
  * @param {array|false} previousSelectorCollection selector collection from the previous call of the method
  * @returns {array|false}
  */
-var extractRemovedSelector = function(selectorCollection, previousSelectorCollection) {
+var extractRemovedSelector = function (selectorCollection, previousSelectorCollection) {
 	previousSelectorCollection = JSON.parse(JSON.stringify(previousSelectorCollection));
 
 	var removedSelector = [];
@@ -83,7 +84,7 @@ var extractRemovedSelector = function(selectorCollection, previousSelectorCollec
  * @param {object} selectorCollection
  * @class
  */
-var generateCss = function(selectorCollection) {
+var generateCss = function (selectorCollection) {
 	selectorCollection = JSON.parse(JSON.stringify(selectorCollection));
 	/**
 	 * @type {array|false}
@@ -96,7 +97,7 @@ var generateCss = function(selectorCollection) {
 	 * @param {array} selectorCollection
 	 * @param {object} colorMapping
 	 */
-	this.apply = function(selectorCollection, colorMapping) {
+	this.apply = function (selectorCollection, colorMapping) {
 		removedSelector = extractRemovedSelector(selectorCollection, this.previousSelectorCollection);
 		removeUnusedStyle(removedSelector);
 		this.previousSelectorCollection = JSON.parse(JSON.stringify(selectorCollection));

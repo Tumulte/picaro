@@ -2,7 +2,7 @@ var colorUtils = require('../colorHelper').colorUtils;
 var template = require('./cssPanelColor.pug').default;
 colorUtils = new colorUtils();
 
-var generateNewColorSet = function(dominant, combination) {
+var generateNewColorSet = function (dominant, combination) {
 	var newCombination = {};
 	newCombination.hueVariation = parseInt(combination.hue) - parseInt(dominant.hue);
 	if (parseInt(combination.saturation) !== parseInt(dominant.saturation)) {
@@ -16,7 +16,7 @@ var generateNewColorSet = function(dominant, combination) {
 };
 
 var colorComponent = {
-	data: function() {
+	data: function () {
 		return {
 			//TODO call that with axios
 			colorSetCollection: colorSetCollection,
@@ -24,19 +24,27 @@ var colorComponent = {
 	},
 	template: template,
 	methods: {
-		bgColor: function(color) {
+		bgColor: function (color) {
 			return 'background:' + colorUtils.getString(color);
 		},
-		checkNum: function(number, min, max) {
+		getStringColor: function (color, hueOnly) {
+			if (hueOnly) {
+				color = JSON.parse(JSON.stringify(color))
+				color.light = 50;
+				color.saturation = 100;
+			}
+			return colorUtils.hslToHex(color).getString();
+		},
+		checkNum: function (number, min, max) {
 			min = min ? min : 0;
 			number = number < min ? min : number;
 			number = number > max ? max : number;
 
 			return isNaN(parseInt(number)) ? min : number;
 		},
-		updateColor: function() {
+		updateColor: function () {
 			this.colorCollection.dominant = colorUtils.hslToHex(this.dominantColor).getString();
-			this.colorParameterCollection.dominant = this.colorCollection.dominant;
+			this.$set(this.colorParameterCollection, "dominant", this.colorCollection.dominant);
 			this.colorCollection = this.colorSet
 				.updateColor(this.colorCollection.dominant)
 				.generate(
@@ -46,41 +54,43 @@ var colorComponent = {
 				);
 		},
 
-		updateCombinationColor: function(index) {
-			this.colorSetParamCollection[index] = generateNewColorSet(
+		updateCombinationColor: function (index) {
+			this.$set(this.colorSetParamCollection, index, generateNewColorSet(
 				this.dominantColor,
 				this.colorCollection.combinationCollection[index]
-			);
-			this.colorParameterCollection.colorSetParamString = JSON.stringify(this.colorSetParamCollection);
+			));
+			this.$set(this.colorParameterCollection, "colorSetParamString", JSON.stringify(this.colorSetParamCollection));
 			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
 			);
 		},
-		updatecolorSetParams: function() {
+		updatecolorSetParams: function () {
 			this.colorSetParamCollection = JSON.parse(this.colorParameterCollection.colorSetParamString);
 			this.colorCollection = this.colorSet.generate(this.colorSetParamCollection);
 		},
-		isMainColor: function(color, subColor) {
+		isMainColor: function (color, subColor) {
 			return color === subColor;
 		},
-		stringify: function(item) {
+		stringify: function (item) {
 			return JSON.stringify(item);
 		},
-		addColor: function() {
-			this.colorSetParamCollection.push({ hueVariation: this.dominantColor.hue });
+		addColor: function () {
+			this.colorSetParamCollection.push({
+				hueVariation: this.dominantColor.hue
+			});
 			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
 				parseInt(this.variationSatAmt)
 			);
 		},
-		removeColor: function(index) {
+		removeColor: function (index) {
 			this.colorCollection.combinationCollection.splice(index, 1);
 			this.colorSetParamCollection.splice(index, 1);
 		},
-		updateVariationAmt: function() {
+		updateVariationAmt: function () {
 			this.colorCollection = this.colorSet.generate(
 				this.colorSetParamCollection,
 				parseInt(this.variationLightAmt),
@@ -88,7 +98,7 @@ var colorComponent = {
 			);
 		},
 
-		storeColorCoordinate: function(coordinates) {
+		storeColorCoordinate: function (coordinates) {
 			this.$store.commit('currentColor', coordinates);
 		},
 	},
@@ -101,11 +111,11 @@ var colorComponent = {
 				this.$store.commit('colorCollection', newValue);
 			},
 		},
-		colorSet: function() {
+		colorSet: function () {
 			return this.$store.getters.colorSet;
 		},
 
-		dominantColor: function() {
+		dominantColor: function () {
 			if (this.$store.getters.colorCollection.dominant) {
 				return colorUtils.hexToHsl(this.$store.getters.colorCollection.dominant).getValueCollection();
 			} else {
@@ -113,7 +123,7 @@ var colorComponent = {
 			}
 		},
 
-		colorSetParamCollection: function() {
+		colorSetParamCollection: function () {
 			return JSON.parse(this.colorParameterCollection.colorSetParamString);
 		},
 		colorParameterCollection: {
@@ -140,7 +150,7 @@ var colorComponent = {
 			},
 			set(newValue) {
 				var colorParameterCollection = this.colorParameterCollection;
-				colorParameterCollection.variationSatAmt = newValue;
+				this.$set(colorParameterCollection, "variationSatAmt", newValue);
 				this.$store.commit('colorParameterCollection', colorParameterCollection);
 			},
 		},

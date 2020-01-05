@@ -1,0 +1,13 @@
+v-container
+    v-row
+        v-col(cols="8" class="pa-0 -ratio-text-container" class="rf-content-container")
+            template(v-for="(data, tag) in textType")
+                div(class="-ratio-container" @class="")
+                    div(v-if="tag !== 'html'" v-html="makeHtml(data.text, tag)" @click="selectTag(tag)")
+        v-col(cols="4" class="pa-0" v-if="selectedTag && selectedTag !== 'p'")
+            v-text-field(type="number" step="0.1" label="Font size" v-model="textType[selectedTag].fontSize" @input="updateTextParams('fontSize', selectedTag)")
+            v-text-field(type="number" step="0.1" label="Line height" v-model="textType[selectedTag].lineHeight" @input="updateTextParams('lineHeight', selectedTag)")
+            v-text-field(type="number" step="0.1" label="Margin bottom" v-model="textType[selectedTag].marginBottom" @input="updateTextParams('marginBottom',selectedTag)")
+            v-text-field(type="number" step="0.1" label="Margin top" v-model="textType[selectedTag].marginTop" @input="updateTextParams('marginTop',selectedTag)")
+    v-text-field(type="number" label="font-size" v-model="textType.html.fontSize" @input="updateTextParams('fontSize','html', 'px !important')")
+    v-text-field(type="number" label="line height" v-model="textType.html.lineHeight" @input="updateTextParams('lineHeight','html', 'px !important')")

@@ -1,19 +1,21 @@
-div(id="_selector" class="_panel")
+v-expansion-panels
     warning-component( :warning-message="warningMessage")
-    ul( :key="selectorIndex" )
-        li(v-for="(propertyCollection, selector) in selectorCollection" )
-            wired-card(class="_selector-container")
-                span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)") {{jsonToCss(selector)}}
-                span(@click="deleteSelector(selector)") [X]
-            ul(class="_selector-box")
-                wired-card
-                    li(v-for="(value, property) in propertyCollection"  v-on:click="storeSelectorAndProperty(selector, property)" )
-                        span(contenteditable=true @blur="resetComponent()" @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)") {{jsonToCss(property)}}
-                        div(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
-                        span(@click="deleteProperty(selector,property)") [X]
-                    label
-                        div(class="css-panel__label") Add new property
-                        wired-input(type="text"  class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
-    label
-        div(class="css-panel__label") Add new selector
-        wired-input(type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")
+    v-expansion-panel(v-for="(propertyCollection, selector) in selectorCollection" :key="selector")
+        v-row(class="px-3")
+            v-col(class="px-3")
+                v-text-field(hide-details=true outlined=true @click:append="deleteSelector(selector)" contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)" v-model="jsonToCss(selector)" append-icon="mdi-delete-outline")
+            v-col(cols="2")
+                v-expansion-panel-header(class="pa-0")
+        v-expansion-panel-content(class="pa-0")
+            v-row(class="align-items-center" v-for="(value, property) in propertyCollection" :key="property" v-on:click="storeSelectorAndProperty(selector, property)" )
+                v-col(cols="9")
+                    v-row
+                        v-text-field(@keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)" v-model="jsonToCss(property)")
+                    v-row
+                        span(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
+                v-col(cols="3")
+                    v-btn(class="w-auto pa-0" text=true @click="deleteProperty(selector,property)")
+                        v-icon mdi-delete-outline
+
+            v-text-field(type="text" label="Add new property" class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
+    v-text-field(label="Add new selector" type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")

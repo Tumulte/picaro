@@ -1,5 +1,4 @@
 // @ts-ignore
-rough = require("roughjs/dist/rough.umd");
 require("wired-elements");
 
 /**
@@ -33,15 +32,23 @@ var vCardText = vuetifyLib.VCardText
 var vDivider = vuetifyLib.VDivider
 var vListItem = vuetifyLib.VListItem
 var vListItemGroup = vuetifyLib.VListItemGroup
-
-
-
+var vContainer = vuetifyLib.VContainer
+var vCol = vuetifyLib.VCol
+var vRow = vuetifyLib.VRow
+var vSelect = vuetifyLib.VSelect
+var vRadio = vuetifyLib.VRadio
+var vRadioGroup = vuetifyLib.VRadioGroup
+var vSlider = vuetifyLib.VSlider
+var vColorPicker = vuetifyLib.VColorPicker
+var vIcon = vuetifyLib.VIcon
+var vCardActions = vuetifyLib.VCardActions
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(vuetify, {
 	components: {
 		vInput,
+		vSelect,
 		vTextField,
 		vListItem,
 		vListItemGroup,
@@ -63,12 +70,18 @@ Vue.use(vuetify, {
 		vApp,
 		vNavigationDrawer,
 		vBtn,
-		vForm
+		vForm,
+		vContainer,
+		vCol,
+		vRow,
+		vRadio,
+		vRadioGroup,
+		vSlider,
+		vColorPicker,
+		vIcon,
+		vCardActions
 	}
 });
-
-//app CSS. Will be processed by webpack
-//@ts-ignore
 
 // TODO SPLIT logics of this file : it's not just style config
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
@@ -171,6 +184,8 @@ if (
 	// @ts-ignore
 	var cssPanel = require("../Ui/Components/cssPanelMain.vue");
 	// @ts-ignore
+	var cssPanelRatio = require("../Ui/Components/cssPanelRatio.vue");
+	// @ts-ignore
 	var messagesComponent = require("../Tools/Components/messages.vue");
 	// @ts-ignore
 	var navPanel = require("../Ui/Components/navPanel.vue");
@@ -185,6 +200,8 @@ if (
 	//@ts-ignore
 	Vue.component("css-panel-color", cssPanelColor);
 	//@ts-ignore
+	Vue.component("css-panel-ratio", cssPanelRatio);
+	//@ts-ignore
 	Vue.component("css-panel-main", cssPanel);
 	//@ts-ignore
 	Vue.component("nav-panel", navPanel);
@@ -196,8 +213,9 @@ if (
 			currentColor: "",
 			currentSelector: {},
 			selectorCollection: {
-				html: {},
-				h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {}
+				body: {},
+				h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {},
+				CLSS__altfont: {}
 			},
 			/* eslint-disable-next-line no-undef */
 			colorCollection: {},
@@ -220,10 +238,10 @@ if (
 			 */
 			currentColor(state, coordinates) {
 				if (state.currentSelector) {
-					state.selectorCollection[state.currentSelector.selector][
-						state.currentSelector.property
-					] = coordinates;
-					state.selectorIndex = toggleIndex(state.selectorIndex);
+					Vue.set(
+						state.selectorCollection[state.currentSelector.selector],
+						state.currentSelector.property, coordinates
+					)
 				}
 			},
 			// @ts-ignore
@@ -301,7 +319,27 @@ if (
 			loaded(state) {
 				return state.loaded;
 			}
-		}
+		},
+		actions: {
+			addSelector: function ({
+				state
+			}, value) {
+				Vue.set(state.selectorCollection, value, {})
+			},
+			addProperty: function ({
+				state
+			}, data) {
+				Vue.set(state.selectorCollection[data.selector], data.property, data.value ? data.value : '')
+			},
+			updateStyles: function ({
+				state
+			}, data) {
+				if (!data) {
+					return;
+				}
+				Vue.set(state.selectorCollection[data.selector], data.property, data.value)
+			}
+		},
 	};
 } else {
 	adminStore = {};
@@ -321,43 +359,4 @@ window.addEventListener("load", function () {
 		vuetify: new vuetify()
 	});
 
-	/**
-	 *
-	 * @param {HTMLCollectionOf<Element>} item
-	 * @param {Object} params
-	 */
-	var createSvgSketch = function (item, params) {
-		Array.prototype.forEach.call(item, function (el) {
-			var rect = el.parentNode.getBoundingClientRect();
-
-			// @ts-ignore
-			var svg = rough.svg(el);
-			el.appendChild(svg.rectangle(5, 5, rect.width, rect.height, params));
-		});
-	};
-	var svgCollectionBox = document.getElementsByClassName("css-panel-svg-box");
-	createSvgSketch(svgCollectionBox, {
-		roughness: 3,
-		strokeWidth: 2
-	});
-	var svgCollectionHighlight = document.getElementsByClassName(
-		"css-panel-svg-highlight"
-	);
-
-	createSvgSketch(svgCollectionHighlight, {
-		fill: "#f15e5e",
-		fillWeight: 3,
-		fillStyle: "solid",
-		roughness: 3,
-		strokeWidth: 1.5
-	});
-
-	var svgCollection = document.getElementsByClassName("css-panel-svg");
-	createSvgSketch(svgCollection, {
-		fill: "#fff",
-		fillWeight: 3,
-		fillStyle: "zigzag",
-		roughness: 3,
-		strokeWidth: 2
-	});
 });
