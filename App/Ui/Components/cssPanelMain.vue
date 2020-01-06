@@ -1,3 +1,4 @@
+<script>
 var settings = require('../../../rougeSettings.json');
 var colors = require('../colorGenerator');
 var template = require('./cssPanelMain.pug').default;
@@ -323,3 +324,4 @@ var panelComponent = {
 };
 
 module.exports = panelComponent;
+</script>

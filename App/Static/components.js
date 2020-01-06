@@ -1,6 +1,4 @@
-// @ts-ignore
-require("wired-elements");
-
+//TODO clear that out
 /**
  * @type {VueApp}
  */
@@ -82,7 +80,57 @@ Vue.use(vuetify, {
 		vCardActions
 	}
 });
-
+var textType = {
+	h1: {
+		text: "header 1",
+		marginTop: 1.34,
+		marginBottom: 1.34,
+		fontSize: 2,
+		lineHeight: 2.75
+	},
+	h2: {
+		text: "header 2",
+		marginTop: 1.25,
+		marginBottom: 1.25,
+		fontSize: 1.5,
+		lineHeight: 2
+	},
+	h3: {
+		text: "header 3",
+		marginTop: 1.17,
+		marginBottom: 1.17,
+		fontSize: 1.17,
+		lineHeight: 1.75
+	},
+	h4: {
+		text: "header 4",
+		marginTop: 1.33,
+		marginBottom: 1.33,
+		fontSize: 1,
+		lineHeight: 1.4
+	},
+	h5: {
+		text: "header 5",
+		marginTop: 1.4,
+		marginBottom: 1.4,
+		fontSize: 0.83,
+		lineHeight: 1.16
+	},
+	h6: {
+		text: "header 6",
+		marginTop: 1.55,
+		marginBottom: 1.55,
+		fontSize: 0.67,
+		lineHeight: 0.9
+	},
+	p: {
+		text: "base text"
+	},
+	html: {
+		lineHeight: 24,
+		fontSize: 16
+	}
+}
 // TODO SPLIT logics of this file : it's not just style config
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
 /* eslint-disable no-undef */
@@ -95,17 +143,17 @@ if (ENVIRONMENT === "development") {
 /* user components */
 var VRuntimeTemplate = require("v-runtime-template").default;
 // @ts-ignore
-var tagsListComponent = require("../Ui/Components/tagsList.vue");
+var tagsListComponent = require("../Ui/Components/tagsList.vue").default;
 // @ts-ignore
-var listComponent = require("../Ui/Components/list.vue");
+var listComponent = require("../Ui/Components/list.vue").default;
 // @ts-ignore
-var linkComponent = require("../Ui/Components/link.vue");
+var linkComponent = require("../Ui/Components/link.vue").default;
 // @ts-ignore
-var formComponent = require("../Ui/Components/form.vue");
+var formComponent = require("../Ui/Components/form.vue").default;
 // @ts-ignore
-var tagsComponent = require("../Ui/Components/tags.vue");
+var tagsComponent = require("../Ui/Components/tags.vue").default;
 // @ts-ignore
-var navComponent = require("../Ui/Components/nav.vue");
+var navComponent = require("../Ui/Components/nav.vue").default;
 
 
 Vue.component("rf-list", listComponent);
@@ -162,13 +210,6 @@ var userStore = {
 	}
 };
 
-/**
- * @param {number} index
- * @returns {number}
- */
-var toggleIndex = function (index) {
-	return index === 0 ? 1 : 0;
-};
 //@ts-ignore
 if (
 	ENVIRONMENT === "development" ||
@@ -176,21 +217,21 @@ if (
 ) {
 	/* eslint-enable no-undef */
 	// @ts-ignore
-	var adminPanel = require("../Ui/Components/adminPanel.vue");
+	var adminPanel = require("../Ui/Components/adminPanel.vue").default;
 	// @ts-ignore
-	var cssPanelSelector = require("../Ui/Components/cssPanelSelector.vue");
+	var cssPanelSelector = require("../Ui/Components/cssPanelSelector.vue").default;
 	// @ts-ignore
-	var cssPanelColor = require("../Ui/Components/cssPanelColor.vue");
+	var cssPanelColor = require("../Ui/Components/cssPanelColor.vue").default;
 	// @ts-ignore
-	var cssPanel = require("../Ui/Components/cssPanelMain.vue");
+	var cssPanel = require("../Ui/Components/cssPanelMain.vue").default;
 	// @ts-ignore
-	var cssPanelRatio = require("../Ui/Components/cssPanelRatio.vue");
+	var cssPanelRatio = require("../Ui/Components/cssPanelRatio.vue").default;
 	// @ts-ignore
-	var messagesComponent = require("../Tools/Components/messages.vue");
+	var messagesComponent = require("../Tools/Components/messages.vue").default;
 	// @ts-ignore
-	var navPanel = require("../Ui/Components/navPanel.vue");
+	var navPanel = require("../Ui/Components/navPanel.vue").default;
 	// @ts-ignore
-	var adminToolBar = require("../Ui/Components/adminToolBar.vue");
+	var adminToolBar = require("../Ui/Components/adminToolBar.vue").default;
 	//@ts-ignore
 	Vue.component("admin-panel", adminPanel);
 	//@ts-ignore
@@ -211,6 +252,7 @@ if (
 		state: {
 			colorParameterCollection: {},
 			currentColor: "",
+			currentRatio: 1,
 			currentSelector: {},
 			selectorCollection: {
 				body: {},
@@ -240,7 +282,21 @@ if (
 				if (state.currentSelector) {
 					Vue.set(
 						state.selectorCollection[state.currentSelector.selector],
-						state.currentSelector.property, coordinates
+						state.currentSelector.property, {
+							type: "color",
+							data: coordinates
+						}
+					)
+				}
+			},
+			currentRatio(state, coordinates) {
+				if (state.currentSelector) {
+					Vue.set(
+						state.selectorCollection[state.currentSelector.selector],
+						state.currentSelector.property, {
+							type: "ratio",
+							data: coordinates
+						}
 					)
 				}
 			},

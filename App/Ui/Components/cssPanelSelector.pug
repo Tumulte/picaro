@@ -12,7 +12,7 @@ v-expansion-panels
                     v-row
                         v-text-field(@keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)" v-model="jsonToCss(property)")
                     v-row
-                        span(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getColorFromCoordinates(value)")
+                        span(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getProperty(value)")
                 v-col(cols="3")
                     v-btn(class="w-auto pa-0" text=true @click="deleteProperty(selector,property)")
                         v-icon mdi-delete-outline

@@ -1,3 +1,4 @@
+<script>
 var sortobject = require('deep-sort-object');
 var Vue = require('vue');
 var sortNumberLowToHigh = function (a, b) {
@@ -477,3 +478,4 @@ var navPanelComponent = {
 };
 
 module.exports = navPanelComponent;
+</script>

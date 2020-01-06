@@ -1,11 +1,11 @@
 div(id="_color" class="_panel" v-if="$store.getters.loaded")
-    v-card(class="_container")
+    v-card(class="_container" v-if="panelOpened")
         v-select(label="Combination Presets" :items="colorSetCollection" item-text="name" item-value="combinationCollection" v-model="colorParameterCollection.colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
-    v-card(class="_container" id="_range-light-container")
+    v-card(class="_container" id="_range-light-container" v-if="panelOpened")
         v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
         v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
     v-expansion-panels
-        v-expansion-panel(:style="bgColor(dominantColor)")
+        v-expansion-panel(:style="bgColor(dominantColor)"  v-if="panelOpened")
             v-expansion-panel-header
             v-expansion-panel-content(:style="bgColor(dominantColor)" class="mb-0")
                     v-slider(min="0" max="360" v-model="dominantColor.hue" @input="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColor, true)")
@@ -14,7 +14,7 @@ div(id="_color" class="_panel" v-if="$store.getters.loaded")
         v-row(class="px-3")
             v-card(v-for="(subColor, index) in colorCollection.dominantSubCollection" :key="index" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="pa-3" v-bind:style="bgColor(subColor)")
         v-card(v-for="(color, index) in colorCollection.combinationCollection" :key="index")
-            v-expansion-panel(v-bind:style="bgColor(color)" )
+            v-expansion-panel(v-bind:style="bgColor(color)"  v-if="panelOpened")
                 v-expansion-panel-header
                 v-expansion-panel-content
                     v-slider(min="0" max="360" v-model="color.hue" label="Hue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor(index, color)")
@@ -22,7 +22,7 @@ div(id="_color" class="_panel" v-if="$store.getters.loaded")
                     v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor(index, color)")
             v-row(class="px-3")
                 v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" v-bind:style="bgColor(subColor)")
-            v-card-actions
+            v-card-actions( v-if="panelOpened")
                 v-btn(text=true @click="removeColor(index)" class="center") Remove Color
     v-row(class="px-3")
         div(v-for="(subColor, index) in colorCollection.graySubCollection" v-on:click="storeColorCoordinate(['gray', index])")
@@ -40,4 +40,4 @@ div(id="_color" class="_panel" v-if="$store.getters.loaded")
         div(v-for="(subColor, index) in colorCollection.infoSubCollection" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" )
             v-card(v-bind:style="bgColor(subColor)")
     v-card-actions
-        v-btn(text=true v-on:click="addColor" class="_color-button") Add Color
+        v-btn(text=true v-on:click="addColor" class="_color-button" v-if="panelOpened") Add Color

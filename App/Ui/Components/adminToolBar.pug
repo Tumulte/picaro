@@ -4,18 +4,25 @@ div
         v-btn(@click="togglePanel('nav')" :dark="!panels.nav" :outlined="panels.nav" :depressed="panels.nav" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Nav
         v-btn(@click="togglePanel('css')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(150, 171, 212)" class="ml-2" x-small=true) CSS
         v-btn(@click="togglePanel('styleSet')" :dark="!panels.styleSet" :outlined="panels.styleSet" :depressed="panels.styleSet" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Style Set
-
-    v-navigation-drawer(v-model="panels.css === false" fixed=true width="900" right=true)
+    v-navigation-drawer(v-model="panels.css === false" fixed=true width="auto" right=true)
         v-container
             v-row
-                v-col(cols="4")
-                    css-panel-selector
-                v-col(cols="4")
-                    css-panel-color
-                v-col(cols="4")
-                    css-panel-ratio
-    v-navigation-drawer(v-model="panels.styleSet" right=true fixed=true width="300")
-        css-panel-main
+                v-col
+                    v-button(@click="setOpenPanel('selector')" text=true) open
+                    v-navigation-drawer(:mini-variant="openPanel !== 'selector'" width="300")
+                        css-panel-selector
+                v-col
+                    v-button(@click="setOpenPanel('color')" text=true) open
+                    v-navigation-drawer(:mini-variant="openPanel !== 'color'" mini-variant-width="146" width="300")
+                        css-panel-color(:panel-opened="openPanel === 'color'")
+                v-col
+                    v-button(@click="setOpenPanel('ratio')" text=true) open
+                    v-navigation-drawer(:mini-variant="openPanel !== 'ratio'" width="300")
+                        css-panel-ratio
+                v-col
+                    v-button(@click="setOpenPanel('main')" text=true) open
+                    v-navigation-drawer(width="300" :mini-variant="openPanel !== 'main'")
+                        css-panel-main
     v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")
         admin-panel
     v-navigation-drawer(v-model="panels.nav" right=true fixed=true width="300")
