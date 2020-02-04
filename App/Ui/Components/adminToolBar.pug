@@ -1,15 +1,16 @@
 div
     v-toolbar(dense=true fixed=true)
-        v-btn(@click="togglePanel('admin')" :dark="!panels.admin" :outlined="panels.admin" :depressed="panels.admin" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Admin
-        v-btn(@click="togglePanel('nav')" :dark="!panels.nav" :outlined="panels.nav" :depressed="panels.nav" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Nav
-        v-btn(@click="togglePanel('css')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(150, 171, 212)" class="ml-2" x-small=true) CSS
-        v-btn(@click="togglePanel('styleSet')" :dark="!panels.styleSet" :outlined="panels.styleSet" :depressed="panels.styleSet" color="rgb(150, 171, 212)" class="ml-2" x-small=true) Style Set
-    v-navigation-drawer(v-model="panels.css === false" fixed=true width="auto" right=true)
+        v-btn(@click="togglePanel('admin')" :dark="!panels.admin" :outlined="panels.admin" :depressed="panels.admin" color="rgb(79, 103, 156)" class="ml-2" x-small=true) Admin
+        v-btn(@click="togglePanel('nav')" :dark="!panels.nav" :outlined="panels.nav" :depressed="panels.nav" color="rgb(79, 103, 156)" class="ml-2" x-small=true) Nav
+        v-btn(@click="togglePanel('css')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(79, 103, 156)" class="ml-2" x-small=true) CSS
+        v-btn(@click="togglePanel('models')" :dark="!panels.models" :outlined="panels.models" :depressed="panels.models" color="rgb(176, 91, 48)" class="ml-2" x-small=true) Models
+        v-btn(@click="togglePanel('users')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(228, 167, 94)" class="ml-2" x-small=true) Users
+
+    v-navigation-drawer(v-model="panels.css" fixed=true width="auto" right=true)
         v-container
             v-row
                 v-col
-                    v-button(@click="setOpenPanel('selector')" text=true) open
-                    v-navigation-drawer(:mini-variant="openPanel !== 'selector'" width="300")
+                    v-navigation-drawer( width="300")
                         css-panel-selector
                 v-col
                     v-button(@click="setOpenPanel('color')" text=true) open
@@ -18,7 +19,7 @@ div
                 v-col
                     v-button(@click="setOpenPanel('ratio')" text=true) open
                     v-navigation-drawer(:mini-variant="openPanel !== 'ratio'" width="300")
-                        css-panel-ratio
+                        css-panel-ratio(:mini-variant="openPanel !== 'ratio'")
                 v-col
                     v-button(@click="setOpenPanel('main')" text=true) open
                     v-navigation-drawer(width="300" :mini-variant="openPanel !== 'main'")
@@ -27,3 +28,5 @@ div
         admin-panel
     v-navigation-drawer(v-model="panels.nav" right=true fixed=true width="300")
         nav-panel(:views="views")
+    v-navigation-drawer(v-model="panels.models" right=true fixed=true width="400")
+        model-panel

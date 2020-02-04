@@ -45,7 +45,24 @@ var selectorComponent = {
         property: property
       });
     },
-
+    changeSelector(event, selector) {
+      this.$store.dispatch("updateSelector", {
+        old: selector,
+        new: utils.cssToJson(event)
+      });
+    },
+    makeRatio(property) {
+      return (
+        Math.round(
+          (parseFloat(this.ratioCollection[property.data].lineHeight) +
+            parseFloat(this.ratioCollection[property.data].marginTop) +
+            parseFloat(this.ratioCollection[property.data].marginBottom)) *
+            100
+        ) /
+          100 +
+        "rem"
+      );
+    },
     addSelector: function(value) {
       value = utils.cssToJson(value);
 
@@ -91,6 +108,7 @@ var selectorComponent = {
         );
       } else if (property.type === "color") {
         var selectedColor = getColorFromCollection(this, property.data);
+
         selectedColor = colorUtils.hslToHex(selectedColor).getString();
         this.colorMapping[JSON.stringify(property.data)] = selectedColor;
         return (
@@ -98,6 +116,8 @@ var selectorComponent = {
           selectedColor +
           '"></div>'
         );
+      } else if (property.type === "ratio") {
+        return this.makeRatio(property);
       } else {
         return property;
       }
@@ -153,11 +173,18 @@ var selectorComponent = {
     }
   },
   mounted: function() {
-    generateCss.apply(this.selectorCollection, this.colorMapping);
+    generateCss.apply(
+      this.selectorCollection,
+      this.colorMapping,
+      this.ratioCollection
+    );
   },
   computed: {
     colorCollection: function() {
       return this.$store.getters.colorCollection;
+    },
+    ratioCollection: function() {
+      return this.$store.getters.ratioCollection;
     },
     selectorCollection: function() {
       generateCss = new cssGenerator.generateCss(
@@ -171,10 +198,22 @@ var selectorComponent = {
   },
   //TODO : that's confusing to have the master style updater here
   updated: function() {
-    var self = this;
-    this.$nextTick(function() {
-      generateCss.apply(self.selectorCollection, self.colorMapping);
+    this.$nextTick(() => {
+      generateCss.apply(
+        this.selectorCollection,
+        this.colorMapping,
+        this.ratioCollection
+      );
     });
+  },
+  watch: {
+    ratioCollection() {
+      generateCss.apply(
+        this.selectorCollection,
+        this.colorMapping,
+        this.ratioCollection
+      );
+    }
   }
 };
 module.exports = selectorComponent;

@@ -12,7 +12,8 @@ var adminToolBarComponent = {
         css: false,
         admin: false,
         nav: false,
-        styleSet: false
+        styleSet: false,
+        models: false
       },
       openPanel: ""
     };

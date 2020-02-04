@@ -1,5 +1,6 @@
 {
-  "Demo": [{
+  "Demo": [
+    {
       "dominant": "#96ABD4",
       "colorSetParamString": "[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]",
       "variationLightAmt": "8",
@@ -117,31 +118,36 @@
       "setName": "default2"
     },
     {
-      "dominant": "#85A3E5",
-      "colorSetParamString": "[{\"hueVariation\":-201,\"light\":60},{\"hueVariation\":-188}]",
+      "dominant": "#7094E1",
+      "colorSetParamString": "[{\"hueVariation\":-201,\"saturation\":73,\"light\":49},{\"hueVariation\":-188,\"saturation\":87,\"light\":58}]",
       "variationLightAmt": "5",
       "variationSatAmt": "8",
-      "selectorSetParamString": "{\"main\":{\"color\":[\"dominant\",3]},\"body\":{\"background\":[\"gray\",11],\"color\":[1,1],\"fontFamily\":\"Knile-Regular.otf\"},\"html\":{\"fontFamily\":\"Andika\"},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"TallAbbeyRg.otf\"},\"mkClss__altfont\":{\"fontFamily\":\"\"}}",
+      "selectorSetParamString": "{\"body\":{\"background\":{\"type\":\"color\",\"data\":[\"gray\",11]},\"color\":{\"type\":\"color\",\"data\":[\"dominant\",0]},\"fontFamily\":\"Knile-Regular.otf\",\"padding\":{\"type\":\"ratio\",\"data\":\"p\"}},\"h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6\":{\"fontFamily\":\"TallAbbeyRg.otf\",\"color\":{\"type\":\"color\",\"data\":[0,2]}},\"h1\":{\"fontSize\":\"4.2rem\",\"lineHeight\":\"4.2rem\",\"marginBottom\":\"1.6rem\",\"marginTop\":\"1.6rem\"},\"h2\":{\"fontSize\":\"3rem\",\"marginBottom\":\"2rem\",\"lineHeight\":\"3rem\",\"marginTop\":\"1.3rem\"},\"h3\":{\"fontSize\":\"2rem\",\"lineHeight\":\"3rem\",\"marginBottom\":\"1.3rem\",\"marginTop\":\"0rem\"},\"h4\":{\"fontSize\":\"1.6rem\",\"lineHeight\":\"2rem\",\"marginBottom\":\"1.3rem\",\"marginTop\":\"0rem\"},\"h6\":{\"fontSize\":\"1rem\",\"lineHeight\":\"1rem\",\"marginBottom\":\"0rem\",\"marginTop\":\"0rem\"},\"h5\":{\"marginBottom\":\"1.3rem\",\"marginTop\":\"0rem\",\"fontSize\":\"1rem\",\"lineHeight\":\"1rem\"},\"mkClssaltfont\":{\"fontFamily\":\"\"}}",
       "fontOrigin": "local",
       "fontSize": "18",
       "id": "NTD9gyEL",
       "setName": "default3",
       "fontFamilyMain": "Knile-Regular.otf",
       "fontFamilyAlt": "",
-      "fontFamilyTitle": "TallAbbeyRg.otf"
+      "fontFamilyTitle": "TallAbbeyRg.otf",
+      "ratioCollectionString": "{\"h1\":{\"text\":\"header 1\",\"marginTop\":\"1.6\",\"marginBottom\":\"1.6\",\"fontSize\":\"4.2\",\"lineHeight\":\"4.2\"},\"h2\":{\"text\":\"header 2\",\"marginTop\":\"1.3\",\"marginBottom\":\"2\",\"fontSize\":\"3\",\"lineHeight\":\"3\"},\"h3\":{\"text\":\"header 3\",\"marginTop\":\"0\",\"marginBottom\":\"1.3\",\"fontSize\":\"2\",\"lineHeight\":\"3\"},\"h4\":{\"text\":\"header 4\",\"marginTop\":\"0\",\"marginBottom\":\"1.3\",\"fontSize\":\"1.6\",\"lineHeight\":\"2\"},\"h5\":{\"text\":\"header 5\",\"marginTop\":\"0\",\"marginBottom\":\"1.3\",\"fontSize\":\"1\",\"lineHeight\":\"1\"},\"h6\":{\"text\":\"header 6\",\"marginTop\":\"0\",\"marginBottom\":\"0\",\"fontSize\":\"1\",\"lineHeight\":\"1\"},\"p\":{\"lineHeight\":1.5,\"fontSize\":1,\"marginBottom\":0,\"marginTop\":0,\"text\":\"base text\"},\"html\":{\"lineHeight\":24,\"fontSize\":16}}"
     }
   ],
-  "colorSetPresets": [{
+  "colorSetPresets": [
+    {
       "id": "1",
       "name": "Complementary",
-      "combinationCollection": [{
-        "hueVariation": 180
-      }]
+      "combinationCollection": [
+        {
+          "hueVariation": 180
+        }
+      ]
     },
     {
       "id": "2",
       "name": "Split-Complementary ",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 150
         },
         {
@@ -152,7 +158,8 @@
     {
       "id": "3",
       "name": "triad",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 120
         },
         {
@@ -163,7 +170,8 @@
     {
       "id": "4",
       "name": "quad",
-      "combinationCollection": [{
+      "combinationCollection": [
+        {
           "hueVariation": 60
         },
         {
@@ -178,7 +186,8 @@
       ]
     }
   ],
-  "config": [{
+  "config": [
+    {
       "id": "",
       "name": "Demo",
       "styleSet": "NTD9gyEL",
@@ -197,9 +206,11 @@
       "messageTimeOut": 10000
     }
   ],
-  "users": [{
-    "id": "wcABAgJBA",
-    "username": "test",
-    "password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
-  }]
+  "users": [
+    {
+      "id": "wcABAgJBA",
+      "username": "test",
+      "password": "$2b$10$KCHfXtBb4ZPVSjaOnngV5.DJ/vbUcNS04AdHOjzW1UulDEe721.I."
+    }
+  ]
 }

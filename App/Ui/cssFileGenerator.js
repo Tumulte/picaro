@@ -10,10 +10,21 @@ var utils = require('../utils');
  * @param {string} colorSet.dominant
  * @returns {string} - the Hex of the color
  */
-var getColor = function (coordinates, colorSet) {
-	if (/^\[\d,\d\]$/.test(coordinates)) {
+var getParameter = function (coordinates, styleSet) {
+	if (coordinates.includes('{"type":"color",')) {
 		coordinates = JSON.parse(coordinates);
-		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
+		var coordinate = coordinates.data[0]
+		var subCoordinate = coordinates.data[1]
+		if (typeof coordinate === 'string') {
+			return styleSet[coordinate + 'SubCollection'][subCoordinate].hex
+		} else {
+			return styleSet.combinationCollection[coordinate].subCombination[subCoordinate].hex;
+		}
+	} else if (coordinates.includes('{"type":"ratio",')) {
+		var ratioCollection = JSON.parse(styleSet.ratioCollectionString);
+		coordinates = JSON.parse(coordinates);
+		return utils.makeRatio(ratioCollection[coordinates.data])
+
 	}
 	return coordinates;
 };
@@ -79,13 +90,14 @@ var generateCSSFile = function (appName, styleSet) {
 				'  ' +
 				utils.jsonToCss(property) +
 				':' +
-				getColor(JSON.stringify(customCSS[selector][property]), colorSet) +
+				getParameter(JSON.stringify(customCSS[selector][property]), colorSet) +
 				';\n';
 		}
 		generatedCSS += extraParameters;
 		generatedCSS += '}\n';
 	}
 	generatedCSS += '/* This is automatically generated CSS, do not edit */';
+	generatedCSS = utils.makeFontFamilyName(generatedCSS);
 
 	fs.writeFile(__dirname + '../../../static/' + appName + '/baseStyle.css', generatedCSS, function (err) {
 		throw err;

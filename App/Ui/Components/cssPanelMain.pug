@@ -2,7 +2,9 @@ v-form(method="post" :key="cssPanelIndex" @submit.prevent="submit($event)")
     v-container
         warning-component( :warning-message="warningMessage")
         input(type="hidden" v-for="(colorData, name) in colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
-        input(type="hidden"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
+        input(type="text"  name="selectorSetParamString" v-bind:value="selectorCollectionString" )
+        input(type="text"  name="ratioCollectionString" v-bind:value="ratioCollectionString" )
+
         v-card(class="_container")
             v-select(:items="styleSetCollection" v-model="styleSet" item-value="setName" item-text="setName" label="Style Set" @change="updateStyleSet()" return-object=true)
         v-card(class="_container")

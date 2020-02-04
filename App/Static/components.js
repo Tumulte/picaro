@@ -80,7 +80,7 @@ Vue.use(vuetify, {
 		vCardActions
 	}
 });
-var textType = {
+var ratioCollection = {
 	h1: {
 		text: "header 1",
 		marginTop: 1.34,
@@ -232,6 +232,10 @@ if (
 	var navPanel = require("../Ui/Components/navPanel.vue").default;
 	// @ts-ignore
 	var adminToolBar = require("../Ui/Components/adminToolBar.vue").default;
+	var modelPanel = require("../Ui/Components/modelPanel.vue").default;
+	var userPanel = require("../Ui/Components/userPanel.vue").default;
+
+
 	//@ts-ignore
 	Vue.component("admin-panel", adminPanel);
 	//@ts-ignore
@@ -248,12 +252,16 @@ if (
 	Vue.component("nav-panel", navPanel);
 	//@ts-ignore
 	Vue.component("warning-component", messagesComponent);
+	Vue.component("user-panel", userPanel);
+	Vue.component("model-panel", modelPanel);
+
+
 	var adminStore = {
 		state: {
 			colorParameterCollection: {},
 			currentColor: "",
 			currentRatio: 1,
-			currentSelector: {},
+			currentSelector: null,
 			selectorCollection: {
 				body: {},
 				h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {},
@@ -266,7 +274,8 @@ if (
 			colorSet: {},
 			styleSet: {},
 			navStructure: {},
-			loaded: false
+			loaded: false,
+			ratioCollection: ratioCollection
 		},
 		mutations: {
 			// @ts-ignore
@@ -303,6 +312,17 @@ if (
 			// @ts-ignore
 			currentSelector(state, data) {
 				state.currentSelector = data;
+			},
+			ratioCollection(state, data) {
+				state.ratioCollection = data;
+				var lineHeight = Math.round(data.html.lineHeight / data.html.fontSize * 100) / 100
+				state.ratioCollection.p = {
+					lineHeight: lineHeight,
+					fontSize: 1,
+					marginBottom: 0,
+					marginTop: 0,
+					text: data.p.text
+				}
 			},
 			// @ts-ignore
 			selectorCollection(state, data) {
@@ -350,6 +370,9 @@ if (
 			colorCollection: function (state) {
 				return state.colorCollection;
 			},
+			ratioCollection: function (state) {
+				return state.ratioCollection
+			},
 			// @ts-ignore
 			selectorIndex: function (state) {
 				return state.selectorIndex;
@@ -377,6 +400,12 @@ if (
 			}
 		},
 		actions: {
+			updateSelector: function ({
+				state
+			}, value) {
+				Vue.set(state.selectorCollection, value.new, state.selectorCollection[value.old])
+				Vue.delete(state.selectorCollection, value.old)
+			},
 			addSelector: function ({
 				state
 			}, value) {

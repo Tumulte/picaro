@@ -1,4 +1,5 @@
 <script>
+var Vue = require("vue");
 var template = require("./cssPanelRatio.pug").default;
 
 var panelComponent = {
@@ -12,6 +13,7 @@ var panelComponent = {
       selectedTag: ""
     };
   },
+  props: ["miniVariant"],
   methods: {
     makeHtml(text, tag) {
       return "<" + tag + ">" + text + "</" + tag + ">";
@@ -29,11 +31,11 @@ var panelComponent = {
       this.$store.dispatch("addProperty", {
         selector: selector,
         property: property,
-        value: this.textType[selector][property] + (unit ? unit : "rem")
+        value: this.ratioCollection[selector][property] + (unit ? unit : "rem")
       });
     },
     storeRatioCoordinate: function(coordinates) {
-      this.$store.commit("currentColor", coordinates);
+      this.$store.commit("currentRatio", coordinates);
     }
   },
   computed: {

@@ -80,8 +80,12 @@ var makeFontFamilyName = function (name) {
 	if (!name) {
 		return;
 	}
-	return name.replace('.otf', '').replace('.ttf', '').replace('.woff', '');
+	return name.replace(/.otf/gm, '').replace(/.ttf/gm, '').replace(/.woff/gm, '');
 };
+var makeRatio = function (sizes) {
+	var ratio = parseFloat(sizes.lineHeight) + parseFloat(sizes.marginTop) + parseFloat(sizes.marginBottom);
+	return Math.round(ratio * 100) / 100 + "rem"
+}
 module.exports = {
 	makeTableName: makeTableName,
 	parseMessage: parseMessage,
@@ -89,5 +93,6 @@ module.exports = {
 	cssToJson: cssToJson,
 	urlencodeFormData: urlencodeFormData,
 	isHexColor: isHexColor,
-	makeFontFamilyName: makeFontFamilyName
+	makeFontFamilyName: makeFontFamilyName,
+	makeRatio: makeRatio
 };

@@ -42,16 +42,19 @@ var removeUnusedStyle = function (removedSelector) {
  * @param {object} parameters The css parameters
  * @param {object} colorMapping A dictionary with the color corresponding to the position
  */
-var makeCssString = function (parameters, colorMapping) {
+var makeCssString = function (parameters, colorMapping, ratioMapping) {
 	/**
 	 * @type {object} an empty object to be filled with the new CSS parameters
 	 */
 	var HTMLParameters = {};
-
+	//TODO use array tools like map and filter
 	for (var parameter in parameters) {
 		parameters = JSON.parse(JSON.stringify(parameters));
-		if (typeof parameters[parameter] === 'object') {
-			parameters[parameter] = colorMapping[JSON.stringify(parameters[parameter])];
+		if (parameters[parameter].type === 'color') {
+			parameters[parameter] = colorMapping[JSON.stringify(parameters[parameter].data)];
+		} else if (parameters[parameter].type === 'ratio') {
+			var sizes = ratioMapping[parameters[parameter].data]
+			parameters[parameter] = utils.makeRatio(sizes)
 		}
 		HTMLParameters[utils.jsonToCss(parameter)] = parameters[parameter];
 	}
@@ -97,13 +100,13 @@ var generateCss = function (selectorCollection) {
 	 * @param {array} selectorCollection
 	 * @param {object} colorMapping
 	 */
-	this.apply = function (selectorCollection, colorMapping) {
+	this.apply = function (selectorCollection, colorMapping, ratioMapping) {
 		removedSelector = extractRemovedSelector(selectorCollection, this.previousSelectorCollection);
 		removeUnusedStyle(removedSelector);
 		this.previousSelectorCollection = JSON.parse(JSON.stringify(selectorCollection));
 
 		for (var selector in selectorCollection) {
-			modifyTargetDOMStyle(selector, makeCssString(selectorCollection[selector], colorMapping));
+			modifyTargetDOMStyle(selector, makeCssString(selectorCollection[selector], colorMapping, ratioMapping));
 		}
 	};
 };

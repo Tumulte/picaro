@@ -3,7 +3,7 @@ v-expansion-panels
     v-expansion-panel(v-for="(propertyCollection, selector) in selectorCollection" :key="selector")
         v-row(class="px-3")
             v-col(class="px-3")
-                v-text-field(hide-details=true outlined=true @click:append="deleteSelector(selector)" contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)" v-model="jsonToCss(selector)" append-icon="mdi-delete-outline")
+                v-text-field(hide-details=true outlined=true @click:append="deleteSelector(selector)" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)" :value="jsonToCss(selector)" @change="changeSelector($event, selector)" append-icon="mdi-delete-outline")
             v-col(cols="2")
                 v-expansion-panel-header(class="pa-0")
         v-expansion-panel-content(class="pa-0")
@@ -12,7 +12,9 @@ v-expansion-panels
                     v-row
                         v-text-field(@keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)" v-model="jsonToCss(property)")
                     v-row
-                        span(contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getProperty(value)")
+                        span(v-if="property.type === 'ratio'") {{makeRatio(property)}}
+                        span(v-else contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getProperty(value)")
+
                 v-col(cols="3")
                     v-btn(class="w-auto pa-0" text=true @click="deleteProperty(selector,property)")
                         v-icon mdi-delete-outline
