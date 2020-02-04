@@ -1,0 +1,19 @@
+v-container
+    v-row
+        v-col(cols="4" class="pa-3")
+            div(v-for="(model,index) in modelCollection")
+                v-card(@click="selectModel(index)") {{model.name}}
+            v-button(@click="addModel")
+                v-icon mdi-plus-thick
+        v-col(cols="8" class="pa-0")
+            div(v-if="model")
+                v-text-field(label='Model Name' v-model="model.name")
+                div(v-for="type in typeCollection") hello
+                    component(:is="type.component")
+
+                v-row
+                    v-col(cols="8")
+                        v-select(outlined=true :items="dataType" item-text="name" item-value="name" v-model="selectedType" return-object=true)
+                    v-col(cols="4")
+                        v-button(text=true @click="addType")
+                            v-icon mdi-plus-thick
