@@ -10,10 +10,21 @@ var utils = require('../utils');
  * @param {string} colorSet.dominant
  * @returns {string} - the Hex of the color
  */
-var getColor = function(coordinates, colorSet) {
-	if (/^\[\d,\d\]$/.test(coordinates)) {
+var getParameter = function (coordinates, styleSet) {
+	if (coordinates.includes('{"type":"color",')) {
 		coordinates = JSON.parse(coordinates);
-		return colorSet.combinationCollection[coordinates[0]].subCombination[coordinates[1]].hex;
+		var coordinate = coordinates.data[0]
+		var subCoordinate = coordinates.data[1]
+		if (typeof coordinate === 'string') {
+			return styleSet[coordinate + 'SubCollection'][subCoordinate].hex
+		} else {
+			return styleSet.combinationCollection[coordinate].subCombination[subCoordinate].hex;
+		}
+	} else if (coordinates.includes('{"type":"ratio",')) {
+		var ratioCollection = JSON.parse(styleSet.ratioCollectionString);
+		coordinates = JSON.parse(coordinates);
+		return utils.makeRatio(ratioCollection[coordinates.data])
+
 	}
 	return coordinates;
 };
@@ -22,7 +33,7 @@ var getColor = function(coordinates, colorSet) {
  *
  * @param {string} font The name of the google font.
  */
-var addGoogleFont = function(font) {
+var addGoogleFont = function (font) {
 	return '@import url("https://fonts.googleapis.com/css?family=' + encodeURI(font) + '&display=swap");\n';
 };
 
@@ -32,7 +43,7 @@ var addGoogleFont = function(font) {
  * @param {string} appName The application name
  * @param {Object} styleSet The current selected app styleset
  */
-var generateCSSFile = function(appName, styleSet) {
+var generateCSSFile = function (appName, styleSet) {
 	var customCSS = JSON.parse(styleSet.selectorSetParamString);
 	var colorSet = new colors.generateColorSet(styleSet.dominant).generate(
 		JSON.parse(styleSet.colorSetParamString),
@@ -64,7 +75,7 @@ var generateCSSFile = function(appName, styleSet) {
 	generatedCSS += '  font-family: "' + styleSet.fontFamilyTitle + '";\n';
 	generatedCSS += '}\n';
 	for (var selector in customCSS) {
-		var prefixId = '#rf-content-container ';
+		var prefixId = '.rf-content-container ';
 		var selectorText = utils.jsonToCss(selector);
 		var extraParameters = '';
 		if (selector === 'body') {
@@ -79,15 +90,16 @@ var generateCSSFile = function(appName, styleSet) {
 				'  ' +
 				utils.jsonToCss(property) +
 				':' +
-				getColor(JSON.stringify(customCSS[selector][property]), colorSet) +
+				getParameter(JSON.stringify(customCSS[selector][property]), colorSet) +
 				';\n';
 		}
 		generatedCSS += extraParameters;
 		generatedCSS += '}\n';
 	}
 	generatedCSS += '/* This is automatically generated CSS, do not edit */';
+	generatedCSS = utils.makeFontFamilyName(generatedCSS);
 
-	fs.writeFile(__dirname + '../../../static/' + appName + '/baseStyle.css', generatedCSS, function(err) {
+	fs.writeFile(__dirname + '../../../static/' + appName + '/baseStyle.css', generatedCSS, function (err) {
 		throw err;
 	});
 };

@@ -12,4 +12,4 @@ div
             v-text-field(name="title" v-model="settings.title" label="App Title" dense outlined)
             v-text-field(v-model="settings.messageTimeOut" label="Message Timeout (in ms)" dense outlined)
             v-switch(v-model="settings.devMode" label="Dev Mode" dense)
-            v-button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit
+            button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit

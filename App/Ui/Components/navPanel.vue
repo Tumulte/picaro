@@ -1,3 +1,4 @@
+<script>
 var sortobject = require('deep-sort-object');
 var Vue = require('vue');
 var sortNumberLowToHigh = function (a, b) {
@@ -72,7 +73,7 @@ var navPanelComponent = {
 
 	render: function (createElement) {
 		var saveButton = createElement(
-			'Button', {
+			'v-button', {
 				on: {
 					click: () => {
 						this.saveNavEntry();
@@ -83,7 +84,7 @@ var navPanelComponent = {
 		);
 
 		var addButton = createElement(
-			'Button', {
+			'v-button', {
 				on: {
 					click: () => {
 						this.addNavEntry();
@@ -369,7 +370,7 @@ var navPanelComponent = {
 				return;
 			}
 			destinationNode = this.getSubNode(destinationNode);
-			destinationNode.children[this.movingNode.name] = this.movingNode.data;
+			this.$set(destinationNode.children, this.movingNode.name, this.movingNode.data)
 			var movingNodeBranch = this.getSubBranch(this.movingNode.data);
 			delete movingNodeBranch[this.movingNode.name];
 
@@ -477,3 +478,4 @@ var navPanelComponent = {
 };
 
 module.exports = navPanelComponent;
+</script>

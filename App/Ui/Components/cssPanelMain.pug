@@ -1,49 +1,31 @@
-form(class="_panel" method="post" :key="cssPanelIndex" @submit.prevent="submit($event)")
-    warning-component( :warning-message="warningMessage")
-    input(type="hidden" v-for="(colorData, name) in $store.getters.colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
-    input(type="hidden"  name="selectorSetParamString" v-bind:value="JSON.stringify(selectorCollection)" )
-    wired-card(class="_container")
-        fieldset(class="style-set-list")
-            legend Style Set
-            div(v-for="selectedStyleSet in styleSetCollection" class="_item" :class="{'__current-style-set': isCurrentSet(selectedStyleSet.id)}" @click="updateStyleSet(selectedStyleSet)" ) {{selectedStyleSet.setName}}
-    wired-card(class="_container")
-        fieldset
-            legend Fonts
-            wired-card(class="_container")
-                label Google Fonts
-                    v-input(type="radio" class="_radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="google" @change="updateFontCollection()")
-                    div(class="_radio-element")
-                label Local Fonts
-                    input(type="radio" class="_radio" name="fontOrigin" v-model="styleSet.fontOrigin" value="local" @change="updateFontCollection()")
-                    div(class="_radio-element")
-            wired-card(class="_container")
-                label
-                    div(class="css-panel__label") Font size (px)
-                    input(type="number" v-model="styleSet.fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
-            wired-card(class="_container")
-                label
-                    div(class="css-panel__label") Main Font
-                    select( v-model="styleSet.fontFamilyMain" class="css-panel__input" name="fontFamilyMain" v-on:change="updateCssFont('fontFamilyMain')")
-                        option(value="none") Selectionner une font
-                        option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
-                label
-                    div(class="css-panel__label") Alternative Font
-                    select( v-model="styleSet.fontFamilyAlt"  class="css-panel__input" name="fontFamilyAlt" v-on:change="updateCssFont('fontFamilyAlt')")
-                        option(value="none") Selectionner une font
-                        option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
-                label
-                    div(class="css-panel__label") Title Font
-                    select( v-model="styleSet.fontFamilyTitle" class="css-panel__input"  name="fontFamilyTitle" v-on:change="updateCssFont('fontFamilyTitle')")
-                        option(value="none") Selectionner une font
-                        option(v-for="font in fontCollection" v-bind:value="font.family") {{font.family}}
+v-form(method="post" :key="cssPanelIndex" @submit.prevent="submit($event)")
+    v-container
+        warning-component( :warning-message="warningMessage")
+        input(type="hidden" v-for="(colorData, name) in colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
+        input(type="text"  name="selectorSetParamString" v-bind:value="selectorCollectionString" )
+        input(type="text"  name="ratioCollectionString" v-bind:value="ratioCollectionString" )
 
-            input(type="text" name="id" v-bind:value="styleSet.id")
-    wired-card(class="_container")
-        fieldset
-            legend Save
-            label
-                div(class="css-panel__label") Config name
-                input(type="text" class="css-panel__input" name="setName" v-model="styleSet.setName" )
-            button(class="_container"  v-if="styleSet.id != 'default'" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
-            v-button(formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
-            button(class="_container"  @click.prevent="checkDelete(styleSet.id)"  v-if="styleSet.id != 'default'" type="button") Delete Style Set
+        v-card(class="_container")
+            v-select(:items="styleSetCollection" v-model="styleSet" item-value="setName" item-text="setName" label="Style Set" @change="updateStyleSet()" return-object=true)
+        v-card(class="_container")
+            v-card-title Fonts
+            v-radio-group(v-model="styleSet.fontOrigin")
+                v-radio(label="Google Fonts" name="fontOrigin" value="google")
+                v-radio(label="Local Fonts" name="fontOrigin" value="local")
+            v-card(class="_container")
+                v-text-field(label="Font size (px)" type="number" v-model="styleSet.fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
+            v-card(class="_container")
+                v-select( v-model="styleSet.fontFamilyMain" label="Main Font" :items="fontCollection" item-text="family" item-value="family" name="fontFamilyMain" v-on:change="updateCssFont('fontFamilyMain')")
+                v-select( v-model="styleSet.fontFamilyAlt" label="Alternative Font" item-text="family" item-value="family" :items="fontCollection" name="fontFamilyAlt" v-on:change="updateCssFont('fontFamilyAlt')")
+                v-select( v-model="styleSet.fontFamilyTitle" label="Title Font" item-text="family" item-value="family" :items="fontCollection" name="fontFamilyTitle" v-on:change="updateCssFont('fontFamilyTitle')")
+                input(type="text" name="id" v-bind:value="styleSet.id")
+                input(type="hidden" v-model="styleSet.fontFamilyMain" name="fontFamilyMain")
+                input(type="hidden" v-model="styleSet.fontFamilyAlt" name="fontFamilyAlt")
+                input(type="hidden" v-model="styleSet.fontFamilyTitle" name="fontFamilyTitle")
+
+        v-card(class="_container")
+            v-text-field(type="text" class="css-panel__input" label="Config name" name="setName" v-model="styleSet.setName" )
+            v-card-actions
+                button(text=true class="_container"  v-if="styleSet.id != 'default'" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
+                button(text=true formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
+                button(text=true class="_container"  @click.prevent="checkDelete(styleSet.id)"  v-if="styleSet.id != 'default'" type="button") Delete Style Set

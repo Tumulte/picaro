@@ -2,7 +2,7 @@
  * @param {import('express').Request} req
  * @returns {string} the table name
  */
-var makeTableName = function(req) {
+var makeTableName = function (req) {
 	return req.params.app + '_' + req.params.table;
 };
 /**
@@ -10,7 +10,7 @@ var makeTableName = function(req) {
  * @param {string} str
  * @returns {string}
  */
-var parseMessage = function(str) {
+var parseMessage = function (str) {
 	/**
 	 * @type {Array}
 	 */
@@ -24,14 +24,14 @@ var parseMessage = function(str) {
  * @param {string} text
  * @returns {string}
  */
-var cssToJson = function(text) {
+var cssToJson = function (text) {
 	if (text.indexOf('.') === 0) {
 		text = text.replace('.', 'mkClss');
 	}
 	text = text.replace(/,/g, '_AND_');
 	text = text.replace(' ', '');
 
-	return text.replace(/-([a-z])/g, function(g) {
+	return text.replace(/-([a-z])/g, function (g) {
 		return g[1].toUpperCase();
 	});
 };
@@ -39,13 +39,13 @@ var cssToJson = function(text) {
  *
  * @param {string} text
  */
-var jsonToCss = function(text) {
+var jsonToCss = function (text) {
 	if (text.indexOf('mkClss') === 0) {
 		text = text.replace('mkClss', '.');
 	}
 	text = text.replace(/_AND_/g, ',');
 
-	return text.replace(/([A-Z])/g, function(el) {
+	return text.replace(/([A-Z])/g, function (el) {
 		return `-${el[0].toLowerCase()}`;
 	});
 };
@@ -53,7 +53,7 @@ var jsonToCss = function(text) {
  *
  * @param {Object} formData a FormData() class
  */
-var urlencodeFormData = function(formData) {
+var urlencodeFormData = function (formData) {
 	var value = '';
 	/**
 	 *
@@ -73,9 +73,19 @@ var urlencodeFormData = function(formData) {
  * @param {string} string
  * @returns {boolean}
  */
-var isHexColor = function(string) {
+var isHexColor = function (string) {
 	return /^#([0-9a-f]{6})$/i.test(string);
 };
+var makeFontFamilyName = function (name) {
+	if (!name) {
+		return;
+	}
+	return name.replace(/.otf/gm, '').replace(/.ttf/gm, '').replace(/.woff/gm, '');
+};
+var makeRatio = function (sizes) {
+	var ratio = parseFloat(sizes.lineHeight) + parseFloat(sizes.marginTop) + parseFloat(sizes.marginBottom);
+	return Math.round(ratio * 100) / 100 + "rem"
+}
 module.exports = {
 	makeTableName: makeTableName,
 	parseMessage: parseMessage,
@@ -83,4 +93,6 @@ module.exports = {
 	cssToJson: cssToJson,
 	urlencodeFormData: urlencodeFormData,
 	isHexColor: isHexColor,
+	makeFontFamilyName: makeFontFamilyName,
+	makeRatio: makeRatio
 };

@@ -1,0 +1,85 @@
+/* This is automatically generated CSS, do not edit */
+:root {
+  --dominant : #7094E1;
+  --combination0:#D85F22;
+  --combination0-0:#4D382E;
+  --combination0-1:#624232;
+  --combination0-2:#7A4B33;
+  --combination0-3:#945333;
+  --combination0-4:#B05B30;
+  --combination0-5:#CE622C;
+  --combination0-6:#DF6D34;
+  --combination0-7:#EB7A42;
+  --combination0-8:#F58851;
+  --combination0-9:#FD9663;
+  --combination1:#F19D37;
+  --combination1-0:#685641;
+  --combination1-1:#7F6443;
+  --combination1-2:#987243;
+  --combination1-3:#B48041;
+  --combination1-4:#C98E45;
+  --combination1-5:#D79B50;
+  --combination1-6:#E4A75E;
+  --combination1-7:#EEB46D;
+  --combination1-8:#F6C07E;
+  --combination1-9:#FCCC92;
+}
+@import url("https://fonts.googleapis.com/css?family=Knile-Regular&display=swap");
+@import url("https://fonts.googleapis.com/css?family=TallAbbeyRg&display=swap");
+html {
+  font-size: 18;
+  font-family: "Knile-Regular";
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "TallAbbeyRg";
+}
+.rf-content-container {
+  background:#fff;
+  color:#4E5F83;
+  font-family:"Knile-Regular";
+  height: 100%;
+}
+.rf-content-container h1,h2,h3,h4,h5,h6{
+  font-family:"TallAbbeyRg";
+  color:#7A4B33;
+}
+.rf-content-container h1{
+  font-size:"4.2rem";
+  line-height:"4.2rem";
+  margin-bottom:"1.6rem";
+  margin-top:"1.6rem";
+}
+.rf-content-container h2{
+  font-size:"3rem";
+  margin-bottom:"2rem";
+  line-height:"3rem";
+  margin-top:"1.3rem";
+}
+.rf-content-container h3{
+  font-size:"2rem";
+  line-height:"3rem";
+  margin-bottom:"1.3rem";
+  margin-top:"0rem";
+}
+.rf-content-container h4{
+  font-size:"1.6rem";
+  line-height:"2rem";
+  margin-bottom:"1.3rem";
+  margin-top:"0rem";
+}
+.rf-content-container h6{
+  font-size:"1rem";
+  line-height:"1rem";
+  margin-bottom:"0rem";
+  margin-top:"0rem";
+}
+.rf-content-container h5{
+  margin-bottom:"1.3rem";
+  margin-top:"0rem";
+  font-size:"1rem";
+  line-height:"1rem";
+}
+.rf-content-container .altfont{
+  font-family:"";
+}
+/* This is automatically generated CSS, do not edit */

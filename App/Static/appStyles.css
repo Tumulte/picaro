@@ -1,29 +1,95 @@
 /* Application styles : edit at you're own risk :) */
 
 :root {
-	--app-ratio: 1.6em;
-	--app-ratio-s: 0.8em;
-	--app-ratio-xs: 0.4em;
-	--app-color: #333;
-	--app-tonic: #f15e5e;
+    --app-ratio: 1.6em;
+    --app-ratio-s: 0.8em;
+    --app-ratio-xs: 0.4em;
+    --app-color: #333;
+    --app-tonic: #f15e5e;
 }
 
 @font-face {
-	font-family: knile;
-	src: url("/fonts/Knile-Regular.otf")
+    font-family: knile;
+    src: url("/fonts/Knile-Regular.otf");
 }
 
 @font-face {
-	font-family: rivina;
-	src: url("/fonts/RivinaTC-penOutline.otf")
+    font-family: rivina;
+    src: url("/fonts/RivinaTC-penOutline.otf");
 }
 
-body .v-application {
-	font-family: knile;
+#rf-admin .v-application {
+    font-family: knile;
 }
 
-body .v-application header {
-	font-family: rivina;
+.v-application {
+    line-height: inherit !important;
+}
+
+#rf-admin .v-application header {
+    font-family: rivina;
+}
+
+#rf-admin {
+    font-size: 20px;
+    line-height: 30px;
+    font-family: "Roboto";
+
+.v-card {
+    padding: 12px;
+    margin: 12px 0;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    background: #fff;
+}
+
+.-ratio-text-container {
+    background: rgb(219, 131, 87) !important;
+}
+
+.-ratio-container {
+    border-left: #ddd 6px solid;
+    overflow: hidden;
+}
+
+.-ratio-container-button {
+    display: none;
+}
+
+.-ratio-container:hover .-ratio-container-button {
+    display: block;
+}
+
+.-ratio-container:nth-child(odd) {
+    border-left: 6px solid #999;
+}
+
+.-ratio-container.__mini {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    border-width: 53px;
+}
+
+.-ratio-container p {
+    margin: 0;
+}
+
+}
+
+#rf-admin .v-card__title {
+    margin: -12px -12px 0 -12px;
 }
 
 #rf-nav-panel-toggle,
@@ -31,473 +97,466 @@ body .v-application header {
 #rf-css-panel-toggle,
 #rf-css-panel {
 
-	/*Design elements*/
-	&.--sketchy,
-	.--sketchy {
-		position: relative;
+/*Design elements*/
+&
+.--sketchy,
+.--sketchy {
+    position: relative;
 
-		svg {
-			position: absolute;
-			top: -5px;
-			left: -5px;
-			z-index: -1;
-			height: 125%;
-			width: 125%;
-		}
-
-		path {
-			transition: fill 0.2s ease;
-		}
-	}
-
-	&.--sketchy:hover path,
-	.--sketchy:hover path {
-		fill: #fff;
-	}
+svg {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    z-index: -1;
+    height: 125%;
+    width: 125%;
 }
 
+path {
+    transition: fill 0.2s ease;
+}
 
+}
+
+&
+.--sketchy:hover path,
+.--sketchy:hover path {
+    fill: #fff;
+}
+
+}
 
 /* Components */
 #rf-admin-panel,
 #rf-nav-panel,
 #rf-css-panel {
 
-	/* Common styling to all sub components */
-	._panel {
-		z-index: 20;
-		position: fixed;
-		background: #fff;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		overflow: auto;
-		width: 300px;
-		padding: var(--app-ratio);
-		height: 100%;
+/* Common styling to all sub components */
+._panel {
+    z-index: 20;
+    position: fixed;
+    background: #fff;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    width: 300px;
+    padding: var(--app-ratio);
+    height: 100%;
 
-		.style-set-list {
-			._item {
-				cursor: pointer;
+.style-set-list {
 
-				&.__current-style-set {
-					color: #fff;
-					background: #000;
-				}
-			}
-		}
-	}
+._item {
+    cursor: pointer;
 
-	#_selector {
-		right: 600px;
-	}
+&
+.__current-style-set {
+    color: #fff;
+    background: #000;
+}
 
-	#_color {
-		right: 300px;
+}
+}
+}
 
-		.sub-combination {
-			height: 40px;
-			width: 10%;
-			display: inline-block;
+#_selector {
+    right: 600px;
+}
 
-			&.__main {
-				border-top: 2px solid #000;
-				box-shadow: 0px -1px #fff;
-			}
-		}
-	}
+#_color {
+    right: 300px;
 
-	#_main {
-		z-index: 19;
-	}
+.sub-combination {
+    height: 40px;
+    width: 10%;
+    display: inline-block;
 
-	#_admin-form-ext-submit {
-		display: none;
-	}
+&
+.__main {
+    border-top: 2px solid #000;
+    box-shadow: 0 -1px #fff;
+}
+
+}
+}
+
+#_main {
+    z-index: 19;
+}
+
+#_admin-form-ext-submit {
+    display: none;
+}
+
 }
 
 #rf-nav-panel ._panel {
-	width: 600px;
+    width: 600px;
 }
 
 /* Basic HTML */
 #rf-nav-panel,
 #rf-css-panel {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    line-height: 1.3em;
 
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	font-family: 'Courier New', Courier, monospace;
-	font-size: 14px;
-	line-height: 1.3em;
-
-	button {
-		width: calc(100% - 2 * var(--app-ratio-s));
-		padding: var(--app-ratio-s);
-		margin: var(--app-ratio-s);
-		background: #fff;
-		border: var(--app-color) var(--app-ratio-xs) solid;
-		color: var(--app-color);
-	}
-
-	fieldset {
-		padding: 0;
-		border: none;
-		margin: 0;
-	}
-
-	legend {
-		margin: 0;
-		border: none;
-		color: #fff;
-		background-color: var(--app-color);
-		width: 100%;
-		text-transform: uppercase;
-		padding: var(--app-ratio-s);
-		position: relative;
-	}
-
-	ul,
-	li {
-		margin: 0;
-		padding: 0;
-	}
-
-	li li {
-		/* background: #fff ; */
-		color: #000;
-		padding: var(--app-ratio-s);
-	}
-
-	li div {
-		display: inline-block;
-		margin: 0 var(--app-ratio-xs);
-	}
-
-	li {
-		list-style: none;
-		/*background: #000 ; */
-		padding: var(--app-ratio-s) 0;
-	}
-
-
-	label {
-		position: relative;
-		display: inline-block;
-		z-index: 10;
-		color: var(--app-color);
-		width: 100%;
-	}
-
-	select {
-		width: 100%;
-	}
-
-	input[type='range'] {
-		width: 100%;
-		margin: var(--app-ratio-s) 0;
-		display: inline-block;
-		-webkit-appearance: none;
-		background: transparent;
-	}
-
-	#_range-light-container {
-		input[type='range'] {
-			margin: 0;
-		}
-	}
-
-	input._color-range {
-		width: 75%;
-		vertical-align: middle;
-	}
-
-	[contenteditable] {
-		background: #efece5;
-		color: #000;
-	}
-
-	/* Special styling for WebKit/Blink */
-	input[type='range']::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		height: 19px;
-		width: 19px;
-		background: transparent;
-		cursor: pointer;
-		margin-top: -8px;
-		/* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-		background-image: url('/svg/slider1.svg');
-		background-size: 20px;
-	}
-
-	input[type='range']:nth-of-type(2n)::-webkit-slider-thumb {
-		background-image: url('/svg/slider2.svg');
-	}
-
-	label:nth-of-type(2n) input[type='range']::-webkit-slider-thumb,
-	input[type='range']:nth-of-type(3n)::-webkit-slider-thumb {
-		background-image: url('/svg/slider3.svg');
-	}
-
-	label:nth-of-type(3n) input[type='range']::-webkit-slider-thumb,
-	input[type='range']:nth-of-type(4n)::-webkit-slider-thumb {
-		background-image: url('/svg/slider4.svg');
-	}
-
-	label:nth-of-type(4n) input[type='range']::-webkit-slider-thumb,
-	input[type='range']:nth-of-type(5n)::-webkit-slider-thumb {
-		background-image: url('/svg/slider5.svg');
-	}
-
-	label:nth-of-type(6n) input[type='range']::-webkit-slider-thumb,
-	input[type='range']:nth-of-type(6n)::-webkit-slider-thumb {
-		background-image: url('/svg/slider6.svg');
-	}
-
-	input[type='range']::-webkit-slider-runnable-track {
-		height: 3px;
-		cursor: pointer;
-		padding-bottom: 3px;
-		border-bottom: 2px solid #000;
-	}
-
-	input[type='range']:focus::-webkit-slider-runnable-track {
-		outline: none;
-	}
-
-	._slider-label {
-		padding: 0 5px;
-		background: #000;
-		color: #fff;
-	}
-
-	._color-range {
-		&.-hue::-webkit-slider-runnable-track {
-			height: 8px;
-			background-image: linear-gradient(90deg,
-					rgba(255, 0, 0, 1) 0%,
-					rgba(255, 255, 0, 1) 16.5%,
-					rgba(0, 255, 0, 1) 33%,
-					rgba(0, 255, 255, 1) 50%,
-					rgba(0, 0, 255, 1) 66%,
-					rgba(255, 0, 255, 1) 83.5%,
-					rgba(255, 0, 0, 1) 100%);
-		}
-
-		&.-light::-webkit-slider-runnable-track {
-			background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-		}
-
-		&.-sat::-webkit-slider-runnable-track,
-		&.-sat:focus::-webkit-slider-runnable-track {
-			background-image: linear-gradient(90deg, rgba(128, 128, 128, 1) 0%, rgba(255, 255, 255, 0) 100%);
-		}
-	}
-
-	._selector-container {
-		padding: var(--app-ratio-s);
-	}
-
-	._color-button {
-		padding: 0 var(--app-ratio-xs);
-		margin: var(--app-ratio-xs) 0;
-	}
-
-	._container {
-		padding: var(--app-ratio-s);
-	}
-
-	._radio {
-		position: absolute;
-		left: -9999px;
-	}
-
-	._radio-element {
-		display: inline-block;
-		width: 17px;
-		height: 17px;
-		margin: var(--app-ratio-s) 0 var(--app-ratio-s) var(--app-ratio-s);
-		background: url('/svg/slider6.svg');
-	}
-
-	._radio-element::before {
-		content: '';
-		background: transparent;
-		width: 11px;
-		display: inline-block;
-		height: 14px;
-		border-radius: 100%;
-		position: relative;
-		left: 3px;
-		top: 2px;
-	}
-
-	._radio:checked+._radio-element::before {
-		content: '';
-		background: var(--app-tonic);
-		width: 16px;
-		display: inline-block;
-		height: 14px;
-		border-radius: 100%;
-		position: relative;
-		left: 0px;
-		top: 1px;
-		z-index: -1;
-	}
-
-	/* Form Inputs */
-	._target-input {
-		display: none;
-		position: absolute;
-		top: 40px;
-		padding: 10px;
-		right: calc(100% - 30px);
-		border: 3px solid #000;
-	}
-
-	._target-input-radio:checked+._target-input {
-		display: block;
-	}
-
-	._container {
-		width: 100%;
-	}
-
-	._color-fold,
-	._target-input-radio {
-		position: absolute;
-		left: -9999px;
-	}
-
-	._color-fold:checked~label {
-		display: none;
-	}
+button {
+    width: calc(100% - 2 * var(--app-ratio-s));
+    padding: var(--app-ratio-s);
+    margin: var(--app-ratio-s);
+    background: #fff;
+    border: var(--app-color) var(--app-ratio-xs) solid;
+    color: var(--app-color);
 }
 
+fieldset {
+    padding: 0;
+    border: none;
+    margin: 0;
+}
+
+legend {
+    margin: 0;
+    border: none;
+    color: #fff;
+    background-color: var(--app-color);
+    width: 100%;
+    text-transform: uppercase;
+    padding: var(--app-ratio-s);
+    position: relative;
+}
+
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+li li {
+    /* background: #fff ; */
+    color: #000;
+    padding: var(--app-ratio-s);
+}
+
+li div {
+    display: inline-block;
+    margin: 0 var(--app-ratio-xs);
+}
+
+li {
+    list-style: none;
+    /*background: #000 ; */
+    padding: var(--app-ratio-s) 0;
+}
+
+label {
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+    color: var(--app-color);
+    width: 100%;
+}
+
+select {
+    width: 100%;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: var(--app-ratio-s) 0;
+    display: inline-block;
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+#_range-light-container {
+
+input[type="range"] {
+    margin: 0;
+}
+
+}
+
+input._color-range {
+    width: 75%;
+    vertical-align: middle;
+}
+
+[contenteditable] {
+    background: #efece5;
+    color: #000;
+}
+
+/* Special styling for WebKit/Blink */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 19px;
+    width: 19px;
+    background: transparent;
+    cursor: pointer;
+    margin-top: -8px;
+    /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    background-image: url("/svg/slider1.svg");
+    background-size: 20px;
+}
+
+input[type="range"]:nth-of-type(2n)::-webkit-slider-thumb {
+    background-image: url("/svg/slider2.svg");
+}
+
+label:nth-of-type(2n) input[type="range"]::-webkit-slider-thumb,
+input[type="range"]:nth-of-type(3n)::-webkit-slider-thumb {
+    background-image: url("/svg/slider3.svg");
+}
+
+label:nth-of-type(3n) input[type="range"]::-webkit-slider-thumb,
+input[type="range"]:nth-of-type(4n)::-webkit-slider-thumb {
+    background-image: url("/svg/slider4.svg");
+}
+
+label:nth-of-type(4n) input[type="range"]::-webkit-slider-thumb,
+input[type="range"]:nth-of-type(5n)::-webkit-slider-thumb {
+    background-image: url("/svg/slider5.svg");
+}
+
+label:nth-of-type(6n) input[type="range"]::-webkit-slider-thumb,
+input[type="range"]:nth-of-type(6n)::-webkit-slider-thumb {
+    background-image: url("/svg/slider6.svg");
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 3px;
+    cursor: pointer;
+    padding-bottom: 3px;
+    border-bottom: 2px solid #000;
+}
+
+input[type="range"]:focus::-webkit-slider-runnable-track {
+    outline: none;
+}
+
+._slider-label {
+    padding: 0 5px;
+    background: #000;
+    color: #fff;
+}
+
+._color-range {
+
+&
+.-hue::-webkit-slider-runnable-track {
+    height: 8px;
+    background-image: linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 1) 0%,
+            rgba(255, 255, 0, 1) 16.5%,
+            rgba(0, 255, 0, 1) 33%,
+            rgba(0, 255, 255, 1) 50%,
+            rgba(0, 0, 255, 1) 66%,
+            rgba(255, 0, 255, 1) 83.5%,
+            rgba(255, 0, 0, 1) 100%
+    );
+}
+
+&
+.-light::-webkit-slider-runnable-track {
+    background-image: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(255, 255, 255, 1) 100%
+    );
+}
+
+&
+.-sat::-webkit-slider-runnable-track,
+
+&
+.-sat:focus::-webkit-slider-runnable-track {
+    background-image: linear-gradient(
+            90deg,
+            rgba(128, 128, 128, 1) 0%,
+            rgba(255, 255, 255, 0) 100%
+    );
+}
+
+}
+
+._selector-container {
+    padding: var(--app-ratio-s);
+}
+
+._color-button {
+    padding: 0 var(--app-ratio-xs);
+    margin: var(--app-ratio-xs) 0;
+}
+
+._container {
+    padding: var(--app-ratio-s);
+}
+
+/* Form Inputs */
+._target-input {
+    display: none;
+    position: absolute;
+    top: 40px;
+    padding: 10px;
+    right: calc(100% - 30px);
+    border: 3px solid #000;
+}
+
+._container {
+    width: 100%;
+}
+
+._color-fold:checked ~ label {
+    display: none;
+}
+
+}
 
 /*Independent Elements */
 /* Panels buttons */
 #rf-admin-panel-toggle,
 #rf-nav-panel-toggle,
 #rf-css-panel-toggle {
-	&._label {
-		font-family: 'Courier New', Courier, monospace;
-		font-size: 14px;
-		line-height: 1.3em;
-		position: absolute;
-		z-index: 100000;
-		right: var(--app-ratio);
-		top: 0;
-		padding: var(--app-ratio-s);
-		background: var(--app-tonic);
-		display: inline-block;
-		cursor: pointer;
-		padding: var(--app-ratio-xs);
-	}
+
+&
+._label {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    line-height: 1.3em;
+    position: absolute;
+    z-index: 100000;
+    right: var(--app-ratio);
+    top: 0;
+    padding: var(--app-ratio-s);
+    background: var(--app-tonic);
+    display: inline-block;
+    cursor: pointer;
+    padding: var(--app-ratio-xs);
+}
+
 }
 
 #rf-admin-panel-toggle {
-	&._label {
-		right: calc(75px + var(--app-ratio));
-	}
+
+&
+._label {
+    right: calc(75px + var(--app-ratio));
+}
+
 }
 
 #rf-nav-panel-toggle {
-	&._label {
-		right: calc(150px + var(--app-ratio));
-	}
+
+&
+._label {
+    right: calc(150px + var(--app-ratio));
+}
+
 }
 
 #__rf-admin-panel-toggle-check,
 #__rf-nav-panel-toggle-check,
 #__rf-css-panel-toggle-check {
-	position: absolute;
-	left: -9999px;
-	top: 0;
+    position: absolute;
+    left: -9999px;
+    top: 0;
 }
 
-#__rf-nav-panel-toggle-check+#rf-nav-panel,
-#__rf-admin-panel-toggle-check+#rf-admin-panel,
-#__rf-css-panel-toggle-check+#rf-css-panel {
-	._panel {
-		left: -9999px;
-	}
+#__rf-nav-panel-toggle-check + #rf-nav-panel,
+#__rf-admin-panel-toggle-check + #rf-admin-panel,
+#__rf-css-panel-toggle-check + #rf-css-panel {
+
+._panel {
+    left: -9999px;
 }
 
-#__rf-nav-panel-toggle-check:checked+#rf-nav-panel,
-#__rf-admin-panel-toggle-check:checked+#rf-admin-panel,
-#__rf-css-panel-toggle-check:checked+#rf-css-panel {
-	._panel {
-		left: auto;
-	}
+}
+
+#__rf-nav-panel-toggle-check:checked + #rf-nav-panel,
+#__rf-admin-panel-toggle-check:checked + #rf-admin-panel,
+#__rf-css-panel-toggle-check:checked + #rf-css-panel {
+
+._panel {
+    left: auto;
+}
+
 }
 
 #rf-app-status {
-	position: fixed;
-	top: 0;
-	right: 159px;
-	font-size: 0.6em;
-	background: #fff;
-	border: 1px solid #000;
+    position: fixed;
+    top: 0;
+    right: 159px;
+    font-size: 0.6em;
+    background: #fff;
+    border: 1px solid #000;
 
-	._status {
-		display: inline-block;
-		margin: 0 10px;
-	}
+._status {
+    display: inline-block;
+    margin: 0 10px;
+}
 
-	.-failure,
-	.-success {
-		font-weight: bold;
-	}
+.-failure,
+.-success {
+    font-weight: bold;
+}
 
-	.-success {
-		color: forestgreen;
-	}
+.-success {
+    color: forestgreen;
+}
 
-	.-failure {
-		color: red;
-	}
+.-failure {
+    color: red;
+}
+
 }
 
 #rf-login {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 
-	/*Elements*/
-	label,
-	input,
-	button {
-		display: block;
-	}
+/*Elements*/
+label,
+input,
+button {
+    display: block;
+}
 
-	button {
-		background: none;
-		border: none;
-	}
+button {
+    background: none;
+    border: none;
+}
+
 }
 
 /*
 #########################
 Application Content
 */
-#rf-content-container {
-	overflow: auto;
+.rf-content-container {
+    overflow: auto;
 }
 
 .component-message {
-	position: fixed;
-	right: 0;
-	bottom: 0;
-	width: 250px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 250px;
 
-	text-align: center;
-	z-index: 10000;
+    text-align: center;
+    z-index: 10000;
 
-	._message {
-		background: #fff;
-		border: 4px solid;
-		padding: 12px !important;
-	}
+._message {
+    background: #fff;
+    border: 4px solid;
+    padding: 12px !important;
+}
+
 }

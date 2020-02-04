@@ -1,68 +1,43 @@
 div(id="_color" class="_panel" v-if="$store.getters.loaded")
-    wired-card(class="_container")
-        label
-            div(class="css-panel__label") Combination Presets
-            select(v-model="colorParameterCollection.colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
-                option(value="none") Selectionner un schéma de couleur
-                option(v-for="colorSet in colorSetCollection" v-bind:value="stringify(colorSet.combinationCollection)") {{colorSet.name}}
-    wired-card(class="_container" id="_range-light-container")
-        label Light variation
-            input(type="range" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
-        label Saturation variation
-            input(type="range"  min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
-
-
-    div(v-bind:style="bgColor(dominantColor)" @input="updateColor()")
-        div(class="_container")
-            label(class="_fold-color" for="_dominant-color-fold") [-]
-            input(type="checkbox" checked="checked" class="_color-fold"  id="_dominant-color-fold")
-            label
-                span(class="_slider-label")  Hue
-                input(type="range" class="_color-range -hue" min="0" max="360" v-model="dominantColor.hue")
-                input(type="number" :value="dominantColor.hue"  v-on:input="dominantColor.hue = checkNum($event.target.value, 0,360)")
-            label
-                span(class="_slider-label") Light
-                input(type="range"  class="_color-range -light" min="0" max="100"  v-model="dominantColor.light")
-                input(type="number" :value="dominantColor.light"  v-on:input="dominantColor.light = checkNum($event.target.value, 0,100)")
-            label
-                span(class="_slider-label") Sat.
-                input(type="range"  class="_color-range -sat" min="0" max="100"  v-model="dominantColor.saturation")
-                input(type="number" :value="dominantColor.saturation"  v-on:input="dominantColor.saturation = checkNum($event.target.value, 0,100)")
-            div
-                div(v-for="(subColor, index) in colorCollection.dominantSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="sub-combination" v-bind:style="bgColor(subColor)")
-    div
-        div(v-for="(subColor, index) in colorCollection.graySubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['gray', index])" class="sub-combination"  v-bind:style="bgColor(subColor)" )
-
-    div(v-for="(color, index) in colorCollection.combinationCollection" v-bind:style="bgColor(color)" v-on:input="updateCombinationColor(index, color)")
-        div(class="_container")
-            label(class="_fold-color" :for="'_color-fold-' + index") [-]
-            input(type="checkbox" checked="checked" class="_color-fold" :id="'_color-fold-' + index")
-            label
-                span(class="_slider-label") Hue
-                input(type="range"  class="_color-range -hue" min="0" max="360" v-model="color.hue")
-                input(type="number" :value="color.hue" v-on:input="color.hue = checkNum($event.target.value, 0,360)")
-
-            label
-                span(class="_slider-label") Light
-                input(type="range"  class="_color-range -light" min="0" max="100"  v-model="color.light")
-                input(type="number"  :value="color.light"   v-on:input="color.light = checkNum($event.target.value, 0,100)")
-
-            label
-                span(class="_slider-label") Sat.
-                input(type="range"  class="_color-range -sat" min="0" max="100"  v-model="color.saturation")
-                input(type="number" :value="color.saturation"  v-on:input="color.saturation = checkNum($event.target.value, 0,100)")
-
-
-            div
-                div(v-for="(subColor, subIndex) in color.subCombination" :class="{'__main':isMainColor(bgColor(subColor), bgColor(color))}"  v-on:click="storeColorCoordinate([index, subIndex])" class="sub-combination" v-bind:style="bgColor(subColor)")
-            wired-button(v-on:click="removeColor(index)" class="_color-button") Remove Color
-    div
-        div(v-for="(subColor, index) in colorCollection.alertSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['alert', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
-    div
-        div(v-for="(subColor, index) in colorCollection.warningSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['warning', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
-    div
-        div(v-for="(subColor, index) in colorCollection.successSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['success', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
-    div
-        div(v-for="(subColor, index) in colorCollection.infoSubCollection" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" v-bind:style="bgColor(subColor)" )
-
-    wired-button(v-on:click="addColor" class="_color-button") Add Color
+    v-card(class="_container" v-if="panelOpened")
+        v-select(label="Combination Presets" :items="colorSetCollection" item-text="name" item-value="combinationCollection" v-model="colorParameterCollection.colorSetParamString" class="css-panel__input" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
+    v-card(class="_container" id="_range-light-container" v-if="panelOpened")
+        v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
+        v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
+    v-expansion-panels
+        v-expansion-panel(:style="bgColor(dominantColor)"  v-if="panelOpened")
+            v-expansion-panel-header
+            v-expansion-panel-content(:style="bgColor(dominantColor)" class="mb-0")
+                    v-slider(min="0" max="360" v-model="dominantColor.hue" @input="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColor, true)")
+                    v-slider(min="0" label="light" max="100" thumb-label="always" @input="updateColor()" v-model="dominantColor.light")
+                    v-slider(min="0" max="100"  thumb-label="always" @input="updateColor()"  v-model="dominantColor.saturation")
+        v-row(class="px-3")
+            v-card(v-for="(subColor, index) in colorCollection.dominantSubCollection" :key="index" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="pa-3" v-bind:style="bgColor(subColor)")
+        v-card(v-for="(color, index) in colorCollection.combinationCollection" :key="index")
+            v-expansion-panel(v-bind:style="bgColor(color)"  v-if="panelOpened")
+                v-expansion-panel-header
+                v-expansion-panel-content
+                    v-slider(min="0" max="360" v-model="color.hue" label="Hue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor(index, color)")
+                    v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @input="updateCombinationColor(index, color)")
+                    v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor(index, color)")
+            v-row(class="px-3")
+                v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" v-bind:style="bgColor(subColor)")
+            v-card-actions( v-if="panelOpened")
+                v-btn(text=true @click="removeColor(index)" class="center") Remove Color
+    v-row(class="px-3")
+        div(v-for="(subColor, index) in colorCollection.graySubCollection" v-on:click="storeColorCoordinate(['gray', index])")
+            v-card(class="pa-3" v-bind:style="bgColor(subColor)")
+    v-row(class="px-3")
+        div(v-for="(subColor, index) in colorCollection.alertSubCollection" v-on:click="storeColorCoordinate(['alert', index])" class="sub-combination" )
+            v-card(v-bind:style="bgColor(subColor)")
+    v-row(class="px-3")
+        div(v-for="(subColor, index) in colorCollection.warningSubCollection" v-on:click="storeColorCoordinate(['warning', index])" class="sub-combination")
+            v-card(v-bind:style="bgColor(subColor)" )
+    v-row(class="px-3")
+        div(v-for="(subColor, index) in colorCollection.successSubCollection" v-on:click="storeColorCoordinate(['success', index])" class="sub-combination")
+            v-card(v-bind:style="bgColor(subColor)")
+    v-row(class="px-3")
+        div(v-for="(subColor, index) in colorCollection.infoSubCollection" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" )
+            v-card(v-bind:style="bgColor(subColor)")
+    v-card-actions
+        v-btn(text=true v-on:click="addColor" class="_color-button" v-if="panelOpened") Add Color

@@ -1,2 +1,7 @@
 div
     div {{form}}
+    div(v-if="numberTypes.includes(component.type)")
+        component(:is="component.type" :min="component.param.min" :max="component.param.max")
+    div(v-if="editMode")
+        div(v-for="(value, param) in component.param")
+            v-base-field(:label="param" v-model="value")

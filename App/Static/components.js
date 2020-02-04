@@ -1,7 +1,4 @@
-// @ts-ignore
-rough = require("roughjs/dist/rough.umd");
-require("wired-elements");
-
+//TODO clear that out
 /**
  * @type {VueApp}
  */
@@ -33,15 +30,23 @@ var vCardText = vuetifyLib.VCardText
 var vDivider = vuetifyLib.VDivider
 var vListItem = vuetifyLib.VListItem
 var vListItemGroup = vuetifyLib.VListItemGroup
-
-
-
+var vContainer = vuetifyLib.VContainer
+var vCol = vuetifyLib.VCol
+var vRow = vuetifyLib.VRow
+var vSelect = vuetifyLib.VSelect
+var vRadio = vuetifyLib.VRadio
+var vRadioGroup = vuetifyLib.VRadioGroup
+var vSlider = vuetifyLib.VSlider
+var vColorPicker = vuetifyLib.VColorPicker
+var vIcon = vuetifyLib.VIcon
+var vCardActions = vuetifyLib.VCardActions
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(vuetify, {
 	components: {
 		vInput,
+		vSelect,
 		vTextField,
 		vListItem,
 		vListItemGroup,
@@ -63,13 +68,69 @@ Vue.use(vuetify, {
 		vApp,
 		vNavigationDrawer,
 		vBtn,
-		vForm
+		vForm,
+		vContainer,
+		vCol,
+		vRow,
+		vRadio,
+		vRadioGroup,
+		vSlider,
+		vColorPicker,
+		vIcon,
+		vCardActions
 	}
 });
-
-//app CSS. Will be processed by webpack
-//@ts-ignore
-
+var ratioCollection = {
+	h1: {
+		text: "header 1",
+		marginTop: 1.34,
+		marginBottom: 1.34,
+		fontSize: 2,
+		lineHeight: 2.75
+	},
+	h2: {
+		text: "header 2",
+		marginTop: 1.25,
+		marginBottom: 1.25,
+		fontSize: 1.5,
+		lineHeight: 2
+	},
+	h3: {
+		text: "header 3",
+		marginTop: 1.17,
+		marginBottom: 1.17,
+		fontSize: 1.17,
+		lineHeight: 1.75
+	},
+	h4: {
+		text: "header 4",
+		marginTop: 1.33,
+		marginBottom: 1.33,
+		fontSize: 1,
+		lineHeight: 1.4
+	},
+	h5: {
+		text: "header 5",
+		marginTop: 1.4,
+		marginBottom: 1.4,
+		fontSize: 0.83,
+		lineHeight: 1.16
+	},
+	h6: {
+		text: "header 6",
+		marginTop: 1.55,
+		marginBottom: 1.55,
+		fontSize: 0.67,
+		lineHeight: 0.9
+	},
+	p: {
+		text: "base text"
+	},
+	html: {
+		lineHeight: 24,
+		fontSize: 16
+	}
+}
 // TODO SPLIT logics of this file : it's not just style config
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
 /* eslint-disable no-undef */
@@ -82,17 +143,17 @@ if (ENVIRONMENT === "development") {
 /* user components */
 var VRuntimeTemplate = require("v-runtime-template").default;
 // @ts-ignore
-var tagsListComponent = require("../Ui/Components/tagsList.vue");
+var tagsListComponent = require("../Ui/Components/tagsList.vue").default;
 // @ts-ignore
-var listComponent = require("../Ui/Components/list.vue");
+var listComponent = require("../Ui/Components/list.vue").default;
 // @ts-ignore
-var linkComponent = require("../Ui/Components/link.vue");
+var linkComponent = require("../Ui/Components/link.vue").default;
 // @ts-ignore
-var formComponent = require("../Ui/Components/form.vue");
+var formComponent = require("../Ui/Components/form.vue").default;
 // @ts-ignore
-var tagsComponent = require("../Ui/Components/tags.vue");
+var tagsComponent = require("../Ui/Components/tags.vue").default;
 // @ts-ignore
-var navComponent = require("../Ui/Components/nav.vue");
+var navComponent = require("../Ui/Components/nav.vue").default;
 
 
 Vue.component("rf-list", listComponent);
@@ -149,13 +210,6 @@ var userStore = {
 	}
 };
 
-/**
- * @param {number} index
- * @returns {number}
- */
-var toggleIndex = function (index) {
-	return index === 0 ? 1 : 0;
-};
 //@ts-ignore
 if (
 	ENVIRONMENT === "development" ||
@@ -163,19 +217,25 @@ if (
 ) {
 	/* eslint-enable no-undef */
 	// @ts-ignore
-	var adminPanel = require("../Ui/Components/adminPanel.vue");
+	var adminPanel = require("../Ui/Components/adminPanel.vue").default;
 	// @ts-ignore
-	var cssPanelSelector = require("../Ui/Components/cssPanelSelector.vue");
+	var cssPanelSelector = require("../Ui/Components/cssPanelSelector.vue").default;
 	// @ts-ignore
-	var cssPanelColor = require("../Ui/Components/cssPanelColor.vue");
+	var cssPanelColor = require("../Ui/Components/cssPanelColor.vue").default;
 	// @ts-ignore
-	var cssPanel = require("../Ui/Components/cssPanelMain.vue");
+	var cssPanel = require("../Ui/Components/cssPanelMain.vue").default;
 	// @ts-ignore
-	var messagesComponent = require("../Tools/Components/messages.vue");
+	var cssPanelRatio = require("../Ui/Components/cssPanelRatio.vue").default;
 	// @ts-ignore
-	var navPanel = require("../Ui/Components/navPanel.vue");
+	var messagesComponent = require("../Tools/Components/messages.vue").default;
 	// @ts-ignore
-	var adminToolBar = require("../Ui/Components/adminToolBar.vue");
+	var navPanel = require("../Ui/Components/navPanel.vue").default;
+	// @ts-ignore
+	var adminToolBar = require("../Ui/Components/adminToolBar.vue").default;
+	var modelPanel = require("../Ui/Components/modelPanel.vue").default;
+	var userPanel = require("../Ui/Components/userPanel.vue").default;
+
+
 	//@ts-ignore
 	Vue.component("admin-panel", adminPanel);
 	//@ts-ignore
@@ -185,19 +245,27 @@ if (
 	//@ts-ignore
 	Vue.component("css-panel-color", cssPanelColor);
 	//@ts-ignore
+	Vue.component("css-panel-ratio", cssPanelRatio);
+	//@ts-ignore
 	Vue.component("css-panel-main", cssPanel);
 	//@ts-ignore
 	Vue.component("nav-panel", navPanel);
 	//@ts-ignore
 	Vue.component("warning-component", messagesComponent);
+	Vue.component("user-panel", userPanel);
+	Vue.component("model-panel", modelPanel);
+
+
 	var adminStore = {
 		state: {
 			colorParameterCollection: {},
 			currentColor: "",
-			currentSelector: {},
+			currentRatio: 1,
+			currentSelector: null,
 			selectorCollection: {
-				html: {},
-				h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {}
+				body: {},
+				h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {},
+				CLSS__altfont: {}
 			},
 			/* eslint-disable-next-line no-undef */
 			colorCollection: {},
@@ -206,7 +274,8 @@ if (
 			colorSet: {},
 			styleSet: {},
 			navStructure: {},
-			loaded: false
+			loaded: false,
+			ratioCollection: ratioCollection
 		},
 		mutations: {
 			// @ts-ignore
@@ -220,15 +289,40 @@ if (
 			 */
 			currentColor(state, coordinates) {
 				if (state.currentSelector) {
-					state.selectorCollection[state.currentSelector.selector][
-						state.currentSelector.property
-					] = coordinates;
-					state.selectorIndex = toggleIndex(state.selectorIndex);
+					Vue.set(
+						state.selectorCollection[state.currentSelector.selector],
+						state.currentSelector.property, {
+							type: "color",
+							data: coordinates
+						}
+					)
+				}
+			},
+			currentRatio(state, coordinates) {
+				if (state.currentSelector) {
+					Vue.set(
+						state.selectorCollection[state.currentSelector.selector],
+						state.currentSelector.property, {
+							type: "ratio",
+							data: coordinates
+						}
+					)
 				}
 			},
 			// @ts-ignore
 			currentSelector(state, data) {
 				state.currentSelector = data;
+			},
+			ratioCollection(state, data) {
+				state.ratioCollection = data;
+				var lineHeight = Math.round(data.html.lineHeight / data.html.fontSize * 100) / 100
+				state.ratioCollection.p = {
+					lineHeight: lineHeight,
+					fontSize: 1,
+					marginBottom: 0,
+					marginTop: 0,
+					text: data.p.text
+				}
 			},
 			// @ts-ignore
 			selectorCollection(state, data) {
@@ -276,6 +370,9 @@ if (
 			colorCollection: function (state) {
 				return state.colorCollection;
 			},
+			ratioCollection: function (state) {
+				return state.ratioCollection
+			},
 			// @ts-ignore
 			selectorIndex: function (state) {
 				return state.selectorIndex;
@@ -301,7 +398,33 @@ if (
 			loaded(state) {
 				return state.loaded;
 			}
-		}
+		},
+		actions: {
+			updateSelector: function ({
+				state
+			}, value) {
+				Vue.set(state.selectorCollection, value.new, state.selectorCollection[value.old])
+				Vue.delete(state.selectorCollection, value.old)
+			},
+			addSelector: function ({
+				state
+			}, value) {
+				Vue.set(state.selectorCollection, value, {})
+			},
+			addProperty: function ({
+				state
+			}, data) {
+				Vue.set(state.selectorCollection[data.selector], data.property, data.value ? data.value : '')
+			},
+			updateStyles: function ({
+				state
+			}, data) {
+				if (!data) {
+					return;
+				}
+				Vue.set(state.selectorCollection[data.selector], data.property, data.value)
+			}
+		},
 	};
 } else {
 	adminStore = {};
@@ -321,43 +444,4 @@ window.addEventListener("load", function () {
 		vuetify: new vuetify()
 	});
 
-	/**
-	 *
-	 * @param {HTMLCollectionOf<Element>} item
-	 * @param {Object} params
-	 */
-	var createSvgSketch = function (item, params) {
-		Array.prototype.forEach.call(item, function (el) {
-			var rect = el.parentNode.getBoundingClientRect();
-
-			// @ts-ignore
-			var svg = rough.svg(el);
-			el.appendChild(svg.rectangle(5, 5, rect.width, rect.height, params));
-		});
-	};
-	var svgCollectionBox = document.getElementsByClassName("css-panel-svg-box");
-	createSvgSketch(svgCollectionBox, {
-		roughness: 3,
-		strokeWidth: 2
-	});
-	var svgCollectionHighlight = document.getElementsByClassName(
-		"css-panel-svg-highlight"
-	);
-
-	createSvgSketch(svgCollectionHighlight, {
-		fill: "#f15e5e",
-		fillWeight: 3,
-		fillStyle: "solid",
-		roughness: 3,
-		strokeWidth: 1.5
-	});
-
-	var svgCollection = document.getElementsByClassName("css-panel-svg");
-	createSvgSketch(svgCollection, {
-		fill: "#fff",
-		fillWeight: 3,
-		fillStyle: "zigzag",
-		roughness: 3,
-		strokeWidth: 2
-	});
 });

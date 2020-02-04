@@ -2,6 +2,7 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 /**
  * @type {import('webpack').Configuration}
@@ -66,6 +67,10 @@ const myWebpackConfig = {
         ]
       },
       {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      },
+      {
         test: /\.(jpg|png)$/,
         use: [
           {
@@ -96,7 +101,8 @@ const myWebpackConfig = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       ENVIRONMENT: JSON.stringify("development")
-    })
+    }),
+    new VueLoaderPlugin()
   ],
   resolve: {
     alias: {

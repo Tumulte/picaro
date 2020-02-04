@@ -3,6 +3,7 @@ html(lang=language)
     title #{title}
 
     link(rel="stylesheet" type="text/css" href="/static/normalize.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css")
     script.
         var colorSetCollection = !{colorSetCollection};
         var isLogged = #{isLogged}
@@ -11,7 +12,7 @@ html(lang=language)
     body
         v-app(id="rf-vue-container")
             if(isLogged)
-                admin-tool-bar(views=views)
+                admin-tool-bar(views=views id="rf-admin")
                 if(isDev)
                     div(id="rf-app-status")
                         span(class="_status") Integration :
