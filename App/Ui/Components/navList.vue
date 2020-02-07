@@ -1,25 +1,26 @@
 <script>
-const axios = require("axios");
-var template = require("./navList.pug").default;
+    import axios from "axios";
 
-var navComponent = {
-  template: template,
-  data: function() {},
-  props: ["recursiveNavStructure"],
-  created: function() {
-    axios
-      .get("s")
-      .then(response => {
-        this.navStructure = JSON.parse(response.data.navStructureString);
-      })
-      .catch(error => {
-        this.warningMessage = {
-          type: "error",
-          text: "Request failed.  Returned status of " + error
-        };
-      });
-  }
-};
+    const template = require("./navList.pug").default;
 
-module.exports = navComponent;
+    export default {
+        template: template,
+        data: function () {
+        },
+        props: ["recursiveNavStructure"],
+        created: function () {
+            axios
+                .get("s")
+                .then(response => {
+                    this.navStructure = JSON.parse(response.data.navStructureString);
+                })
+                .catch(error => {
+                    this.warningMessage = {
+                        type: "error",
+                        text: `Request failed.  Returned status of ${error}`
+                    };
+                });
+        }
+    };
+
 </script>

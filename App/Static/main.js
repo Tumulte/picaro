@@ -1,2 +1,3 @@
-require('../../App/Static/appStyles.css');
-require('./components');
+import components from "./components";
+
+require("../../App/Static/appStyles.css");

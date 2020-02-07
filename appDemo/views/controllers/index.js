@@ -1,3 +1,3 @@
-var vue = require(vue);
+const vue = require(vue);
 
-var test = new vue();
+const test = new vue();

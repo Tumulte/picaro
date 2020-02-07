@@ -5,7 +5,7 @@ v-container
             template(v-for="(data, tag) in ratioCollection")
                 div(class="-ratio-container" @click="storeRatioCoordinate(tag)"  :class="{'__mini': miniVariant}")
                     component(v-if="tag !== 'html'" :is="tag" @click="storeRatioCoordinate(tag)") {{data.text}}
-                        v-button(v-if="!miniVariant" class="-ratio-container-button" @click.stop="selectTag(tag)" text=true) edit
+                        v-btn(v-if="!miniVariant" class="-ratio-container-button" @click.stop="selectTag(tag)" text=true) edit
         v-col(cols="4" class="pa-0" v-if="selectedTag && selectedTag !== 'p' && !miniVariant")
             v-text-field(type="number" step="0.1" label="Font size" v-model="ratioCollection[selectedTag].fontSize" @input="updateTextParams('fontSize', selectedTag)")
             v-text-field(type="number" step="0.1" label="Line height" v-model="ratioCollection[selectedTag].lineHeight" @input="updateTextParams('lineHeight', selectedTag)")

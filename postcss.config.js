@@ -1,6 +1,6 @@
 module.exports = {
-	plugins: {
-		'postcss-preset-env': {},
-		'postcss-nested': {},
-	},
+    plugins: {
+        "postcss-preset-env": {},
+        "postcss-nested": {},
+    },
 };

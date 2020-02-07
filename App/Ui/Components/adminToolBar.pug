@@ -11,17 +11,16 @@ div
             v-row
                 v-col
                     v-navigation-drawer( width="300")
-                        css-panel-selector
                 v-col
-                    v-button(@click="setOpenPanel('color')" text=true) open
+                    v-btn(@click="setOpenPanel('color')" text=true) open
                     v-navigation-drawer(:mini-variant="openPanel !== 'color'" mini-variant-width="146" width="300")
                         css-panel-color(:panel-opened="openPanel === 'color'")
                 v-col
-                    v-button(@click="setOpenPanel('ratio')" text=true) open
+                    v-btn(@click="setOpenPanel('ratio')" text=true) open
                     v-navigation-drawer(:mini-variant="openPanel !== 'ratio'" width="300")
                         css-panel-ratio(:mini-variant="openPanel !== 'ratio'")
                 v-col
-                    v-button(@click="setOpenPanel('main')" text=true) open
+                    v-btn(@click="setOpenPanel('main')" text=true) open
                     v-navigation-drawer(width="300" :mini-variant="openPanel !== 'main'")
                         css-panel-main
     v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")

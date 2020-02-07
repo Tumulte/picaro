@@ -1,19 +1,19 @@
 <script>
-const axios = require("axios");
-var template = require("./link.pug").default;
+    import axios from "axios";
 
-var linkComponent = {
-  data: function() {
-    return {
-      warningMessage: []
+    const template = require("./link.pug").default;
+
+    export default {
+        data: function () {
+            return {
+                warningMessage: []
+            };
+        },
+        template: template,
+        computed: {
+            list: function () {
+                return this.$store.getters.list;
+            }
+        }
     };
-  },
-  template: template,
-  computed: {
-    list: function() {
-      return this.$store.getters.list;
-    }
-  }
-};
-module.exports = linkComponent;
 </script>

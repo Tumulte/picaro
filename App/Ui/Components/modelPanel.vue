@@ -1,7 +1,7 @@
 <script>
     const template = require("./modelPanel.pug").default;
 
-    const panelComponent = {
+    export default {
         template: template,
         /**
          * @type {function}
@@ -55,7 +55,7 @@
         methods: {
             addModel() {
                 this.modelCollection.push({
-                    name: "model" + this.modelCollection.length
+                    name: `model${this.modelCollection.length}`
                 });
                 this.selectedModelIndex = this.modelCollection.length - 1;
             },
@@ -72,6 +72,4 @@
             }
         }
     };
-
-    module.exports = panelComponent;
 </script>

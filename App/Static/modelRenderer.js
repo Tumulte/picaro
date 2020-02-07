@@ -1,79 +1,78 @@
 /**
  * @type {VueApp}
  */
-var Vue = require('vue');
-var Vuex = require('vuex');
+import Vue from "vue";
+import Vuex from "vuex";
+import VRuntimeTemplate from "v-runtime-template";
+import VueRouter from "vue-router";
 
-var VRuntimeTemplate = require('v-runtime-template').default;
+const tagsListComponent = require("../Ui/Components/tagsList.vue");
+const listComponent = require("../Ui/Components/list.vue");
+const linkComponent = require("../Ui/Components/link.vue");
+const formComponent = require("../Ui/Components/form.vue");
+const tagsComponent = require("../Ui/Components/tags.vue");
+const navComponent = require("../Ui/Components/nav.vue");
 
-var VueRouter = require('vue-router').default;
-var tagsListComponent = require('../Ui/Components/tagsList.vue');
-var listComponent = require('../Ui/Components/list.vue');
-var linkComponent = require('../Ui/Components/link.vue');
-var formComponent = require('../Ui/Components/form.vue');
-var tagsComponent = require('../Ui/Components/tags.vue');
-var navComponent = require('../Ui/Components/nav.vue');
+Vue.component("rf-list", listComponent);
+Vue.component("rf-tags", tagsComponent);
+Vue.component("rf-tags-list", tagsListComponent);
+Vue.component("rf-link", linkComponent);
+Vue.component("rf-form", formComponent);
+Vue.component("rf-nav", navComponent);
 
-Vue.component('rf-list', listComponent);
-Vue.component('rf-tags', tagsComponent);
-Vue.component('rf-tags-list', tagsListComponent);
-Vue.component('rf-link', linkComponent);
-Vue.component('rf-form', formComponent);
-Vue.component('rf-nav', navComponent);
-
-Vue.component('v-runtime-template', VRuntimeTemplate);
+Vue.component("v-runtime-template", VRuntimeTemplate);
 
 Vue.use(VueRouter);
 
 
-var router = new VueRouter({
-	routes: [{
-			path: '/tag/:type/:tag',
-		},
-		{
-			path: '/link/:id',
-		},
-	],
+const router = new VueRouter({
+    routes: [{
+        path: "/tag/:type/:tag",
+    },
+        {
+            path: "/link/:id",
+        },
+    ],
 });
 
 Vue.use(Vuex);
-var store = new Vuex.Store({
-	state: {
-		list: {},
-		tagCollection: {},
-	},
-	mutations: {
-		list(state, data) {
-			state.list = data;
-		},
-		tagCollection(state, data) {
-			state.tagCollection = data;
-		},
-		formType(state, data) {
-			if (data === 'hasTags') {
-				new Vue({
-					el: 'rf-tags',
-					store,
-				});
-			}
-		},
-	},
-	getters: {
-		list: function (state) {
-			return state.list;
-		},
-		tagCollection: function (state) {
-			return state.tagCollection;
-		},
-	},
+const store = new Vuex.Store({
+    state: {
+        list: {},
+        tagCollection: {},
+    },
+    mutations: {
+        list(state, data) {
+            state.list = data;
+        },
+        tagCollection(state, data) {
+            state.tagCollection = data;
+        },
+        formType(state, data) {
+            if (data === "hasTags") {
+                new Vue({
+                    el: "rf-tags",
+                    store,
+                });
+            }
+        },
+    },
+    getters: {
+        list: function (state) {
+            return state.list;
+        },
+        tagCollection: function (state) {
+            return state.tagCollection;
+        },
+    },
 });
 
-window.addEventListener('load', function () {
-	//@ts-ignore
-	new Vue({
-		el: '#rf-cont',
-		router,
-		store,
-	});
+window.addEventListener("load", function () {
+    //@ts-ignore
+    new Vue({
+        el: "#rf-cont",
+        router,
+        store,
+    });
 
 });
