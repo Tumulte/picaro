@@ -27,7 +27,7 @@
 @import url("https://fonts.googleapis.com/css?family=Knile-Regular&display=swap");
 @import url("https://fonts.googleapis.com/css?family=TallAbbeyRg&display=swap");
 html {
-  font-size: 18;
+  font-size: 18px;
   font-family: "Knile-Regular";
 }
 h1, h2, h3, h4, h5, h6 {
@@ -37,6 +37,7 @@ h1, h2, h3, h4, h5, h6 {
   background:#fff;
   color:#4E5F83;
   font-family:"Knile-Regular";
+  padding:1.5rem;
   height: 100%;
 }
 .rf-content-container h1,h2,h3,h4,h5,h6{
@@ -44,42 +45,36 @@ h1, h2, h3, h4, h5, h6 {
   color:#7A4B33;
 }
 .rf-content-container h1{
-  font-size:"4.2rem";
-  line-height:"4.2rem";
-  margin-bottom:"1.6rem";
-  margin-top:"1.6rem";
+  font-size:4.2rem;
+  line-height:4.2rem;
+  margin-bottom:1.6rem;
+  margin-top:1.6rem;
 }
 .rf-content-container h2{
-  font-size:"3rem";
-  margin-bottom:"2rem";
-  line-height:"3rem";
-  margin-top:"1.3rem";
+  font-size:3rem;
+  margin-bottom:2rem;
+  line-height:3rem;
+  margin-top:1.3rem;
 }
 .rf-content-container h3{
-  font-size:"2rem";
-  line-height:"3rem";
-  margin-bottom:"1.3rem";
-  margin-top:"0rem";
+  font-size:2rem;
+  line-height:3rem;
+  margin-bottom:1.3rem;
 }
 .rf-content-container h4{
-  font-size:"1.6rem";
-  line-height:"2rem";
-  margin-bottom:"1.3rem";
-  margin-top:"0rem";
+  font-size:1.6rem;
+  line-height:2rem;
+  margin-bottom:1.3rem;
 }
 .rf-content-container h6{
-  font-size:"1rem";
-  line-height:"1rem";
-  margin-bottom:"0rem";
-  margin-top:"0rem";
+  font-size:1rem;
+  line-height:1rem;
 }
 .rf-content-container h5{
-  margin-bottom:"1.3rem";
-  margin-top:"0rem";
-  font-size:"1rem";
-  line-height:"1rem";
+  margin-bottom:1.3rem;
+  font-size:1rem;
+  line-height:1rem;
 }
 .rf-content-container .altfont{
-  font-family:"";
 }
 /* This is automatically generated CSS, do not edit */

@@ -10,18 +10,19 @@ div
         v-container
             v-row
                 v-col
-                    v-navigation-drawer( width="300")
+                    v-navigation-drawer(permanent=true width="300")
+                        css-panel-selector
                 v-col
                     v-btn(@click="setOpenPanel('color')" text=true) open
-                    v-navigation-drawer(:mini-variant="openPanel !== 'color'" mini-variant-width="146" width="300")
+                    div(class="subpanels" :class="{'__open': subpanelOpenned('color')}")
                         css-panel-color(:panel-opened="openPanel === 'color'")
                 v-col
                     v-btn(@click="setOpenPanel('ratio')" text=true) open
-                    v-navigation-drawer(:mini-variant="openPanel !== 'ratio'" width="300")
+                    div(class="subpanels" :class="{'__open': subpanelOpenned('ratio')}")
                         css-panel-ratio(:mini-variant="openPanel !== 'ratio'")
                 v-col
                     v-btn(@click="setOpenPanel('main')" text=true) open
-                    v-navigation-drawer(width="300" :mini-variant="openPanel !== 'main'")
+                    div(class="subpanels" :class="{'__open': subpanelOpenned('main')}")
                         css-panel-main
     v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")
         admin-panel

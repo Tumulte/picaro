@@ -1,14 +1,14 @@
-<script>
-    const template = require("./modelPanel.pug").default;
+<script lang="ts">
+    import component from "vuetify/src/util/component";
+    import {User} from "../../Typings/global"
 
+    const template = require("./modelPanel.pug").default;
     export default {
         template: template,
-        /**
-         * @type {function}
-         */
         data() {
             return {
-                dataType: [
+                dataType: {} as User,
+                tata: [
                     {
                         name: "text",
                         component: "v-text-field"
@@ -58,6 +58,7 @@
                     name: `model${this.modelCollection.length}`
                 });
                 this.selectedModelIndex = this.modelCollection.length - 1;
+
             },
             selectModel(index) {
                 this.selectedModelIndex = index;

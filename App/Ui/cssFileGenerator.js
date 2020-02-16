@@ -1,7 +1,7 @@
-import fs from "fs";
+const fs = require("fs");
 import {generateColorSet} from "./colorGenerator";
 
-import utils from "../utils";
+import {makeFontFamilyName, jsonToCss, makeRatio} from "../utils";
 
 /**
  *
@@ -11,21 +11,23 @@ import utils from "../utils";
  * @param {string} colorSet.dominant
  * @returns {string} - the Hex of the color
  */
-const getParameter = function (coordinates, styleSet) {
+const getParameter = function (coordinates, styleSet, colorSet) {
     if (coordinates.includes("{\"type\":\"color\",")) {
         coordinates = JSON.parse(coordinates);
         const coordinate = coordinates.data[0];
         const subCoordinate = coordinates.data[1];
         if (typeof coordinate === "string") {
-            return styleSet[`${coordinate}SubCollection`][subCoordinate].hex;
+            return colorSet[`${coordinate}SubCollection`][subCoordinate].hex;
         } else {
-            return styleSet.combinationCollection[coordinate].subCombination[subCoordinate].hex;
+            return colorSet.combinationCollection[coordinate].subCombination[subCoordinate].hex;
         }
     } else if (coordinates.includes("{\"type\":\"ratio\",")) {
         const ratioCollection = JSON.parse(styleSet.ratioCollectionString);
         coordinates = JSON.parse(coordinates);
-        return utils.makeRatio(ratioCollection[coordinates.data]);
+        return makeRatio(ratioCollection[coordinates.data]).replace(/"/g, "");
 
+    } else if (coordinates.includes("rem")) {
+        return coordinates.replace(/"/g, "");
     }
     return coordinates;
 };
@@ -62,7 +64,6 @@ const generateCSSFile = function (appName, styleSet) {
 `;
         }
     }
-
     let generatedCSS = "/* This is automatically generated CSS, do not edit */\n";
     generatedCSS += ":root {\n";
     generatedCSS += `  --dominant : ${styleSet.dominant};
@@ -73,7 +74,7 @@ const generateCSSFile = function (appName, styleSet) {
     generatedCSS += addGoogleFont(styleSet.fontFamilyTitle);
 
     generatedCSS += "html {\n";
-    generatedCSS += `  font-size: ${styleSet.fontSize};
+    generatedCSS += `  font-size: ${styleSet.fontSize}px;
 `;
     generatedCSS += `  font-family: "${styleSet.fontFamilyMain}";
 `;
@@ -84,7 +85,7 @@ const generateCSSFile = function (appName, styleSet) {
     generatedCSS += "}\n";
     for (let selector in customCSS) {
         let prefixId = ".rf-content-container ";
-        let selectorText = utils.jsonToCss(selector);
+        let selectorText = jsonToCss(selector);
         let extraParameters = "";
         if (selector === "body") {
             selectorText = "";
@@ -92,21 +93,24 @@ const generateCSSFile = function (appName, styleSet) {
         } else if (selector === "html") {
             prefixId = "";
         }
-        generatedCSS += `${prefixId + selectorText}{
-`;
+        generatedCSS += `${prefixId + selectorText}{\n`;
         for (let property in customCSS[selector]) {
-            generatedCSS +=
-                `  ${utils.jsonToCss(property)}:${getParameter(JSON.stringify(customCSS[selector][property]), colorSet)};
-`;
+            console.info(customCSS[selector][property]);
+            if (customCSS[selector][property] !== "" && customCSS[selector][property] !== "0rem") {
+                generatedCSS +=
+                    `  ${jsonToCss(property)}:${getParameter(JSON.stringify(customCSS[selector][property]), styleSet, colorSet)};\n`;
+            }
+
         }
         generatedCSS += extraParameters;
         generatedCSS += "}\n";
     }
     generatedCSS += "/* This is automatically generated CSS, do not edit */";
-    generatedCSS = utils.makeFontFamilyName(generatedCSS);
-
-    fs.writeFile(`${__dirname}../../../static/${appName}/baseStyle.css`, generatedCSS, function (err) {
-        throw err;
+    generatedCSS = makeFontFamilyName(generatedCSS);
+    fs.writeFile(`${__dirname}/../../static/${appName.toLowerCase()}/baseStyle.css`, generatedCSS, function (err) {
+        if (err) {
+            console.debug(err);
+        }
     });
 };
 

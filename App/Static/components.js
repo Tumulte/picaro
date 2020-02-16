@@ -238,7 +238,7 @@ import cssPanelRatio from "../Ui/Components/cssPanelRatio.vue";
 import messagesComponent from "../Tools/Components/messages.vue";
 import navPanel from "../Ui/Components/navPanel.vue";
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
-import modelPanel from "../Ui/Components/modelPanel.vue";
+import modelPanel from "../Ui/Components/modelPanelts.vue";
 import userPanel from "../Ui/Components/userPanel.vue";
 
 import vuetifyLib from "vuetify/lib";

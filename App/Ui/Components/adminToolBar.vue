@@ -37,6 +37,9 @@
                         this.panels[panel] = false;
                     }
                 }
+            },
+            subpanelOpenned(name) {
+                return this.openPanel === name;
             }
         }
     };

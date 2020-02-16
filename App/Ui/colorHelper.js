@@ -121,7 +121,7 @@ export function colorHelper() {
     };
 
     this.hslToRgb = function (color) {
-        
+
         this.color = color;
         const light = this.color.light / 100;
         const sat = this.color.saturation / 100;
@@ -241,12 +241,11 @@ export function colorHelper() {
             return colorObject;
         } else if (re.test(this.color)) {
             const hex = this.color;
-            colorObject = {
+            return {
                 hexred: hex.substring(1, 3),
                 hexgreen: hex.substring(3, 5),
                 hexblue: hex.substring(5, 7),
             };
-            return colorObject;
         }
     };
 };

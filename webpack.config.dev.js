@@ -61,6 +61,11 @@ const myWebpackConfig = {
                 ]
             },
             {
+                test: /\.ts?$/,
+                use: "ts-loader",
+                exclude: /node_modules/,
+            },
+            {
                 test: /\.pug$/,
                 oneOf: [
                     // this applies to `<template lang="pug">` in Vue components
@@ -115,7 +120,9 @@ const myWebpackConfig = {
     resolve: {
         alias: {
             vue: "vue/dist/vue.js"
-        }
+        },
+        extensions: [".tsx", ".ts", ".js"],
+
     }
 };
 module.exports = myWebpackConfig;
