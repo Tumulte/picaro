@@ -159,12 +159,10 @@
                     if (Object.keys(collection[node].children).length > 0) {
                         children = this.generateMainRender(createElement, collection[node].children);
                     }
-
+                    let parents = "";
                     //Todo replace parents and display name
                     if (collection[node].parents) {
-                        let parents = collection[node].parents.join(",");
-                    } else {
-                        parents = "";
+                        parents = collection[node].parents.join(",");
                     }
                     const nodeKey = createElement(
                         "v-card-title", {
@@ -181,7 +179,7 @@
                         class: "my-1"
                     }, [accordion]);
 
-                    let parents = createElement("v-card-subtitle", [parents]);
+                    parents = createElement("v-card-subtitle", [parents]);
                     listItemCollection.push(
                         this.generateListItem(
                             createElement,

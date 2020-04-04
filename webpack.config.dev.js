@@ -110,6 +110,7 @@ const myWebpackConfig = {
             }
         ]
     },
+
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
@@ -119,7 +120,8 @@ const myWebpackConfig = {
     ],
     resolve: {
         alias: {
-            vue: "vue/dist/vue.js"
+            vue: "vue/dist/vue.js",
+            "@components": path.resolve(__dirname, "App/Ui/Components")
         },
         extensions: [".tsx", ".ts", ".js"],
 

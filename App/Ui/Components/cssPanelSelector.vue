@@ -16,7 +16,6 @@
             )
         ) {
             const index = `${data[0]}SubCollection`;
-            console.debug(data, index, "tsrtsrt");
 
             return instance.colorCollection[index][data[1]];
         } else if (

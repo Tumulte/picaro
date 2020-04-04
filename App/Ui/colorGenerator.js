@@ -55,7 +55,6 @@ export function generateColorSet(dominant) {
             }
         }
         offset = offset * variation;
-
         const valueCollection = [];
         for (let i = 1; i <= 10; i++) {
             if (i <= 5) {
@@ -93,11 +92,9 @@ export function generateColorSet(dominant) {
      */
     const createSubCombinationArray = function (combination, gray) {
         const lightCollection = getSubValues(combination.light, self.lightVariation);
-
         const satCollection = getSubValues(combination.saturation, self.satVariation);
 
-        const subCombination = [];
-
+        let subCombination = [];
         for (let i = 0; i < 10; i++) {
             subCombination[i] = {
                 hue: combination.hue,
@@ -169,18 +166,16 @@ export function generateColorSet(dominant) {
      * @returns {object}
      */
     this.generate = function (colors, lightVariation, satVariation) {
-        const self = this;
 
         this.lightVariation = lightVariation;
         this.satVariation = satVariation;
         this.colorCollection.dominantSubCollection = createSubCombinationArray(this.hsl);
-
         this.colorCollection.combinationCollection = [];
-        colors.forEach(function (item) {
-            const saturation = item.saturation ? item.saturation : self.hsl.saturation;
-            const light = item.light ? item.light : self.hsl.light;
+        colors.forEach((item) => {
+            const saturation = item.saturation ? item.saturation : this.hsl.saturation;
+            const light = item.light ? item.light : this.hsl.light;
             const combination = {
-                hue: self.hsl.hue + item.hueVariation,
+                hue: this.hsl.hue + item.hueVariation,
                 saturation: saturation,
                 light: light,
             };

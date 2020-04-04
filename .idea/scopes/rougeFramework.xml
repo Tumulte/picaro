@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="rougeFramework" pattern="!file:*.svg&amp;&amp;!file:*.pug&amp;&amp;!file[rougeFramework]:.vscode//*&amp;&amp;!file[rougeFramework]:App/Dist//*&amp;&amp;!file[rougeFramework]:App/Tests/css//*&amp;&amp;!file[rougeFramework]:App/Tests/coverage//*&amp;&amp;!file[rougeFramework]:App/Tests/js//*&amp;&amp;!file[rougeFramework]:App/Tests/Cypress/plugins//*&amp;&amp;!file[rougeFramework]:App/Tests/Cypress/screenshots//*&amp;&amp;!file[rougeFramework]:App/Tests/Cypress/support//*&amp;&amp;!file[rougeFramework]:App/Tests/Cypress/videos//*" />
+</component>
