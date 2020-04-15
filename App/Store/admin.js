@@ -70,10 +70,9 @@ export default {
         cssPanelIndex: 1,
         colorSet: {},
         styleSet: {},
-        navStructure: {},
         loaded: false,
         ratioCollection: ratioCollection,
-        modelCollection: {}
+
     },
     mutations: {
 
@@ -132,9 +131,7 @@ export default {
             state.colorSet = data;
         },
         // @ts-ignore
-        navStructure(state, data) {
-            state.navStructure = data;
-        },
+
         // @ts-ignore
         styleSet(state, data) {
             state.styleSet = data;
@@ -155,9 +152,7 @@ export default {
         loaded(state, data) {
             state.loaded = data;
         },
-        modelCollection(state, data) {
-            state.modelCollection = data;
-        }
+
     },
     getters: {
         // @ts-ignore
@@ -187,10 +182,6 @@ export default {
         colorSet(state) {
             return state.colorSet;
         },
-        // @ts-ignore
-        navStructure(state) {
-            return state.navStructure;
-        },
 
         // @ts-ignore
         styleSet(state) {
@@ -200,15 +191,11 @@ export default {
         loaded(state) {
             return state.loaded;
         },
-        modelCollection(state) {
-            return state.modelCollection;
-        }
+
 
     },
     actions: {
-        addKeyToCollection: function ({state}, data) {
-            Vue.set(state[data.collection], data.key, data.value);
-        },
+
         updateSelector: function ({
                                       state
                                   }, value) {

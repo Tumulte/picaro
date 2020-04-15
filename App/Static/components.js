@@ -25,6 +25,8 @@ import Vuetify, {
     VCardTitle,
     VCardSubtitle,
     VCardText,
+    VAlert,
+    VDialog,
     VApp,
     VBtn,
     VForm,
@@ -36,7 +38,8 @@ import Vuetify, {
     VSlider,
     VColorPicker,
     VIcon,
-    VCardActions
+    VCardActions,
+    VScrollYReverseTransition
 } from "vuetify/lib";
 
 
@@ -61,6 +64,7 @@ Vue.use(Vuetify, {
         VToolbarItems,
         VNavigationDrawer,
         VCard,
+        VScrollYReverseTransition,
         VCardTitle,
         VCardSubtitle,
         VCardText,
@@ -75,7 +79,9 @@ Vue.use(Vuetify, {
         VSlider,
         VColorPicker,
         VIcon,
-        VCardActions
+        VCardActions,
+        VAlert,
+        VDialog
     }
 });
 
@@ -95,6 +101,7 @@ import link from "../Ui/Components/link.vue";
 import form from "../Ui/Components/form.vue";
 import tags from "../Ui/Components/tags.vue";
 import nav from "../Ui/Components/nav.vue";
+import alert from "@components/utils/alert.vue";
 
 
 Vue.component("rf-list", list);
@@ -103,6 +110,7 @@ Vue.component("rf-tags-list", tagsList);
 Vue.component("rf-link", link);
 Vue.component("rf-form", form);
 Vue.component("rf-nav", nav);
+Vue.component("rf-alert", alert);
 
 
 const router = new VueRouter({
@@ -127,6 +135,7 @@ import navPanel from "../Ui/Components/navPanel.vue";
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
 import modelPanel from "../Ui/Components/modelPanel.vue";
 import userPanel from "../Ui/Components/userPanel.vue";
+import model from "../Ui/Components/model.vue";
 
 
 import vuetifyLib from "vuetify/lib";
@@ -159,6 +168,8 @@ if (
     Vue.component("warning-component", messagesComponent);
     Vue.component("user-panel", userPanel);
     Vue.component("model-panel", modelPanel);
+    Vue.component("rf-model", model);
+    Vue.component("rf-alert", alert);
 
 
 }

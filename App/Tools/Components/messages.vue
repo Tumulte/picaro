@@ -1,23 +1,23 @@
+<template lang="pug">
+    div(class="component-message-container")
+        ul(class="component-message")
+            li(v-for="(message, index) in messageCollection" class="_message" :class="message.type") {{ message.text }}
+                span(@click="deleteMessage(index)") [X]
+                v-alert(:type="message.type" dismissible=true) {{message.text}}
+
+
+            li(v-for="(message, index) in messageCollectionConfirm"  class="_message" :class="message.type") {{ message.text }}
+                div
+                    button(v-on:click="confirmCallback(message.callback, index)") Continue
+                    button(v-on:click="cancelCallback(index)") Cancel
+</template>
 <script>
     import {warningTimeout as timeOut} from "../../../rougeSettings.json";
     import {parseMessage} from "../../utils";
     import hash from "object-hash";
 
     export default {
-        props: ["warningMessage"],
-        template:
-            "<div class=\"component-message-container\">" +
-            "<ul class=\"component-message\">" +
-            "<li v-for=\"(message, index) in messageCollection\" class=\"_message\" :class=\"message.type\">" +
-            "{{ message.text }} <span @click=\"deleteMessage(index)\">[X]</span>" +
-            "</li>" +
-            "<li v-for=\"(message, index) in messageCollectionConfirm\"  class=\"_message\" :class=\"message.type\">" +
-            "{{ message.text }}" +
-            "<div><button v-on:click=\"confirmCallback(message.callback, index)\">Continue</button><button v-on:click=\"cancelCallback(index)\">Cancel</button></div>" +
-            "</li>" +
-            "</ul>" +
-            "</div>",
-
+        props: ["warningMessage", "modal"],
         data: function () {
             return {
                 messageCollection: [],

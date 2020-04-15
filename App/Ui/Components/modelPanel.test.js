@@ -38,7 +38,7 @@ describe("modelPanel", () => {
             addButton.trigger("click");
             await Vue.nextTick();
 
-            expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[]}");
+            expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[]}");
             expect(wrapper.contains("[data-jest=\"add-model\"]")).toBe(false);
             expect(wrapper.contains("[data-jest=\"model-name\"]")).toBe(false);
             expect(wrapper.contains("[data-jest=\"model-name-title\"]")).toBe(true);
@@ -53,23 +53,19 @@ describe("modelPanel", () => {
 
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
-        expect(wrapper.vm.allFieldsValid).toBe(false);
+        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
 
         name.setValue("test-name");
         await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
-        expect(wrapper.vm.allFieldsValid).toBe(false);
+        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
 
         label.setValue("test");
         await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
-        expect(wrapper.vm.allFieldsValid).toBe(true);
+        expect(wrapper.vm.$refs.Boolean.valid).toBe(true);
 
         name.setValue("test-naVme");
         await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
-        wrapper.get("[data-jest='name-field-error']");
-        expect(wrapper.vm.allFieldsValid).toBe(false);
+        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
     });
 
     // Inspect the raw component options
@@ -79,20 +75,15 @@ describe("modelPanel", () => {
         name.setValue("test-name");
         label.setValue("test");
         await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
 
 
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
 
         await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
 
-        expect(wrapper.vm.$store.getters.validCounter).toBe(0);
 
         //write the new data in a string
-        expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[{\"name\":\"test-name\",\"label\":\"test\",\"requiered\":false,\"type\":\"Boolean\"}]}");
-        //reset the temp component
-        expect(wrapper.vm.currentField).toStrictEqual({});
+        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"test-name\",\"required\":false,\"label\":\"test\",\"type\":\"Boolean\"}]}");
 
         //Display the new thing in the list
         const elementList = wrapper.get(".current-model-elements");
@@ -116,7 +107,7 @@ describe("modelPanel", () => {
 
         wrapper.get("[data-jest='save-boolean']").trigger("click");
         await Vue.nextTick();
-        expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"type\":\"Boolean\",\"label\":\"test of toto part 2\"}]}");
+        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
 
     });
     it("reorganize the form", async () => {
@@ -130,19 +121,16 @@ describe("modelPanel", () => {
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
         label.setValue("hello");
-        await new Promise((r) => setTimeout(r, 200));
-        expect(wrapper.vm.$store.getters.validCounter).toBe(1);
+
         name.setValue("new-element-2");
-        await new Promise((r) => setTimeout(r, 200));
-        expect(wrapper.vm.$store.getters.validCounter).toBe(0);
-        await new Promise((r) => setTimeout(r, 200));
+
         await Vue.nextTick();
-        expect(wrapper.vm.$store.getters.validCounter).toBe(0);
+        expect(wrapper.vm.$refs.Text.valid).toBe(true);
 
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"type\":\"Boolean\",\"label\":\"test of toto part 2\"},{\"name\":\"new-element-2\",\"label\":\"hello\",\"requiered\":false,\"type\":\"Text\"}]}");
+        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"},{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"}]}");
 
         const moveButtons = wrapper.findAll("[data-jest='move-field']");
 
@@ -153,7 +141,7 @@ describe("modelPanel", () => {
         moveDest.trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"label\":\"hello\",\"requiered\":false,\"type\":\"Text\"},{\"name\":\"tataname-2\",\"type\":\"Boolean\",\"label\":\"test of toto part 2\"}]}");
+        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"},{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
 
     });
     // Inspect the component instance on mount
@@ -162,8 +150,8 @@ describe("modelPanel", () => {
         removeButton.at(1).trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.hiddenModelString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"label\":\"hello\",\"requiered\":false,\"type\":\"Text\"}]}");
-        
+        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"}]}");
+
 
     });
 

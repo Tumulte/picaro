@@ -121,7 +121,8 @@ const myWebpackConfig = {
     resolve: {
         alias: {
             vue: "vue/dist/vue.js",
-            "@components": path.resolve(__dirname, "App/Ui/Components")
+            "@components": path.resolve(__dirname, "App/Ui/Components"),
+            "@store": path.resolve(__dirname, "App/Store")
         },
         extensions: [".tsx", ".ts", ".js"],
 

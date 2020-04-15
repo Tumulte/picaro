@@ -1,32 +1,38 @@
 <template lang="pug">
-    div
-        v-text-field(data-jest='rf-form-text')
-        formFieldEditCommon(@changeParentCommonData="getCommonData($event)"  :edit="edit" :fieldData="fieldData" @updateEditedFieldData="saveEdit($event)")
+    v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="label" :name="name")
 </template>
+
 <script>
-    import modelValidation from "../../mixins/modelValidation";
-    import editFieldCommons from "../../mixins/modelEditCommons";
-    import formFieldEditCommon from "./formElements/_formFieldEditCommon.vue";
 
     export default {
-        mixins: [modelValidation, editFieldCommons],
-        components: {
-            formFieldEditCommon
+        name: "text.vue",
+        data: function () {
+            return {
+                text: "",
+                textRules: [
+                    v => (!this.required || !!v) || "Name is required",
+                    v => {
+                        if (!this.regex) {
+                            return true;
+                        }
+                        let regex = new RegExp(this.regex);
+                        return regex.test(v) || "this is not the correct pattern";
+
+                    }
+                ],
+            };
         },
-        methods: {
-            getCommonData(event) {
-                let fieldData = {};
-
-                for (let data in event) {
-                    fieldData[data] = event[data];
-                }
-                fieldData.type = "Text";
-                this.$emit("updateFieldData", fieldData);
-
-            },
-
-
+        props: {
+            required: {type: Boolean, default: false},
+            label: {type: String, required: true},
+            name: {type: String, required: true},
+            regex: {type: String, default: ""}
         },
+
+
     };
-
 </script>
+
+<style scoped>
+
+</style>

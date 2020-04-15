@@ -22,7 +22,7 @@
     export default {
         data: function () {
             return {
-                warningMessage: "",
+                warningMessage: {},
                 settings: {
                     id: "",
                     applicationName: "",

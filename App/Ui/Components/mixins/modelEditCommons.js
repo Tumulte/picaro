@@ -2,8 +2,9 @@ export default {
     data: function () {
 
         return {
-            validCounterName: "labelFieldCounter",
-            name: "",
+            valid: true,
+            isEdited: false,
+            commonData: {}
         };
     },
     props: {
@@ -15,16 +16,28 @@ export default {
             type: Object,
         }
     },
-
     methods: {
 
-        saveEdit(data) {
-            this.$emit("updateEditedFieldData", data);
+        editField() {
+            this.isEdited = true;
+        },
+        cancelEdit() {
+            this.isEdited = false;
+
+        },
+        addField() {
+            this.$emit("addFieldData", this.commonData);
+            this.isEdited = false;
+        },
+        saveEdit() {
+            this.$emit("updateEditedFieldData", this.commonData);
+            this.isEdited = false;
         },
     },
+
     computed: {
-        allFieldsValid() {
-            return this.$store.getters.validCounter === 0;
-        },
-    },
+        editOrAdd() {
+            return this.edit || this.isEdited;
+        }
+    }
 };

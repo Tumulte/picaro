@@ -1,30 +1,28 @@
 <template lang="pug">
-    div
-        v-switch(data-jest='rf-form-switch')
-        formFieldEditCommon(@changeParentCommonData="getCommonData($event)" @updateEditedFieldData="saveEdit($event)" :edit="edit" :fieldData="fieldData")
+    v-switch(data-jest="boolean-field"  v-model.trim="bool" :rules="boolRules" :label="label" :name="name")
 </template>
+
 <script>
-    import modelValidation from "../../mixins/modelValidation";
-    import editFieldCommons from "../../mixins/modelEditCommons";
-    import formFieldEditCommon from "./formElements/_formFieldEditCommon.vue";
 
     export default {
-        mixins: [modelValidation, editFieldCommons],
-        components: {
-            formFieldEditCommon
+        name: "boolean.vue",
+        data: function () {
+            return {
+                bool: "",
+                boolRules: [
+                    v => (!this.required || !!v) || "Name is required",
+                ],
+            };
         },
-        methods: {
-            getCommonData(event) {
-                let fieldData = {};
-
-                for (let data in event) {
-                    fieldData[data] = event[data];
-                }
-                fieldData.type = "Boolean";
-                this.$emit("updateFieldData", fieldData);
-
-            },
+        props: {
+            required: {type: Boolean, default: false},
+            label: {type: String, required: true},
+            name: {type: String, required: true},
         },
+
     };
-
 </script>
+
+<style scoped>
+
+</style>

@@ -34,7 +34,7 @@
                 fontCollection: [],
                 styleSetCollection: [],
                 styleSet: {},
-                warningMessage: "",
+                warningMessage: {},
                 googleFontCollection: [],
                 localFontCollection: []
             };
