@@ -2,7 +2,7 @@
     div
         .create-model-container
             input(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name")
-            v-btn(v-if="displayNewModelButton" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput") Add new model
+            v-btn(v-if="displayNewModelButton" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique") Add new model
 
         div(class="model-preview" v-if="currentModelName")
             h1(data-jest="model-name-title") Model : {{currentModelName}}
@@ -12,15 +12,24 @@
                     option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
             component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel($event)")
         .current-model-elements(v-for="(model,index) in modelCollection")
-            h2 {{index}}
-            v-btn(@click="currentEditModelName = index") Edit
-            div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
-                div(v-if="currentMovingField &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination') Move here
-                component(:is="fieldType[field.type].component" :fieldData="field" @deletField="deleteField(subIndex)" :ref="field.type" @updateEditedFieldData="saveEditedField($event,subIndex)")
-                v-btn(data-jest='move-field' @click="moveField(subIndex)" v-if="model.length > 1 && subIndex !== currentMovingField") Move
-                div(v-if="currentMovingField && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination') Move here
-                v-btn(data-jest='delete-button' @click="deleteField(subIndex)") Delete
-        v-btn(@click="saveModel") Save
+            v-card(class="pa-3 my-3" outlined :class="{'elevation-6':(index === currentEditModelName)}")
+                v-card-title
+                    h2 {{index}}
+                        v-btn(v-if="currentEditModelName !== index" @click="currentEditModelName = index" outlined class="mx-2") Edit
+                        v-btn(v-else @click="currentEditModelName = null" outlined class="mx-2") Cancel
+
+                div(v-if="index === currentEditModelName")
+                    v-card-text
+                        div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
+                            v-card(outlined class="pa-1 my-2"  :loading="subIndex === currentMovingField")
+                                v-btn(v-if="currentMovingField !== null &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination' outlined color="primary") Move here
+                                component(:is="fieldType[field.type].component" :fieldData="field" @deletField="deleteField(subIndex)" :ref="field.type" @updateEditedFieldData="saveEditedField($event,subIndex)")
+                                div(class="d-flex justify-end")
+                                    v-btn(class="mr-3 mt-3" data-jest='move-field' @click="moveField(subIndex)" v-if="model.length > 1 && subIndex !== currentMovingField" color="primary" outlined) Move
+                                    v-btn(data-jest='delete-button' @click="deleteField(subIndex)" color="error" text class="mr-3 mt-3" ) Delete
+                                v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(index)"  data-jest='move-field-destination' outlined color="primary") Move here
+                    v-card-actions(class="justify-end")
+                        v-btn(@click="saveModel" color="success") Save
 </template>
 <script>
     import textField from "./partials/formEdit/_textEdit.vue";
@@ -83,29 +92,20 @@
                 });
                 this.currentModelName = this.modelNameInput;
                 this.displayNewModelButton = false;
+
             },
-            saveModel: function () {
+            saveModel: async function () {
+                this.$store.commit("newModelName", this.modelNameInput);
+                await this.$nextTick();
                 document.getElementById("_admin-form-ext-submit").click();
 
+                //Todo : add confirmation of the save
             },
-            async testCallback() {
-                this.$store.dispatch("awaitConfirmation", {
-                    text: "Êtes-vous sûr de vouloir faire ça ???",
-                    type: "warning"
-                }).then(() => console.debug("it is confirmed"));
-                this.$store.dispatch("awaitConfirmation", {
-                    text: "Are you???",
-                    type: "error"
-                }).then(() => console.debug("it is confirmed"));
-                this.$store.dispatch("awaitConfirmation", {
-                    text: "What ???",
-                    type: "info"
-                }).then(() => console.debug("it is confirmed"));
-
-            }
         },
         computed: {
-
+            modelNameIsUnique() {
+                return Object.keys(this.modelCollection).filter(item => item === this.modelNameInput).length === 0;
+            },
             modelCollection() {
                 return this.$store.getters.modelCollection;
             },
@@ -114,9 +114,10 @@
             }
         },
         created() {
-            this.testCallback();
-
-
+            //TODO find a better way to skip
+            if (process.env.ISTEST) {
+                return;
+            }
             axios
                 .get("/appapi/settings/")
                 .then(response => {
@@ -138,3 +139,8 @@
     };
 
 </script>
+<style scoped>
+    .v-btn {
+        font-family: "Knile-Regular", serif
+    }
+</style>
