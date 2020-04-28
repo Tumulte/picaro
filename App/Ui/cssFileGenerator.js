@@ -36,6 +36,7 @@ const getParameter = function (coordinates, styleSet, colorSet) {
  *
  * @param {string} font The name of the google font.
  */
+//TODO a condition for local fonts
 const addGoogleFont = function (font) {
     return `@import url("https://fonts.googleapis.com/css?family=${encodeURI(font)}&display=swap");
 `;

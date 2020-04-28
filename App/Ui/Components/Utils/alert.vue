@@ -14,7 +14,7 @@
                     v-row(align="center" justify="center")
                         v-col(cols="6" class="px-8 pr-0") {{alert.text}}
                         v-col(cols="6" class="pa-0 text-right")
-                            v-btn(@click="discardMessage" data-jest="discard-button" outlined) Cancel
+                            v-btn(@click="discardMessage" data-jest="discard-button" outlined) Ok
 </template>
 <script>
 

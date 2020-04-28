@@ -1,19 +1,26 @@
+<template lang="pug">
+    div
+        div(v-for="(item, index) in list" v-if="checkFilters(item)")
+            slot(v-bind:item="item")
+
+            div(@click="editItem(index)") edit
+        //rf-form(v-if="edit === index" :rf-model="rfModel" :rf-data="listItemData")
+
+</template>
 <script>
     import axios from "axios";
-
-    const template = require("./list.pug").default;
+    import richText from "./partials/display/_richText.vue";
 
     export default {
+        name: "rfList",
         data: function () {
             return {
-                warningMessage: [],
                 appName: appName,
                 filterCollection: false,
                 edit: false,
                 listItemData: {}
             };
         },
-        template: template,
         props: ["rfModel"],
         methods: {
             checkFilters: function (item) {
@@ -39,12 +46,15 @@
         },
         mounted: function () {
             axios
-                .get(`/api/${this.appName.toLowerCase()}/${this.$props.rfModel}`)
+                .get(`/api/${this.appName}/${this.$props.rfModel}`)
                 .then(response => {
                     this.$store.commit("list", response.data);
                 })
                 .catch(error => {
-                    this.warningMessage.push(error);
+                    this.$store.dispatch("addAlert", {
+                        type: "error",
+                        text: error
+                    });
                 });
         },
         watch: {
