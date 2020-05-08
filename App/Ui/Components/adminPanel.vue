@@ -2,7 +2,6 @@
     div
         v-toolbar(color="rgb(47, 70, 116)" dark) Admin Settings
         div(class="px-5 py-5")
-            warning-component( :warning-message="warningMessage")
             v-form(action="/appapi/settings/?_method=PUT"  id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
                 v-text-field(name="navStructureString" v-model="navStructureString" dense)
                 v-text-field(name="modelCollectionString" v-model="modelCollectionString" dense)
@@ -22,7 +21,6 @@
     export default {
         data: function () {
             return {
-                warningMessage: {},
                 settings: {
                     id: "",
                     applicationName: "",
@@ -34,6 +32,22 @@
             };
         },
         methods: {
+            createNewModel() {
+                axios
+                    .post(`/api/${appName}/newmodel/${this.newModelName}`)
+                    .then(() => {
+                        this.$store.dispatch("addAlert", {
+                            type: "info",
+                            text: `The model "${this.newModelName}" was created`
+                        });
+                    })
+                    .catch(errors => {
+                        this.$store.dispatch("addAlert", {
+                            type: "error",
+                            text: `The model "${this.newModelName}" already exists ${errors}`
+                        });
+                    });
+            },
             sendAdminForm: function (event) {
                 this.$nextTick(() => {
                     let form = event.target;
@@ -49,30 +63,32 @@
                             }
                         })
                         .then(() => {
-                            this.warningMessage = {
+                            if (this.newModelName) {
+                                this.createNewModel();
+                            }
+                            this.$store.dispatch("addAlert", {
                                 type: "success",
-                                text: "Saved successfully"
-                            };
+                                text: "Saved successfully !"
+                            });
                         })
                         .catch(errors => {
-                            this.warningMessage = {
+                            this.$store.dispatch("addAlert", {
                                 type: "error",
                                 text: `Request failed.  Returned status of ${errors}`
-                            };
+                            });
                         });
                 });
             },
-            saveConfig: function (event, noValidation) {
+            saveConfig: async function (event, noValidation) {
                 if (noValidation) {
                     this.sendAdminForm(event);
                 } else {
-                    this.warningMessage = {
+                    await this.$store.dispatch("awaitConfirmation", {
                         text: "Are you sure you want save a new config ?",
-                        type: "warning",
-                        callback: () => {
-                            this.sendAdminForm(event);
-                        }
-                    };
+                        type: "warning"
+                    });
+                    this.sendAdminForm(event);
+
                 }
             }
         },
@@ -83,13 +99,16 @@
                     this.settings = response.data;
                 })
                 .catch(errors => {
-                    this.warningMessage = {
+                    this.$store.dispatch("addAlert", {
                         type: "error",
                         text: `Request failed.  Returned status of ${errors}`
-                    };
+                    });
                 });
         },
         computed: {
+            newModelName() {
+                return this.$store.getters.newModelName;
+            },
             setName: function () {
                 return this.$store.getters.styleSet.id;
             },

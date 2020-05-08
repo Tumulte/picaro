@@ -231,6 +231,7 @@ app.use(function (req, res, next) {
 //Development specific stuffs
 if (!isProd) {
     app.use(function (req, res, next) {
+        /*
         const integrationReport = require("./mochawesome.json");
         const unitReport = require("./Tests/jest-results.json");
         const unitEndDate = new Date(unitReport.testResults[0].perfStats.end);
@@ -242,9 +243,11 @@ if (!isProd) {
 
         res.locals.unitEnd = unitEnd;
         res.locals.intEnd = intEnd;
-        res.locals.isDev = true;
         res.locals.integrationReport = integrationReport;
         res.locals.unitReport = unitReport;
+
+         */
+        res.locals.isDev = true;
 
         next();
     });

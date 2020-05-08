@@ -8,6 +8,9 @@ import Vuex from "vuex";
 import userStore from "../../Store/user";
 import adminStore from "../../Store/admin";
 
+process.env.ISTEST = true;
+
+
 Vue.use(Vuex);
 const store = new Vuex.Store({
     modules: {
@@ -45,36 +48,19 @@ describe("modelPanel", () => {
             options = select.findAll("option");
         }
     );
-    it("prevents creation of a new field if it has not all the correct values", async () => {
-        //select boolean
-        options.at(1).setSelected();
-        await Vue.nextTick();
-
-        const name = wrapper.get("[data-jest='rf-form-name']");
-        const label = wrapper.get("[data-jest='rf-form-label']");
-        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
-
-        name.setValue("test-name");
-        await Vue.nextTick();
-        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
-
-        label.setValue("test");
-        await Vue.nextTick();
-        expect(wrapper.vm.$refs.Boolean.valid).toBe(true);
-
-        name.setValue("test-naVme");
-        await Vue.nextTick();
-        expect(wrapper.vm.$refs.Boolean.valid).toBe(false);
-    });
 
     // Inspect the raw component options
     it("creates new field of selected type", async () => {
+        options.at(1).setSelected();
+
+        await Vue.nextTick();
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
         name.setValue("test-name");
         label.setValue("test");
         await Vue.nextTick();
 
+        await new Promise(r => setTimeout(r, 100));
 
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
 
@@ -98,11 +84,10 @@ describe("modelPanel", () => {
         expect(wrapper.contains("[data-jest='edit-boolean']")).toBe(false);
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
-        await Vue.nextTick();
+        await wrapper.vm.$nextTick();
         name.setValue("tataname-2");
         label.setValue("test of toto part 2");
-        await Vue.nextTick();
-        await new Promise((r) => setTimeout(r, 200));
+        await wrapper.vm.$nextTick();
 
         wrapper.get("[data-jest='save-boolean']").trigger("click");
         await Vue.nextTick();
@@ -117,13 +102,18 @@ describe("modelPanel", () => {
 
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
+        await wrapper.vm.$nextTick();
+
         label.setValue("hello");
 
         name.setValue("new-element-2");
+        await wrapper.vm.$forceUpdate();
 
-        await Vue.nextTick();
-        expect(wrapper.vm.$refs.Text.valid).toBe(true);
+        expect(wrapper.vm.$refs.Text[0].commonData.label).toBe("hello");
+        expect(wrapper.vm.$refs.Text[0].commonData.name).toBe("new-element-2");
+        await wrapper.vm.$forceUpdate();
 
+        expect(wrapper.vm.valid).toBe(true);
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
         await Vue.nextTick();
 

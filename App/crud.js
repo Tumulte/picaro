@@ -12,6 +12,15 @@ const updateItem = function updateItem(db, req) {
 };
 const crud = function crud(db) {
     const dataRouter = express.Router();
+
+    dataRouter.route("/:app/newmodel/:modelname").post(function (req, res) {
+        if (db.has(req.params.app + req.params.modelname).value()) {
+            return res.status(500).send(`The table ${req.params.modelname} already exists`);
+        }
+
+        db.set(req.params.app + "_" + req.params.modelname, []).write();
+    });
+
     dataRouter.use("/:app/:table/:itemId", function (req, res, next) {
         if (db.has(makeTableName(req)).value()) {
             let data = new RelationHandler(db, req);
@@ -42,6 +51,7 @@ const crud = function crud(db) {
             data.save();
             res.send("Sauvegardé");
         });
+
     dataRouter
         .route("/:app/:table/:itemId")
         .get(function (req, res) {
@@ -69,6 +79,7 @@ const crud = function crud(db) {
                 .write();
             res.send("ok");
         });
+
     return dataRouter;
 };
 export default crud;

@@ -16,6 +16,7 @@ const appCrud = function appCrud(appDb, currentApp) {
     dataRouter.route("/all").get(function (req, res) {
         res.json(appDb.get(currentApp.applicationName).value());
     });
+
     dataRouter
         .route("/settings/")
         .get(function (req, res) {
