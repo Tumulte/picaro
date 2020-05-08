@@ -34,9 +34,9 @@ describe("modelPanel", () => {
             {text: "isn't it anonther ?", type: "error", timeOut: 100}
         );
         await Vue.nextTick();
-        expect(wrapper.html().includes("div class=\"v-alert__content\">this is a warning message")).toBe(true);
-        expect(wrapper.html().includes("v-alert v-sheet theme--dark warning")).toBe(true);
-        expect(wrapper.html().includes("div class=\"v-alert__content\">isn't it anonther")).toBe(true);
+        expect(wrapper.html().includes("this is a warning message")).toBe(true);
+        expect(wrapper.html().includes("warning")).toBe(true);
+        expect(wrapper.html().includes("isn't it anonther")).toBe(true);
         expect(wrapper.html().includes(" v-alert__icon mdi mdi-alert theme--dark")).toBe(true);
         expect(wrapper.vm.$store.getters.alertCollection.length).toBe(2);
 

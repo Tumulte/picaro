@@ -8,14 +8,9 @@ module.exports = {
             }],
     ],
     "plugins": [
+
         [
-            "@babel/proposal-decorators",
-            {
-                "legacy": true
-            }
-        ],
-        [
-            "@babel/proposal-class-properties",
+            "@babel/plugin-proposal-class-properties",
             {
                 "loose": true
             }

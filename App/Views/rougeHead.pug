@@ -13,7 +13,7 @@ html(lang=language)
             v-app(id="rf-vue-container")
                 if(isLogged)
                     admin-tool-bar(views=views id="rf-admin")
-                    if(isDev)
+                    if(isDev && integrationReport)
                         div(id="rf-app-status")
                             span(class="_status") Integration :
                                 if(integrationReport.stats.failures === 0)

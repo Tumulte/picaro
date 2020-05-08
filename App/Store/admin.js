@@ -64,7 +64,6 @@ export default {
             h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {},
             CLSS__altfont: {}
         },
-        /* eslint-disable-next-line no-undef */
         colorCollection: {},
         selectorIndex: "1",
         cssPanelIndex: 1,
@@ -72,7 +71,7 @@ export default {
         styleSet: {},
         loaded: false,
         ratioCollection: ratioCollection,
-
+        newModelName: ""
     },
     mutations: {
 
@@ -152,6 +151,9 @@ export default {
         loaded(state, data) {
             state.loaded = data;
         },
+        newModelName(state, data) {
+            state.newModelName = data;
+        }
 
     },
     getters: {
@@ -191,6 +193,9 @@ export default {
         loaded(state) {
             return state.loaded;
         },
+        newModelName(state) {
+            return state.newModelName;
+        }
 
 
     },

@@ -98,13 +98,10 @@ export default {
                 state.alertCallbackCollection.push(data);
                 await Vue.nextTick();
                 const alertButtons = document.getElementsByClassName("rf-alert-button");
-                console.debug(Array.from(alertButtons));
 
                 Array.from(alertButtons).forEach(function (element) {
-                    console.debug("yyyy");
 
                     element.addEventListener("click", () => {
-                        console.debug("ststtt");
                         if (state.alertConfirmationStatus[key] && state.alertConfirmationStatus[key].status === true) {
                             removeAlert();
                             resolve();
