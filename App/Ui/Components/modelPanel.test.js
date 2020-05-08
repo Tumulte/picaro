@@ -41,7 +41,6 @@ describe("modelPanel", () => {
             expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[]}");
             expect(wrapper.contains("[data-jest=\"add-model\"]")).toBe(false);
             expect(wrapper.contains("[data-jest=\"model-name\"]")).toBe(false);
-            expect(wrapper.contains("[data-jest=\"model-name-title\"]")).toBe(true);
             select = wrapper.get("[data-jest='select-input']");
             options = select.findAll("option");
         }
@@ -79,7 +78,7 @@ describe("modelPanel", () => {
 
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
 
-        await Vue.nextTick();
+        await wrapper.vm.$nextTick();
 
 
         //write the new data in a string
@@ -114,9 +113,7 @@ describe("modelPanel", () => {
 
         options.at(2).setSelected();
 
-        await Vue.nextTick();
-
-        //expect(wrapper.vm.$store.getters.validCounter).toBe(2);
+        await wrapper.vm.$nextTick();
 
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
@@ -144,9 +141,12 @@ describe("modelPanel", () => {
         expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"},{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
 
     });
+
     // Inspect the component instance on mount
     it("deletes existing field", async () => {
         const removeButton = wrapper.findAll("[data-jest='delete-button']");
+        await wrapper.vm.$nextTick();
+
         removeButton.at(1).trigger("click");
         await Vue.nextTick();
 
@@ -154,6 +154,7 @@ describe("modelPanel", () => {
 
 
     });
-
+    //todo : add moving existing models’ fields tests
+    //todo: add cancel test
 
 });

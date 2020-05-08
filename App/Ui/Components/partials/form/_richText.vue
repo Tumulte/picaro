@@ -2,7 +2,7 @@
     div
         input(v-model="editorString"  :name="name" type="hidden" )
         h3 {{label}}
-        editor-menu-bar( :editor="editor"  v-slot="{ commands, isActive }" class="editor-textarea" v-on:keydown.enter.prevent.stop)
+        editor-menu-bar( :editor="editor"  v-slot="{ commands, isActive }" class="editor-textarea" v-on:keydown.enter.prevent.stop="true")
             div
                 //todo add borders
                 //todo add require option

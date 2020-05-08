@@ -1,41 +1,45 @@
 <template lang="pug">
     div
+        //TODO add proper class for "selected"
+        //TODO allow adding field to existing model
         .create-model-container
-            input(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name")
+            v-text-field(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name" lapel="New model name" )
             v-btn(v-if="displayNewModelButton" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique") Add new model
 
-        div(class="model-preview" v-if="currentModelName")
-            h1(data-jest="model-name-title") Model : {{currentModelName}}
-            .model-type
-                select(data-jest="select-input" v-model="selectedFieldType")
-                    option(value="none") Select…
-                    option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
-            component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel($event)")
         .current-model-elements(v-for="(model,index) in modelCollection")
-            v-card(class="pa-3 my-3" outlined :class="{'elevation-6':(index === currentEditModelName)}")
+            v-card(class="pa-3 my-3" outlined :class="{'elevation-6':(index === currentEditModelName)}" v-if="noEdition(index)")
                 v-card-title
                     h2 {{index}}
-                        v-btn(v-if="currentEditModelName !== index" @click="currentEditModelName = index" outlined class="mx-2") Edit
-                        v-btn(v-else @click="currentEditModelName = null" outlined class="mx-2") Cancel
-
+                        v-btn(v-if="currentEditModelName !== index && !currentModelName" @click="currentEditModelName = index" outlined class="mx-2") Edit
+                        v-btn(v-else @click="cancelEditModel" outlined class="mx-2") Cancel
+                            div(class="model-preview" v-if="currentModelName")
+                .model-type
+                    select(data-jest="select-input" v-model="selectedFieldType")
+                        option(value="none") Select…
+                        option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
+                component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel($event)")
                 div(v-if="index === currentEditModelName")
                     v-card-text
                         div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
+                            v-btn(v-if="currentMovingField !== null &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination' outlined color="primary") Move here
                             v-card(outlined class="pa-1 my-2"  :loading="subIndex === currentMovingField")
-                                v-btn(v-if="currentMovingField !== null &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination' outlined color="primary") Move here
                                 component(:is="fieldType[field.type].component" :fieldData="field" @deletField="deleteField(subIndex)" :ref="field.type" @updateEditedFieldData="saveEditedField($event,subIndex)")
                                 div(class="d-flex justify-end")
                                     v-btn(class="mr-3 mt-3" data-jest='move-field' @click="moveField(subIndex)" v-if="model.length > 1 && subIndex !== currentMovingField" color="primary" outlined) Move
                                     v-btn(data-jest='delete-button' @click="deleteField(subIndex)" color="error" text class="mr-3 mt-3" ) Delete
-                                v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(index)"  data-jest='move-field-destination' outlined color="primary") Move here
+                            v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary") Move here
                     v-card-actions(class="justify-end")
-                        v-btn(@click="saveModel" color="success") Save
+                        v-btn(@click="deleteModel" color="error" text) Delete
+                        v-btn(@click="saveModel" color="success" data-jest="save model") Save
+        //todo add delete
+        //todo test whole process
 </template>
 <script>
     import textField from "./partials/formEdit/_textEdit.vue";
     import booleanField from "./partials/formEdit/_booleanEdit.vue";
     import arrayMove from "array-move";
     import axios from "axios";
+    import richText from "./partials/formEdit/_richTextEdit.vue";
 
     export default {
         data: function () {
@@ -49,8 +53,9 @@
                 currentMovingField: null,
                 fieldType:
                     {
-                        "Boolean": {name: "boolean", component: booleanField},
-                        "Text": {name: "text", component: textField},
+                        "Boolean": {name: "Boolean", component: booleanField},
+                        "Text": {name: "Text", component: textField},
+                        "RichText": {name: "Rich Text Editor", component: richText}
                     }
             };
         },
@@ -61,11 +66,29 @@
                     this.currentMovingField = index;
                 } else {
                     let currentModelState = JSON.parse(this.modelCollectionString);
-                    currentModelState[this.currentModelName] = arrayMove(currentModelState[this.currentModelName], this.currentMovingField, index);
+                    let selectedModel = this.currentModelName ? this.currentModelName : this.currentEditModelName;
+                    currentModelState[selectedModel] = arrayMove(currentModelState[selectedModel], this.currentMovingField, index);
                     this.$store.commit("modelCollection", currentModelState);
                     this.currentMovingField = null;
 
                 }
+            },
+            async cancelEditModel() {
+                if (this.currentModelName) {
+                    await this.$store.dispatch("awaitConfirmation", {
+                        text: "Are you sure you want to abandon the creation of this new model ?",
+                        type: "warning"
+                    });
+                    this.$store.dispatch("removeKeyFromCollection", {
+                        collection: "modelCollection",
+                        key: this.modelNameInput,
+                    });
+                    this.modelNameInput = "";
+                    this.currentModelName = null;
+                    this.displayNewModelButton = true;
+
+                }
+                this.currentEditModelName = null;
             },
             deleteField(index) {
                 let currentModelState = JSON.parse(this.modelCollectionString);
@@ -73,8 +96,14 @@
                 this.$store.commit("modelCollection", currentModelState);
             },
             addFieldToModel(event) {
+                let model = "";
+                if (this.currentModelName) {
+                    model = this.currentModelName;
+                } else {
+                    model = this.currentEditModelName;
+                }
                 let currentModelState = JSON.parse(this.modelCollectionString);
-                currentModelState[this.currentModelName].push(event);
+                currentModelState[model].push(event);
                 this.$store.commit("modelCollection", currentModelState);
                 this.selectedFieldType = "none";
                 this.currentEditModelName = this.currentModelName;
@@ -94,13 +123,29 @@
                 this.displayNewModelButton = false;
 
             },
+            async deleteModel() {
+                await this.$store.dispatch("awaitConfirmation", {
+                    text: `Are you sure you want to delete this model :  ${this.currentEditModelName}?`,
+                    type: "error"
+                });
+                this.$store.dispatch("removeKeyFromCollection", {
+                    collection: "modelCollection",
+                    key: this.currentEditModelName,
+                });
+                await this.$nextTick();
+                document.getElementById("_admin-form-ext-submit").click();
+
+            },
             saveModel: async function () {
+
                 this.$store.commit("newModelName", this.modelNameInput);
                 await this.$nextTick();
                 document.getElementById("_admin-form-ext-submit").click();
 
-                //Todo : add confirmation of the save
             },
+            noEdition: function (index) {
+                return !this.currentModelName || index === this.currentModelName;
+            }
         },
         computed: {
             modelNameIsUnique() {

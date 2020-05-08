@@ -1,5 +1,5 @@
 <template lang="pug">
-    div
+    div cunticolu
         ul(v-for="item in navStructure" v-if="!item.hidden")
             li {{ item.displayName }}
                 rf-nav(recursive-nav-structure="item.children" v-if="Object.keys(item.children).length > 0")

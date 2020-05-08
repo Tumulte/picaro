@@ -18,6 +18,7 @@
 
         editor-content(:editor="editor" class="editor-textarea")
         v-form(v-model="valid")
+            //todo : add required
             formFieldEditCommon(@changeParentCommonData="getCommonData($event)" @updateEditedFieldData="saveEdit()" :edit="editOrAdd" :fieldData="fieldData")
             v-btn(v-if="isEdited" data-jest='cancel-boolean' @click="cancelEdit") Cancel
             v-btn(v-if="isEdited" data-jest='save-boolean' @click="saveEdit" :disabled="!valid") Save

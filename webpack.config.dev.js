@@ -28,10 +28,29 @@ const myWebpackConfig = {
         contentBase: path.join(__dirname, "App/Dist"),
         overlay: true,
         hot: true,
-
         stats: {
             colors: true
-        }
+        },
+        proxy: {
+            "/public": {
+                target: "http://localhost:8080",
+                pathRewrite: {"^/public": ""}
+            },
+            "/static": {
+                target: "http://localhost:8080",
+            },
+            "/appapi": {
+                target: "http://localhost:8080",
+            },
+            "/api": {
+                target: "http://localhost:8080",
+            },
+            "/fonts": {
+                target: "http://localhost:8080",
+            }
+
+        },
+        port: 3000
     },
     target: "web",
     output: {

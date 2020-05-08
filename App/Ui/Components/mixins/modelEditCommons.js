@@ -4,7 +4,7 @@ export default {
         return {
             valid: true,
             isEdited: false,
-            commonData: {}
+            commonData: {},
         };
     },
     props: {
@@ -14,6 +14,8 @@ export default {
         },
         fieldData: {
             type: Object,
+            default: () => ({})
+
         }
     },
     methods: {

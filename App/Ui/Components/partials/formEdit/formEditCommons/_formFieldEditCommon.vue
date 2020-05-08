@@ -32,7 +32,7 @@
         },
 
         created() {
-            if (this.fieldData) {
+            if (this.fieldData.label) {
                 this.label = this.fieldData.label;
                 this.name = this.fieldData.name;
                 this.required = this.fieldData.required;

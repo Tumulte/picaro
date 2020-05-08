@@ -53,6 +53,9 @@ export default {
         },
     },
     actions: {
+        removeKeyFromCollection: function ({state}, data) {
+            Vue.delete(state[data.collection], data.key);
+        },
         addKeyToCollection: function ({state}, data) {
             Vue.set(state[data.collection], data.key, data.value);
         },
