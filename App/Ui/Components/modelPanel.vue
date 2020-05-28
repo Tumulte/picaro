@@ -14,9 +14,10 @@
                         v-btn(v-else @click="cancelEditModel" outlined class="mx-2") Cancel
                             div(class="model-preview" v-if="currentModelName")
                 .model-type
-                    select(data-jest="select-input" v-model="selectedFieldType")
-                        option(value="none") Select…
-                        option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
+                    .select-container(v-if="index === currentEditModelName || modelNameInput")
+                        select(data-jest="select-input" v-model="selectedFieldType" )
+                            option(value="none") Select…
+                            option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
                 component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel($event)")
                 div(v-if="index === currentEditModelName")
                     v-card-text
@@ -40,6 +41,7 @@
     import arrayMove from "array-move";
     import axios from "axios";
     import richText from "./partials/formEdit/_richTextEdit.vue";
+    import multiChoice from "./partials/formEdit/_multiChoiceEdit.vue";
 
     export default {
         data: function () {
@@ -55,7 +57,8 @@
                     {
                         "Boolean": {name: "Boolean", component: booleanField},
                         "Text": {name: "Text", component: textField},
-                        "RichText": {name: "Rich Text Editor", component: richText}
+                        "RichText": {name: "Rich Text Editor", component: richText},
+                        "MultiChoice": {name: "Multiple Choices", component: multiChoice}
                     }
             };
         },
@@ -159,7 +162,7 @@
             }
         },
         created() {
-            //TODO find a better way to skip
+            //TODO BACKGROUND find a better way to skip
             if (process.env.ISTEST) {
                 return;
             }
@@ -188,4 +191,29 @@
     .v-btn {
         font-family: "Knile-Regular", serif
     }
+
+    select {
+        padding: 10px;
+        width: 100%;
+
+    }
+
+    .select-container {
+        border: 1px solid black;
+        position: relative;
+        border-radius: 5px;
+        width: 70%;
+        background: #fefefe;
+    }
+
+    .select-container::after {
+        content: "\25BC";
+        pointer-events: none;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        color: #555;
+    }
+
+
 </style>

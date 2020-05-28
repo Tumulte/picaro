@@ -35,9 +35,8 @@ const db = low(adapter);
 // @ts-ignore
 let currentApplicationSettings = appDb
     .get("config")
-    // @ts-ignore
     .find({
-        applicationName: settings.defaultApp
+        id: settings.defaultApp
     })
     .value();
 currentApplicationSettings.applicationName = settings.defaultApp;
@@ -295,6 +294,7 @@ app.get("/:app", function (req, res) {
     /**
      * @type {string}
      */
+    app.set("appName", req.params.app);
     const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
 
     if (upperCasedApp in settings.applications) {
@@ -310,6 +310,7 @@ app.get("/:app", function (req, res) {
 
 app.get("/:app/:view", function (req, res) {
     const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
+    app.set("appName", req.params.app);
     app.set("views", `${__dirname}/../app${upperCasedApp}/views`);
     res.render(req.params.view);
 });

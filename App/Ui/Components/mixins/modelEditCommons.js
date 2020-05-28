@@ -4,7 +4,7 @@ export default {
         return {
             valid: true,
             isEdited: false,
-            commonData: {},
+            commonData: {label: "", name: ""},
         };
     },
     props: {

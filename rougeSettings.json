@@ -1,18 +1,25 @@
 {
-	"sessionSecret": "secret",
-	"defaultApp": "Demo",
-	"warningTimeout": 10000,
-	"applications": {
-		"Demo": {
-			"styleSet": "default",
-			"language": "fr",
-			"title": "Mon Application",
-			"devMode": true
-		},
-		"Blog": {
-			"language": "fr",
-			"title": "Mon Blog"
-		}
-	},
-	"googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
+  "sessionSecret": "secret",
+  "defaultApp": "Demo",
+  "warningTimeout": 10000,
+  "applications": {
+    "Bululu": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
+    "Demo": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+    "Blog": {
+      "language": "fr",
+      "title": "Mon Blog"
+    }
+  },
+  "googleFontKey": "AIzaSyCpEdd3h9V13GWIr0ImefrxPig0M883_AI"
 }

@@ -38,6 +38,7 @@ import Vuetify, {
     VSlider,
     VColorPicker,
     VIcon,
+    VCheckbox,
     VCardActions,
     VScrollYReverseTransition
 } from "vuetify/lib";
@@ -81,7 +82,8 @@ Vue.use(Vuetify, {
         VIcon,
         VCardActions,
         VAlert,
-        VDialog
+        VDialog,
+        VCheckbox
     }
 });
 

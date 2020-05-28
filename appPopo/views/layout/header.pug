@@ -1,12 +1,11 @@
 extends ../../../App/Views/rougeHead.pug
-block  head
+block head
+    title My Popo app
     if environment === 'production'
-        link(rel='stylesheet', href='/static/appDemo.css')
+        link(rel='stylesheet', href='/static/appPopo.css')
     else
         script var ENVIRONMENT = "development";
-    script(src="/static/appDemo-bundle.js")
-
-
+    script(src="/appPopo-bundle.js")
 block body
     div(class="rf-content-container")
         rf-nav

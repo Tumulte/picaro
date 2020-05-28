@@ -14,7 +14,7 @@ const upload = multer();
 const appCrud = function appCrud(appDb, currentApp) {
     const dataRouter = express.Router();
     dataRouter.route("/all").get(function (req, res) {
-        res.json(appDb.get(currentApp.applicationName).value());
+        res.json(appDb.get(app.get("appName")).value());
     });
 
     dataRouter
