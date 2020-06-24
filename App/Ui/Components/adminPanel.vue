@@ -14,6 +14,7 @@
                 v-switch(v-model="settings.devMode" label="Dev Mode" dense)
                 button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit
 
+
 </template>
 <script>
     import axios from "axios";
@@ -31,6 +32,7 @@
                 }
             };
         },
+
         methods: {
             createNewModel() {
                 axios

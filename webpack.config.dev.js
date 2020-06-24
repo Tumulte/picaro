@@ -1,16 +1,17 @@
 //TODO BACKGROUND Créer un "common"
 
-import path from "path";
-import webpack from "webpack";
+const path = require("path");
+const webpack = require("webpack");
 
-import fibers from "fibers";
-import sass from "sass";
-import VueLoaderPlugin from "vue-loader/lib/plugin";
+const fibers = require("fibers");
+const sass = require("sass");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 /**
  * @type {import('webpack').Configuration}
  * */
 const myWebpackConfig = {
+    target: "web",
     devtool: "inline-source-map",
     mode: "development",
     entry: {
@@ -25,10 +26,14 @@ const myWebpackConfig = {
         appBlog: [
             path.resolve(__dirname, "static/demo/main.js"),
             path.resolve(__dirname, "App/Static/main.js")
-        ]
+        ],
+        client: path.resolve(__dirname, "App/Static/client.js")
+
+
     },
     devServer: {
-        publicPath: "/static/",
+
+        publicPath: "localhost:3000/",
         contentBase: path.join(__dirname, "App/Dist"),
         overlay: true,
         hot: true,
@@ -56,10 +61,10 @@ const myWebpackConfig = {
         },
         port: 3000
     },
-    target: "web",
     output: {
         path: path.resolve(__dirname, "App/Dist"),
-        filename: "[name]-bundle.js"
+        filename: "[name]-bundle.js",
+        publicPath: "/dev-bundle/"
     },
     module: {
         rules: [
@@ -148,7 +153,6 @@ const myWebpackConfig = {
             "@store": path.resolve(__dirname, "App/Store")
         },
         extensions: [".tsx", ".ts", ".js"],
-
     }
 };
 module.exports = myWebpackConfig;

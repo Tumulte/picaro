@@ -91,9 +91,10 @@ Vue.use(Vuetify, {
 // Webpack Development Server, active only for Development. Validation is confused, validation is OFF.
 /* eslint-disable no-undef */
 // @ts-ignore
+
 if (ENVIRONMENT === "development") {
     // @ts-ignore
-    require("webpack-hot-middleware/client?reload=true");
+    //require("webpack-hot-middleware/client?reload=true&path=http://localhost:8080/dev-bundle/__webpack_hmr");
 }
 
 /* user components */
@@ -104,6 +105,7 @@ import form from "../Ui/Components/form.vue";
 import tags from "../Ui/Components/tags.vue";
 import nav from "../Ui/Components/nav.vue";
 import alert from "@components/utils/alert.vue";
+import richText from "../Ui/Components/partials/display/_richText.vue";
 
 
 Vue.component("rf-list", list);
@@ -113,6 +115,7 @@ Vue.component("rf-link", link);
 Vue.component("rf-form", form);
 Vue.component("rf-nav", nav);
 Vue.component("rf-alert", alert);
+Vue.component("rf-rich-text", richText);
 
 
 const router = new VueRouter({

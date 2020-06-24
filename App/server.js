@@ -57,16 +57,7 @@ const isProd = process.env.NODE_ENV === "production";
 if (!isProd) {
     const fs = require("fs");
     app.locals.views = fs.readdirSync(`${__dirname}/../app${currentApplicationSettings.applicationName}/views/`);
-    //webpack
-    const webpack = require("webpack");
-    const config = require("../webpack.config.dev.js");
-    const compiler = webpack(config);
-    const webpackHotMiddleware = require("webpack-hot-middleware")(compiler);
-    // @ts-ignore
-    const webpackDevMiddleware = require("webpack-dev-middleware")(compiler, config.devServer);
-    //webpack
-    app.use(webpackDevMiddleware);
-    app.use(webpackHotMiddleware);
+
 }
 
 //Static Files
@@ -308,7 +299,10 @@ app.get("/:app", function (req, res) {
     }
 });
 
-app.get("/:app/:view", function (req, res) {
+app.get("/:app/:view", function (req, res, next) {
+    if (req.params.app === "dev-bundle") {
+        return next();
+    }
     const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
     app.set("appName", req.params.app);
     app.set("views", `${__dirname}/../app${upperCasedApp}/views`);
