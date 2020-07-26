@@ -3,6 +3,20 @@
   "defaultApp": "Demo",
   "warningTimeout": 10000,
   "applications": {
+    "Hullulu": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
+    "Tatatutu": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
     "Bululu": {
       "styleSet": "default",
       "language": "fr",

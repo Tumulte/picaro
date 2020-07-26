@@ -1,7 +1,4 @@
 //TODO clear that out
-/**
- * @type {VueApp}
- */
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 
@@ -101,7 +98,6 @@ if (ENVIRONMENT === "development") {
 import tagsList from "../Ui/Components/tagsList.vue";
 import list from "../Ui/Components/list.vue";
 import link from "../Ui/Components/link.vue";
-import form from "../Ui/Components/form.vue";
 import tags from "../Ui/Components/tags.vue";
 import nav from "../Ui/Components/nav.vue";
 import alert from "@components/utils/alert.vue";
@@ -112,7 +108,6 @@ Vue.component("rf-list", list);
 Vue.component("rf-tags", tags);
 Vue.component("rf-tags-list", tagsList);
 Vue.component("rf-link", link);
-Vue.component("rf-form", form);
 Vue.component("rf-nav", nav);
 Vue.component("rf-alert", alert);
 Vue.component("rf-rich-text", richText);
@@ -130,20 +125,13 @@ const router = new VueRouter({
 
 
 // TODO add webpack chuncks to exclude that in production
-import adminPanel from "../Ui/Components/adminPanel.vue";
-import cssPanelSelector from "../Ui/Components/cssPanelSelector.vue";
-import cssPanelColor from "../Ui/Components/cssPanelColor.vue";
 import cssPanel from "../Ui/Components/cssPanelMain.vue";
-import cssPanelRatio from "../Ui/Components/cssPanelRatio.vue";
 import messagesComponent from "../Tools/Components/messages.vue";
-import navPanel from "../Ui/Components/navPanel.vue";
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
-import modelPanel from "../Ui/Components/modelPanel.vue";
 import userPanel from "../Ui/Components/userPanel.vue";
 import model from "../Ui/Components/model.vue";
 
 
-import vuetifyLib from "vuetify/lib";
 import VueRouter from "vue-router";
 import vuetify from "vuetify";
 import Vuex from "vuex";
@@ -155,24 +143,10 @@ if (
     (typeof isLogged !== "undefined" && isLogged)
 ) {
 
-    //@ts-ignore
-    Vue.component("admin-panel", adminPanel);
-    //@ts-ignore
     Vue.component("admin-tool-bar", adminToolBar);
-    //@ts-ignore
-    Vue.component("css-panel-selector", cssPanelSelector);
-    //@ts-ignore
-    Vue.component("css-panel-color", cssPanelColor);
-    //@ts-ignore
-    Vue.component("css-panel-ratio", cssPanelRatio);
-    //@ts-ignore
     Vue.component("css-panel-main", cssPanel);
-    //@ts-ignore
-    Vue.component("nav-panel", navPanel);
-    //@ts-ignore
     Vue.component("warning-component", messagesComponent);
     Vue.component("user-panel", userPanel);
-    Vue.component("model-panel", modelPanel);
     Vue.component("rf-model", model);
     Vue.component("rf-alert", alert);
 

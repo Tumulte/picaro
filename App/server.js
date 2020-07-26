@@ -8,7 +8,6 @@ import FileSync from "lowdb/adapters/FileSync";
 import settings from "./../rougeSettings.json";
 
 //rougeFramework UI
-import tableToForm from "./formGenerator";
 import cssFileGenerator from "./Ui/cssFileGenerator";
 
 //rougeFramework Back End
@@ -66,8 +65,11 @@ app.use("/static", express.static("node_modules/normalize.css"));
 app.use("/static", express.static("App/Dist"));
 app.use("/fonts", express.static("static/fonts"));
 
+
 app.use("/images", express.static("App/Static/images"));
 app.use("/svg", express.static("App/Static/svg"));
+app.use("/fonts", express.static("App/Static/fonts"));
+
 
 //Per apps Static Files
 for (let application in settings.applications) {
@@ -201,7 +203,7 @@ app.get("/admin/logout", function (req, res) {
 });
 
 //Application Data
-const appApi = appCrud(appDb, currentApplicationSettings);
+const appApi = appCrud(appDb, app, currentApplicationSettings);
 app.use("/appapi", appApi);
 
 //TODO generate a default styleset with any app
@@ -277,6 +279,7 @@ app.post("/admin/settings/:type", upload.none(), function (req, res) {
 
 //Pages
 app.get("/", function (req, res) {
+    app.set("appName", settings.defaultApp);
     app.set("views", `${__dirname}/../app${settings.defaultApp}/views`);
     res.render("index");
 });

@@ -5,16 +5,12 @@ import multer from "multer";
 
 const upload = multer();
 
-/**
- *
- * @param {Object} appDb
- * @param {function} appDb.get
- * @param {Object} currentApp
- */
-const appCrud = function appCrud(appDb, currentApp) {
+
+const appCrud = function appCrud(appDb, app, currentApp) {
     const dataRouter = express.Router();
-    dataRouter.route("/all").get(function (req, res) {
-        res.json(appDb.get(app.get("appName")).value());
+    dataRouter.route("/all/").get(function (req, res) {
+        res.json(appDb.get("config")
+            .find({id: app.get("appName")}));
     });
 
     dataRouter
@@ -25,7 +21,6 @@ const appCrud = function appCrud(appDb, currentApp) {
         .put(upload.none(), function (req, res) {
             appDb
                 .get("config")
-                // @ts-ignore
                 .find({id: currentApp.id})
                 .assign(req.body)
                 .write();
@@ -35,8 +30,7 @@ const appCrud = function appCrud(appDb, currentApp) {
         /**
          * @type {object}
          */
-        let data = {};
-        data = appDb.get(currentApp.applicationName).find({id: currentApp.styleSet}).value();
+        let data = appDb.get(currentApp.applicationName).find({id: currentApp.styleSet}).value();
         if (!data) {
             res.status(404).send(`No style collection named ${req.params.styleId}`);
         }
@@ -65,8 +59,7 @@ const appCrud = function appCrud(appDb, currentApp) {
             /**
              * @type {object}
              */
-            let data = {};
-            data = appDb.get(currentApp.applicationName).find({id: req.params.styleId}).value();
+            let data = appDb.get(currentApp.applicationName).find({id: req.params.styleId}).value();
             if (!data.styleCollection) {
                 res.status(404).send(`No style collection named ${req.params.styleId}`);
             }

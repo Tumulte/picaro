@@ -1,5 +1,12 @@
+import FileSync from "lowdb/adapters/FileSync";
+import low from "lowdb";
+
 const inquirer = require("inquirer");
 const fs = require("fs");
+
+const appAdapter = new FileSync("./App/Data/appData.json");
+const appDb = low(appAdapter);
+
 const createNewApp = function () {
     inquirer.prompt([{
         type: "input",
@@ -15,6 +22,22 @@ const createNewApp = function () {
     }]).then(answers => {
         let nameLower = answers.name.toLowerCase();
         let name = nameLower.charAt(0).toUpperCase() + nameLower.slice(1);
+
+        appDb.set(nameLower, []).write();
+        appDb.get("config")
+            .push({
+                id: nameLower,
+                "name": name,
+                "styleSet": "",
+                "language": "",
+                "title": "",
+                "devMode": true,
+                "messageTimeOut": 10000,
+                "applicationName": name,
+                "navStructureString": "",
+                "modelCollectionString": ""
+            }).write();
+
         if (!fs.existsSync(`./app${name}`)) {
             fs.mkdirSync(`./app${name}`);
         }

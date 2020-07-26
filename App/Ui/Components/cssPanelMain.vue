@@ -1,3 +1,38 @@
+<template lang="pug">
+    v-form(method="post" :key="cssPanelIndex" @submit.prevent="submit($event)")
+        v-container
+            warning-component( :warning-message="warningMessage")
+            input(type="hidden" v-for="(colorData, name) in colorParameterCollection" v-bind:name="name" v-bind:value="colorData" )
+            input(type="text"  name="selectorSetParamString" v-bind:value="selectorCollectionString" )
+            input(type="text"  name="ratioCollectionString" v-bind:value="ratioCollectionString" )
+
+            v-card(class="_container")
+                v-select(:items="styleSetCollection" v-model="styleSet" item-value="setName" item-text="setName" label="Style Set" @change="updateStyleSet()" return-object=true)
+            v-card(class="_container")
+                v-card-title Fonts
+                v-radio-group(v-model="styleSet.fontOrigin")
+                    v-radio(label="Google Fonts" name="fontOrigin" value="google")
+                    v-radio(label="Local Fonts" name="fontOrigin" value="local")
+                v-card(class="_container")
+                    v-text-field(label="Font size (px)" type="number" v-model="styleSet.fontSize"  class="css-panel__input" name="fontSize" v-on:change="updateFontSize")
+                v-card(class="_container")
+                    v-select( v-model="styleSet.fontFamilyMain" label="Main Font" :items="fontCollection" item-text="family" item-value="family"  v-on:change="updateCssFont('fontFamilyMain')")
+                    v-select( v-model="styleSet.fontFamilyAlt" label="Alternative Font" item-text="family" item-value="family" :items="fontCollection" v-on:change="updateCssFont('fontFamilyAlt')")
+                    v-select( v-model="styleSet.fontFamilyTitle" label="Title Font" item-text="family" item-value="family" :items="fontCollection" v-on:change="updateCssFont('fontFamilyTitle')")
+                    input(type="text" name="id" v-bind:value="styleSet.id")
+                    input(type="text" v-model="styleSet.fontFamilyMain" name="fontFamilyMain")
+                    input(type="text" v-model="styleSet.fontFamilyAlt" name="fontFamilyAlt")
+                    input(type="text" v-model="styleSet.fontFamilyTitle" name="fontFamilyTitle")
+
+            v-card(class="_container")
+                v-text-field(type="text" class="css-panel__input" label="Config name" name="setName" v-model="styleSet.setName" )
+                v-card-actions
+                    v-btn(text=true class="_container"  v-if="styleSet.id !== 'default'" formaction='/admin/settings/overwrite' @click.prevent="checkSave($event)") Save
+                    v-btn(text=true formaction='/admin/settings/new' @click.prevent="saveNew($event)") Save a new Style Set
+                    v-btn(text=true class="_container"  @click.prevent="checkDelete(styleSet.id)"  v-if="styleSet.id !== 'default'" type="button") Delete Style Set
+
+</template>
+
 <script>
     import settings from "../../../rougeSettings.json";
     import {generateColorSet} from "../colorGenerator";
@@ -11,7 +46,7 @@
         axios
             .get("/appapi/all")
             .then(response => {
-                instance.styleSetCollection = response.data;
+                instance.styleSetCollection = [response.data];
             })
             .catch(error => {
                 instance.warningMessage = {

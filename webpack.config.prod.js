@@ -36,6 +36,7 @@ export default {
         ],
     },
     plugins: [
+        ["react-remove-properties", {"properties": ["data-test", "data-jest"]}],
         new miniCssExtractPlugin(),
         new optimizeCssAssetsPlugin(),
         new webpack.DefinePlugin({ENVIRONMENT: JSON.stringify("production")}),
