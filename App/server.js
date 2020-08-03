@@ -214,7 +214,6 @@ app.use(function (req, res, next) {
     res.locals.language = currentApplicationSettings.language;
     res.locals.settings = currentApplicationSettings;
     res.locals.appName = currentApplicationSettings.applicationName;
-    res.locals.colorSetCollection = JSON.stringify(appDb.get("colorSetPresets").value());
 
     res.locals.isLogged = currentApplicationSettings.devMode ? true : req.isAuthenticated();
 

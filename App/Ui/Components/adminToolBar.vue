@@ -16,7 +16,7 @@
                     v-col
                         v-btn(@click="setOpenPanel('color')" text=true) open
                         div(class="subpanels" :class="{'__open': subpanelOpenned('color')}")
-                            css-panel-color(:panel-opened="openPanel === 'color'")
+                            css-panel-color(:mini-variant="openPanel !== 'color'" :panel-opened="openPanel === 'color'")
                     v-col
                         v-btn(@click="setOpenPanel('ratio')" text=true) open
                         div(class="subpanels" :class="{'__open': subpanelOpenned('ratio')}")
@@ -24,7 +24,7 @@
                     v-col
                         v-btn(@click="setOpenPanel('main')" text=true) open
                         div(class="subpanels" :class="{'__open': subpanelOpenned('main')}")
-                            css-panel-main
+                            css-panel-main(:mini-variant="openPanel !== 'main'")
         v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")
             admin-panel
         v-navigation-drawer(v-model="panels.nav" right=true fixed=true width="300")
@@ -47,7 +47,7 @@
         data: function () {
             return {
                 panels: {
-                    css: false,
+                    css: true,
                     admin: false,
                     nav: false,
                     styleSet: false,
@@ -82,3 +82,12 @@
     };
 
 </script>
+<style scoped="true">
+    .subpanels {
+        width: 50px;
+    }
+
+    .subpanels.__open {
+        width: 300px;
+    }
+</style>

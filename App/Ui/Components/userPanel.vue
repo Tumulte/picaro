@@ -1,10 +1,10 @@
-<script>
-    import Vue from "vue";
+<template lang="pug">
 
-    const template = require("./cssPanelRatio.pug").default;
+</template>
+<script>
+
 
     export default {
-        template: template,
 
         /**
          * @type {function}
