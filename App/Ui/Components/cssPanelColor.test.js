@@ -281,20 +281,22 @@ wrapper.vm.$store.commit("colorSet", colorSet);
 wrapper.vm.$store.commit("colorParameterCollection", colorParameterCollection);
 wrapper.vm.$store.commit("loaded", true);
 
-const dominantColorBox = wrapper.find("#_color");
-
 describe("color css panel", () => {
     it("Display the right color", async () => {
         await wrapper.vm.$nextTick();
-        await wrapper.vm.$forceUpdate();
 
         expect(wrapper.vm.bgColor(wrapper.vm.dominantColor)).toBe("background:hsl(221,65%,66%)");
-        const dominantColorBox = wrapper.find("[data-jest='dominant-preview']");
-        const subColorBox = wrapper.find("[data-jest='sub-preview']");
-        expect(dominantColorBox.hasStyle("background", "tata")).toBe("hsl(221,65%,66%)");
+        expect(wrapper.vm.col);
 
-        expect(subColorBox.element.style.background).toBe("hsl(221,65%,66%)");
 
+    });
+    it("Changes color when it has to", async () => {
+        wrapper.find("[data-jest='dominantExpansion']").trigger("click");
+        await wrapper.vm.$nextTick();
+        wrapper.find("[data-jest='dominantColorHue']").vm.$emit("end", 25);
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.dominantColor).toBe("ta");
 
     });
 });
