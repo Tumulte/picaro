@@ -9,7 +9,7 @@
       v-expansion-panel(:style="bgColor(dominantColor)" v-if="!miniVariant" data-jest="dominant-preview")
         v-expansion-panel-header(data-jest="dominantExpansion")
         v-expansion-panel-content(:style="bgColor(dominantColor)" class="mb-0")
-          v-slider(min="0" max="360" v-model="dominantColor.hue" @input="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColor, true)" data-jest="dominantColorHue")
+          v-slider(min="0" max="360" v-model="dominantColor.hue" @input="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColor, true)" ref="dominantHue")
           v-slider(min="0" label="light" max="100" thumb-label="always" @input="updateColor()" v-model="dominantColor.light")
           v-slider(min="0" max="100"  thumb-label="always" @input="updateColor()"  v-model="dominantColor.saturation")
       v-row(class="px-3")
