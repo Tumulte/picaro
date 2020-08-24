@@ -36,184 +36,181 @@
         //todo test whole process
 </template>
 <script>
-    import textField from "./partials/formEdit/_textEdit.vue";
-    import booleanField from "./partials/formEdit/_booleanEdit.vue";
-    import arrayMove from "array-move";
-    import axios from "axios";
-    import richText from "./partials/formEdit/_richTextEdit.vue";
-    import multiChoice from "./partials/formEdit/_multiChoiceEdit.vue";
+import textField from "./partials/formEdit/_textEdit.vue";
+import booleanField from "./partials/formEdit/_booleanEdit.vue";
+import arrayMove from "array-move";
+import axios from "axios";
+import richText from "./partials/formEdit/_richTextEdit.vue";
+import multiChoice from "./partials/formEdit/_multiChoiceEdit.vue";
 
-    export default {
-        data: function () {
-            return {
-                modelNameInput: "",
-                valid: true,
-                displayNewModelButton: true,
-                currentEditModelName: null,
-                selectedFieldType: "none",
-                currentModelName: "",
-                currentMovingField: null,
-                fieldType:
-                    {
-                        "Boolean": {name: "Boolean", component: booleanField},
-                        "Text": {name: "Text", component: textField},
-                        "RichText": {name: "Rich Text Editor", component: richText},
-                        "MultiChoice": {name: "Multiple Choices", component: multiChoice}
-                    }
-            };
+export default {
+    data: function () {
+        return {
+            modelNameInput: "",
+            valid: true,
+            displayNewModelButton: true,
+            currentEditModelName: null,
+            selectedFieldType: "none",
+            currentModelName: "",
+            currentMovingField: null,
+            fieldType:
+                {
+                    "Boolean": {name: "Boolean", component: booleanField},
+                    "Text": {name: "Text", component: textField},
+                    "RichText": {name: "Rich Text Editor", component: richText},
+                    "MultiChoice": {name: "Multiple Choices", component: multiChoice}
+                }
+        };
+    },
+    methods: {
+
+        moveField(index) {
+            if (this.currentMovingField === null) {
+                this.currentMovingField = index;
+            } else {
+                let currentModelState = JSON.parse(this.modelCollectionString);
+                let selectedModel = this.currentModelName ? this.currentModelName : this.currentEditModelName;
+                currentModelState[selectedModel] = arrayMove(currentModelState[selectedModel], this.currentMovingField, index);
+                this.$store.commit("modelCollection", currentModelState);
+                this.currentMovingField = null;
+
+            }
         },
-        methods: {
-
-            moveField(index) {
-                if (this.currentMovingField === null) {
-                    this.currentMovingField = index;
-                } else {
-                    let currentModelState = JSON.parse(this.modelCollectionString);
-                    let selectedModel = this.currentModelName ? this.currentModelName : this.currentEditModelName;
-                    currentModelState[selectedModel] = arrayMove(currentModelState[selectedModel], this.currentMovingField, index);
-                    this.$store.commit("modelCollection", currentModelState);
-                    this.currentMovingField = null;
-
-                }
-            },
-            async cancelEditModel() {
-                if (this.currentModelName) {
-                    await this.$store.dispatch("awaitConfirmation", {
-                        text: "Are you sure you want to abandon the creation of this new model ?",
-                        type: "warning"
-                    });
-                    this.$store.dispatch("removeKeyFromCollection", {
-                        collection: "modelCollection",
-                        key: this.modelNameInput,
-                    });
-                    this.modelNameInput = "";
-                    this.currentModelName = null;
-                    this.displayNewModelButton = true;
-
-                }
-                this.currentEditModelName = null;
-            },
-            deleteField(index) {
-                let currentModelState = JSON.parse(this.modelCollectionString);
-                currentModelState[this.currentModelName].splice(index, 1);
-                this.$store.commit("modelCollection", currentModelState);
-            },
-            addFieldToModel(event) {
-                let model = "";
-                if (this.currentModelName) {
-                    model = this.currentModelName;
-                } else {
-                    model = this.currentEditModelName;
-                }
-                let currentModelState = JSON.parse(this.modelCollectionString);
-                currentModelState[model].push(event);
-                this.$store.commit("modelCollection", currentModelState);
-                this.selectedFieldType = "none";
-                this.currentEditModelName = this.currentModelName;
-            },
-            saveEditedField(event, index) {
-                let currentModelState = JSON.parse(this.modelCollectionString);
-                currentModelState[this.currentModelName][index] = event;
-                this.$store.commit("modelCollection", currentModelState);
-            },
-            createNewModel() {
-                this.$store.dispatch("addKeyToCollection", {
-                    collection: "modelCollection",
-                    key: this.modelNameInput,
-                    value: []
-                });
-                this.currentModelName = this.modelNameInput;
-                this.displayNewModelButton = false;
-
-            },
-            async deleteModel() {
+        async cancelEditModel() {
+            if (this.currentModelName) {
                 await this.$store.dispatch("awaitConfirmation", {
-                    text: `Are you sure you want to delete this model :  ${this.currentEditModelName}?`,
-                    type: "error"
+                    text: "Are you sure you want to abandon the creation of this new model ?",
+                    type: "warning"
                 });
                 this.$store.dispatch("removeKeyFromCollection", {
                     collection: "modelCollection",
-                    key: this.currentEditModelName,
+                    key: this.modelNameInput,
                 });
-                await this.$nextTick();
-                document.getElementById("_admin-form-ext-submit").click();
+                this.modelNameInput = "";
+                this.currentModelName = null;
+                this.displayNewModelButton = true;
 
-            },
-            saveModel: async function () {
-
-                this.$store.commit("newModelName", this.modelNameInput);
-                await this.$nextTick();
-                document.getElementById("_admin-form-ext-submit").click();
-
-            },
-            noEdition: function (index) {
-                return !this.currentModelName || index === this.currentModelName;
             }
+            this.currentEditModelName = null;
         },
-        computed: {
-            modelNameIsUnique() {
-                return Object.keys(this.modelCollection).filter(item => item === this.modelNameInput).length === 0;
-            },
-            modelCollection() {
-                return this.$store.getters.modelCollection;
-            },
-            modelCollectionString() {
-                return JSON.stringify(this.modelCollection);
-            }
+        deleteField(index) {
+            let currentModelState = JSON.parse(this.modelCollectionString);
+            currentModelState[this.currentModelName].splice(index, 1);
+            this.$store.commit("modelCollection", currentModelState);
         },
-        created() {
-            //TODO BACKGROUND find a better way to skip
-            if (process.env.ISTEST) {
-                return;
+        addFieldToModel(event) {
+            let model = "";
+            if (this.currentModelName) {
+                model = this.currentModelName;
+            } else {
+                model = this.currentEditModelName;
             }
-            axios
-                .get("/appapi/settings/")
-                .then(response => {
-                    this.$store.commit(
-                        "modelCollection",
-                        JSON.parse(response.data.modelCollectionString)
-                    );
-                })
-                .catch(error => {
-                    this.warningMessage = {
-                        type: "error",
-                        text: `Request failed.  Returned status of ${error}`
-                    };
+            let currentModelState = JSON.parse(this.modelCollectionString);
+            currentModelState[model].push(event);
+            this.$store.commit("modelCollection", currentModelState);
+            this.selectedFieldType = "none";
+            this.currentEditModelName = this.currentModelName;
+        },
+        saveEditedField(event, index) {
+            let currentModelState = JSON.parse(this.modelCollectionString);
+            currentModelState[this.currentModelName][index] = event;
+            this.$store.commit("modelCollection", currentModelState);
+        },
+        createNewModel() {
+            this.$store.dispatch("addKeyToCollection", {
+                collection: "modelCollection",
+                key: this.modelNameInput,
+                value: []
+            });
+            this.currentModelName = this.modelNameInput;
+            this.displayNewModelButton = false;
 
+        },
+        async deleteModel() {
+            await this.$store.dispatch("awaitConfirmation", {
+                text: `Are you sure you want to delete this model :  ${this.currentEditModelName}?`,
+                type: "error"
+            });
+            this.$store.dispatch("removeKeyFromCollection", {
+                collection: "modelCollection",
+                key: this.currentEditModelName,
+            });
+            await this.$nextTick();
+            document.getElementById("_admin-form-ext-submit").click();
 
-                });
+        },
+        saveModel: async function () {
+
+            this.$store.commit("newModelName", this.modelNameInput);
+            await this.$nextTick();
+            document.getElementById("_admin-form-ext-submit").click();
+
+        },
+        noEdition: function (index) {
+            return !this.currentModelName || index === this.currentModelName;
         }
+    },
+    computed: {
+        modelNameIsUnique() {
+            return Object.keys(this.modelCollection).filter(item => item === this.modelNameInput).length === 0;
+        },
+        modelCollection() {
+            return this.$store.getters.modelCollection;
+        },
+        modelCollectionString() {
+            return JSON.stringify(this.modelCollection);
+        }
+    },
+    created() {
+        //TODO BACKGROUND find a better way to skip
+        if (process.env.ISTEST) {
+            return;
+        }
+        axios
 
-    };
+            .get("/appapi/settings/")
+            .then(response => {
+                this.$store.commit(
+                    "modelCollection",
+                    JSON.parse(response.data.modelCollectionString)
+                );
+            })
+            .catch(error => {
+                this.warningMessage = {
+                    type: "error",
+                    text: `Request failed.  Returned status of ${error}`
+                };
+
+
+            });
+    }
+
+};
 
 </script>
 <style scoped>
-    .v-btn {
-        font-family: "Knile-Regular", serif
-    }
+select {
+    padding: 10px;
+    width: 100%;
 
-    select {
-        padding: 10px;
-        width: 100%;
+}
 
-    }
+.select-container {
+    border: 1px solid black;
+    position: relative;
+    border-radius: 5px;
+    width: 70%;
+    background: #fefefe;
+}
 
-    .select-container {
-        border: 1px solid black;
-        position: relative;
-        border-radius: 5px;
-        width: 70%;
-        background: #fefefe;
-    }
-
-    .select-container::after {
-        content: "\25BC";
-        pointer-events: none;
-        position: absolute;
-        right: 20px;
-        top: 10px;
-        color: #555;
-    }
+.select-container::after {
+    content: "\25BC";
+    pointer-events: none;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #555;
+}
 
 
 </style>

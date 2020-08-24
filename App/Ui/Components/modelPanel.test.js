@@ -33,7 +33,7 @@ let options = null;
 describe("modelPanel", () => {
     it("Creates a new model", async () => {
 
-            expect(wrapper.contains("[data-jest=\"add-model\"][disabled='disabled']")).toBe(true);
+            expect(wrapper.find("[data-jest=\"add-model\"][disabled='disabled']").exists()).toBe(true);
             const addButton = wrapper.get("[data-jest='add-model']");
             const name = wrapper.get("[data-jest='model-name']");
             name.setValue("test model");
@@ -42,8 +42,8 @@ describe("modelPanel", () => {
             await Vue.nextTick();
 
             expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[]}");
-            expect(wrapper.contains("[data-jest=\"add-model\"]")).toBe(false);
-            expect(wrapper.contains("[data-jest=\"model-name\"]")).toBe(false);
+            expect(wrapper.find("[data-jest=\"add-model\"]").exists()).toBe(false);
+            expect(wrapper.find("[data-jest=\"model-name\"]").exists()).toBe(false);
             select = wrapper.get("[data-jest='select-input']");
             options = select.findAll("option");
         }
@@ -72,7 +72,7 @@ describe("modelPanel", () => {
 
         //Display the new thing in the list
         const elementList = wrapper.get(".current-model-elements");
-        expect(elementList.contains("[data-jest=\"rf-form-switch\"]")).toBe(true);
+        expect(elementList.find("[data-jest=\"rf-form-switch\"]").exists()).toBe(true);
 
     });
 
@@ -80,8 +80,8 @@ describe("modelPanel", () => {
         const edit = wrapper.get("[data-jest='edit-boolean']");
         edit.trigger("click");
         await Vue.nextTick();
-        expect(wrapper.contains("[data-jest='save-boolean']")).toBe(true);
-        expect(wrapper.contains("[data-jest='edit-boolean']")).toBe(false);
+        expect(wrapper.find("[data-jest='save-boolean']").exists()).toBe(true);
+        expect(wrapper.find("[data-jest='edit-boolean']").exists()).toBe(false);
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
         await wrapper.vm.$nextTick();
