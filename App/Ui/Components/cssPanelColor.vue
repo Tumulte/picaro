@@ -20,6 +20,7 @@
                     v-expansion-panel-content
                         v-slider(min="0" max="360" v-model="color.hue" label="Hue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor(index, color)")
                         v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @input="updateCombinationColor(index, color)")
+                        v-btn(v-if="color.light !== dominantColor.light" @click="resetSetting('light', index, color)") reset
                         v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor(index, color)")
                 v-row(class="px-3")
                     v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" v-bind:style="bgColor(subColor)" class="pa-3")
@@ -123,7 +124,13 @@ export default {
         };
     },
     methods: {
-        bgColor: function (color,) {
+        resetSetting(setting, index) {
+            let newSettings = this.colorSetParamCollection;
+            delete newSettings[index][setting];
+            this.$store.commit("colorSetParamCollection", newSettings);
+            this.updateCombinationColor(index);
+        },
+        bgColor: function (color) {
             return `background:${colorUtils.getString(color)}`;
         },
         getStringColor: function (color, hueOnly) {

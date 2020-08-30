@@ -153,6 +153,10 @@ export default {
         },
         newModelName(state, data) {
             state.newModelName = data;
+        },
+        colorSetParamCollection(state, data) {
+            console.debug(data);
+            Vue.set(state.colorParameterCollection, "colorSetParamString", JSON.stringify(data));
         }
 
     },
@@ -200,7 +204,6 @@ export default {
 
     },
     actions: {
-
         updateSelector: function ({
                                       state
                                   }, value) {
