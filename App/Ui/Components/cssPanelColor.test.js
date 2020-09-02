@@ -143,5 +143,12 @@ describe("color css panel", () => {
         expect(mainPanelWrapper.find("[data-jest='color-param-main-dominant']").element.value).toBe("#325520");
         expect(mainPanelWrapper.vm.colorParameterCollection.colorSetParamString).toBe(colorSetParamString);
     });
+    it("resets the light when reset is clicked", async () => {
+
+        wrapper.vm.resetSetting("light", 1);
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.colorParameterCollection.colorSetParamString).not.toContain("\"light\":58}");
+        expect(wrapper.vm.colorCollection.combinationCollection[0].light).toBe(wrapper.vm.dominantColor.light);
+    });
 });
 

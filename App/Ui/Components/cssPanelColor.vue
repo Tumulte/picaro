@@ -20,7 +20,7 @@
                     v-expansion-panel-content
                         v-slider(min="0" max="360" v-model="color.hue" label="Hue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor(index, color)")
                         v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @input="updateCombinationColor(index, color)")
-                        v-btn(v-if="color.light !== dominantColor.light" @click="resetSetting('light', index, color)") reset
+                        v-btn(v-if="color.light !== dominantColor.light" @click.stop="resetSetting('light', index, color)" ) reset
                         v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor(index, color)")
                 v-row(class="px-3")
                     v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" v-bind:style="bgColor(subColor)" class="pa-3")
@@ -67,7 +67,8 @@ export default {
     props: ["panelOpened", "miniVariant"],
     data: function () {
         return {
-            // TODO put in a JSON
+            isMounted: false,
+            // TODO put in a JSON
             colorSetCollection: [
                 {
                     "id": "1",
@@ -125,10 +126,9 @@ export default {
     },
     methods: {
         resetSetting(setting, index) {
-            let newSettings = this.colorSetParamCollection;
+            let newSettings = JSON.parse(this.colorParameterCollection.colorSetParamString);
             delete newSettings[index][setting];
-            this.$store.commit("colorSetParamCollection", newSettings);
-            this.updateCombinationColor(index);
+            this.updateCombinationColor(index, JSON.stringify(newSettings));
         },
         bgColor: function (color) {
             return `background:${colorUtils.getString(color)}`;
@@ -149,6 +149,10 @@ export default {
             return isNaN(parseInt(number)) ? min : number;
         },
         updateColor: function () {
+            if (!this.isMounted) {//prevent initial trigger
+                return;
+            }
+
             this.colorCollection.dominant = colorUtils
                 .hslToHex(this.dominantColor)
                 .getString();
@@ -166,7 +170,8 @@ export default {
                 );
         },
 
-        updateCombinationColor: function (index) {
+        updateCombinationColor: function (index, customParameters) {
+
             this.$set(
                 this.colorSetParamCollection,
                 index,
@@ -178,7 +183,7 @@ export default {
             this.$set(
                 this.colorParameterCollection,
                 "colorSetParamString",
-                JSON.stringify(this.colorSetParamCollection)
+                customParameters ? customParameters : JSON.stringify(this.colorSetParamCollection)
             );
             this.colorCollection = this.colorSet.generate(
                 this.colorSetParamCollection,
@@ -226,6 +231,9 @@ export default {
             this.$store.commit("currentColor", coordinates);
         }
     },
+    mounted() {
+        this.isMounted = true;
+    },
     computed: {
         colorCollection: {
             get() {
@@ -248,7 +256,7 @@ export default {
                 return {};
             }
         },
-
+        //TODO just rename the darn thing
         colorSetParamCollection() {
             return JSON.parse(this.colorParameterCollection.colorSetParamString);
         },
