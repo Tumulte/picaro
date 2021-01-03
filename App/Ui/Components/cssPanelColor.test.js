@@ -149,6 +149,51 @@ describe("color css panel", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.vm.colorParameterCollection.colorSetParamString).not.toContain("\"light\":58}");
         expect(wrapper.vm.colorCollection.combinationCollection[0].light).toBe(wrapper.vm.dominantColor.light);
+
+        expect(wrapper.vm.colorCollection.combinationCollection[0].light).toBe(wrapper.vm.dominantColor.light);
+
+        wrapper.vm.resetSetting("saturation", 1);
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.colorCollection.combinationCollection[0].saturation).toBe(wrapper.vm.dominantColor.saturation);
+    });
+    it("Moves light and saturation with the dominant when it is reset", async () => {
+
+        wrapper.vm.dominantColor.light = 89;
+        wrapper.vm.dominantColor.saturation = 9;
+        wrapper.vm.updateColor();
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.colorCollection.combinationCollection[0].saturation).toBe(wrapper.vm.dominantColor.saturation);
+        expect(wrapper.vm.colorCollection.combinationCollection[0].light).toBe(wrapper.vm.dominantColor.light);
+
+    });
+    it("adds colors to the list of colors", async () => {
+        wrapper.find("[data-jest='addColor']").trigger("click");
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.colorSetParamCollection[2].hueVariation).toBe(wrapper.vm.dominantColor.hue);
+        expect(wrapper.find("[data-jest='sub-preview2']").exists()).toBe(true);
+        wrapper.find("[data-jest='addColor']").trigger("click");
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.colorSetParamCollection[3].hueVariation).toBe(wrapper.vm.dominantColor.hue);
+        expect(wrapper.find("[data-jest='sub-preview3']").exists()).toBe(true);
+        await mainPanelWrapper.vm.$nextTick();
+
+        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":-188},{\"hueVariation\":96},{\"hueVariation\":96}]");
+    });
+    it("changes the newly added color", async () => {
+
+
+        wrapper.find("[data-jest='sub-preview2']").trigger("click");
+        expect(wrapper.findAll(".v-slider--horizontal").at(1).exists()).toBe(true);
+        Vue.set(wrapper.vm.colorCollection.combinationCollection[2], "hue", 19);
+
+        console.debug("bite", wrapper.vm.colorCollection.combinationCollection[2].hue);
+
+        wrapper.vm.updateCombinationColor();
+        await wrapper.vm.$nextTick();
+
+
+        wrapper.findAllComponents({ref: "subHue"}).vm.$emit("input", 111);
+        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":-188},{\"hueVariation\":96},{\"hueVariation\":96}]");
     });
 });
 

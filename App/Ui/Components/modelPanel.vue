@@ -180,8 +180,6 @@ export default {
                     type: "error",
                     text: `Request failed.  Returned status of ${error}`
                 };
-
-
             });
     }
 

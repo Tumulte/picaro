@@ -15,13 +15,13 @@
             v-row(class="px-3")
                 v-card(v-for="(subColor, index) in colorCollection.dominantSubCollection" :key="index" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColor))}" v-on:click="storeColorCoordinate(['dominant', index])" class="pa-3" v-bind:style="bgColor(subColor)")
             v-card(v-for="(color, index) in colorCollection.combinationCollection" :key="index")
-                v-expansion-panel(v-bind:style="bgColor(color)"  v-if="!miniVariant"  data-jest="sub-preview")
+                v-expansion-panel(v-bind:style="bgColor(color)"  v-if="!miniVariant"  :data-jest="`sub-preview${index}`")
                     v-expansion-panel-header
                     v-expansion-panel-content
-                        v-slider(min="0" max="360" v-model="color.hue" label="Hue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor(index, color)")
-                        v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @input="updateCombinationColor(index, color)")
+                        v-slider(min="0" max="360" v-model="color.hue" label="Hue" ref="subHue" thumb-label="always" :thumb-color="getStringColor(color, true)" @input="updateCombinationColor()")
+                        v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @input="updateCombinationColor()")
                         v-btn(v-if="color.light !== dominantColor.light" @click.stop="resetSetting('light', index, color)" ) reset
-                        v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor(index, color)")
+                        v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @input="updateCombinationColor()")
                 v-row(class="px-3")
                     v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" v-bind:style="bgColor(subColor)" class="pa-3")
                 v-card-actions
@@ -42,7 +42,7 @@
             div(v-for="(subColor, index) in colorCollection.infoSubCollection" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" )
                 v-card(v-bind:style="bgColor(subColor)")
         v-card-actions
-            v-btn(text=true v-on:click="addColor" class="_color-button" v-if="!miniVariant") Add Color
+            v-btn(text=true @click="addColor" class="_color-button" v-if="!miniVariant" data-jest="addColor") Add Color
 </template>
 <script>
 import {colorHelper} from "../colorHelper";
@@ -206,9 +206,11 @@ export default {
             return JSON.stringify(item);
         },
         addColor: function () {
-            this.colorSetParamCollection.push({
+            const newColorSet = this.colorSetParamCollection;
+            newColorSet.push({
                 hueVariation: this.dominantColor.hue
             });
+            this.colorParameterCollection.colorSetParamString = JSON.stringify(newColorSet);
             this.colorCollection = this.colorSet.generate(
                 this.colorSetParamCollection,
                 parseInt(this.variationLightAmt),
