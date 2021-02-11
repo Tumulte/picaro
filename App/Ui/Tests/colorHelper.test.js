@@ -1,12 +1,12 @@
 // @ts-nocheck
-import {colorUtils} from "../colorHelper";
+import {colorHelper} from "../colorHelper";
 
 const pink = "#EA05CA";
 const grey = "777777";
 const green = "4B2";
 const darkBlue = "#148";
 
-colorUtils = new colorUtils();
+const colorUtils = new colorHelper();
 
 describe("hexadecimal is converted to decimal", () => {
     it("return the decimal values", () => {

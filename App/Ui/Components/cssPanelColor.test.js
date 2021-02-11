@@ -8,7 +8,6 @@ import Vuex from "vuex";
 import userStore from "../../Store/user";
 import adminStore from "../../Store/admin";
 import {generateColorSet} from "../colorGenerator";
-import cssPanelSelector from "./cssPanelSelector";
 import cssPanelMain from "./cssPanelMain";
 
 process.env.ISTEST = true;
@@ -50,12 +49,6 @@ const wrapper =
     );
 const mainPanelWrapper =
     mount(cssPanelMain, {
-            vuetify, store,
-            stubs: ["warning-component"]
-        }
-    );
-const selectorWrapper =
-    mount(cssPanelSelector, {
             vuetify, store,
             stubs: ["warning-component"]
         }
@@ -110,7 +103,7 @@ describe("color css panel", () => {
         expect(dummyClass.style.color).toBe("rgb(152, 114, 67)");
 
     });
-    it("generates new colors when the hue slider is moved", async () => {
+    it("generates new colors when the main hue slider is moved", async () => {
         wrapper.findComponent({ref: "dominantHue"}).vm.$emit("input", 100);
         await wrapper.vm.$nextTick();
         expect(wrapper.vm.dominantColor).toStrictEqual({"hue": 100, "light": 66, "saturation": 65});
@@ -184,16 +177,30 @@ describe("color css panel", () => {
 
         wrapper.find("[data-jest='sub-preview2']").trigger("click");
         expect(wrapper.findAll(".v-slider--horizontal").at(1).exists()).toBe(true);
-        Vue.set(wrapper.vm.colorCollection.combinationCollection[2], "hue", 19);
+        Vue.set(wrapper.vm.colorCollection.combinationCollection[3], "hue", 101);
 
-        console.debug("bite", wrapper.vm.colorCollection.combinationCollection[2].hue);
-
-        wrapper.vm.updateCombinationColor();
+        wrapper.vm.updateCombinationColor(3);
         await wrapper.vm.$nextTick();
 
 
-        wrapper.findAllComponents({ref: "subHue"}).vm.$emit("input", 111);
-        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":-188},{\"hueVariation\":96},{\"hueVariation\":96}]");
+        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":-188},{\"hueVariation\":96},{\"hueVariation\":5}]");
+    });
+    it("removes a color", async () => {
+        expect(wrapper.findAll(".sub-color-parameters").length).toBe(4);
+        wrapper.find("[data-jest='remove-color-1']").trigger("click");
+        await wrapper.vm.$nextTick();
+        expect(wrapper.findAll(".sub-color-parameters").length).toBe(3);
+
+        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":96},{\"hueVariation\":5}]");
+    });
+    it("changes a colors properly after", async () => {
+        expect(wrapper.findAll(".sub-color-parameters").length).toBe(3);
+
+        Vue.set(wrapper.vm.colorCollection.combinationCollection[2], "hue", 28);
+        wrapper.vm.updateCombinationColor(2);
+
+        await wrapper.vm.$nextTick();
+        expect(mainPanelWrapper.find("[data-jest='color-param-main-colorSetParamString']").element.value).toBe("[{\"hueVariation\":-201},{\"hueVariation\":96},{\"hueVariation\":-68}]");
     });
 });
 

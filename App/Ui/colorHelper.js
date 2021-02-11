@@ -229,16 +229,16 @@ export function colorHelper() {
 
             return {red: colorValues[0], green: colorValues[1], blue: colorValues[2]};
         } else if (this.color.indexOf("hsl(") > -1) {
-            colorValues = this.color
+            const colorValues = this.color
                 .split("(")[1]
                 .split(")")[0]
                 .split(",");
-            colorObject = {
+            return {
                 hue: parseInt(colorValues[0]),
                 saturation: parseInt(colorValues[1]),
                 light: parseInt(colorValues[2]),
             };
-            return colorObject;
+
         } else if (re.test(this.color)) {
             const hex = this.color;
             return {
@@ -248,4 +248,4 @@ export function colorHelper() {
             };
         }
     };
-};
+}
