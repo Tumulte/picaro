@@ -27,12 +27,12 @@
 import {colorHelper} from "../colorHelper";
 
 import {cssToJson, isHexColor, jsonToCss} from "../../utils";
-import cssGenerator from "../cssGenerator";
+import {generateCSS} from "../cssGenerator";
 import messages from "../../Messages/messages.json";
+import {mapGetters} from "vuex";
 
 
 const colorUtils = new colorHelper();
-let generateCss = false;
 const getColorFromCollection = function (instance, data) {
     if (
         ["dominant", "warning", "alert", "info", "gray", "success"].includes(
@@ -193,48 +193,30 @@ export default {
             }
         }
     },
-    mounted: function () {
-        generateCss.apply(
-            this.selectorCollection,
-            this.colorMapping,
-            this.ratioCollection
-        );
-    },
     computed: {
-        colorCollection: function () {
-            return this.$store.getters.colorCollection;
-        },
-        ratioCollection: function () {
-            return this.$store.getters.ratioCollection;
-        },
-        selectorCollection: function () {
-            generateCss = new cssGenerator.generateCss(
-                this.$store.getters.selectorCollection
-            );
-            return this.$store.getters.selectorCollection;
-        },
-        selectorIndex: function () {
-            return this.$store.getters.selectorIndex;
-        }
+        ...mapGetters([
+            "styleSet",
+            "colorCollection",
+            "selectorCollection",
+            "selectorIndex",
+            "ratioCollection"
+        ])
     },
     //TODO : that's confusing to have the master style updater here
     updated: function () {
         this.$nextTick(() => {
-            generateCss.apply(
-                this.selectorCollection,
-                this.colorMapping,
-                this.ratioCollection
-            );
+            document.getElementById("rf-live-styles").innerHTML = generateCSS(this.styleSet);
         });
     },
     watch: {
-        ratioCollection() {
-            generateCss.apply(
-                this.selectorCollection,
-                this.colorMapping,
-                this.ratioCollection
-            );
+        styleSetLoaded() {
+            generateCSS(this.styleSet);
+
         }
+    },
+    created() {
+        document.head.insertAdjacentHTML("beforeend", "<style type='text/css' id='rf-live-styles' ></style>");
     }
+
 };
 </script>

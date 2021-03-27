@@ -11,7 +11,7 @@
             v-container
                 v-row
                     v-col
-                        v-navigation-drawer(permanent=true width="300")
+                        div(class="subpanels __open")
                             css-panel-selector
                     v-col
                         v-btn(@click="setOpenPanel('color')" text=true) open
@@ -34,60 +34,60 @@
 
 </template>
 <script>
-    import adminPanel from "./adminPanel.vue";
-    import modelPanel from "./modelPanel.vue";
-    import navPanel from "./navPanel.vue";
-    import cssPanelSelector from "./cssPanelSelector.vue";
-    import cssPanelRatio from "./cssPanelRatio.vue";
-    import cssPanelColor from "./cssPanelColor.vue";
+import adminPanel from "./adminPanel.vue";
+import modelPanel from "./modelPanel.vue";
+import navPanel from "./navPanel.vue";
+import cssPanelSelector from "./cssPanelSelector.vue";
+import cssPanelRatio from "./cssPanelRatio.vue";
+import cssPanelColor from "./cssPanelColor.vue";
 
-    export default {
-        props: ["views"],
-        components: {adminPanel, modelPanel, navPanel, cssPanelSelector, cssPanelColor, cssPanelRatio},
-        data: function () {
-            return {
-                panels: {
-                    css: true,
-                    admin: false,
-                    nav: false,
-                    styleSet: false,
-                    models: false
-                },
-                openPanel: ""
-            };
+export default {
+    props: ["views"],
+    components: {adminPanel, modelPanel, navPanel, cssPanelSelector, cssPanelColor, cssPanelRatio},
+    data: function () {
+        return {
+            panels: {
+                css: true,
+                admin: false,
+                nav: false,
+                styleSet: false,
+                models: false
+            },
+            openPanel: ""
+        };
+    },
+    methods: {
+        togglePanel(panel) {
+            this.closeAllBut(panel);
+            this.panels[panel] = !this.panels[panel];
         },
-        methods: {
-            togglePanel(panel) {
-                this.closeAllBut(panel);
-                this.panels[panel] = !this.panels[panel];
-            },
-            setOpenPanel(type) {
-                if (this.openPanel === type) {
-                    this.openPanel = "";
-                    return;
-                }
-                this.openPanel = type;
-            },
-            closeAllBut(clickedPanel) {
-                for (let panel in this.panels) {
-                    if (panel !== clickedPanel) {
-                        this.panels[panel] = false;
-                    }
-                }
-            },
-            subpanelOpenned(name) {
-                return this.openPanel === name;
+        setOpenPanel(type) {
+            if (this.openPanel === type) {
+                this.openPanel = "";
+                return;
             }
+            this.openPanel = type;
+        },
+        closeAllBut(clickedPanel) {
+            for (let panel in this.panels) {
+                if (panel !== clickedPanel) {
+                    this.panels[panel] = false;
+                }
+            }
+        },
+        subpanelOpenned(name) {
+            return this.openPanel === name;
         }
-    };
+    }
+};
 
 </script>
 <style scoped="true">
-    .subpanels {
-        width: 50px;
-    }
+.subpanels {
+    width: 50px;
+}
 
-    .subpanels.__open {
-        width: 300px;
-    }
+.subpanels.__open {
+    width: 300px;
+}
 </style>

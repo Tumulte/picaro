@@ -1,0 +1,90 @@
+/* START This is an automatically generated CSS, do not edit */
+@font-face {
+    font-family: "Knile-Regular";
+    src: url("/fonts/Knile-Regular.otf");
+}
+@font-face {
+    font-family: "TallAbbeyRg";
+    src: url("/fonts/TallAbbeyRg.otf");
+}
+:root {
+    --dominant: #7094E1;
+    --color0: #D85F22;
+    --color0-sub0: #4D382E;
+    --color0-sub1: #624232;
+    --color0-sub2: #7A4B33;
+    --color0-sub3: #945333;
+    --color0-sub4: #B05B30;
+    --color0-sub5: #CE622C;
+    --color0-sub6: #DF6D34;
+    --color0-sub7: #EB7A42;
+    --color0-sub8: #F58851;
+    --color0-sub9: #FD9663;
+    --color1: #F19D37;
+    --color1-sub0: #685641;
+    --color1-sub1: #7F6443;
+    --color1-sub2: #987243;
+    --color1-sub3: #B48041;
+    --color1-sub4: #C98E45;
+    --color1-sub5: #D79B50;
+    --color1-sub6: #E4A75E;
+    --color1-sub7: #EEB46D;
+    --color1-sub8: #F6C07E;
+    --color1-sub9: #FCCC92;
+}
+html {
+    font-size: 18px;
+    font-family: Knile-Regular;
+    height: 100%;
+    padding: 10px;
+}
+.rf-content-container h1,
+.rf-content-container h2,
+.rf-content-container h3,
+.rf-content-container h4,
+.rf-content-container h5,
+.rf-content-container h6 {
+    font-family: TallAbbeyRg;
+    color: #7A4B33;
+    font-weight: bold;
+}
+.rf-content-container body {
+    height: 100%;
+    background: #fff;
+    color: #4E5F83;
+    font-family: Knile-Regular;
+    padding: 1.5rem;
+}
+.rf-content-container h1 {
+    font-size: 4.2rem;
+    line-height: 4.2rem;
+    margin-bottom: 1.6rem;
+    margin-top: 1.6rem;
+}
+.rf-content-container h2 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    line-height: 3rem;
+    margin-top: 1.3rem;
+}
+.rf-content-container h3 {
+    font-size: 2rem;
+    line-height: 3rem;
+    margin-bottom: 1.3rem;
+}
+.rf-content-container h4 {
+    font-size: 1.6rem;
+    line-height: 2rem;
+    margin-bottom: 1.3rem;
+}
+.rf-content-container h6 {
+    font-size: 1rem;
+    line-height: 1rem;
+}
+.rf-content-container h5 {
+    margin-bottom: 1.3rem;
+    font-size: 1rem;
+    line-height: 1rem;
+}
+
+/* END This was an automatically generated CSS, do not edit */

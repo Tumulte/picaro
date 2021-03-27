@@ -71,7 +71,8 @@ export default {
         styleSet: {},
         loaded: false,
         ratioCollection: ratioCollection,
-        newModelName: ""
+        newModelName: "",
+        styleSetLoaded: false
     },
     mutations: {
 
@@ -130,7 +131,9 @@ export default {
             state.colorSet = data;
         },
         // @ts-ignore
-
+        styleSetLoaded(state, data) {
+            state.styleSetLoaded = data;
+        },
         // @ts-ignore
         styleSet(state, data) {
             state.styleSet = data;
@@ -157,6 +160,9 @@ export default {
 
     },
     getters: {
+        styleSetLoaded(state) {
+            return state.styleSetLoaded;
+        },
         // @ts-ignore
         colorParameterCollection: function (state) {
             return state.colorParameterCollection;

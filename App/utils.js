@@ -88,7 +88,7 @@ export function makeFontFamilyName(name) {
     if (!name) {
         return;
     }
-    return name.replace(/.otf/gm, "").replace(/.ttf/gm, "").replace(/.woff/gm, "");
+    return name.replace(/.otf/gm, "").replace(/.ttf/gm, "").replace(/.woff/gm, "").replace(/\"/g, "");
 };
 
 export function makeRatio(sizes) {

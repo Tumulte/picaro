@@ -324,6 +324,7 @@ src:url("/fonts/${encodeURI(this.styleSet[currentFontType])}");
             .get("/appapi")
             .then(response => {
                 this.applyStyleSet(response.data);
+                this.$store.commit("styleSetLoaded", true);
             })
             .catch(error => {
                 this.warningMessage = {

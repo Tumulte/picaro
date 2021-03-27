@@ -1,7 +1,5 @@
 <template lang="pug">
     div(id="_color" class="_panel" v-if="$store.getters.loaded")
-        v-card(class="_container" v-if="!miniVariant")
-            v-select(label="Combination Presets" :items="colorSetCollection" item-text="name" item-value="combinationCollection" class="pa-3 ma-3 css-panel__input" v-model="colorParameterCollection.colorSetParamString" name="colorSetParamCollection"  v-on:change="updatecolorSetParams")
         v-card(v-if="!miniVariant" class="_container pa-3 ma-3" id="_range-light-container")
             v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="variationLightAmt" @input="updateVariationAmt()" )
             v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="variationSatAmt" @input="updateVariationAmt()" )
@@ -68,60 +66,6 @@ export default {
     data: function () {
         return {
             isMounted: false,
-            // TODO put in a JSON
-            colorSetCollection: [
-                {
-                    "id": "1",
-                    "name": "Complementary",
-                    "combinationCollection": [
-                        {
-                            "hueVariation": 180
-                        }
-                    ]
-                },
-                {
-                    "id": "2",
-                    "name": "Split-Complementary ",
-                    "combinationCollection": [
-                        {
-                            "hueVariation": 150
-                        },
-                        {
-                            "hueVariation": 210
-                        }
-                    ]
-                },
-                {
-                    "id": "3",
-                    "name": "triad",
-                    "combinationCollection": [
-                        {
-                            "hueVariation": 120
-                        },
-                        {
-                            "hueVariation": 240
-                        }
-                    ]
-                },
-                {
-                    "id": "4",
-                    "name": "quad",
-                    "combinationCollection": [
-                        {
-                            "hueVariation": 60
-                        },
-                        {
-                            "hueVariation": 120
-                        },
-                        {
-                            "hueVariation": 240
-                        },
-                        {
-                            "hueVariation": 300
-                        }
-                    ]
-                }
-            ]
         };
     },
     methods: {

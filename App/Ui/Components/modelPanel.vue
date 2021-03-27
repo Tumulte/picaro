@@ -1,7 +1,7 @@
 <template lang="pug">
     div
-        //TODO add proper class for "selected"
-        //TODO allow adding field to existing model
+        //TODO add proper class for "selected"
+        //TODO allow adding field to existing model
         .create-model-container
             v-text-field(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name" lapel="New model name" )
             v-btn(v-if="displayNewModelButton" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique") Add new model
@@ -82,7 +82,7 @@ export default {
                     text: "Are you sure you want to abandon the creation of this new model ?",
                     type: "warning"
                 });
-                this.$store.dispatch("removeKeyFromCollection", {
+                await this.$store.dispatch("removeKeyFromCollection", {
                     collection: "modelCollection",
                     key: this.modelNameInput,
                 });
@@ -131,7 +131,7 @@ export default {
                 text: `Are you sure you want to delete this model :  ${this.currentEditModelName}?`,
                 type: "error"
             });
-            this.$store.dispatch("removeKeyFromCollection", {
+            await this.$store.dispatch("removeKeyFromCollection", {
                 collection: "modelCollection",
                 key: this.currentEditModelName,
             });

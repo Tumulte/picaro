@@ -1,15 +1,17 @@
 html {
-	font-family: var(--font-family-main);
-	background: var(--color-dominant);
-	font-size: var(--font-size);
+    font-family: var(--font-family-main);
+    background: var(--color-dominant);
+    font-size: var(--font-size);
 }
+
 #test-colors {
-	background: var(--color-combination-0);
-	border: 5px solid var(--color-combination-1);
-	padding: 20px;
+    background: var(--color-combination-0);
+    border: 5px solid var(--color-combination-1);
+    padding: 20px;
 }
+
 #test-more-colors {
-	background: var(--color-combination-2);
-	border: 5px solid var(--color-combination-3);
-	padding: 20px;
+    background: var(--color-combination-2);
+    border: 5px solid var(--color-combination-3);
+    padding: 20px;
 }

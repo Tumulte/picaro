@@ -117,6 +117,9 @@ describe("color css panel", () => {
         expect(dummyClass.style.color).toBe("rgb(113, 67, 152)");
 
     });
+    it("updates the main styleSet values", () => {
+        expect(wrapper.vm.styleSet.dominant).toEqual("tst");
+    });
     it("changes light when the slider is moved", () => {
         wrapper.findComponent({ref: "dominantLight"}).vm.$emit("input", 23);
         expect(wrapper.vm.colorCollection.combinationCollection[0].light).toBe(23);
