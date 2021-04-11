@@ -80,7 +80,7 @@ describe("modelPanel", () => {
         const edit = wrapper.get("[data-jest='edit-boolean']");
         edit.trigger("click");
         await Vue.nextTick();
-        expect(wrapper.find("[data-jest='save-boolean']").exists()).toBe(true);
+        expect(wrapper.find("[data-jest='saveStyleSet-boolean']").exists()).toBe(true);
         expect(wrapper.find("[data-jest='edit-boolean']").exists()).toBe(false);
         const name = wrapper.get("[data-jest='rf-form-name']");
         const label = wrapper.get("[data-jest='rf-form-label']");
@@ -89,7 +89,7 @@ describe("modelPanel", () => {
         label.setValue("test of toto part 2");
         await wrapper.vm.$nextTick();
 
-        wrapper.get("[data-jest='save-boolean']").trigger("click");
+        wrapper.get("[data-jest='saveStyleSet-boolean']").trigger("click");
         await Vue.nextTick();
         expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
 

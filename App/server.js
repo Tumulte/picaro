@@ -38,6 +38,7 @@ let currentApplicationSettings = appDb
         id: settings.defaultApp
     })
     .value();
+console.debug(currentApplicationSettings);
 currentApplicationSettings.applicationName = settings.defaultApp;
 const upload = multer();
 
@@ -247,33 +248,6 @@ if (!isProd) {
 //TODO add setup. Check initiateApp.js
 app.get("/admin/setup", function () {
     appDb.set(currentApplicationSettings.applicationName, []).write();
-});
-
-//TODO add put
-//TODO should be in appApi
-app.post("/admin/settings/:type", upload.none(), function (req, res) {
-    if (req.body.styleSet === "") {
-        req.body.styleSet = `styleSet-${req.body.id}`;
-    }
-    if (req.params.type === "overwrite") {
-        appDb
-            .get(currentApplicationSettings.applicationName)
-            // @ts-ignore
-            .find({
-                id: req.body.id
-            })
-            .assign(req.body)
-            .write();
-    } else {
-        appDb
-            .get(currentApplicationSettings.applicationName)
-            // @ts-ignore
-            .push(req.body)
-            .write();
-    }
-    cssFileGenerator.generateCSSFile(currentApplicationSettings.applicationName, req.body);
-
-    res.send(`settings for ${currentApplicationSettings.applicationName} saved`);
 });
 
 //Pages

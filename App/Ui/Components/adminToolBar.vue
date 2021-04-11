@@ -47,11 +47,11 @@ export default {
     data: function () {
         return {
             panels: {
-                css: true,
+                css: false,
                 admin: false,
                 nav: false,
                 styleSet: false,
-                models: false
+                models: true
             },
             openPanel: ""
         };

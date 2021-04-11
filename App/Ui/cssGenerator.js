@@ -1,4 +1,5 @@
 import {generateColorSet} from "./colorGenerator";
+import {webSafeFonts} from "../utils";
 
 const prefixClass = ".rf-content-container";
 const headerTags = `${prefixClass} h1,
@@ -7,7 +8,7 @@ ${prefixClass} h3,
 ${prefixClass} h4,
 ${prefixClass} h5,
 ${prefixClass} h6`;
-import {makeFontFamilyName, jsonToCss, makeRatio} from "../utils";
+import {makeFontFamilyName, makeRatio} from "../utils";
 
 /**
  *
@@ -28,7 +29,7 @@ const getParameter = function (coordinates, styleSet, colorSet) {
             return colorSet.combinationCollection[coordinate].subCombination[subCoordinate].hex;
         }
     } else if (coordinates.includes("{\"type\":\"ratio\",")) {
-        const ratioCollection = JSON.parse(styleSet.ratioCollectionString);
+        const ratioCollection = styleSet.ratioCollection;
         coordinates = JSON.parse(coordinates);
         return makeRatio(ratioCollection[coordinates.data]).replace(/"/g, "");
 
@@ -43,9 +44,17 @@ const getParameter = function (coordinates, styleSet, colorSet) {
  * @param {string} font The name of the google font.
  */
 //TODO a condition for local fonts
-const addGoogleFont = function (font) {
-    return `@import url("https://fonts.googleapis.com/css?family=${encodeURI(font)}&display=swap");
+const addFont = function (font, type) {
+    if (webSafeFonts.includes(font)) return "";
+    if (type === "google") {
+        return `@import url("https://fonts.googleapis.com/css?family=${encodeURI(font)}&display=swap");
 `;
+    } else if (type === "local") {
+        return `@font-face {
+    font-family: "${makeFontFamilyName(font)}";
+    src: url("/fonts/${encodeURI(font)}");
+}`;
+    }
 };
 const getColorCSSVariables = function (colorSet) {
 
@@ -67,32 +76,35 @@ const getColorCSSVariables = function (colorSet) {
  */
 export const generateCSS = function (styleSet) {
     const colorSet = new generateColorSet(styleSet.dominant).generate(
-        JSON.parse(styleSet.colorSetParamString),
+        styleSet.colorParameterCollection,
         parseInt(styleSet.variationLightAmt),
         parseInt(styleSet.variationSatAmt)
     );
 
 
-    const customCSS = JSON.parse(styleSet.selectorSetParamString);
+    const customCSS = styleSet.selectorCollection;
     let extraParameters = "";
     let htmlProperties = "";
+    let bodyProperties = "";
     let headerProperties = "";
     for (const [selector, properties] of Object.entries(customCSS)) {
         let propertiesString = "";
-        const selectorText = jsonToCss(selector).replace(/,/g, `,\n    ${prefixClass} `);
+        const selectorText = selector.replace(/,/g, `,\n    ${prefixClass} `);
 
         if (selector === "body") {
             propertiesString = "    height: 100%;\n";
         }
         for (const [property, value] of Object.entries(properties)) {
             if (value && value !== "0rem") {
-                propertiesString += `    ${jsonToCss(property)}: ${getParameter(JSON.stringify(value), styleSet, colorSet)};\n`;
+                propertiesString += `    ${property}: ${getParameter(JSON.stringify(value), styleSet, colorSet)};\n`;
             }
         }
         propertiesString = propertiesString.slice(0, -1); //remove last line break to avoid empty line
-        if (selector === "html") {
-            htmlProperties = `\n${propertiesString}`;
-        } else if (selector === "h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6") {
+        if (selector === "body") {
+            bodyProperties = `\n${propertiesString}`;
+        } else if (selector === "html") {
+            htmlProperties = `${propertiesString}`;
+        } else if (selector === "h1, h2, h3, h4, h5, h6") {
             headerProperties = propertiesString;
         } else if (propertiesString) {
             extraParameters += `${prefixClass} ${selectorText} {
@@ -102,31 +114,22 @@ ${propertiesString}
 
 
     }
-    let fontFace = "";
-    if (styleSet.fontOrigin === "google") {
-        fontFace =
-            `${addGoogleFont(styleSet.fontFamilyMain)};
-${addGoogleFont(styleSet.fontFamilyTitle)};`;
-    } else if (styleSet.fontOrigin === "local") {
-        fontFace =
-            `@font-face {
-    font-family: "${makeFontFamilyName(styleSet.fontFamilyMain)}";
-    src: url("/fonts/${encodeURI(styleSet.fontFamilyMain)}");
-}
-@font-face {
-    font-family: "${makeFontFamilyName(styleSet.fontFamilyTitle)}";
-    src: url("/fonts/${encodeURI(styleSet.fontFamilyTitle)}");
-}`;
-    }
+    let fontFace = `${styleSet.fontFamilyMain ? addFont(styleSet.fontFamilyMain, styleSet.fontOrigin) : ""}
+${styleSet.fontFamilyMain ? addFont(styleSet.fontFamilyTitle, styleSet.fontOrigin) : ""}
+${styleSet.fontFamilyAlt ? addFont(styleSet.fontFamilyAlt, styleSet.fontOrigin) : ""}`;
+
+
     return `/* START This is an automatically generated CSS, do not edit */
 ${fontFace}
 :root {
     --dominant: ${styleSet.dominant};
 ${getColorCSSVariables(colorSet)}
 }
-html {
-    font-size: ${styleSet.fontSize}px;
-    font-family: ${makeFontFamilyName(styleSet.fontFamilyMain)};${htmlProperties}
+html{
+${htmlProperties}
+}
+.rf-content-container {
+    font-family: ${makeFontFamilyName(styleSet.fontFamilyMain)};${bodyProperties}
 }
 ${headerTags} {
 ${headerProperties}

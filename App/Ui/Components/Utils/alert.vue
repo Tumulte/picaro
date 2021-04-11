@@ -18,39 +18,39 @@
 </template>
 <script>
 
-    export default {
-        methods: {
-            confirmCallbackMessage(key, index) {
-                this.$store.dispatch("addAlertConfirmation", {key: key, index: index});
-            },
-            discardCallbackMessage(key, index) {
-                this.$store.dispatch("addAlertDiscard", {key: key, index: index});
-            },
-            discardMessage(index) {
-                this.$store.dispatch("removeAlert", index);
-            },
-
+export default {
+    methods: {
+        confirmCallbackMessage(key, index) {
+            this.$store.dispatch("addAlertConfirmation", {key: key, index: index});
         },
-        computed: {
-            alertCollection() {
-                return this.$store.getters.alertCollection;
-            },
-            alertCallbackCollection() {
-                return this.$store.getters.alertCallbackCollection;
-            }
+        discardCallbackMessage(key, index) {
+            this.$store.dispatch("addAlertDiscard", {key: key, index: index});
+        },
+        discardMessage(index) {
+            this.$store.dispatch("removeAlert", index);
+        },
+
+    },
+    computed: {
+        alertCollection() {
+            return this.$store.getters.alertCollection;
+        },
+        alertCallbackCollection() {
+            return this.$store.getters.alertCallbackCollection;
         }
-    };
+    }
+};
 </script>
 <style scoped>
-    li {
-        list-style: none;
-    }
+li {
+    list-style: none;
+}
 
-    button {
-        margin: 10px;
-    }
+button {
+    margin: 10px;
+}
 
-    .alert-container {
-        width: 620px
-    }
+.alert-container {
+    width: 620px
+}
 </style>

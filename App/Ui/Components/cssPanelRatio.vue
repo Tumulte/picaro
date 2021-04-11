@@ -1,70 +1,61 @@
 <template lang="pug">
-    v-container
+    v-container(v-if="loaded")
         v-row
-            v-col(cols="8" class="pa-0 -ratio-text-container" class="rf-content-container")
-
-                template(v-for="(data, tag) in ratioCollection")
+            v-col(cols="8" class="pa-0 -ratio-text-container rf-content-container")
+                template(v-for="(data, tag) in styleSet.ratioCollection")
                     div(class="-ratio-container" @click="storeRatioCoordinate(tag)"  :class="{'__mini': miniVariant}")
                         component(v-if="tag !== 'html'" :is="tag" @click="storeRatioCoordinate(tag)") {{data.text}}
                             v-btn(v-if="!miniVariant" class="-ratio-container-button" @click.stop="selectTag(tag)" text=true) edit
             v-col(cols="4" class="pa-0" v-if="selectedTag && selectedTag !== 'p' && !miniVariant")
-                v-text-field(type="number" step="0.1" label="Font size" v-model="ratioCollection[selectedTag].fontSize" @input="updateTextParams('fontSize', selectedTag)")
-                v-text-field(type="number" step="0.1" label="Line height" v-model="ratioCollection[selectedTag].lineHeight" @input="updateTextParams('lineHeight', selectedTag)")
-                v-text-field(type="number" step="0.1" label="Margin bottom" v-model="ratioCollection[selectedTag].marginBottom" @input="updateTextParams('marginBottom',selectedTag)")
-                v-text-field(type="number" step="0.1" label="Margin top" v-model="ratioCollection[selectedTag].marginTop" @input="updateTextParams('marginTop',selectedTag)")
-        v-text-field(type="number" label="font-size" v-model="ratioCollection.html.fontSize" @input="updateTextParams('fontSize','html', 'px !important')")
-        v-text-field(type="number" label="line height" v-model="ratioCollection.html.lineHeight" @input="updateTextParams('lineHeight','html', 'px !important')")
+                v-text-field(type="number" step="0.1" data-jest="ratio-fs" label="Font size" v-model="styleSet.ratioCollection[selectedTag]['font-size']" @input="updateTextParams('font-size', selectedTag)")
+                v-text-field(type="number" step="0.1" data-jest="ratio-lh" label="Line height" v-model="styleSet.ratioCollection[selectedTag]['line-height']" @input="updateTextParams('line-height', selectedTag)")
+                v-text-field(type="number" step="0.1" data-jest="ratio-mb" label="Margin bottom" v-model="styleSet.ratioCollection[selectedTag]['margin-bottom']" @input="updateTextParams('margin-bottom',selectedTag)")
+                v-text-field(type="number" step="0.1" data-jest="ratio-mt" label="Margin top" v-model="styleSet.ratioCollection[selectedTag]['margin-top']" @input="updateTextParams('margin-top',selectedTag)")
+        v-text-field(type="number" label="font-size" data-jest="main-font-size" v-model="styleSet.ratioCollection.html['font-size']" @input="updateTextParams('font-size','html', 'px !important')")
+        v-text-field(type="number" label="line height" data-jest="main-line-height" v-model="styleSet.ratioCollection.html['line-height']" @input="updateTextParams('line-height','html', 'px !important')")
 </template>
 <script>
 
-    export default {
+import {mapActions, mapGetters} from "vuex";
 
-        /**
-         * @type {function}
-         */
-        data: function () {
-            return {
-                selectedTag: ""
-            };
-        },
-        props: ["miniVariant"],
-        methods: {
-            makeHtml(text, tag) {
-                return `<${tag}>${text}</${tag}>`;
-            },
-            selectTag(tag) {
-                if (this.selectedTag === tag) {
-                    this.selectedTag = "";
-                }
-                this.selectedTag = tag;
-            },
-            updateTextParams(property, selector, unit) {
-                if (!this.selectorCollection[selector]) {
-                    this.$store.dispatch("addSelector", selector);
-                }
-                this.$store.dispatch("addProperty", {
-                    selector: selector,
-                    property: property,
-                    value: `${this.ratioCollection[selector][property]}${unit ? unit : "rem"}`
-                });
-            },
-            storeRatioCoordinate: function (coordinates) {
-                this.$store.commit("currentRatio", coordinates);
+export default {
+
+    /**
+     * @type {function}
+     */
+    data() {
+        return {
+            selectedTag: ""
+        };
+    },
+    props: ["miniVariant"],
+    methods: {
+        ...mapActions(["triggerNewStyle"]),
+        selectTag(tag) {
+            if (this.selectedTag === tag) {
+                this.selectedTag = "";
             }
+            this.selectedTag = tag;
         },
-        computed: {
-            selectorCollection() {
-                return this.$store.getters.selectorCollection;
-            },
-            ratioCollection: {
-                get() {
-                    return this.$store.getters.ratioCollection;
-                },
-                set(newValue) {
-                    this.$store.commit("ratioCollection", newValue);
-                }
+        updateTextParams(property, selector, unit) {
+            if (!this.styleSet.selectorCollection[selector]) {
+                this.$store.dispatch("addSelector", selector);
             }
+            this.$store.dispatch("addProperty", {
+                selector: selector,
+                property: property,
+                value: `${this.styleSet.ratioCollection[selector][property]}${unit ? unit : "rem"}`
+            });
+            this.triggerNewStyle();
+        },
+        storeRatioCoordinate(coordinates) {
+            this.$store.commit("currentRatio", coordinates);
+            this.$store.dispatch("triggerNewStyle");
         }
-    };
+    },
+    computed: {
+        ...mapGetters(["styleSet", "loaded"]),
+    }
+};
 
 </script>

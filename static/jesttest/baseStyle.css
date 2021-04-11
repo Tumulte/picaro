@@ -3,9 +3,10 @@
     font-family: "Knile-Regular";
     src: url("/fonts/Knile-Regular.otf");
 }
+
 @font-face {
-    font-family: "TallAbbeyRg";
-    src: url("/fonts/TallAbbeyRg.otf");
+    font-family: "test";
+    src: url("/fonts/test.ttf");
 }
 :root {
     --dominant: #7094E1;
@@ -32,11 +33,16 @@
     --color1-sub8: #F6C07E;
     --color1-sub9: #FCCC92;
 }
-html {
-    font-size: 18px;
+html{
+    font-size: 16px;
+}
+.rf-content-container {
     font-family: Knile-Regular;
     height: 100%;
-    padding: 10px;
+    background: #fff;
+    color: #4E5F83;
+    font-family: Knile-Regular;
+    padding: 1.5rem;
 }
 .rf-content-container h1,
 .rf-content-container h2,
@@ -44,16 +50,9 @@ html {
 .rf-content-container h4,
 .rf-content-container h5,
 .rf-content-container h6 {
-    font-family: TallAbbeyRg;
+    font-family: Arial;
     color: #7A4B33;
     font-weight: bold;
-}
-.rf-content-container body {
-    height: 100%;
-    background: #fff;
-    color: #4E5F83;
-    font-family: Knile-Regular;
-    padding: 1.5rem;
 }
 .rf-content-container h1 {
     font-size: 4.2rem;

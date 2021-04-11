@@ -31,17 +31,17 @@
                             v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary") Move here
                     v-card-actions(class="justify-end")
                         v-btn(@click="deleteModel" color="error" text) Delete
-                        v-btn(@click="saveModel" color="success" data-jest="save model") Save
+                        v-btn(@click="saveModel" color="success" data-jest="saveStyleSet model") Save
         //todo add delete
         //todo test whole process
 </template>
 <script>
-import textField from "./partials/formEdit/_textEdit.vue";
-import booleanField from "./partials/formEdit/_booleanEdit.vue";
+import textField from "./partials/model/panelEdit/_text.vue";
+import booleanField from "./partials/model/panelEdit/_booleanEdit.vue";
 import arrayMove from "array-move";
 import axios from "axios";
-import richText from "./partials/formEdit/_richTextEdit.vue";
-import multiChoice from "./partials/formEdit/_multiChoiceEdit.vue";
+import richText from "./partials/model/panelEdit/_richText.vue";
+import multiChoice from "./partials/model/panelEdit/_multiChoiceEdit.vue";
 
 export default {
     data: function () {
@@ -63,7 +63,6 @@ export default {
         };
     },
     methods: {
-
         moveField(index) {
             if (this.currentMovingField === null) {
                 this.currentMovingField = index;
@@ -89,7 +88,6 @@ export default {
                 this.modelNameInput = "";
                 this.currentModelName = null;
                 this.displayNewModelButton = true;
-
             }
             this.currentEditModelName = null;
         },
@@ -124,7 +122,6 @@ export default {
             });
             this.currentModelName = this.modelNameInput;
             this.displayNewModelButton = false;
-
         },
         async deleteModel() {
             await this.$store.dispatch("awaitConfirmation", {
@@ -137,14 +134,11 @@ export default {
             });
             await this.$nextTick();
             document.getElementById("_admin-form-ext-submit").click();
-
         },
         saveModel: async function () {
-
             this.$store.commit("newModelName", this.modelNameInput);
             await this.$nextTick();
             document.getElementById("_admin-form-ext-submit").click();
-
         },
         noEdition: function (index) {
             return !this.currentModelName || index === this.currentModelName;
@@ -160,27 +154,6 @@ export default {
         modelCollectionString() {
             return JSON.stringify(this.modelCollection);
         }
-    },
-    created() {
-        //TODO BACKGROUND find a better way to skip
-        if (process.env.ISTEST) {
-            return;
-        }
-        axios
-
-            .get("/appapi/settings/")
-            .then(response => {
-                this.$store.commit(
-                    "modelCollection",
-                    JSON.parse(response.data.modelCollectionString)
-                );
-            })
-            .catch(error => {
-                this.warningMessage = {
-                    type: "error",
-                    text: `Request failed.  Returned status of ${error}`
-                };
-            });
     }
 
 };

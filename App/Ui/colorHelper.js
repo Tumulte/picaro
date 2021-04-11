@@ -197,7 +197,6 @@ export function colorHelper() {
         if (color) {
             this.color = color;
         }
-
         if (typeof this.color === "string") {
             return this.color;
         } else if (typeof this.color.red !== "undefined") {

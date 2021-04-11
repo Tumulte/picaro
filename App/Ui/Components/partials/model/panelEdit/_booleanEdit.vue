@@ -7,26 +7,26 @@
             formFieldEditCommon(@changeParentCommonData="getCommonData($event)" @updateEditedFieldData="saveEdit()" :edit="editOrAdd" :fieldData="fieldData")
 
             v-btn(v-if="isEdited" data-jest='cancel-boolean' @click="cancelEdit") Cancel
-            v-btn(v-if="isEdited" data-jest='save-boolean' @click="saveEdit" :disabled="!valid") Save
+            v-btn(v-if="isEdited" data-jest='saveStyleSet-boolean' @click="saveEdit" :disabled="!valid") Save
             v-btn(v-else-if="edit && !isEdited" data-jest="add-button" @click="addField" :disabled="!valid") Add field
 
 </template>
 <script>
-    import editFieldCommons from "../../mixins/modelEditCommons";
-    import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
+import editFieldCommons from "../../../mixins/modelEditCommons";
+import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
 
-    export default {
-        name: "BooleanEdit",
-        mixins: [editFieldCommons],
-        components: {
-            formFieldEditCommon
+export default {
+    name: "BooleanPanelEdit",
+    mixins: [editFieldCommons],
+    components: {
+        formFieldEditCommon
+    },
+    methods: {
+        getCommonData(event) {
+            event.type = "Boolean";
+            this.commonData = event;
         },
-        methods: {
-            getCommonData(event) {
-                event.type = "Boolean";
-                this.commonData = event;
-            },
 
-        }
-    };
+    }
+};
 </script>

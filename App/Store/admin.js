@@ -1,85 +1,75 @@
 import Vue from "vue";
+import {generateCSS} from "../Ui/cssGenerator";
 
 
 const ratioCollection = {
     h1: {
         text: "header 1",
         marginTop: 1.34,
-        marginBottom: 1.34,
-        fontSize: 2,
-        lineHeight: 2.75
+        "margin-bottom": 1.34,
+        "font-size": 2,
+        "line-height": 2.75
     },
     h2: {
         text: "header 2",
-        marginTop: 1.25,
-        marginBottom: 1.25,
-        fontSize: 1.5,
-        lineHeight: 2
+        "margin-top": 1.25,
+        "margin-bottom": 1.25,
+        "font-size": 1.5,
+        "line-height": 2
     },
     h3: {
         text: "header 3",
-        marginTop: 1.17,
-        marginBottom: 1.17,
-        fontSize: 1.17,
-        lineHeight: 1.75
+        "margin-top": 1.17,
+        "margin-bottom": 1.17,
+        "font-size": 1.17,
+        "line-height": 1.75
     },
     h4: {
         text: "header 4",
-        marginTop: 1.33,
-        marginBottom: 1.33,
-        fontSize: 1,
-        lineHeight: 1.4
+        "margin-top": 1.33,
+        "margin-bottom": 1.33,
+        "font-size": 1,
+        "line-height": 1.4
     },
     h5: {
         text: "header 5",
-        marginTop: 1.4,
-        marginBottom: 1.4,
-        fontSize: 0.83,
-        lineHeight: 1.16
+        "margin-top": 1.4,
+        "margin-bottom": 1.4,
+        "font-size": 0.83,
+        "line-height": 1.16
     },
     h6: {
         text: "header 6",
-        marginTop: 1.55,
-        marginBottom: 1.55,
-        fontSize: 0.67,
-        lineHeight: 0.9
+        "margin-top": 1.55,
+        "margin-bottom": 1.55,
+        "font-size": 0.67,
+        "line-height": 0.9
     },
     p: {
         text: "base text"
     },
     html: {
-        lineHeight: 24,
-        fontSize: 16
+        "line-height": 24,
+        "font-size": 16
     }
 };
 
 export default {
     state: {
-        colorParameterCollection: {},
         currentColor: "",
         currentRatio: 1,
         currentSelector: null,
-        selectorCollection: {
-            body: {},
-            h1_AND_h2_AND_h3_AND_h4_AND_h5_AND_h6: {},
-            CLSS__altfont: {}
-        },
         colorCollection: {},
-        selectorIndex: "1",
         cssPanelIndex: 1,
         colorSet: {},
         styleSet: {},
         loaded: false,
         ratioCollection: ratioCollection,
         newModelName: "",
-        styleSetLoaded: false
+        styleSetLoaded: false,
+        triggerNewStyle: false,
     },
     mutations: {
-
-        // @ts-ignore
-        colorParameterCollection(state, data) {
-            state.colorParameterCollection = data;
-        },
         /**
          *
          * @param {Object} state Vuex state
@@ -88,7 +78,7 @@ export default {
         currentColor(state, coordinates) {
             if (state.currentSelector) {
                 Vue.set(
-                    state.selectorCollection[state.currentSelector.selector],
+                    state.styleSet.selectorCollection[state.currentSelector.selector],
                     state.currentSelector.property, {
                         type: "color",
                         data: coordinates
@@ -99,7 +89,7 @@ export default {
         currentRatio(state, coordinates) {
             if (state.currentSelector) {
                 Vue.set(
-                    state.selectorCollection[state.currentSelector.selector],
+                    state.styleSet.selectorCollection[state.currentSelector.selector],
                     state.currentSelector.property, {
                         type: "ratio",
                         data: coordinates
@@ -113,18 +103,14 @@ export default {
         },
         ratioCollection(state, data) {
             state.ratioCollection = data;
-            const lineHeight = Math.round(data.html.lineHeight / data.html.fontSize * 100) / 100;
+            const lineHeight = Math.round(data.html["line-height"] / data.html["font-size"] * 100) / 100;
             state.ratioCollection.p = {
-                lineHeight: lineHeight,
-                fontSize: 1,
-                marginBottom: 0,
-                marginTop: 0,
+                "line-height": lineHeight,
+                "font-size": 1,
+                "margin-bottom": 0,
+                "margin-top": 0,
                 text: data.p.text
             };
-        },
-        // @ts-ignore
-        selectorCollection(state, data) {
-            state.selectorCollection = data;
         },
         // @ts-ignore
         colorSet(state, data) {
@@ -140,11 +126,8 @@ export default {
         },
         // @ts-ignore
         colorCollection(state, data) {
+            state.styleSet.dominant = data.dominant;
             state.colorCollection = data;
-        },
-        // @ts-ignore
-        selectorIndex(state, data) {
-            state.selectorIndex = data;
         },
         // @ts-ignore
         cssPanelIndex(state, data) {
@@ -157,19 +140,13 @@ export default {
         newModelName(state, data) {
             state.newModelName = data;
         },
-
+        triggerNewStyle(state, data) {
+            state.triggerNewStyle = data;
+        },
     },
     getters: {
         styleSetLoaded(state) {
             return state.styleSetLoaded;
-        },
-        // @ts-ignore
-        colorParameterCollection: function (state) {
-            return state.colorParameterCollection;
-        },
-        // @ts-ignore
-        selectorCollection: function (state) {
-            return state.selectorCollection;
         },
         // @ts-ignore
         colorCollection: function (state) {
@@ -178,10 +155,7 @@ export default {
         ratioCollection: function (state) {
             return state.ratioCollection;
         },
-        // @ts-ignore
-        selectorIndex: function (state) {
-            return state.selectorIndex;
-        },
+
         // @ts-ignore
         cssPanelIndex(state) {
             return state.cssPanelIndex;
@@ -201,34 +175,58 @@ export default {
         },
         newModelName(state) {
             return state.newModelName;
+        },
+        triggerNewStyle(state) {
+            return state.triggerNewStyle;
         }
 
 
     },
     actions: {
-        updateSelector: function ({
-                                      state
-                                  }, value) {
-            Vue.set(state.selectorCollection, value.new, state.selectorCollection[value.old]);
-            Vue.delete(state.selectorCollection, value.old);
+        updateProperty({
+                           state, dispatch
+                       }, value) {
+            Vue.set(state.styleSet.selectorCollection[value.selector], value.new, state.styleSet.selectorCollection[value.selector][value.old]);
+            Vue.delete(state.styleSet.selectorCollection[value.selector], value.old);
+            dispatch("triggerNewStyle");
+
         },
-        addSelector: function ({
-                                   state
-                               }, value) {
-            Vue.set(state.selectorCollection, value, {});
+        updateSelector({
+                           state, dispatch
+                       }, value) {
+            Vue.set(state.styleSet.selectorCollection, value.new, state.styleSet.selectorCollection[value.old]);
+            Vue.delete(state.styleSet.selectorCollection, value.old);
+            dispatch("triggerNewStyle");
         },
-        addProperty: function ({
-                                   state
-                               }, data) {
-            Vue.set(state.selectorCollection[data.selector], data.property, data.value ? data.value : "");
+
+        addSelector({
+                        state, dispatch
+                    }, value) {
+            Vue.set(state.styleSet.selectorCollection, value, {});
+            dispatch("triggerNewStyle");
+
         },
-        updateStyles: function ({
-                                    state
-                                }, data) {
+        addProperty({
+                        state, dispatch
+                    }, data) {
+            Vue.set(state.styleSet.selectorCollection[data.selector], data.property, data.value ? data.value : "");
+            dispatch("triggerNewStyle");
+        },
+        updateStyles({state, dispatch}, data) {
             if (!data || !data.value) {
                 return;
             }
-            Vue.set(state.selectorCollection[data.selector], data.property, data.value);
+            if (!state.styleSet.selectorCollection[data.selector]) {
+                Vue.set(state.styleSet.selectorCollection, data.selector, {});
+            }
+            Vue.set(state.styleSet.selectorCollection[data.selector], data.property, data.value);
+            dispatch("triggerNewStyle");
+        },
+        triggerNewStyle({state}) {
+            if (document.readyState === "complete") {
+                document.getElementById("rf-live-styles").innerHTML = generateCSS(state.styleSet);
+            }
         }
+
     },
 };

@@ -57,7 +57,6 @@ const crud = function crud(db) {
         .get(function (req, res) {
             res.json(req.data);
         })
-
         .put(function (req, res) {
             db.get(makeTableName(req))
                 .find({

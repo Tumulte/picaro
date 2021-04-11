@@ -7,6 +7,9 @@ npm-debug.log
 .history
 rougeSettings.json
 static/fonts/*
+static/fonts/Knile*
+static/fonts/TallAbbey*
+static/fonts/RivinaTC*
 App/Tests/Cypress/videos/*
 App/mochawesome.json
 App/Tests/css/*

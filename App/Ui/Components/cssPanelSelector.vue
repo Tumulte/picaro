@@ -1,17 +1,16 @@
 <template lang="pug">
-    v-expansion-panels
-        warning-component( :warning-message="warningMessage")
+    v-expansion-panels(:key="componentKey" v-if="loaded")
         v-expansion-panel(v-for="(propertyCollection, selector) in selectorCollection" :key="selector")
             v-row(class="px-3")
                 v-col(class="px-3")
-                    v-text-field(hide-details=true outlined=true @click:append="deleteSelector(selector)" @keypress.enter.prevent.stop="saveEdit({selector:selector}, $event)" :value="jsonToCss(selector)" @change="changeSelector($event, selector)" append-icon="mdi-delete-outline")
+                    v-text-field(hide-details=true outlined=true data-jest="selector-card" @click:append="deleteSelector(selector)" :value="selector" @change="changeSelector(selector, $event)" append-icon="mdi-delete-outline")
                 v-col(cols="2")
-                    v-expansion-panel-header(class="pa-0")
+                    v-expansion-panel-header(class="pa-0" data-jest="selector-accordion")
             v-expansion-panel-content(class="pa-0")
-                v-row(class="align-items-center" v-for="(value, property) in propertyCollection" :key="property" v-on:click="storeSelectorAndProperty(selector, property)" )
+                v-row(class="align-items-center" data-jest="select-property" v-for="(value, property) in propertyCollection" :key="property" v-on:click="storeSelectorAndProperty(selector, property)" )
                     v-col(cols="9")
                         v-row
-                            v-text-field(@keypress.enter.prevent.stop="saveEdit({selector:selector, property:property}, $event)" )
+                            v-text-field(@change="changeProperty($event, selector, property)" :value="property" data-jest="property-edit")
                         v-row
                             span(v-if="property.type === 'ratio'") {{makeRatio(property)}}
                             span(v-else contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getProperty(value)")
@@ -20,16 +19,15 @@
                         v-btn(class="w-auto pa-0" text=true @click="deleteProperty(selector,property)")
                             v-icon mdi-delete-outline
 
-                v-text-field(type="text" label="Add new property" class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)")
-        v-text-field(label="Add new selector" type="text"  class="css-panel__input"  @keyup.enter="addSelector($event.target.value)")
+                v-text-field(type="text" label="Add new property" class="css-panel__input"  @keyup.enter="addProperty($event.target.value,selector)" data-jest="add-property")
+        v-text-field(label="Add new selector" type="text"  class="css-panel__input" v-model="newSelectorName" @keyup.enter="addSelector()" data-jest="add-selector")
 </template>
 <script>
 import {colorHelper} from "../colorHelper";
 
-import {cssToJson, isHexColor, jsonToCss} from "../../utils";
-import {generateCSS} from "../cssGenerator";
+import {isHexColor} from "../../utils";
 import messages from "../../Messages/messages.json";
-import {mapGetters} from "vuex";
+import {mapGetters, mapActions} from "vuex";
 
 
 const colorUtils = new colorHelper();
@@ -61,56 +59,55 @@ export default {
             newSelector: "",
             newProperty: {},
             colorMapping: {},
-            warningMessage: ""
+            message: "",
+            newSelectorName: "",
+            componentKey: true
         };
     },
     methods: {
+        ...mapActions([
+            "addAlert",
+            "triggerNewStyle"
+        ]),
         storeSelectorAndProperty: function (selector, property) {
-            selector = cssToJson(selector);
             this.$store.commit("currentSelector", {
                 selector: selector,
                 property: property
             });
         },
-        changeSelector(event, selector) {
-            this.$store.dispatch("updateSelector", {
-                old: selector,
-                new: cssToJson(event)
-            });
-        },
         makeRatio(property) {
             return (
                 `${Math.round(
-                    (parseFloat(this.ratioCollection[property.data].lineHeight) +
-                        parseFloat(this.ratioCollection[property.data].marginTop) +
-                        parseFloat(this.ratioCollection[property.data].marginBottom)) *
+                    (parseFloat(this.ratioCollection[property.data]["line-height"]) +
+                        parseFloat(this.ratioCollection[property.data]["margin-top"]) +
+                        parseFloat(this.ratioCollection[property.data]["margin-bottom"])) *
                     100
                 ) /
                 100}rem`
             );
         },
-        addSelector: function (value) {
-            value = cssToJson(value);
+        addSelector: function () {
+            if (!this.newSelectorName) {
+                this.addAlert({text: "You have to write a valid CSS selector", type: "info"});
+                return;
+            }
 
-            if (value in this.selectorCollection) {
+            if (this.newSelectorName in this.selectorCollection) {
                 this.warningMessage = {
                     text: messages.warnings.duplicateKey,
                     type: "warning",
-                    textVariable: value
+                    textVariable: this.newSelectorName
                 };
             } else {
-                this.$store.dispatch("addSelector", value);
+                this.$store.dispatch("addSelector", this.newSelectorName);
+                this.newSelectorName = "";
             }
         },
         addProperty: function (value, selector) {
-            value = cssToJson(value);
-            selector = cssToJson(selector);
-            if (value in this.selectorCollection[selector]) {
-                this.warningMessage = {
-                    text: messages.warnings.duplicateKey,
-                    type: "warning",
-                    textVariable: value
-                };
+            if (!value) {
+                this.addAlert({text: "You have to write a valid CSS property", type: "info"});
+            } else if (value in this.selectorCollection[selector]) {
+                this.addAlert({text: `The property ${value} already exists in ${selector}`, type: "info"});
             } else {
                 this.$store.dispatch("addProperty", {
                     selector: selector,
@@ -120,8 +117,6 @@ export default {
                     selector: selector,
                     property: value
                 });
-
-                this.$store.commit("selectorIndex", value + selector);
             }
         },
         getProperty: function (property) {
@@ -143,80 +138,63 @@ export default {
                 return property;
             }
         },
-        deleteProperty: function (selector, property) {
-            this.warningMessage = {
-                text: "Are you sure you want to delete ?",
-                type: "warning",
-                callback: () => {
-                    this.$delete(this.selectorCollection[selector], property);
-                }
-            };
+        async deleteProperty(selector, property) {
+            await this.$store.dispatch("awaitConfirmation", {
+                text: `Are you sure you want to delete ${property.toUpperCase()} from ${selector} ?`,
+                type: "info"
+            });
+
+            this.$delete(this.selectorCollection[selector], property);
         },
-        deleteSelector: function (selector) {
-            this.warningMessage = {
-                text: "Are you sure you want to delete %s and all it's properties ?",
-                type: "warning",
-                textVariable: selector,
-                callback: () => {
-                    this.$delete(this.selectorCollection, selector);
-                }
-            };
+        async deleteSelector(selector) {
+            await this.$store.dispatch("awaitConfirmation", {
+                text: `Are you sure you want to delete ${selector.toUpperCase()} and all it's properties ?`,
+                type: "info"
+            });
+            this.$delete(this.selectorCollection, selector);
         },
-        jsonToCss: function (text) {
-            return jsonToCss(text);
-        },
-        saveEdit: function (coordinates, event) {
-            const value = cssToJson(event.target.innerHTML);
-            if (coordinates.value) {
-                this.$set(
-                    this.selectorCollection[coordinates.selector],
-                    coordinates.property,
-                    event.target.innerHTML
-                );
-            } else if (coordinates.property) {
-                this.$set(
-                    this.selectorCollection[coordinates.selector],
-                    value,
-                    this.selectorCollection[coordinates.selector][coordinates.property]
-                );
-                this.$delete(
-                    this.selectorCollection[coordinates.selector],
-                    coordinates.property
-                );
+        changeSelector(selector, event) {
+            if (!(event in this.styleSet.selectorCollection)) {
+                this.$store.dispatch("updateSelector", {
+                    old: selector,
+                    new: event
+                });
             } else {
-                this.$set(
-                    this.selectorCollection,
-                    value,
-                    this.selectorCollection[coordinates.selector]
-                );
-                this.$delete(this.selectorCollection, coordinates.selector);
+                this.componentKey = !this.componentKey; //cancel changes
+                this.addAlert({type: "warning", text: `The selector ${event.toUpperCase()} already exists`});
             }
-        }
+        },
+        changeProperty(event, selector, property) {
+            if (!(event in this.styleSet.selectorCollection[selector])) {
+                this.$store.dispatch("updateProperty", {
+                    selector: selector,
+                    old: property,
+                    new: event
+                });
+            } else {
+                this.componentKey = !this.componentKey; //cancel changes
+                this.addAlert({type: "warning", text: `The property ${event.toUpperCase()} already exists`});
+            }
+        },
     },
     computed: {
         ...mapGetters([
             "styleSet",
-            "colorCollection",
-            "selectorCollection",
-            "selectorIndex",
-            "ratioCollection"
-        ])
-    },
-    //TODO : that's confusing to have the master style updater here
-    updated: function () {
-        this.$nextTick(() => {
-            document.getElementById("rf-live-styles").innerHTML = generateCSS(this.styleSet);
-        });
-    },
-    watch: {
-        styleSetLoaded() {
-            generateCSS(this.styleSet);
-
+            "colorSet",
+            "ratioCollection",
+            "loaded"
+        ]),
+        selectorCollection() {
+            return this.styleSet.selectorCollection;
+        },
+        colorCollection() {
+            if (this.loaded) {
+                return this.colorSet.colorCollection;
+            } else {
+                return [];
+            }
         }
     },
-    created() {
-        document.head.insertAdjacentHTML("beforeend", "<style type='text/css' id='rf-live-styles' ></style>");
-    }
 
 };
 </script>

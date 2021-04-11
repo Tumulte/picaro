@@ -1,79 +1,62 @@
 <template lang="pug">
     div
-        v-form(v-model="valid" @submit.prevent="sendForm($event)"  method="post" :action="`/api/${appName}/${encodeURI(rfModel)}`")
+        v-form(v-model="valid" @submit.prevent="sendForm()")
             v-switch(v-model="valid" class="ma-4" label="Valid" readonly)
-            div(v-for="model in modelCollection[rfModel]" data-jest="form-element")
-                component( :is="`rf${model.type}`" :required="model.required" :label="model.label" :regex="model.regex" :name="model.name")
+            div(v-for="modelParams in modelCollection[model]" data-jest="form-element")
+                component(:is="`rf${modelParams.type}`" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="model" @updateData="updateData($event)")
             v-btn(type="submit") Submit
-
 </template>
 <script>
-    import axios from "axios";
-    import rfBoolean from "./partials/form/_boolean.vue";
-    import rfText from "./partials/form/_text.vue";
-    import rfRichText from "./partials/form/_richText.vue";
+import axios from "axios";
+import rfBoolean from "./partials/model/edit/_boolean.vue";
+import rfText from "./partials/model/edit/_text.vue";
+import rfRichText from "./partials/model/edit/_richText.vue";
+import {mapActions, mapGetters} from "vuex";
 
-    export default {
-        name: "model.vue",
-        data: function () {
-            return {
-                valid: true,
-                appName: "",
-            };
+export default {
+    name: "model",
+    data: function () {
+        return {
+            valid: true,
+            currentModelData: {}
+        };
+    },
+    props: {model: String},
+    components: {rfBoolean, rfText, rfRichText},
+    methods: {
+        ...mapActions(["addAlert"]),
+        updateData(data) {
+            console.debug(data);
+            this.$set(this.currentModelData, data.name, data.value);
         },
-        props: {rfModel: String},
-        components: {rfBoolean, rfText, rfRichText},
-        computed: {
-            modelCollection() {
-                return this.$store.getters.modelCollection;
-            }
-        },
-        methods: {
-            sendForm(event) {
-                this.$nextTick(() => {
-                    let form = event.target;
-
-                    const formData = new FormData(form);
-                    console.debug(Object.fromEntries(formData));
-                    axios
-                        .post(form.action, Object.fromEntries(formData))
-                        .then(() => {
-                            this.warningMessage = {
-                                type: "success",
-                                text: "Saved successfully"
-                            };
-                        })
-                        .catch(errors => {
-                            this.warningMessage = {
-                                type: "error",
-                                text: `Request failed.  Returned status of ${errors}`
-                            };
+        sendForm() {
+            this.$nextTick(() => {
+                axios
+                    .post(`/api/${this.settings.applicationName}/${encodeURI(this.model)}`, this.currentModelData)
+                    .then(() => {
+                        this.addAlert({
+                            type: "success",
+                            text: "Saved successfully"
                         });
-                });
-            }
-        },
-        created: function () {
-            axios
-                .get("/appapi/settings/")
-                .then(response => {
-                    this.$store.commit(
-                        "modelCollection",
-                        JSON.parse(response.data.modelCollectionString)
+                    }).catch(errors => {
+                    this.addAlert({
+                            type: "error",
+                            text: `Request failed.  Returned status of ${errors}`
+                        }
                     );
-                    this.appName = response.data.applicationName;
-
-                })
-                .catch(error => {
-
-                    this.warningMessage = {
-                        type: "error",
-                        text: `Request failed.  Returned status of ${error}`
-                    };
-
-
                 });
+            });
         }
-    };
+    },
+    computed: {
+        ...mapGetters(["modelCollection", "settings"])
+    },
+    watch: {
+        modelCollection() {
+            this.currentModelData = this.modelCollection[this.model];
+        }
+    }
+};
 
 </script>
 

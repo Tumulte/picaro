@@ -74,6 +74,7 @@ export function generateColorSet(dominant) {
 
      */
     const addCombination = function (combination) {
+
         combination.hue = base360(combination.hue);
         const hex = colorUtils.hslToHex(combination).getString();
         self.colorCollection.combinationCollection.push({
@@ -82,6 +83,7 @@ export function generateColorSet(dominant) {
             light: combination.light,
             saturation: combination.saturation,
         });
+
         addSubCombination();
     };
     /**
@@ -135,8 +137,11 @@ export function generateColorSet(dominant) {
      */
     this.updateColor = function (newColor) {
         this.colorCollection.dominant = newColor;
-
-        this.hsl = colorUtils.hexToHsl(newColor).getValueCollection();
+        if (newColor.hue) {
+            this.hsl = newColor;
+        } else {
+            this.hsl = colorUtils.hexToHsl(newColor).getValueCollection();
+        }
         return this;
     };
 
@@ -166,21 +171,22 @@ export function generateColorSet(dominant) {
      * @returns {object}
      */
     this.generate = function (colors, lightVariation, satVariation) {
-
         this.lightVariation = lightVariation;
         this.satVariation = satVariation;
         this.colorCollection.dominantSubCollection = createSubCombinationArray(this.hsl);
         this.colorCollection.combinationCollection = [];
         colors.forEach((item) => {
-            const saturation = item.saturation ? item.saturation : this.hsl.saturation;
-            const light = item.light ? item.light : this.hsl.light;
+            const saturation = item.saturation !== undefined ? item.saturation : this.hsl.saturation;
+            const light = item.light !== undefined ? item.light : this.hsl.light;
             const combination = {
                 hue: this.hsl.hue + item.hueVariation,
                 saturation: saturation,
                 light: light,
             };
+
             addCombination(combination);
         });
+
         this.colorCollection.graySubCollection = createSubCombinationArray(
             {
                 hue: this.hsl.hue,
@@ -189,6 +195,7 @@ export function generateColorSet(dominant) {
             },
             true
         );
+
         this.colorCollection.alertSubCollection = createSubCombinationArray({
             hue: 0,
             saturation: this.hsl.saturation,
@@ -209,6 +216,8 @@ export function generateColorSet(dominant) {
             saturation: this.hsl.saturation,
             light: this.hsl.light,
         });
+
+
         return this.colorCollection;
     };
-};
+}

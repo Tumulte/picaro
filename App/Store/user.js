@@ -5,12 +5,14 @@ export default {
     state: {
         list: {},
         tagCollection: {},
-        modelCollection: {},
-        navStructure: {},
         alertCollection: [],
         dialog: {},
         alertCallbackCollection: [],
-        alertConfirmationStatus: {}
+        alertConfirmationStatus: {},
+        settings: {modelCollectionString: "{}", navStructureString: "{}"},
+        modelCollection: {},
+        navStructure: {}
+
     },
     mutations: {
         // @ts-ignore
@@ -21,14 +23,14 @@ export default {
         tagCollection(state, data) {
             state.tagCollection = data;
         },
-
-        navStructure(state, data) {
-            state.navStructure = data;
+        settings(state, data) {
+            state.settings = data;
+            state.modelCollection = JSON.parse(state.settings.modelCollectionString);
+            state.navStructure = JSON.parse(state.settings.navStructureString);
         },
         modelCollection(state, data) {
             state.modelCollection = data;
-        },
-
+        }
     },
     getters: {
         // @ts-ignore
@@ -39,18 +41,22 @@ export default {
         tagCollection: function (state) {
             return state.tagCollection;
         },
-        modelCollection(state) {
-            return state.modelCollection;
-        },
-        navStructure(state) {
-            return state.navStructure;
-        },
         alertCollection(state) {
             return state.alertCollection;
         },
         alertCallbackCollection(state) {
             return state.alertCallbackCollection;
         },
+        settings(state) {
+            return state.settings;
+        },
+        modelCollection(state) {
+            return state.modelCollection;
+        },
+        navStructure(state) {
+            return state.navStructure;
+        },
+
     },
     actions: {
         removeKeyFromCollection: function ({state}, data) {
@@ -98,9 +104,7 @@ export default {
                 state.alertCallbackCollection.push(data);
                 await Vue.nextTick();
                 const alertButtons = document.getElementsByClassName("rf-alert-button");
-
                 Array.from(alertButtons).forEach(function (element) {
-
                     element.addEventListener("click", () => {
                         if (state.alertConfirmationStatus[key] && state.alertConfirmationStatus[key].status === true) {
                             removeAlert();

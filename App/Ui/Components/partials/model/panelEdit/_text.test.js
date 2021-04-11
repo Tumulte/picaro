@@ -1,7 +1,7 @@
 import {mount} from "@vue/test-utils";
 
 import Vuetify from "vuetify";
-import text from "./_textEdit.vue";
+import text from "./_text.vue";
 import common from "./formEditCommons/_formFieldEditCommon";
 
 const vuetify = new Vuetify();

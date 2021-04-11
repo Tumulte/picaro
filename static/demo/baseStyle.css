@@ -1,90 +1,89 @@
-/* This is automatically generated CSS, do not edit */
+/* START This is an automatically generated CSS, do not edit */
+@font-face {
+    font-family: "Knile-Regular";
+    src: url("/fonts/Knile-Regular.otf");
+}
+@font-face {
+    font-family: "TallAbbeyRg";
+    src: url("/fonts/TallAbbeyRg.otf");
+}
+
 :root {
     --dominant: #7094E1;
-    --combination0: #D85F22;
-    --combination0-0: #4D382E;
-    --combination0-1: #624232;
-    --combination0-2: #7A4B33;
-    --combination0-3: #945333;
-    --combination0-4: #B05B30;
-    --combination0-5: #CE622C;
-    --combination0-6: #DF6D34;
-    --combination0-7: #EB7A42;
-    --combination0-8: #F58851;
-    --combination0-9: #FD9663;
-    --combination1: #F19D37;
-    --combination1-0: #685641;
-    --combination1-1: #7F6443;
-    --combination1-2: #987243;
-    --combination1-3: #B48041;
-    --combination1-4: #C98E45;
-    --combination1-5: #D79B50;
-    --combination1-6: #E4A75E;
-    --combination1-7: #EEB46D;
-    --combination1-8: #F6C07E;
-    --combination1-9: #FCCC92;
+    --color0: #D85F22;
+    --color0-sub0: #4D382E;
+    --color0-sub1: #624232;
+    --color0-sub2: #7A4B33;
+    --color0-sub3: #945333;
+    --color0-sub4: #B05B30;
+    --color0-sub5: #CE622C;
+    --color0-sub6: #DF6D34;
+    --color0-sub7: #EB7A42;
+    --color0-sub8: #F58851;
+    --color0-sub9: #FD9663;
+    --color1: #F19D37;
+    --color1-sub0: #685641;
+    --color1-sub1: #7F6443;
+    --color1-sub2: #987243;
+    --color1-sub3: #B48041;
+    --color1-sub4: #C98E45;
+    --color1-sub5: #D79B50;
+    --color1-sub6: #E4A75E;
+    --color1-sub7: #EEB46D;
+    --color1-sub8: #F6C07E;
+    --color1-sub9: #FCCC92;
 }
-
-html {
-    font-size: 18px;
-    font-family: "Knile-Regular";
+.rf-content-container, .v-application {
+    font-family: Knile-Regular;
 }
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: "TallAbbeyRg";
+.rf-content-container h1,
+.rf-content-container h2,
+.rf-content-container h3,
+.rf-content-container h4,
+.rf-content-container h5,
+.rf-content-container h6 {
+    fontFamily: TallAbbeyRg;
+    color: #7A4B33;
+    font-family: TallAbbeyRg;
 }
-
-.rf-content-container {
+.rf-content-container body {
+    height: 100%;
     background: #fff;
     color: #4E5F83;
-    font-family: "Knile-Regular";
+    fontFamily: Knile-Regular;
     padding: 1.5rem;
-    height: 100%;
+    font-family: Knile-Regular;
 }
-
-.rf-content-container h1, h2, h3, h4, h5, h6 {
-    font-family: "TallAbbeyRg";
-    color: #7A4B33;
-}
-
 .rf-content-container h1 {
-    font-size: 4.2rem;
-    line-height: 4.2rem;
-    margin-bottom: 1.6rem;
-    margin-top: 1.6rem;
+    fontSize: 4.2rem;
+    lineHeight: 4.2rem;
+    marginBottom: 1.6rem;
+    marginTop: 1.6rem;
 }
-
 .rf-content-container h2 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    line-height: 3rem;
-    margin-top: 1.3rem;
+    fontSize: 3rem;
+    marginBottom: 2rem;
+    lineHeight: 3rem;
+    marginTop: 1.3rem;
 }
-
 .rf-content-container h3 {
-    font-size: 2rem;
-    line-height: 3rem;
-    margin-bottom: 1.3rem;
+    fontSize: 2rem;
+    lineHeight: 3rem;
+    marginBottom: 1.3rem;
 }
-
 .rf-content-container h4 {
-    font-size: 1.6rem;
-    line-height: 2rem;
-    margin-bottom: 1.3rem;
+    fontSize: 1.6rem;
+    lineHeight: 2rem;
+    marginBottom: 1.3rem;
 }
-
 .rf-content-container h6 {
-    font-size: 1rem;
-    line-height: 1rem;
+    fontSize: 1rem;
+    lineHeight: 1rem;
 }
-
 .rf-content-container h5 {
-    margin-bottom: 1.3rem;
-    font-size: 1rem;
-    line-height: 1rem;
+    marginBottom: 1.3rem;
+    fontSize: 1rem;
+    lineHeight: 1rem;
 }
 
-.rf-content-container .altfont {
-}
-
-/* This is automatically generated CSS, do not edit */
+/* END This was an automatically generated CSS, do not edit */

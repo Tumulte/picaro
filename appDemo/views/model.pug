@@ -1,9 +1,10 @@
 extends layout/header.pug
 block content
-    model-panel
-    rf-model(rf-model="testRTE")
-    rf-list(rf-model="testRTE" v-slot="{ item}")
-        rf-rich-text(:editor-data="item['test-rte']")
+    rf-model(model="testRTE")
+    rf-list(model="testRTE" v-slot="{item}")
+        rf-model-field(:field-data="item"  field-name='test-rte')
+        rf-model-field(:field-data="item"  field-name='areyou')
+        rf-model-field(:field-data="item"  field-name='yup')
 
 
 

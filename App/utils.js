@@ -21,37 +21,6 @@ export function parseMessage(str) {
     return str.replace(/%s/g, () => args[i++]);
 };
 
-/**
- * Replaces the css syntaxe with JS object compatible syntaxe
- * @param {string} text
- * @returns {string}
- */
-export function cssToJson(text) {
-    if (text.indexOf(".") === 0) {
-        text = text.replace(".", "mkClss");
-    }
-    text = text.replace(/,/g, "_AND_");
-    text = text.replace(" ", "");
-
-    return text.replace(/-([a-z])/g, function (g) {
-        return g[1].toUpperCase();
-    });
-};
-
-/**
- *
- * @param {string} text
- */
-export function jsonToCss(text) {
-    if (text.indexOf("mkClss") === 0) {
-        text = text.replace("mkClss", ".");
-    }
-    text = text.replace(/_AND_/g, ",");
-
-    return text.replace(/([A-Z])/g, function (el) {
-        return `-${el[0].toLowerCase()}`;
-    });
-};
 
 /**
  *
@@ -92,6 +61,26 @@ export function makeFontFamilyName(name) {
 };
 
 export function makeRatio(sizes) {
-    const ratio = parseFloat(sizes.lineHeight) + parseFloat(sizes.marginTop) + parseFloat(sizes.marginBottom);
+    const ratio = parseFloat(sizes["line-height"]) + parseFloat(sizes["margin-top"]) + parseFloat(sizes["margin-bottom"]);
     return `${Math.round(ratio * 100) / 100}rem`;
 };
+
+export const debounce = (func, delay) => {
+    let inDebounce;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(inDebounce);
+        inDebounce = setTimeout(() => func.apply(context, args), delay);
+    };
+};
+export const webSafeFonts = ["Arial",
+    "Verdana",
+    "Helvetica",
+    "Tahoma",
+    "Trebuchet MS",
+    "Times New Roman",
+    "Georgia",
+    " Garamond",
+    "Courier New",
+    "Brush Script MT"];
