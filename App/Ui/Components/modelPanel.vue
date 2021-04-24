@@ -30,18 +30,20 @@
                                     v-btn(data-jest='delete-button' @click="deleteField(subIndex)" color="error" text class="mr-3 mt-3" ) Delete
                             v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary") Move here
                     v-card-actions(class="justify-end")
-                        v-btn(@click="deleteModel" color="error" text) Delete
+                        v-btn(@click="deleteModel" color="error" text v-if="currentEditModelName !== 'meta'") Delete
                         v-btn(@click="saveModel" color="success" data-jest="saveStyleSet model") Save
         //todo add delete
         //todo test whole process
 </template>
 <script>
 import textField from "./partials/model/panelEdit/_text.vue";
-import booleanField from "./partials/model/panelEdit/_booleanEdit.vue";
+import booleanField from "./partials/model/panelEdit/_booleanSwitchEdit.vue";
 import arrayMove from "array-move";
-import axios from "axios";
 import richText from "./partials/model/panelEdit/_richText.vue";
 import multiChoice from "./partials/model/panelEdit/_multiChoiceEdit.vue";
+import categoryFilter from "./partials/model/panelEdit/_categoryFilterEdit.vue";
+
+import {mapGetters} from "vuex";
 
 export default {
     data: function () {
@@ -53,7 +55,10 @@ export default {
             selectedFieldType: "none",
             currentModelName: "",
             currentMovingField: null,
-            fieldType:
+            metaFieldType: {
+                "CategoryFilter": {name: "Category", options: [], component: categoryFilter}
+            },
+            standardFieldType:
                 {
                     "Boolean": {name: "Boolean", component: booleanField},
                     "Text": {name: "Text", component: textField},
@@ -62,17 +67,16 @@ export default {
                 }
         };
     },
+    components: {categoryFilter},
     methods: {
         moveField(index) {
             if (this.currentMovingField === null) {
                 this.currentMovingField = index;
             } else {
-                let currentModelState = JSON.parse(this.modelCollectionString);
                 let selectedModel = this.currentModelName ? this.currentModelName : this.currentEditModelName;
-                currentModelState[selectedModel] = arrayMove(currentModelState[selectedModel], this.currentMovingField, index);
-                this.$store.commit("modelCollection", currentModelState);
+                this.modelCollection[selectedModel] = arrayMove(this.modelCollection[selectedModel], this.currentMovingField, index);
+                this.$store.commit("modelCollection", this.modelCollection);
                 this.currentMovingField = null;
-
             }
         },
         async cancelEditModel() {
@@ -92,9 +96,8 @@ export default {
             this.currentEditModelName = null;
         },
         deleteField(index) {
-            let currentModelState = JSON.parse(this.modelCollectionString);
-            currentModelState[this.currentModelName].splice(index, 1);
-            this.$store.commit("modelCollection", currentModelState);
+            this.modelCollection[this.currentModelName].splice(index, 1);
+            this.$store.commit("modelCollection", this.modelCollection);
         },
         addFieldToModel(event) {
             let model = "";
@@ -103,16 +106,14 @@ export default {
             } else {
                 model = this.currentEditModelName;
             }
-            let currentModelState = JSON.parse(this.modelCollectionString);
-            currentModelState[model].push(event);
-            this.$store.commit("modelCollection", currentModelState);
+            this.modelCollection[model].push(event);
+            this.$store.commit("modelCollection", this.modelCollection);
             this.selectedFieldType = "none";
             this.currentEditModelName = this.currentModelName;
         },
         saveEditedField(event, index) {
-            let currentModelState = JSON.parse(this.modelCollectionString);
-            currentModelState[this.currentModelName][index] = event;
-            this.$store.commit("modelCollection", currentModelState);
+            this.modelCollection[this.currentModelName][index] = event;
+            this.$store.commit("modelCollection", this.modelCollection);
         },
         createNewModel() {
             this.$store.dispatch("addKeyToCollection", {
@@ -145,15 +146,15 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(["modelCollection"]),
         modelNameIsUnique() {
             return Object.keys(this.modelCollection).filter(item => item === this.modelNameInput).length === 0;
         },
-        modelCollection() {
-            return this.$store.getters.modelCollection;
-        },
-        modelCollectionString() {
-            return JSON.stringify(this.modelCollection);
+        fieldType() {
+            if (this.currentEditModelName === "meta") return this.metaFieldType;
+            return this.standardFieldType;
         }
+
     }
 
 };

@@ -2,7 +2,7 @@ import {createLocalVue, mount} from "@vue/test-utils";
 
 import Vuetify from "vuetify";
 import Vue from "vue";
-import model from "./model.vue";
+import model from "./modelForm.vue";
 import Vuelidate from "vuelidate";
 import Vuex from "vuex";
 import userStore from "../../Store/user";
@@ -44,7 +44,6 @@ wrapper.vm.$store.commit("modelCollection", {
         }
     ]
 });
-const modelName = wrapper.vm.modelName;
 describe("modelPanel", () => {
     it.skip("Generates a form from data", async () => {
         const formElements = wrapper.findAll("[data-jest='form-element']");

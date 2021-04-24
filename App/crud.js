@@ -71,12 +71,12 @@ const crud = function crud(db) {
             res.send("updated !");
         })
         .delete(function (req, res) {
-            db.get("posts")
+            db.get(makeTableName(req))
                 .remove({
                     id: req.params.itemId,
                 })
                 .write();
-            res.send("ok");
+            res.send("Item deleted");
         });
 
     return dataRouter;

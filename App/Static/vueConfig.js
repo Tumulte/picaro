@@ -3,14 +3,15 @@ import Vue from "vue";
 import Vuelidate from "vuelidate";
 /* user components */
 import tagsList from "../Ui/Components/tagsList.vue";
-import list from "../Ui/Components/list.vue";
-import link from "../Ui/Components/link.vue";
+import list from "../Ui/Components/displayList.vue";
+import link from "../Ui/Components/filterLink.vue";
 import tags from "../Ui/Components/tags.vue";
 import nav from "../Ui/Components/nav.vue";
 import alert from "@components/utils/alert.vue";
+import rfApp from "../Ui/Components/rfApp.vue";
 
 import modelField from "../Ui/Components/modelField.vue";
-
+import router from "../Router/router";
 import Vuetify, {
     VInput,
     VSelect,
@@ -52,7 +53,7 @@ import Vuetify, {
 import cssPanel from "../Ui/Components/cssPanelMain.vue";
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
 import userPanel from "../Ui/Components/userPanel.vue";
-import model from "../Ui/Components/model.vue";
+import model from "../Ui/Components/modelForm.vue";
 
 
 import VueRouter from "vue-router";
@@ -61,6 +62,7 @@ import Vuex from "vuex";
 import adminStore from "../Store/admin";
 import userStore from "../Store/user";
 import axios from "axios";
+import rfLayout from "../Ui/Components/rfLayout.vue";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -113,17 +115,8 @@ Vue.component("rf-link", link);
 Vue.component("rf-nav", nav);
 Vue.component("rf-alert", alert);
 Vue.component("rf-model-field", modelField);
-
-
-const router = new VueRouter({
-    routes: [{
-        path: "/tag/:type/:tag"
-    },
-        {
-            path: "/link/:id"
-        }
-    ]
-});
+Vue.component("rf-app", rfApp);
+Vue.component("rf-layout", rfLayout);
 
 if (
     ENVIRONMENT === "development" ||

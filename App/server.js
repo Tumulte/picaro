@@ -7,13 +7,9 @@ import FileSync from "lowdb/adapters/FileSync";
 /* rougeFramework Settings */
 import settings from "./../rougeSettings.json";
 
-//rougeFramework UI
-import cssFileGenerator from "./Ui/cssFileGenerator";
-
 //rougeFramework Back End
 import crud from "./crud.js";
 import appCrud from "./appCrud.js";
-import multer from "multer";
 
 /* API TOOLS */
 import bodyParser from "body-parser";
@@ -38,9 +34,7 @@ let currentApplicationSettings = appDb
         id: settings.defaultApp
     })
     .value();
-console.debug(currentApplicationSettings);
 currentApplicationSettings.applicationName = settings.defaultApp;
-const upload = multer();
 
 //Server Params
 const port = 8080;

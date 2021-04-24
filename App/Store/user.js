@@ -1,5 +1,50 @@
 import Vue from "vue";
 import {warningTimeout as timeOut} from "../../rougeSettings.json";
+import router from "../Router/router";
+
+function updateRoute(filterCollection) {
+    let globalFilters = "~";
+    let globalParams = "0";
+    let globalFiltersArray = [];
+    let globalParamsArray = [];
+    for (const [key, value] of Object.entries(filterCollection.all)) {
+        globalFiltersArray.push(key);
+        globalParamsArray.push(value.join("--"));
+    }
+    if (globalParamsArray.length > 0) {
+        globalFilters = globalFiltersArray.join("__");
+        globalParams = globalParamsArray.join("__");
+    }
+
+    let modelFiltersArray = [];
+    let modelParamsArray = [];
+    if (Object.entries(filterCollection.modelFilters).length !== 0) {
+        for (const [key, value] of Object.entries(filterCollection.modelFilters)) {
+            let itemFilters = [];
+            let itemParams = [];
+            for (const [subkey, subvalue] of Object.entries(value)) {
+                itemFilters.push(subkey);
+                itemParams.push(subvalue.join("--"));
+            }
+            modelFiltersArray.push(`${JSON.parse(key).join("--")}__${itemFilters.join("--")}`);
+            modelParamsArray.push(itemParams.join("__"));
+        }
+    } else {
+        modelFiltersArray = ["~"];
+        modelParamsArray = ["0"];
+
+    }
+    router.push({
+        name: "filterRoute",
+        params: {
+            globalFilters: encodeURI(globalFilters),
+            globalParams: encodeURI(globalParams),
+            modelFilters: encodeURI(modelFiltersArray.join("~")),
+            modelFilterParams: encodeURI(modelParamsArray.join("~"))
+        }
+    });
+
+}
 
 export default {
     state: {
@@ -9,10 +54,10 @@ export default {
         dialog: {},
         alertCallbackCollection: [],
         alertConfirmationStatus: {},
-        settings: {modelCollectionString: "{}", navStructureString: "{}"},
+        settings: {modelCollection: {}, navStructureString: "{}"},
         modelCollection: {},
-        navStructure: {}
-
+        navStructure: {},
+        filterCollection: {all: {}, modelFilters: {}}
     },
     mutations: {
         // @ts-ignore
@@ -25,11 +70,14 @@ export default {
         },
         settings(state, data) {
             state.settings = data;
-            state.modelCollection = JSON.parse(state.settings.modelCollectionString);
+            state.modelCollection = state.settings.modelCollection;
             state.navStructure = JSON.parse(state.settings.navStructureString);
         },
         modelCollection(state, data) {
             state.modelCollection = data;
+        },
+        filterCollection(state, data) {
+            state.filterCollection = data;
         }
     },
     getters: {
@@ -56,13 +104,48 @@ export default {
         navStructure(state) {
             return state.navStructure;
         },
-
+        filterCollection(state) {
+            return state.filterCollection;
+        },
+        filterCollectionExpanded(state) {
+            const filterCollectionExpanded = {};
+            for (const [key, value] of Object.entries(state.filterCollection.modelFilters)) {
+                JSON.parse(key).forEach(item => {
+                    filterCollectionExpanded[item] = value;
+                });
+            }
+            return filterCollectionExpanded;
+        }
     },
     actions: {
-        removeKeyFromCollection: function ({state}, data) {
-            Vue.delete(state[data.collection], data.key);
+        updateFilterCollection({state}, {filterParams, models, type}) {
+            const temporaryFilterCollection = JSON.parse(JSON.stringify(state.filterCollection)); //filterCollection will be leter updater on route change
+            models = typeof models === "string" ? [models] : models;
+            models = JSON.stringify(models);
+            const params = typeof filterParams === "string" ? [filterParams] : filterParams;
+            if (!temporaryFilterCollection.modelFilters[models]) {
+                temporaryFilterCollection.modelFilters[models] = {};
+            }
+
+            temporaryFilterCollection.modelFilters[models][type] = params;
+            updateRoute(temporaryFilterCollection);
         },
-        addKeyToCollection: function ({state}, data) {
+        updateFilterCommonCollection({state}, {type, params}) {
+            params = typeof params === "string" ? [params] : params;
+            const temporaryFilterCollection = JSON.parse(JSON.stringify(state.filterCollection)); //filterCollection will be leter updater on route change
+
+            temporaryFilterCollection.all[type] = params;
+            console.debug(temporaryFilterCollection);
+            updateRoute(temporaryFilterCollection);
+
+        },
+        addItemToList({state}, {model: model, listData: listData}) {
+            Vue.set(state.list, model, listData);
+        },
+        removeKeyFromCollection({state}, {collection: collection, key: key}) {
+            Vue.delete(state[collection], key);
+        },
+        addKeyToCollection({state}, data) {
             Vue.set(state[data.collection], data.key, data.value);
         },
         addAlert({state}, data) {

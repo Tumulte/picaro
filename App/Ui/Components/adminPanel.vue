@@ -2,9 +2,8 @@
     div
         v-toolbar(color="rgb(47, 70, 116)" dark) Admin Settings
         div(class="px-5 py-5")
-            v-form(action="/appapi/settings/?_method=PUT"  id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
+            v-form(id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
                 v-text-field(name="navStructureString" v-model="navStructureString" dense)
-                v-text-field(name="modelCollectionString" v-model="modelCollectionString" dense)
                 v-text-field(name="id" v-model="settings.id" dense)
                 v-text-field(name="name" v-model="settings.applicationName" label="App Name" dense outlined)
                 v-text-field(name="styleSet" v-model="styleSet.id" dense)
@@ -19,19 +18,6 @@ import axios from "axios";
 import {mapGetters} from "vuex";
 
 export default {
-    data: function () {
-        return {
-            settings: {
-                id: "",
-                applicationName: "",
-                language: "",
-                title: "",
-                devMode: false,
-                messageTimeOut: 10000
-            }
-        };
-    },
-
     methods: {
         createNewModel() {
             axios
@@ -49,20 +35,10 @@ export default {
                     });
                 });
         },
-        sendAdminForm: function (event) {
+        sendAdminForm: function () {
             this.$nextTick(() => {
-                let form = event.target;
-                if (form.form) {
-                    form = form.form;
-                }
-                const formData = new FormData(form);
-
                 axios
-                    .put(form.action, formData, {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                    })
+                    .put("/appapi/settings/", this.settings)
                     .then(() => {
                         if (this.newModelName) {
                             this.createNewModel();
@@ -95,13 +71,10 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["styleSet", "newModelName", "modelCollection"]),
+        ...mapGetters(["styleSet", "newModelName", "modelCollection", "settings"]),
         navStructureString: function () {
             return JSON.stringify(this.$store.getters.navStructure);
         },
-        modelCollectionString() {
-            return JSON.stringify(this.modelCollection);
-        }
     }
 };
 </script>

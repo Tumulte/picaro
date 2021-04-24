@@ -152,13 +152,118 @@
       "id": "Demo",
       "name": "Demo",
       "styleSet": "JypE4DEcP",
-      "language": "",
-      "title": "",
+      "language": "fr",
+      "title": "Demo",
       "devMode": true,
       "messageTimeOut": 10000,
       "applicationName": "Demo",
       "navStructureString": "{\"0__add\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"0__add\",\"displayName\":\"add\",\"url\":\"/add\",\"custom\":false},\"1__books\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"1__books\",\"displayName\":\"books\",\"url\":\"/books\",\"custom\":false},\"2__edit\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"2__edit\",\"displayName\":\"edit\",\"url\":\"/edit\",\"custom\":false},\"3__films\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"3__films\",\"displayName\":\"films\",\"url\":\"/films\",\"custom\":false},\"4__index\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"4__index\",\"displayName\":\"index\",\"url\":\"/index\",\"custom\":false},\"5__listtest\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"5__listtest\",\"displayName\":\"listtest\",\"url\":\"/listtest\",\"custom\":false}}",
-      "modelCollectionString": "{\"testRTE\":[{\"name\":\"test-rte\",\"required\":false,\"label\":\"test RTE\",\"type\":\"RichText\"},{\"name\":\"areyou\",\"required\":false,\"label\":\"Are you ?\",\"type\":\"Boolean\"},{\"name\":\"yup\",\"required\":false,\"label\":\"I forgot that, haven't I?\",\"type\":\"Text\",\"regex\":\"\"}]}"
+      "layoutCollection": {
+        "colors": [
+          [
+            {
+              "type": "filterLink",
+              "model": "TtuU6D69T"
+            },
+            {
+              "id": "TtuU6D69T",
+              "model": "testRTE",
+              "category": "colors",
+              "type": "list"
+            }
+          ]
+        ],
+        "demo": [
+          [
+            {
+              "id": "stsg4DtgP",
+              "model": "testRTE",
+              "category": "colors",
+              "type": "list"
+            },
+            {
+              "id": "TtuU6D69T",
+              "model": "testRTE",
+              "category": "colors",
+              "type": "list"
+            }
+          ],
+          [
+            {
+              "id": "TtuU6D69T",
+              "model": "testRTE",
+              "category": "colors",
+              "type": "list"
+            }
+          ]
+        ]
+      },
+      "layoutCommonCollection": [
+        [
+          "filterLayout"
+        ],
+        [
+          "default"
+        ]
+      ],
+      "modelCollection": {
+        "meta": [
+          {
+            "name": "categories",
+            "required": false,
+            "label": "Catégories",
+            "type": "CategoryFilter",
+            "options": [
+              {
+                "label": "Colors"
+              },
+              {
+                "label": "Ratio"
+              }
+            ]
+          }
+        ],
+        "testRTE": [
+          {
+            "name": "test-rte",
+            "required": false,
+            "label": "test RTE",
+            "type": "RichText"
+          },
+          {
+            "name": "booleanTest",
+            "required": false,
+            "label": "Display Sub Title",
+            "type": "Boolean"
+          },
+          {
+            "name": "title",
+            "required": false,
+            "label": "Post Title",
+            "type": "Text",
+            "regex": ""
+          },
+          {
+            "name": "subtitle",
+            "required": false,
+            "label": "Sub Title",
+            "type": "Text",
+            "regex": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "ctct",
+      "name": "Ctct",
+      "styleSet": "",
+      "language": "",
+      "title": "",
+      "devMode": true,
+      "messageTimeOut": 10000,
+      "applicationName": "Ctct",
+      "navStructureString": "",
+      "modelCollectionString": ""
     }
   ],
   "users": [

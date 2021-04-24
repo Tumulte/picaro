@@ -1,10 +1,8 @@
 extends layout/header.pug
 block content
-    rf-model(model="testRTE")
-    rf-list(model="testRTE" v-slot="{item}")
-        rf-model-field(:field-data="item"  field-name='test-rte')
-        rf-model-field(:field-data="item"  field-name='areyou')
-        rf-model-field(:field-data="item"  field-name='yup')
+    h1 Model test Page
+    rf-layout
+
 
 
 

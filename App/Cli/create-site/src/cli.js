@@ -6,8 +6,9 @@ const fs = require("fs");
 
 const appAdapter = new FileSync("./App/Data/appData.json");
 const appDb = low(appAdapter);
-
-const createNewApp = function () {
+const adapter = new FileSync("./App/Data/data.json");
+const db = low(adapter);
+const createNewApp = async function () {
     inquirer.prompt([{
         type: "input",
         message: "What is the name of your app (only lowercase letters) ?",
@@ -34,9 +35,10 @@ const createNewApp = function () {
                 "devMode": true,
                 "messageTimeOut": 10000,
                 "applicationName": name,
-                "navStructureString": "",
-                "modelCollectionString": ""
+                "navStructure": {},
+                "modelCollection": {"meta": []}
             }).write();
+        db.set(`${nameLower}_meta`, []).write();
 
         if (!fs.existsSync(`./app${name}`)) {
             fs.mkdirSync(`./app${name}`);
@@ -61,9 +63,7 @@ const createNewApp = function () {
             headerFileContent += "        script var ENVIRONMENT = \"development\";\n";
             headerFileContent += `    script(src=\"/app${name}-bundle.js\")\n`;
             headerFileContent += "block body\n";
-            headerFileContent += "    div(class=\"rf-content-container\")\n";
-            headerFileContent += "        rf-nav\n";
-            headerFileContent += "        block content\n";
+            headerFileContent += "    block content\n";
 
             fs.writeFileSync(`./app${name}/views/layout/header.pug`, headerFileContent);
 
@@ -143,5 +143,7 @@ export function cli() {
             if (answers.action === "create") {
                 createNewApp();
             }
-        });
+        }).catch(error => {
+        console.info(`CLI FAILED : ${error}.`);
+    });
 }

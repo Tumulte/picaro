@@ -32,7 +32,6 @@ let select = null;
 let options = null;
 describe("modelPanel", () => {
     it("Creates a new model", async () => {
-
             expect(wrapper.find("[data-jest=\"add-model\"][disabled='disabled']").exists()).toBe(true);
             const addButton = wrapper.get("[data-jest='add-model']");
             const name = wrapper.get("[data-jest='model-name']");
@@ -41,7 +40,7 @@ describe("modelPanel", () => {
             addButton.trigger("click");
             await Vue.nextTick();
 
-            expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[]}");
+            expect(wrapper.vm.modelCollection).toStrictEqual({"test model": []});
             expect(wrapper.find("[data-jest=\"add-model\"]").exists()).toBe(false);
             expect(wrapper.find("[data-jest=\"model-name\"]").exists()).toBe(false);
             select = wrapper.get("[data-jest='select-input']");
@@ -68,7 +67,14 @@ describe("modelPanel", () => {
 
 
         //write the new data in a string
-        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"test-name\",\"required\":false,\"label\":\"test\",\"type\":\"Boolean\"}]}");
+        expect(wrapper.vm.modelCollection).toStrictEqual({
+            "test model": [{
+                "name": "test-name",
+                "required": false,
+                "label": "test",
+                "type": "Boolean"
+            }]
+        });
 
         //Display the new thing in the list
         const elementList = wrapper.get(".current-model-elements");
@@ -91,7 +97,15 @@ describe("modelPanel", () => {
 
         wrapper.get("[data-jest='saveStyleSet-boolean']").trigger("click");
         await Vue.nextTick();
-        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
+        expect(wrapper.vm.modelCollection).toStrictEqual({
+                "test model": [{
+                    "name": "tataname-2",
+                    "required": false,
+                    "label": "test of toto part 2",
+                    "type": "Boolean"
+                }]
+            }
+        );
 
     });
     it("reorganize the form", async () => {
@@ -117,7 +131,14 @@ describe("modelPanel", () => {
         wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"},{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"}]}");
+        expect(wrapper.vm.modelCollection).toStrictEqual({
+            "test model": [{
+                "name": "tataname-2",
+                "required": false,
+                "label": "test of toto part 2",
+                "type": "Boolean"
+            }, {"name": "new-element-2", "required": false, "label": "hello", "type": "Text", "regex": ""}]
+        });
 
         const moveButtons = wrapper.findAll("[data-jest='move-field']");
 
@@ -128,7 +149,15 @@ describe("modelPanel", () => {
         moveDest.trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"},{\"name\":\"tataname-2\",\"required\":false,\"label\":\"test of toto part 2\",\"type\":\"Boolean\"}]}");
+        expect(wrapper.vm.modelCollection).toStrictEqual({
+            "test model": [{
+                "name": "new-element-2",
+                "required": false,
+                "label": "hello",
+                "type": "Text",
+                "regex": ""
+            }, {"name": "tataname-2", "required": false, "label": "test of toto part 2", "type": "Boolean"}]
+        });
 
     });
 
@@ -140,7 +169,15 @@ describe("modelPanel", () => {
         removeButton.at(1).trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.vm.modelCollectionString).toBe("{\"test model\":[{\"name\":\"new-element-2\",\"required\":false,\"label\":\"hello\",\"type\":\"Text\",\"regex\":\"\"}]}");
+        expect(wrapper.vm.modelCollection).toStrictEqual({
+            "test model": [{
+                "name": "new-element-2",
+                "required": false,
+                "label": "hello",
+                "type": "Text",
+                "regex": ""
+            }]
+        });
 
 
     });

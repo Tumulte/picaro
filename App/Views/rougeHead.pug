@@ -13,7 +13,7 @@ html(lang=language)
                 if(isLogged)
                     admin-tool-bar(views=views id="rf-admin")
                     if(isDev && integrationReport)
-                        div(id="rf-app-status")
+                        #rf-app-status
                             span(class="_status") Integration :
                                 if(integrationReport.stats.failures === 0)
                                     span(class="-success") &nbsp;ok
@@ -26,6 +26,8 @@ html(lang=language)
                                 else
                                     span(class="-failure") &nbsp;#{unitReport.numFailedTests} failed
                                 | &nbsp;(#{unitEnd})
-                block body
-                div(id="rf-alert-container")
-                    rf-alert
+                div(class="rf-content-container")
+                    rf-app
+                        rf-nav
+                        block body
+                        rf-alert

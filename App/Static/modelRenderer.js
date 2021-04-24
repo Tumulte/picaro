@@ -4,8 +4,8 @@ import VRuntimeTemplate from "v-runtime-template";
 import VueRouter from "vue-router";
 
 const tagsListComponent = require("../Ui/Components/tagsList.vue");
-const listComponent = require("../Ui/Components/list.vue");
-const linkComponent = require("../Ui/Components/link.vue");
+const listComponent = require("../Ui/Components/displayList.vue");
+const linkComponent = require("../Ui/Components/filterLink.vue");
 const tagsComponent = require("../Ui/Components/tags.vue");
 const navComponent = require("../Ui/Components/nav.vue");
 

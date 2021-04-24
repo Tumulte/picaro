@@ -7,7 +7,7 @@
   },
   "description": "Initial Json for a Node project",
   "bin": {
-    "create": "./App/Cli/create-site/bin/cli.js"
+    "rf-cli": "./App/Cli/create-site/bin/cli.js"
   },
   "scripts": {
     "start": "node ./App/server.js",
@@ -26,7 +26,7 @@
   },
   "keywords": [
     "cli",
-    "create"
+    "rf-cli"
   ],
   "author": "Étienne Rouge",
   "license": "SEE LICENSE IN LICENCE.md",
@@ -117,7 +117,7 @@
     "google-auth-library": "6.0.0",
     "googleapis": "^51.0.0",
     "html-webpack-plugin": "^4.3.0",
-    "inquirer": "^7.3.3",
+    "inquirer": "^8.0.0",
     "jest": "^26.3.0",
     "jest-stare": "^2.0.1",
     "jsdom": "^16.4.0",

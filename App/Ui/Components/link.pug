@@ -1,6 +1,0 @@
-div
-    div(v-for="item in list")
-        ul
-            router-link(:to="'/link/' + (item.id)" tag="li")
-                a
-                    slot(v-bind:item="item")

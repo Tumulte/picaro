@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import {generateCSSFile} from "./Ui/cssFileGenerator";
+import {configModel, validateData} from "./utils";
 
 const upload = multer();
 
@@ -19,12 +20,17 @@ const appCrud = function appCrud(appDb, app, currentApp) {
             res.json(currentApp);
         })
         .put(upload.none(), function (req, res) {
-            appDb
-                .get("config")
-                .find({id: currentApp.id})
-                .assign(req.body)
-                .write();
-            res.send("Config modified successfully");
+            let errors = validateData(configModel, req.body);
+            if (!errors) {
+                appDb
+                    .get("config")
+                    .find({id: currentApp.id})
+                    .assign(req.body)
+                    .write();
+                res.send("Config modified successfully");
+            } else {
+                return res.status(500).send(errors);
+            }
         });
     dataRouter.route("/").get(function (req, res) {
         /**

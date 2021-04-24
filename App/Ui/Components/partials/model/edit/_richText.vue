@@ -5,19 +5,19 @@
             div
                 //todo add borders
                 //todo add require option
-                button( :class="{ 'is-active': isActive.bold() }" @click="commands.bold" outlined)
+                button( :class="{ 'is-active': isActive.bold() }" @click.stop="commands.bold")
                     v-icon mdi-format-bold
-                button( :class="{ 'is-active': isActive.italic() }" @click="commands.italic" outlined)
+                button( :class="{ 'is-active': isActive.italic() }" @click.stop="commands.italic")
                     v-icon mdi-format-italic
-                button( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click="commands.heading({ level: 1 })")
+                button( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click.stop="commands.heading({ level: 1 })")
                     v-icon mdi-format-header-1
-                button( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click="commands.heading({ level: 2 })")
+                button( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click.stop="commands.heading({ level: 2 })")
                     v-icon mdi-format-header-2
-                button( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click="commands.heading({ level: 3 })")
+                button( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click.stop="commands.heading({ level: 3 })")
                     v-icon mdi-format-header-3
         editor-content(:editor="editor" class="editor-textarea")
-        v-btn(v-if="isEdit" @click="save()") save
-        v-btn(v-if="isEdit && temporaryContent" @click="cancel()") cancel
+        v-btn(v-if="isEdit  && temporaryContent" @click="save()") save
+        v-btn(v-if="isEdit" @click="cancel()") cancel
 
 
 </template>
@@ -42,6 +42,7 @@ import {
     Underline,
     History,
 } from "tiptap-extensions";
+import {mapActions} from "vuex";
 
 export default {
     name: "richTextEdit",
@@ -57,12 +58,15 @@ export default {
         isEdit: {type: Boolean, default: false},
     },
     methods: {
+        ...mapActions(["awaitConfirmation"]),
         async save() {
             this.$emit("saveEdit", this.temporaryContent);
             this.$emit("endEdit");
         },
-        cancel() {
-            this.temporaryContent = null;
+        async cancel() {
+            if (this.temporaryContent) {
+                await this.awaitConfirmation({type: "warning", text: "Are you sure you want to cancel your changes ?"});
+            }
             this.$emit("endEdit");
         },
         updateModelData(content) {

@@ -1,20 +1,23 @@
 <template lang="pug">
     div
-        component(:is="`${fieldData[fieldName].fieldType}${edit?'-edit':''}`" :field-data="fieldData[fieldName]" :is-edit="true" @saveEdit="sendForm($event)" @endEdit="edit = false")
-        v-btn(@click="toggleEdit()" v-if="!edit") edit
-
+        component(v-if="fieldData[fieldName]" :is="`${fieldData[fieldName].fieldType}${edit?'-edit':''}`" :field-data="fieldData[fieldName]" :is-edit="true" @saveEdit="sendForm($event)" @endEdit="edit = false")
+        v-btn(@click="toggleEdit()" v-if="!edit && $parent.edit") edit
+        v-btn(@click="deleteField()" v-if="edit") delete
 
 </template>
 
 <script>
 import richTextEdit from "./partials/model/edit/_richText.vue";
 import richText from "./partials/model/display/_richText.vue";
+import textLine from "./partials/model/display/_textLine.vue";
+import textLineEdit from "./partials/model/edit/_textLine.vue";
 import {mapActions, mapGetters} from "vuex";
+
 import axios from "axios";
 
 export default {
     name: "modelField",
-    components: {richTextEdit, richText},
+    components: {richTextEdit, richText, textLine, textLineEdit},
     data() {
         return {
             edit: false
@@ -37,6 +40,7 @@ export default {
                             type: "success",
                             text: "Saved successfully"
                         });
+                        this.$emit("reloadData");
                     }).catch(errors => {
                     this.addAlert({
                             type: "error",
@@ -45,7 +49,7 @@ export default {
                     );
                 });
             });
-        }
+        },
     },
     watch: {},
     computed: {

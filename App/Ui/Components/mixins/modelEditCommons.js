@@ -27,8 +27,8 @@ export default {
             this.isEdited = false;
 
         },
-        addField() {
-            this.$emit("addFieldData", this.commonData);
+        addField: function (extraParams = {}) {
+            this.$emit("addFieldData", {...this.commonData, ...extraParams});
             this.isEdited = false;
         },
         saveEdit() {

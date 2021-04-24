@@ -3,6 +3,27 @@
   "defaultApp": "Demo",
   "warningTimeout": 10000,
   "applications": {
+    "Ctct": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
+    "Doc2": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
+    "Doc": {
+      "styleSet": "default",
+      "language": "fr",
+      "title": "Mon Application",
+      "devMode": true
+    },
+
     "Hullulu": {
       "styleSet": "default",
       "language": "fr",

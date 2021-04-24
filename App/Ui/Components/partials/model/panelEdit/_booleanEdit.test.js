@@ -1,7 +1,7 @@
 import {mount} from "@vue/test-utils";
 
 import Vuetify from "vuetify";
-import boolean from "./_booleanEdit.vue";
+import boolean from "./_booleanSwitchEdit.vue";
 import common from "./formEditCommons/_formFieldEditCommon";
 
 const vuetify = new Vuetify();
@@ -13,7 +13,7 @@ const wrapper =
         stubs: {
             formFieldEditCommon: common
         }
-        
+
 
     });
 
