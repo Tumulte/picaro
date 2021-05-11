@@ -1,7 +1,6 @@
 <template lang="pug">
     div(:key="key")
         v-form(v-model="valid")
-
             v-switch(v-model="valid" class="ma-4" label="Valid" readonly)
             div(v-for="modelParams in modelCollection[modelName]" data-jest="form-element")
                 component(:is="`rf${modelParams.type}`" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="modelName" @updateData="updateData($event)")

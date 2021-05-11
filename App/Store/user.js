@@ -115,6 +115,14 @@ export default {
                 });
             }
             return filterCollectionExpanded;
+        },
+        selectedLayout(state) {
+            const layoutName = state.filterCollection.all.layout || "colors";
+            return state.settings.layoutCollection[layoutName].layout;
+        },
+        selectedCategory(state) {
+            const layoutName = state.filterCollection.all.layout || "colors";
+            return state.settings.layoutCollection[layoutName].category;
         }
     },
     actions: {
@@ -135,7 +143,7 @@ export default {
             const temporaryFilterCollection = JSON.parse(JSON.stringify(state.filterCollection)); //filterCollection will be leter updater on route change
 
             temporaryFilterCollection.all[type] = params;
-            console.debug(temporaryFilterCollection);
+            temporaryFilterCollection.modelFilters = {}; //model specific filters dont carry over layout chages
             updateRoute(temporaryFilterCollection);
 
         },

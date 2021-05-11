@@ -13,8 +13,9 @@ export default {
     },
     props: {modelParams: {required: true, type: Object}},
     watch: {
-        text() {
-            if (!this.selected) {
+        selected() {
+            if (!this.isEdit) {
+                console.debug(this.selected);
                 this.$emit("updateData", {
                     name: this.modelParams.name,
                     value: this.selected

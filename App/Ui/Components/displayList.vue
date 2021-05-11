@@ -4,7 +4,6 @@
         model(:model-name="model" @reloadData="loadListData" v-if="edit")
         div(v-for="(item) in list" v-if="checkFilters(item)")
             rf-model-field(:field-data="item"  :field-name='index' v-for="(field, index) in item" v-if="field.fieldType" :key="index")
-
             model-item-edit(:model-name="model" :id="item.id"  @reloadData="loadListData()" v-if="edit")
 
 </template>
@@ -28,11 +27,9 @@ export default {
     props: ["model"],
     methods: {
         checkFilters(item) {
-            if (!this.listFilters) return true;
-            if (this.listFilters.link) {
-                return this.listFilters.link[0] === item.id;
-            }
-            return true;
+            const isLinked = !(this.listFilters && this.listFilters.link) || this.listFilters.link[0] === item.id;
+            const hasCategory = !(this.selectedCategory && item.categories) || this.selectedCategory === item.categories;
+            return isLinked && hasCategory;
         },
         loadListData() {
             axios
@@ -54,7 +51,7 @@ export default {
 
 
     computed: {
-        ...mapGetters(["filterCollectionExpanded"]),
+        ...mapGetters(["filterCollectionExpanded", "selectedCategory"]),
         list() {
             return this.$store.getters.list[this.model];
         },
@@ -63,7 +60,8 @@ export default {
         },
         listFilters() {
             return this.filterCollectionExpanded[this.model];
-        }
+        },
+
     }
 };
 

@@ -30,7 +30,6 @@ export default {
     mixins: [editFieldCommons],
     components: {
         formFieldEditCommon,
-
     },
     methods: {
         getCommonData(event) {
@@ -45,6 +44,11 @@ export default {
             this.options.push({label: ""});
         }
 
+    },
+    created() {
+        if (this.fieldData.options.length > 0) {
+            this.options = this.fieldData.options;
+        }
     }
 };
 

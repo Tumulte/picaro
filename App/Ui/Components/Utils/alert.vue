@@ -1,5 +1,5 @@
 <template lang="pug">
-    div(class="alert-container")
+    div(id="rf-alert-container")
         v-scroll-y-reverse-transition(group=true tag="ul" class="alert-group-list")
             li(v-for="(alert, index) in alertCallbackCollection" :key="index")
                 v-alert(:type="alert.type" transition="scroll-y-reverse-transition" dense prominent)
@@ -50,7 +50,11 @@ button {
     margin: 10px;
 }
 
-.alert-container {
-    width: 620px
+#rf-alert-container {
+    width: 620px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 999999;
 }
 </style>

@@ -1,7 +1,7 @@
 <template lang="pug">
     div
         div(v-for="(layout, index) in layoutCollection")
-            a(@click="changeLayout(index)") {{index}}
+            a(@click="changeLayout(index, layout)") {{index}}
 </template>
 
 <script>
@@ -16,8 +16,8 @@ export default {
     },
     methods: {
         ...mapActions(["updateFilterCommonCollection"]),
-        changeLayout(layout) {
-            this.updateFilterCommonCollection({type: "layout", params: layout});
+        changeLayout(index, layout) {
+            this.updateFilterCommonCollection({type: "layout", params: index});
         }
     }
 };

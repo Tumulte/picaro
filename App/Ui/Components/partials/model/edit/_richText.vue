@@ -5,15 +5,15 @@
             div
                 //todo add borders
                 //todo add require option
-                button( :class="{ 'is-active': isActive.bold() }" @click.stop="commands.bold")
+                span( :class="{ 'is-active': isActive.bold() }" @click.stop="commands.bold")
                     v-icon mdi-format-bold
-                button( :class="{ 'is-active': isActive.italic() }" @click.stop="commands.italic")
+                span( :class="{ 'is-active': isActive.italic() }" @click.stop="commands.italic")
                     v-icon mdi-format-italic
-                button( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click.stop="commands.heading({ level: 1 })")
+                span( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click.stop="commands.heading({ level: 1 })")
                     v-icon mdi-format-header-1
-                button( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click.stop="commands.heading({ level: 2 })")
+                span( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click.stop="commands.heading({ level: 2 })")
                     v-icon mdi-format-header-2
-                button( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click.stop="commands.heading({ level: 3 })")
+                span( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click.stop="commands.heading({ level: 3 })")
                     v-icon mdi-format-header-3
         editor-content(:editor="editor" class="editor-textarea")
         v-btn(v-if="isEdit  && temporaryContent" @click="save()") save
