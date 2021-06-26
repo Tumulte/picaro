@@ -1,52 +1,35 @@
 <template lang="pug">
     div
         h3 {{label}}
-        editor-menu-bar( :editor="editor"  v-slot="{ commands, isActive }" class="editor-textarea" v-on:keydown.enter.prevent.stop="true")
-            div
-                //todo add borders
-                //todo add require option
-                span( :class="{ 'is-active': isActive.bold() }" @click.stop="commands.bold")
-                    v-icon mdi-format-bold
-                span( :class="{ 'is-active': isActive.italic() }" @click.stop="commands.italic")
-                    v-icon mdi-format-italic
-                span( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click.stop="commands.heading({ level: 1 })")
-                    v-icon mdi-format-header-1
-                span( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click.stop="commands.heading({ level: 2 })")
-                    v-icon mdi-format-header-2
-                span( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click.stop="commands.heading({ level: 3 })")
-                    v-icon mdi-format-header-3
+        div(v-if="editor")
+            span( :class="{ 'is-active': editor.isActive('bold') }" @click.stop="editor.chain().focus().toggleBold().run()")
+                v-icon mdi-format-bold
+            span( :class="{ 'is-active': editor.isActive('italic') }" @click.stop="editor.chain().focus().toggleItalic().run()")
+                v-icon mdi-format-italic
+            span( :class="{ 'is-active': editor.isActive('heading',{ level: 1 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 1 }).run()")
+                v-icon mdi-format-header-1
+            span( :class="{ 'is-active': editor.isActive('heading',{ level: 2 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 2 }).run()")
+                v-icon mdi-format-header-2
+            span( :class="{ 'is-active': editor.isActive('heading',{ level: 3 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 3 }).run()")
+                v-icon mdi-format-header-3
+            span( :class="{ 'is-active': editor.isActive('codeBlock') }" @click.stop="editor.chain().focus().toggleCodeBlock().run()")
+                v-icon mdi-code-array
+            span( :class="{ 'is-active': editor.isActive('code') }" @click.stop="editor.chain().focus().toggleCode().run()")
+                v-icon mdi-code-not-equal-variant
         editor-content(:editor="editor" class="editor-textarea")
-        v-btn(v-if="isEdit  && temporaryContent" @click="save()") save
-        v-btn(v-if="isEdit" @click="cancel()") cancel
 
 
 </template>
 
 <script>
-import {Editor, EditorContent, EditorMenuBar} from "tiptap";
-import {
-    Blockquote,
-    CodeBlock,
-    HardBreak,
-    Heading,
-    OrderedList,
-    BulletList,
-    ListItem,
-    TodoItem,
-    TodoList,
-    Bold,
-    Code,
-    Italic,
-    Link,
-    Strike,
-    Underline,
-    History,
-} from "tiptap-extensions";
+import {Editor, EditorContent} from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
+
 import {mapActions} from "vuex";
 
 export default {
     name: "richTextEdit",
-    components: {EditorContent, EditorMenuBar},
+    components: {EditorContent},
     data() {
         return {editor: null, temporaryContent: null};
     },
@@ -79,32 +62,16 @@ export default {
     mounted() {
         this.editor = new Editor({
                 extensions: [
-                    new Blockquote(),
-                    new CodeBlock(),
-                    new HardBreak(),
-                    new Heading({levels: [1, 2, 3]}),
-                    new BulletList(),
-                    new OrderedList(),
-                    new ListItem(),
-                    new TodoItem(),
-                    new TodoList(),
-                    new Bold(),
-                    new Code(),
-                    new Italic(),
-                    new Link(),
-                    new Strike(),
-                    new Underline(),
-                    new History(),
+                    StarterKit
                 ],
                 content: this.fieldData,
-                onUpdate: ({getJSON}) => {
-                    const content = Object.assign({}, getJSON(), {fieldType: "rich-text", required: this.required});
+                onUpdate: ({editor}) => {
+                    const content = Object.assign({}, editor.getJSON(), {fieldType: "rich-text", required: this.required});
                     if (this.isEdit) {
                         this.temporaryContent = content;
                     } else {
                         this.updateModelData(content);
                     }
-
                 },
             }
         );
@@ -118,5 +85,9 @@ export default {
 <style scoped>
 .editor-textarea {
     border: 1px solid #ddd;
+}
+
+.is-active .theme--light.v-icon {
+    color: coral;
 }
 </style>

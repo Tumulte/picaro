@@ -141,7 +141,6 @@ export default {
             }
         },
         async saveStyleSet() {
-            console.debug("tata");
             await this.awaitConfirmation({
                 text: "Are you sure you want to overwrite this style set ?",
                 type: "warning"

@@ -1,8 +1,7 @@
 <template lang="pug">
     div
         v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="label" :name="name")
-        v-btn(v-if="isEdit" data-jest='cancel-boolean' @click="cancelEdit") Cancel
-        v-btn(v-if="isEdit && text !== fieldData.content" data-jest='save-boolean' @click="saveEdit") Save
+
 </template>
 
 <script>
@@ -30,7 +29,11 @@ export default {
         label: {type: String, default: ""},
         name: {type: String, default: ""},
         regex: {type: String, default: ""},
-        fieldData: {type: Object, default: null},
+        fieldData: {
+            type: Object, default() {
+                return {};
+            }
+        },
         isEdit: {type: Boolean, default: false},
     },
     watch: {

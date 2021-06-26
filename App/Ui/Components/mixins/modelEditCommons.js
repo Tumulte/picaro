@@ -28,6 +28,9 @@ export default {
 
         },
         addField: function (extraParams = {}) {
+            if (extraParams.target) {
+                extraParams = {};
+            } // avoid sending empty events as data
             this.$emit("addFieldData", {...this.commonData, ...extraParams});
             this.isEdited = false;
         },

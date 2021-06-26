@@ -4,17 +4,8 @@
 </template>
 
 <script>
-import {Editor} from "tiptap";
-import {
-    Blockquote, Bold,
-    BulletList, Code,
-    CodeBlock,
-    HardBreak,
-    Heading, History, Italic, Link,
-    ListItem,
-    OrderedList, Strike,
-    TodoItem, TodoList, Underline
-} from "tiptap-extensions";
+import {Editor, EditorContent} from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
 
 let editor;
 
@@ -29,25 +20,10 @@ export default {
     mounted() {
         editor = new Editor({
             extensions: [
-                new Blockquote(),
-                new CodeBlock(),
-                new HardBreak(),
-                new Heading({levels: [1, 2, 3]}),
-                new BulletList(),
-                new OrderedList(),
-                new ListItem(),
-                new TodoItem(),
-                new TodoList(),
-                new Bold(),
-                new Code(),
-                new Italic(),
-                new Link(),
-                new Strike(),
-                new Underline(),
-                new History(),
+                StarterKit
             ],
         });
-        editor.setContent(this.fieldData);
+        editor.commands.setContent(this.fieldData);
         this.html = editor.getHTML();
     },
     beforeDestroy() {

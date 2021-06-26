@@ -18,7 +18,7 @@
                         select(data-jest="select-input" v-model="selectedFieldType" )
                             option(value="none") Select…
                             option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
-                component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel($event)")
+                component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel")
                 div(v-if="index === currentEditModelName")
                     v-card-text
                         div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
@@ -112,6 +112,8 @@ export default {
             this.currentEditModelName = this.currentModelName;
         },
         saveEditedField(event, index) {
+            if (event.isTrusted) delete event.isTrusted;
+
             this.modelCollection[this.currentModelName][index] = event;
             this.$store.commit("modelCollection", this.modelCollection);
         },

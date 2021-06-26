@@ -3,9 +3,9 @@
         v-form(v-model="valid")
             v-switch(v-model="valid" class="ma-4" label="Valid" readonly)
             div(v-for="modelParams in modelCollection[modelName]" data-jest="form-element")
-                component(:is="`rf${modelParams.type}`" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="modelName" @updateData="updateData($event)")
+                component(:is="`rf${modelParams.type}`" :is-edit="isEdit" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="modelName" :field-data="modelData[modelParams.name]" @updateData="updateData")
             div(v-for="modelParams in modelCollection.meta" data-jest="form-element")
-                component(:is="`rf${modelParams.type}`" :model-params="modelParams" @updateData="updateData($event)")
+                component(:is="`rf${modelParams.type}`" :model-params="modelParams" @updateData="updateData" :is-edit="true" :field-data="modelData[modelParams.name]")
             v-btn(@click="sendForm") Submit
 </template>
 <script>
@@ -18,7 +18,7 @@ import rfCategoryFilter from "./partials/model/edit/_categoryFilter.vue";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-    name: "model",
+    name: "modelForm",
     data: function () {
         return {
             valid: true,
@@ -26,7 +26,15 @@ export default {
             key: true
         };
     },
-    props: {modelName: String},
+    props: {
+        modelName: {type: String, default: ""},
+        modelData: {
+            type: Object, default() {
+                return {};
+            }
+        },
+        isEdit: {type: Boolean, default: false}
+    },
     components: {rfBoolean, rfText, rfRichText, rfCategoryFilter},
     methods: {
         ...mapActions(["addAlert"]),
@@ -56,6 +64,9 @@ export default {
     },
     computed: {
         ...mapGetters(["modelCollection", "settings"])
+    },
+    created() {
+        this.currentModelData = this.modelData;
     },
     watch: {
         modelCollection() {

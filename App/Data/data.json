@@ -325,7 +325,7 @@
     }
   ],
   "demo_,pp,p,p": [],
-  "Demo_testRTE": [
+  "Demo_article": [
     {
       "test-rte": {
         "type": "doc",
@@ -437,6 +437,103 @@
       },
       "categories": "Ratio",
       "id": "bQYhGZlBG"
+    },
+    {
+      "title": {
+        "content": "Installation",
+        "fieldType": "text-line",
+        "required": true
+      },
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Installation"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Open a terminal go to the folder where you want rougeFramework with a terminal then run"
+              }
+            ]
+          },
+          {
+            "type": "codeBlock",
+            "attrs": {
+              "language": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "git clone https://github.com/Tumulte/rougeFramework.git\ncd rougeFramework\nnpm install"
+              }
+            ]
+          }
+        ],
+        "fieldType": "rich-text",
+        "required": true
+      },
+      "categories": {
+        "content": "install",
+        "fieldType": "category-filter"
+      },
+      "id": "KW6tmkkW_"
+    },
+    {
+      "title": {
+        "content": "Starting the app",
+        "fieldType": "text-line",
+        "required": true
+      },
+      "categories": {
+        "content": "install",
+        "fieldType": "category-filter"
+      },
+      "body": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Stating the app"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ],
+                "text": "npm start dev"
+              }
+            ]
+          }
+        ],
+        "fieldType": "rich-text",
+        "required": true
+      },
+      "id": "_85Zatj_h"
     }
   ],
   "Demo_meta": []

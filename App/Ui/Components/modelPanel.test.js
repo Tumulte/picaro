@@ -7,6 +7,8 @@ import Vuelidate from "vuelidate";
 import Vuex from "vuex";
 import userStore from "../../Store/user";
 import adminStore from "../../Store/admin";
+import vueTestingHelper from "../../Tests/testHelper";
+
 
 process.env.ISTEST = true;
 
@@ -27,6 +29,7 @@ const wrapper =
         vuetify, localVue, store
     });
 
+const w = new vueTestingHelper(wrapper);
 
 let select = null;
 let options = null;
@@ -43,27 +46,27 @@ describe("modelPanel", () => {
             expect(wrapper.vm.modelCollection).toStrictEqual({"test model": []});
             expect(wrapper.find("[data-jest=\"add-model\"]").exists()).toBe(false);
             expect(wrapper.find("[data-jest=\"model-name\"]").exists()).toBe(false);
-            select = wrapper.get("[data-jest='select-input']");
-            options = select.findAll("option");
+
         }
     );
 
     // Inspect the raw component options
     it("creates new field of selected type", async () => {
-        options.at(1).setSelected();
+
+
+        w.select(1, "select-input");
 
         await Vue.nextTick();
-        const name = wrapper.get("[data-jest='rf-form-name']");
-        const label = wrapper.get("[data-jest='rf-form-label']");
+        const name = w.get("rf-form-name");
+        const label = w.get("rf-form-label");
         name.setValue("test-name");
         label.setValue("test");
-        await Vue.nextTick();
+        await w.tick();
 
-        await new Promise(r => setTimeout(r, 100));
+        await w.wait(100);
+        w.click("add-button", ":not([disabled='disabled']");
 
-        wrapper.get("[data-jest='add-button']:not([disabled='disabled'])").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await w.tick();
 
 
         //write the new data in a string
@@ -78,24 +81,19 @@ describe("modelPanel", () => {
 
         //Display the new thing in the list
         const elementList = wrapper.get(".current-model-elements");
-        expect(elementList.find("[data-jest=\"rf-form-switch\"]").exists()).toBe(true);
+        expect(w.exists("rf-form-switch", "", elementList)).toBe(true);
 
     });
 
     it("edits a field with new values", async () => {
-        const edit = wrapper.get("[data-jest='edit-boolean']");
-        edit.trigger("click");
-        await Vue.nextTick();
-        expect(wrapper.find("[data-jest='saveStyleSet-boolean']").exists()).toBe(true);
-        expect(wrapper.find("[data-jest='edit-boolean']").exists()).toBe(false);
-        const name = wrapper.get("[data-jest='rf-form-name']");
-        const label = wrapper.get("[data-jest='rf-form-label']");
-        await wrapper.vm.$nextTick();
-        name.setValue("tataname-2");
-        label.setValue("test of toto part 2");
-        await wrapper.vm.$nextTick();
-
-        wrapper.get("[data-jest='saveStyleSet-boolean']").trigger("click");
+        w.click("edit-boolean");
+        await w.tick();
+        expect(w.exists("saveStyleSet-boolean")).toBe(true);
+        expect(w.exists("edit-boolean")).toBe(false);
+        w.set("tataname-2", "rf-form-name");
+        w.set("test of toto part 2", "rf-form-label");
+        await w.tick();
+        w.click("saveStyleSet-boolean");
         await Vue.nextTick();
         expect(wrapper.vm.modelCollection).toStrictEqual({
                 "test model": [{
@@ -110,7 +108,7 @@ describe("modelPanel", () => {
     });
     it("reorganize the form", async () => {
 
-        options.at(2).setSelected();
+        w.select(2, "select-input");
 
         await wrapper.vm.$nextTick();
 

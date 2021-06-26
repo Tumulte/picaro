@@ -113,7 +113,7 @@ describe("The selector panel handles the CSS edition of the app", () => {
         propertyInput.trigger("keyup.enter");
         await wrapper.vm.$nextTick();
 
-        wrapper.findAll("[data-jest='selector-accordion']").at(0).trigger("click");
+        wrapper.find("[data-jest='selector-accordion']").trigger("click");
         await wrapper.vm.$nextTick();
 
         propertyInput = wrapper.find("[data-jest='add-property']");

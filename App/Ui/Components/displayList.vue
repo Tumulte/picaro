@@ -3,8 +3,10 @@
         v-btn(@click="edit = !edit") Edit
         model(:model-name="model" @reloadData="loadListData" v-if="edit")
         div(v-for="(item) in list" v-if="checkFilters(item)")
-            rf-model-field(:field-data="item"  :field-name='index' v-for="(field, index) in item" v-if="field.fieldType" :key="index")
-            model-item-edit(:model-name="model" :id="item.id"  @reloadData="loadListData()" v-if="edit")
+            rf-model-field(:field-data="item"  :field-name='index' v-for="(field, index) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="index")
+            model(:model-name="model" @reloadData="reloadListData" :model-data="item" v-if="edit" :is-edit="edit")
+            model-item-edit(:model-name="model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()" v-if="edit")
+
 
 </template>
 <script>
@@ -28,7 +30,7 @@ export default {
     methods: {
         checkFilters(item) {
             const isLinked = !(this.listFilters && this.listFilters.link) || this.listFilters.link[0] === item.id;
-            const hasCategory = !(this.selectedCategory && item.categories) || this.selectedCategory === item.categories;
+            const hasCategory = !(this.selectedCategory && item.categories) || this.selectedCategory === item.categories.content;
             return isLinked && hasCategory;
         },
         loadListData() {
@@ -36,6 +38,7 @@ export default {
                 .get(`/api/${this.appName}/${this.model}`)
                 .then(response => {
                     this.$store.dispatch("addItemToList", {model: this.model, listData: response.data});
+                    this.edit = false;
                 })
                 .catch(error => {
                     this.$store.dispatch("addAlert", {

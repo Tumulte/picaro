@@ -1,20 +1,24 @@
 <template lang="pug">
     div
         input(v-model="editorString")
-        editor-menu-bar( :editor="editor"  v-slot="{ commands, isActive }" class="editor-textarea")
-            div
-                //todo add borders
-                //todo add require option
-                button( :class="{ 'is-active': isActive.bold() }" @click="commands.bold" outlined)
-                    v-icon mdi-format-bold
-                button( :class="{ 'is-active': isActive.italic() }" @click="commands.italic" outlined)
-                    v-icon mdi-format-italic
-                button( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click="commands.heading({ level: 1 })")
-                    v-icon mdi-format-header-1
-                button( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click="commands.heading({ level: 2 })")
-                    v-icon mdi-format-header-2
-                button( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click="commands.heading({ level: 3 })")
-                    v-icon mdi-format-header-3
+        div
+            span( :class="{ 'is-active': isActive.bold() }" @click.stop="editor.chain().focus().toggleBold().run()")
+                v-icon mdi-format-bold
+            span( :class="{ 'is-active': isActive.italic() }" @click.stop="editor.chain().focus().toggleItalic().run()")
+                v-icon mdi-format-italic
+            span( :class="{ 'is-active': isActive.heading({ level: 1 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 1 }).run()")
+                v-icon mdi-format-header-1
+            span( :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 2 }).run()")
+                v-icon mdi-format-header-2
+            span( :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 3 }).run()")
+                v-icon mdi-format-header-3
+            span( :class="{ 'is-active': isActive.codeBlock() }" @click.stop="editor.chain().focus().toggleCodeBlock().run()")
+                v-icon mdi-code-array
+            span( :class="{ 'is-active': isActive.code() }" @click.stop="editor.chain().focus().toggleCode().run()")
+                v-icon mdi-code-not-equal-variant
+        editor-content(:editor="editor" class="editor-textarea")
+        v-btn(v-if="isEdit  && temporaryContent" @click="save()") save
+        v-btn(v-if="isEdit" @click="cancel()") cancel
 
         editor-content(:editor="editor" class="editor-textarea")
         v-form(v-model="valid")
@@ -26,31 +30,14 @@
 </template>
 
 <script>
-import {Editor, EditorContent, EditorMenuBar} from "tiptap";
-import {
-    Blockquote,
-    CodeBlock,
-    HardBreak,
-    Heading,
-    OrderedList,
-    BulletList,
-    ListItem,
-    TodoItem,
-    TodoList,
-    Bold,
-    Code,
-    Italic,
-    Link,
-    Strike,
-    Underline,
-    History,
-} from "tiptap-extensions";
+import {Editor, EditorContent} from "@tiptap/vue-2";
+import StarterKit from "@tiptap/starter-kit";
 import editFieldCommons from "../../../mixins/modelEditCommons";
 import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
 
 export default {
     name: "richText",
-    components: {EditorContent, EditorMenuBar, formFieldEditCommon},
+    components: {EditorContent, formFieldEditCommon},
     mixins: [editFieldCommons],
     data: function () {
         return {
@@ -68,25 +55,10 @@ export default {
     mounted() {
         this.editor = new Editor({
                 extensions: [
-                    new Blockquote(),
-                    new CodeBlock(),
-                    new HardBreak(),
-                    new Heading({levels: [1, 2, 3]}),
-                    new BulletList(),
-                    new OrderedList(),
-                    new ListItem(),
-                    new TodoItem(),
-                    new TodoList(),
-                    new Bold(),
-                    new Code(),
-                    new Italic(),
-                    new Link(),
-                    new Strike(),
-                    new Underline(),
-                    new History(),
+                    StarterKit
                 ],
-                onUpdate: ({getJSON}) => {
-                    this.editorString = JSON.stringify(getJSON());
+                onUpdate: ({editor}) => {
+                    this.editorString = JSON.stringify(editor.getJSON());
                 },
             }
         );

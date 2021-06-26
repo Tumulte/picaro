@@ -28,7 +28,7 @@ export default {
             }
         },
         checkCategorie(item) {
-            return !(this.selectedCategory && item.categories) || this.selectedCategory === item.categories;
+            return this.selectedCategory === item.categories.content;
         },
     },
     computed: {

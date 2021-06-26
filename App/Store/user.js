@@ -117,11 +117,11 @@ export default {
             return filterCollectionExpanded;
         },
         selectedLayout(state) {
-            const layoutName = state.filterCollection.all.layout || "colors";
+            const layoutName = state.filterCollection.all.layout || "install";
             return state.settings.layoutCollection[layoutName].layout;
         },
         selectedCategory(state) {
-            const layoutName = state.filterCollection.all.layout || "colors";
+            const layoutName = state.filterCollection.all.layout || "install";
             return state.settings.layoutCollection[layoutName].category;
         }
     },
