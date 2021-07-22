@@ -134,7 +134,7 @@
     "postcss-preset-env": "^6.7.0",
     "prosemirror-tables": "^1.1.1",
     "prosemirror-utils": "^0.9.6",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "pug-plain-loader": "^1.0.0",
     "raw-loader": "^4.0.1",
     "sass": "^1.26.10",
