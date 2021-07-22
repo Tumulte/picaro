@@ -148,7 +148,7 @@ const myWebpackConfig = {
             "@components": path.resolve(__dirname, "App/Ui/Components"),
             "@store": path.resolve(__dirname, "App/Store")
         },
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [".js", ".vue", ".json"],
     }
 };
 module.exports = myWebpackConfig;

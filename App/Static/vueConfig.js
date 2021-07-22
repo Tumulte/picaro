@@ -47,7 +47,8 @@ import Vuetify, {
     VIcon,
     VCheckbox,
     VCardActions,
-    VScrollYReverseTransition
+    VScrollYReverseTransition,
+    VCombobox
 } from "vuetify/lib";
 // TODO add webpack chuncks to exclude that in production
 import cssPanel from "../Ui/Components/cssPanelMain.vue";
@@ -62,7 +63,7 @@ import Vuex from "vuex";
 import adminStore from "../Store/admin";
 import userStore from "../Store/user";
 import axios from "axios";
-import rfLayout from "../Ui/Components/rfLayout.vue";
+import rfLayout from "../Ui/Components/rfCommonLayout.vue";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -103,7 +104,8 @@ Vue.use(Vuetify, {
         VCardActions,
         VAlert,
         VDialog,
-        VCheckbox
+        VCheckbox,
+        VCombobox
     }
 });
 

@@ -36,7 +36,7 @@ export default {
             return {content: this.selected, fieldType: "category-filter"};
         },
         categories() {
-            return this.modelCollection.meta.find(item => item.name === "categories");
+            return this.modelCollection.appFilters.find(item => item.name === "categories");
         }
     },
     created() {

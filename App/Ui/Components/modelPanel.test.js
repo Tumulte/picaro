@@ -90,8 +90,8 @@ describe("modelPanel", () => {
         await w.tick();
         expect(w.exists("saveStyleSet-boolean")).toBe(true);
         expect(w.exists("edit-boolean")).toBe(false);
-        w.set("tataname-2", "rf-form-name");
-        w.set("test of toto part 2", "rf-form-label");
+        w.setValue("tataname-2", "rf-form-name");
+        w.setValue("test of toto part 2", "rf-form-label");
         await w.tick();
         w.click("saveStyleSet-boolean");
         await Vue.nextTick();

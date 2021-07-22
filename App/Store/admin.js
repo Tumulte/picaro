@@ -68,6 +68,9 @@ export default {
         newModelName: "",
         styleSetLoaded: false,
         triggerNewStyle: false,
+        editCommonLayout: false,
+        editLayout: false,
+        pendingLinkedPanel: ""
     },
     mutations: {
         /**
@@ -143,6 +146,15 @@ export default {
         triggerNewStyle(state, data) {
             state.triggerNewStyle = data;
         },
+        setEditCommonLayout(state, data) {
+            state.editCommonLayout = data;
+        },
+        setEditLayout(state, data) {
+            state.editLayout = data;
+        },
+        setPendingLinkedPanel(state, data) {
+            state.pendingLinkedPanel = data;
+        },
     },
     getters: {
         styleSetLoaded(state) {
@@ -178,6 +190,9 @@ export default {
         },
         triggerNewStyle(state) {
             return state.triggerNewStyle;
+        },
+        pendingLinkedPanel(state) {
+            return state.pendingLinkedPanel;
         }
 
 
@@ -227,6 +242,5 @@ export default {
                 document.getElementById("rf-live-styles").innerHTML = generateCSS(state.styleSet);
             }
         }
-
     },
 };

@@ -23,12 +23,21 @@ export default function vueTestingHelper(wrapper) {
     this.exists = function (attributeName, extraAttribute, newRoot) {
         return this.find(attributeName, extraAttribute, newRoot).exists();
     };
-    this.set = function (value, attributeName, extraAttribute, newRoot) {
+    this.setValue = function (value, attributeName, extraAttribute, newRoot) {
         this.get(attributeName, extraAttribute, newRoot).setValue(value);
     };
     this.select = function (value, attributeName, extraAttribute, newRoot) {
         const select = this.get(attributeName, extraAttribute, newRoot);
         const options = select.findAll("option");
         options.at(value).setSelected();
+    };
+    this.set = function (data, value) {
+        wrapper.vm[data] = value;
+    };
+    this.commit = function (key, value) {
+        wrapper.vm.$store.commit(key, value);
+    };
+    this.dispatch = function (key, payload) {
+        wrapper.vm.$store.dispatch(key, payload);
     };
 }

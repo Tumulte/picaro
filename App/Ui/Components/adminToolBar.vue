@@ -51,7 +51,7 @@ export default {
                 admin: false,
                 nav: false,
                 styleSet: false,
-                models: true
+                models: false
             },
             openPanel: ""
         };

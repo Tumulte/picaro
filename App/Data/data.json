@@ -351,7 +351,9 @@
         "fieldType": "text-line",
         "required": false
       },
-      "categories": "Colors",
+      "categories": [
+        "Colors"
+      ],
       "id": "DQYu,BG"
     },
     {
@@ -379,7 +381,9 @@
         "fieldType": "text-line",
         "required": false
       },
-      "categories": "Colors",
+      "categories": [
+        "Colors"
+      ],
       "id": "DQYhGZlBG"
     },
     {
@@ -407,7 +411,9 @@
         "fieldType": "text-line",
         "required": false
       },
-      "categories": "Ratio",
+      "categories": [
+        "Ratio"
+      ],
       "id": "DQYhGilBG"
     },
     {
@@ -435,7 +441,9 @@
         "fieldType": "text-line",
         "required": false
       },
-      "categories": "Ratio",
+      "categories": [
+        "Ratio"
+      ],
       "id": "bQYhGZlBG"
     },
     {
@@ -484,10 +492,9 @@
         "fieldType": "rich-text",
         "required": true
       },
-      "categories": {
-        "content": "install",
-        "fieldType": "category-filter"
-      },
+      "categories": [
+        "sts78CVvs"
+      ],
       "id": "KW6tmkkW_"
     },
     {
@@ -496,10 +503,9 @@
         "fieldType": "text-line",
         "required": true
       },
-      "categories": {
-        "content": "install",
-        "fieldType": "category-filter"
-      },
+      "categories": [
+        "TdE8HkEey"
+      ],
       "body": {
         "type": "doc",
         "content": [

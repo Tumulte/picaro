@@ -101,6 +101,12 @@ export default {
         modelCollection(state) {
             return state.modelCollection;
         },
+        availableFilterCollection(state) {
+            return state.settings.availableFilterCollection;
+        },
+        modelCollectionNames(getters) {
+            return Object.keys(getters.modelCollection);
+        },
         navStructure(state) {
             return state.navStructure;
         },
@@ -118,11 +124,10 @@ export default {
         },
         selectedLayout(state) {
             const layoutName = state.filterCollection.all.layout || "install";
-            return state.settings.layoutCollection[layoutName].layout;
+            return {layout: state.settings.layoutCollection[layoutName], name: layoutName};
         },
-        selectedCategory(state) {
-            const layoutName = state.filterCollection.all.layout || "install";
-            return state.settings.layoutCollection[layoutName].category;
+        selectedCategories(state) {
+            return state.filterCollection.all.categories || [];
         }
     },
     actions: {
@@ -146,6 +151,15 @@ export default {
             temporaryFilterCollection.modelFilters = {}; //model specific filters dont carry over layout chages
             updateRoute(temporaryFilterCollection);
 
+        },
+        updateSettings({state}, {property, value}) {
+            Vue.set(state.settings, property, value);
+        },
+        updateAvailableFilters({state}, {property, value}) {
+            Vue.set(state.settings.availableFilterCollection, property, value);
+        },
+        updateLayout({state}, {layoutName, lineIndex, columnIndex, payload}) {
+            Vue.set(state.settings.layoutCollection[layoutName][lineIndex][columnIndex], payload.type, payload.data);
         },
         addItemToList({state}, {model: model, listData: listData}) {
             Vue.set(state.list, model, listData);

@@ -1,21 +1,23 @@
 <template lang="pug">
     div
-        div(v-for="item in list" v-if="checkCategorie(item)")
+        div(v-for="item in list" v-if="checkFilters(item)")
             ul
                 component(:is="htmlTag" class="extraClass")
                     a(@click="addFilter(item.id)" :class="{selected: selectedId === item.id}") {{item[field].content}}
 </template>
 <script>
 import {mapActions, mapGetters} from "vuex";
+import checkFilters from "./mixins/checkFilters";
 
 export default {
     name: "filterLink",
+    mixins: [checkFilters],
     data() {
         return {selectedId: ""};
     },
     props: {
         field: {type: String, default: "title"},
-        model: {type: String, required: true},
+        panelParams: {type: Object, required: true},
         htmlTag: {type: String, default: "span"},
         extraClass: {type: String, default: ""}
     },
@@ -27,12 +29,9 @@ export default {
                 this.updateFilterCollection({models: [this.model], type: "link", filterParams: [id]});
             }
         },
-        checkCategorie(item) {
-            return this.selectedCategory === item.categories.content;
-        },
     },
     computed: {
-        ...mapGetters(["selectedCategory"]),
+        ...mapGetters(["selectedCategories"]),
         list: function () {
             return this.$store.getters.list[this.model];
         },

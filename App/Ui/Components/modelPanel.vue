@@ -30,7 +30,6 @@
                                     v-btn(data-jest='delete-button' @click="deleteField(subIndex)" color="error" text class="mr-3 mt-3" ) Delete
                             v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary") Move here
                     v-card-actions(class="justify-end")
-                        v-btn(@click="deleteModel" color="error" text v-if="currentEditModelName !== 'meta'") Delete
                         v-btn(@click="saveModel" color="success" data-jest="saveStyleSet model") Save
         //todo add delete
         //todo test whole process
@@ -55,9 +54,6 @@ export default {
             selectedFieldType: "none",
             currentModelName: "",
             currentMovingField: null,
-            metaFieldType: {
-                "CategoryFilter": {name: "Category", options: [], component: categoryFilter}
-            },
             standardFieldType:
                 {
                     "Boolean": {name: "Boolean", component: booleanField},
@@ -153,7 +149,6 @@ export default {
             return Object.keys(this.modelCollection).filter(item => item === this.modelNameInput).length === 0;
         },
         fieldType() {
-            if (this.currentEditModelName === "meta") return this.metaFieldType;
             return this.standardFieldType;
         }
 

@@ -159,56 +159,71 @@
       "applicationName": "Demo",
       "navStructureString": "{\"0__add\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"0__add\",\"displayName\":\"add\",\"url\":\"/add\",\"custom\":false},\"1__books\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"1__books\",\"displayName\":\"books\",\"url\":\"/books\",\"custom\":false},\"2__edit\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"2__edit\",\"displayName\":\"edit\",\"url\":\"/edit\",\"custom\":false},\"3__films\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"3__films\",\"displayName\":\"films\",\"url\":\"/films\",\"custom\":false},\"4__index\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"4__index\",\"displayName\":\"index\",\"url\":\"/index\",\"custom\":false},\"5__listtest\":{\"hidden\":false,\"children\":{},\"parents\":[],\"name\":\"5__listtest\",\"displayName\":\"listtest\",\"url\":\"/listtest\",\"custom\":false}}",
       "layoutCollection": {
-        "install": {
-          "category": "install",
-          "layout": [
-            [
-              {
-                "id": "7c8c3uitv",
-                "model": "article",
-                "type": "filterLink",
-                "category": "install"
-              },
-              {
-                "id": "TtuU6D69T",
-                "model": "article",
-                "type": "list",
-                "category": "install"
-              }
-            ]
+        "install": [
+          [
+            {
+              "id": "7c8c3uitv",
+              "model": "article",
+              "type": "filterLink",
+              "categories": [
+                "sts78CVvs"
+              ]
+            },
+            {
+              "id": "TtuU6D69T",
+              "model": "article",
+              "type": "list",
+              "categories": [
+                "sts78CVvs"
+              ]
+            }
           ]
-        },
-        "Ratio": {
-          "category": "Ratio",
-          "layout": [
-            [
-              {
-                "type": "filterLink",
-                "model": "article"
-              },
-              {
-                "id": "stsg4DtgP",
-                "model": "article",
-                "category": "Ratio",
-                "type": "list"
-              },
-              {
-                "id": "TtuU6D69T",
-                "model": "article",
-                "category": "Ratio",
-                "type": "list"
-              }
-            ],
-            [
-              {
-                "id": "TtuU6D69T",
-                "model": "article",
-                "category": "Ratio",
-                "type": "list"
-              }
-            ]
+        ],
+        "Ratio": [
+          [
+            {
+              "type": "filterLink",
+              "model": "article"
+            },
+            {
+              "id": "stsg4DtgP",
+              "model": "article",
+              "categories": [
+                "sts78CVvs"
+              ],
+              "type": "list"
+            },
+            {
+              "id": "TtuU6D69T",
+              "model": "article",
+              "categories": [
+                "sts78CVvs"
+              ],
+              "type": "list"
+            }
+          ],
+          [
+            {
+              "id": "TtuU6D69T",
+              "model": "article",
+              "category": "Ratio",
+              "type": "list"
+            }
           ]
-        }
+        ]
+      },
+      "availableFilterCollection": {
+        "categories": [
+          {
+            "label": "Installation",
+            "id": "sts78CVvs"
+          },
+          {
+            "id": "TdE8HkEey",
+            "label": "Test label"
+          }
+        ],
+        "tags": []
       },
       "layoutCommonCollection": [
         [
@@ -219,31 +234,6 @@
         ]
       ],
       "modelCollection": {
-        "meta": [
-          {
-            "name": "categories",
-            "required": false,
-            "label": "Catégories",
-            "type": "CategoryFilter",
-            "options": [
-              {
-                "label": "install"
-              },
-              {
-                "label": "intro"
-              },
-              {
-                "label": "Colors"
-              },
-              {
-                "label": "Ratio"
-              },
-              {
-                "label": "Users"
-              }
-            ]
-          }
-        ],
         "article": [
           {
             "name": "title",
@@ -265,20 +255,17 @@
             "label": "Body",
             "type": "RichText"
           }
+        ],
+        "simple-text": [
+          {
+            "name": "title",
+            "required": true,
+            "label": "Title",
+            "type": "Text",
+            "regex": ""
+          }
         ]
       }
-    },
-    {
-      "id": "ctct",
-      "name": "Ctct",
-      "styleSet": "",
-      "language": "",
-      "title": "",
-      "devMode": true,
-      "messageTimeOut": 10000,
-      "applicationName": "Ctct",
-      "navStructureString": "",
-      "modelCollectionString": ""
     }
   ],
   "users": [

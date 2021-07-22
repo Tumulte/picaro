@@ -4,8 +4,8 @@
         model(:model-name="model" @reloadData="loadListData" v-if="edit")
         div(v-for="(item) in list" v-if="checkFilters(item)")
             rf-model-field(:field-data="item"  :field-name='index' v-for="(field, index) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="index")
-            model(:model-name="model" @reloadData="reloadListData" :model-data="item" v-if="edit" :is-edit="edit")
-            model-item-edit(:model-name="model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()" v-if="edit")
+            model(:model-name="panelParams.model" @reloadData="reloadListData" :model-data="item" v-if="edit" :is-edit="edit")
+            model-item-edit(:model-name="panelParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()" v-if="edit")
 
 
 </template>
@@ -14,10 +14,12 @@ import axios from "axios";
 import ModelItemEdit from "./modelItemEdit.vue";
 import Model from "./modelForm.vue";
 import {mapGetters} from "vuex";
+import checkFilters from "./mixins/checkFilters";
 
 export default {
     name: "rfList",
     components: {Model, ModelItemEdit},
+    mixins: [checkFilters],
     data: function () {
         return {
             appName: appName,
@@ -26,16 +28,12 @@ export default {
             activeFilterCollection: []
         };
     },
-    props: ["model"],
+    props: {panelParams: {type: Object, required: true}},
     methods: {
-        checkFilters(item) {
-            const isLinked = !(this.listFilters && this.listFilters.link) || this.listFilters.link[0] === item.id;
-            const hasCategory = !(this.selectedCategory && item.categories) || this.selectedCategory === item.categories.content;
-            return isLinked && hasCategory;
-        },
+
         loadListData() {
             axios
-                .get(`/api/${this.appName}/${this.model}`)
+                .get(`/api/${this.appName}/${this.panelParams.model}`)
                 .then(response => {
                     this.$store.dispatch("addItemToList", {model: this.model, listData: response.data});
                     this.edit = false;
@@ -54,7 +52,7 @@ export default {
 
 
     computed: {
-        ...mapGetters(["filterCollectionExpanded", "selectedCategory"]),
+        ...mapGetters(["filterCollectionExpanded", "selectedCategories"]),
         list() {
             return this.$store.getters.list[this.model];
         },

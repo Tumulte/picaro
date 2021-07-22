@@ -4,7 +4,7 @@
             v-switch(v-model="valid" class="ma-4" label="Valid" readonly)
             div(v-for="modelParams in modelCollection[modelName]" data-jest="form-element")
                 component(:is="`rf${modelParams.type}`" :is-edit="isEdit" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="modelName" :field-data="modelData[modelParams.name]" @updateData="updateData")
-            div(v-for="modelParams in modelCollection.meta" data-jest="form-element")
+            div(v-for="modelParams in modelCollection.appFilters" data-jest="form-element")
                 component(:is="`rf${modelParams.type}`" :model-params="modelParams" @updateData="updateData" :is-edit="true" :field-data="modelData[modelParams.name]")
             v-btn(@click="sendForm") Submit
 </template>
