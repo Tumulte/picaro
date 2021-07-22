@@ -1,10 +1,13 @@
 {
-    "defaultApp": "Demo",
-    "applications": {
-        "Demo": {
-            "language": "fr",
-            "title": "Mon Application"
-        }
-    },
-    "googleFontKey": ""
-}
+  "sessionSecret": "secret",
+  "defaultApp": "Demo",
+  "warningTimeout": 10000,
+  "applications": {
+    "Demo": {
+      "styleSet": "default",
+      "language": "en",
+      "title": "RF demo app",
+      "devMode": true
+    }
+  },
+  "googleFontKey": ""

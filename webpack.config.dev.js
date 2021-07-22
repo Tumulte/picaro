@@ -1,4 +1,4 @@
-//TODO BACKGROUND Créer un "common"
+//TODO BACKGROUND create a "common"
 
 const path = require("path");
 const webpack = require("webpack");
@@ -7,9 +7,6 @@ const fibers = require("fibers");
 const sass = require("sass");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
-/**
- * @type {import('webpack').Configuration}
- * */
 const myWebpackConfig = {
     target: "web",
     devtool: "inline-source-map",

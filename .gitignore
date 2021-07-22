@@ -1,7 +1,6 @@
 node_modules
 .idea
 .editorconfig
-package-lock.json
 npm-debug.log
 .vscode
 .history

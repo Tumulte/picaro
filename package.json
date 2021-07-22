@@ -21,8 +21,7 @@
     "test:watch": "jest --watch",
     "build": "webpack --mode=production --config webpack.config.prod.js",
     "build:dev": "webpack --mode=development --config webpack.config.dev.js",
-    "start:front": "webpack-dev-server --config webpack.config.dev.js",
-    "preinstall": "npx npm-force-resolutions"
+    "start:front": "webpack-dev-server --config webpack.config.dev.js"
   },
   "keywords": [
     "cli",
