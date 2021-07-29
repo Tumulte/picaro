@@ -1,2 +1,2 @@
-require('./baseStyle.css');
-require('./styles.css');
+import './baseStyle.css';
+import './styles.css';
