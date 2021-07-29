@@ -1,11 +1,11 @@
 import express from "express";
-/*DATABASE INITIALISATION */
-import low from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
-//rougeFramework own database (parameters, styles, users…)
+import lodash from "lodash"
 
+/*DATABASE INITIALISATION */
+import loki from 'lokijs'
+import lfsa from 'lokijs/src/loki-fs-structured-adapter'
 /* rougeFramework Settings */
-import settings from "./../rougeSettings.json";
+import settings from "../rougeSettings.json"
 
 //rougeFramework Back End
 import crud from "./crud.js";
@@ -20,21 +20,98 @@ import methodOverride from "method-override";
 import passport from "passport";
 import flash from "express-flash";
 import session from "express-session";
-import initializePassport from "./passportConfig";
+import initializePassport from "./passportConfig.js";
 
-const appAdapter = new FileSync("./App/Data/appData.json");
-const appDb = low(appAdapter);
+var adapter = new lfsa();
+var db = new loki('rf.db', {
+    adapter : adapter,
+    autoload: true,
+    autoloadCallback : databaseInitialize,
+    autosave: true,
+    autosaveInterval: 4000
+});
+const appAdapter = new JSONFileSync("./App/Data/appData.json");
+const appDb = new Low(appAdapter);
+appDb.read().then(() =>{
+    appDb.chain = lodash.chain(appDb.data)
+    let currentApplicationSettings = appDb.chain
+        .get("config")
+        .find({
+            id: settings.defaultApp
+        })
+        .value();
+    currentApplicationSettings.applicationName = settings.defaultApp;
+
+    app.get("/:app", function (req, res) {
+        /**
+         * @type {string}
+         */
+        app.set("appName", req.params.app);
+        const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
+
+        if (upperCasedApp in settings.applications) {
+            // @ts-ignore
+            currentApplicationSettings = settings.applications[upperCasedApp];
+            currentApplicationSettings.applicationName = upperCasedApp;
+            app.set("views", `${__dirname}/../app${upperCasedApp}/views`);
+            res.render("index");
+        } else if (req.params.app !== "admin" || req.params.app !== "__webpack_hmr") {
+            res.status(404).send("This page does not exist");
+        }
+    });
+
+    const getUser = function (value, type = "username") {
+        /**
+         * @type {object}
+         */
+        const parameters = {};
+        parameters[type] = value;
+        return (
+            appDb.chain
+                .get("users")
+                // @ts-ignore
+                .find(parameters)
+                .value()
+        );
+    };
+    initializePassport(passport, getUser);
+
+    //TODO add setup. Check initiateApp.js
+    app.get("/admin/setup", function () {
+        appDb.chain.set(currentApplicationSettings.applicationName, []).write();
+    });
+
+    //Application Data
+    const appApi = appCrud(appDb, app, currentApplicationSettings);
+    app.use("/appapi", appApi);
+})
+
+
 //Apps database
-const adapter = new FileSync("./App/Data/data.json");
-const db = low(adapter);
-// @ts-ignore
-let currentApplicationSettings = appDb
-    .get("config")
-    .find({
-        id: settings.defaultApp
-    })
-    .value();
-currentApplicationSettings.applicationName = settings.defaultApp;
+const adapter = new JSONFileSync("./App/Data/data.json");
+const db = new Low(adapter);
+db.read().then(()=>{
+    db.chain = lodash.chain(db.data)
+    const api = crud(db.chain);
+//TODO bah non en fait… juste pour les "post/put/delete"
+    app.use("/api", checkAuthenticated, api);
+    app.use("/edit/:app/:table/:id", function (req, res, next) {
+        const data = db.chain
+            .get(`${req.params.app}_${req.params.table}`)
+            // @ts-ignore
+            .find({
+                id: req.params.id,
+            })
+            .value();
+        req.params.method = "put";
+
+        req.form = tableToForm(req.params, data);
+
+        next();
+    });
+
+})
+
 
 //Server Params
 const port = 8080;
@@ -48,11 +125,6 @@ app.use(methodOverride("_method"));
 app.set("view engine", "pug");
 
 const isProd = process.env.NODE_ENV === "production";
-if (!isProd) {
-    const fs = require("fs");
-    app.locals.views = fs.readdirSync(`${__dirname}/../app${currentApplicationSettings.applicationName}/views/`);
-
-}
 
 //Static Files
 app.use("/static", express.static("static"));
@@ -76,23 +148,7 @@ for (let application in settings.applications) {
     );
 }
 
-const api = crud(db);
-//TODO bah non en fait… juste pour les "post/put/delete"
-app.use("/api", checkAuthenticated, api);
-app.use("/edit/:app/:table/:id", function (req, res, next) {
-    const data = db
-        .get(`${req.params.app}_${req.params.table}`)
-        // @ts-ignore
-        .find({
-            id: req.params.id,
-        })
-        .value();
-    req.params.method = "put";
 
-    req.form = tableToForm(req.params, data);
-
-    next();
-});
 
 app.use(
     "/admin/add/:app/:table/",
@@ -135,20 +191,7 @@ app.use(passport.session());
  * @param {string} type
  * @returns {object} The user data
  */
-const getUser = function (value, type = "username") {
-    /**
-     * @type {object}
-     */
-    const parameters = {};
-    parameters[type] = value;
-    return (
-        appDb
-            .get("users")
-            // @ts-ignore
-            .find(parameters)
-            .value()
-    );
-};
+
 app.use(flash());
 
 /**
@@ -178,7 +221,6 @@ function checkNotAuthenticated(req, res, next) {
     next();
 }
 
-initializePassport(passport, getUser);
 app.post(
     "/admin/login",
     checkNotAuthenticated,
@@ -197,9 +239,7 @@ app.get("/admin/logout", function (req, res) {
     res.redirect("/");
 });
 
-//Application Data
-const appApi = appCrud(appDb, app, currentApplicationSettings);
-app.use("/appapi", appApi);
+
 
 //TODO generate a default styleset with any app
 //All apps middleware
@@ -239,34 +279,12 @@ if (!isProd) {
     });
 }
 
-//TODO add setup. Check initiateApp.js
-app.get("/admin/setup", function () {
-    appDb.set(currentApplicationSettings.applicationName, []).write();
-});
 
 //Pages
 app.get("/", function (req, res) {
     app.set("appName", settings.defaultApp);
     app.set("views", `${__dirname}/../app${settings.defaultApp}/views`);
     res.render("index");
-});
-
-app.get("/:app", function (req, res) {
-    /**
-     * @type {string}
-     */
-    app.set("appName", req.params.app);
-    const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
-
-    if (upperCasedApp in settings.applications) {
-        // @ts-ignore
-        currentApplicationSettings = settings.applications[upperCasedApp];
-        currentApplicationSettings.applicationName = upperCasedApp;
-        app.set("views", `${__dirname}/../app${upperCasedApp}/views`);
-        res.render("index");
-    } else if (req.params.app !== "admin" || req.params.app !== "__webpack_hmr") {
-        res.status(404).send("This page does not exist");
-    }
 });
 
 app.get("/:app/:view", function (req, res, next) {

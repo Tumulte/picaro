@@ -12,14 +12,7 @@ const myWebpackConfig = {
     devtool: "inline-source-map",
     mode: "development",
     entry: {
-        appDoc: [
-            path.resolve(__dirname, "static/doc/main.js"),
-            path.resolve(__dirname, "App/Static/main.js")
-        ],
-        appDemo: [
-            path.resolve(__dirname, "static/demo/main.js"),
-            path.resolve(__dirname, "App/Static/main.js")
-        ],
+
         client: path.resolve(__dirname, "App/Static/client.js")
 
 
