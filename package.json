@@ -7,7 +7,7 @@
   },
   "description": "Initial Json for a Node project",
   "bin": {
-    "rf-cli": "./App/Cli/create-site/bin/cli.js"
+    "rfcli": "./App/Cli/create-site/bin/cli.js"
   },
   "scripts": {
     "start": "node ./App/server.js",
@@ -25,7 +25,7 @@
   },
   "keywords": [
     "cli",
-    "rf-cli"
+    "rfcli"
   ],
   "author": "Étienne Rouge",
   "license": "SEE LICENSE IN LICENCE.md",

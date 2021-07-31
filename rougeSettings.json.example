@@ -1,13 +1,7 @@
 {
   "sessionSecret": "secret",
-  "defaultApp": "Demo",
   "warningTimeout": 10000,
   "applications": {
-    "Demo": {
-      "styleSet": "default",
-      "language": "en",
-      "title": "RF demo app",
-      "devMode": true
-    }
+      "defaultApp": "Demo"
   },
   "googleFontKey": ""

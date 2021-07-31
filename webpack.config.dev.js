@@ -12,13 +12,9 @@ const myWebpackConfig = {
     devtool: "inline-source-map",
     mode: "development",
     entry: {
-
-        client: path.resolve(__dirname, "App/Static/client.js")
-
-
+        client: path.resolve(__dirname, "App/Static/client.js"),
     },
     devServer: {
-
         publicPath: "localhost:3000/",
         contentBase: path.join(__dirname, "App/Dist"),
         overlay: true,
