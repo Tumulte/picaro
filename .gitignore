@@ -5,10 +5,9 @@ npm-debug.log
 .vscode
 .history
 rougeSettings.json
-static/fonts/*
-static/fonts/Knile*
-static/fonts/TallAbbey*
-static/fonts/RivinaTC*
+static/*
+rfData*
+app*/*
 App/Tests/Cypress/videos/*
 App/mochawesome.json
 App/Tests/css/*
