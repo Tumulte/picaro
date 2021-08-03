@@ -12,7 +12,6 @@ const myWebpackConfig = {
     devtool: "inline-source-map",
     mode: "development",
     entry: {
-        client: path.resolve(__dirname, "App/Static/client.js"),
     },
     devServer: {
         publicPath: "localhost:3000/",

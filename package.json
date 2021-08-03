@@ -20,8 +20,8 @@
     "test:int": "cypress run",
     "test:watch": "jest --watch",
     "build": "webpack --mode=production --config webpack.config.prod.js",
-    "build:dev": "webpack --mode=development --config webpack.config.dev.js",
-    "start:front": "webpack serve --config webpack.config.dev.js"
+    "build:dev": "webpack --mode=development --config webpack.config.dev.js.example",
+    "start:front": "webpack serve --config webpack.config.dev.js.example"
   },
   "keywords": [
     "cli",
@@ -37,6 +37,7 @@
     "@types/sass": "^1.16.1",
     "@vue/composition-api": "^1.0.3",
     "axios": "^0.21.1",
+    "babel-loader": "^8.2.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "1.19.0",
     "compression": "1.7.4",
@@ -45,7 +46,6 @@
     "express-flash": "0.0.2",
     "express-session": "^1.17.2",
     "json-server": "^0.16.3",
-    "lodash": "^4.17.21",
     "lokijs": "^1.5.12",
     "method-override": "^3.0.0",
     "mini-css-extract-plugin": "^2.1.0",
@@ -114,7 +114,7 @@
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",
     "raw-loader": "^4.0.2",
-    "sass": "^1.35.2",
+    "sass": "~1.32.12",
     "sass-loader": "^12.1.0",
     "shelljs": "^0.8.4",
     "style-loader": "^3.2.1",

@@ -15,12 +15,13 @@ const handleData = function (type, name) {
             console.log(`The app ${name} already exist`);
             return;
         }
-        if (db.getCollection("config") === null) { //first init
-            db.addCollection("config");
+        if (db.getCollection("settings") === null) { //first init
+            db.addCollection("settings");
+            db.addCollection("users");
         }
-        const config = db.getCollection("config");
+        const settings = db.getCollection("settings");
         // log some random event data as part of our example
-        config.insert({
+        settings.insert({
             "id": name,
             "name": name,
             "styleSet": "",
@@ -48,23 +49,37 @@ const handleData = function (type, name) {
             }
         });
     } else if(type === 'destroy') {
-        db.removeCollection(name)
-        const config = db.getCollection("config");
-        config.findAndRemove({id : name})
-        db.saveDatabase((err) => {
+        db.loadDatabase({}, function(err) {
             if (err) {
                 console.log("error : " + err);
             }
             else {
-                console.log("database saved.");
+                console.log("database loaded.");
+                db.removeCollection(name)
+                const settings = db.getCollection("settings");
+                settings.findAndRemove({id : name})
+                db.saveDatabase((err) => {
+                    if (err) {
+                        console.log("error : " + err);
+                    }
+                    else {
+                        console.log("database saved.");
+                    }
+                });
+
             }
         });
-
     }
 }
 
 const handleFiles = function(type, name, nameLower) {
     if(type === 'create') {
+
+        if (!fs.existsSync(`./static`)) {
+            fs.mkdirSync(`./static`);
+            fs.mkdirSync(`./static/fonts`);
+            console.log("Init static folders (first run) : OK")
+        }
         // App folder
         fs.mkdirSync(`./app${name}`);
         fs.mkdirSync(`./app${name}/controllers`);
@@ -117,8 +132,8 @@ const handleWebpack = function (type, name, nameLower) {
         data.splice(14, 0, newData);
 
     } else if (type === 'destroy') {
-        const webpackIndex = data.findIndex(item => item === "        app${name}: [")
-        data.splice(webpackIndex, 4)
+        const webpackIndex = data.findIndex(item => item.includes(`app${name}: [`))
+        if(webpackIndex !== -1) data.splice(webpackIndex, 4)
     }
     let text = data.join("\n");
 
@@ -126,7 +141,28 @@ const handleWebpack = function (type, name, nameLower) {
         if (err) return console.log(err);
     });
 }
-const handleConfig = function (type, name) {
+const handleSettings = function (type, name) {
+    if (!fs.existsSync(`./webpack.config.dev.js`)) {
+        fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
+            if (err) throw err;
+            console.log("webpack.config.dev.js.example was copied to webpack.config.dev.js");
+        });
+    }
+
+    if (!fs.existsSync(`./rougeSettings.json`)) {
+        fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
+            if (err) throw err;
+            console.log("rougeSettings.json.example was copied to rougeSettings.json");
+        });
+    }
+
+    if (!fs.existsSync(`./rougeSettings.json`)) {
+        fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
+            if (err) throw err;
+            console.log("rougeSettings.json.example was copied to rougeSettings.json");
+        });
+    }
+
     let settings = fs.readFileSync("./rougeSettings.json").toString().split("\n");
     if(type === 'create') {
         const newSettingsData = `    "${name}": {
@@ -137,15 +173,15 @@ const handleConfig = function (type, name) {
         settings.splice(4, 0, newSettingsData);
 
     } else if (type === 'destroy') {
-        const index = settings.findIndex(item => item === "    ${name}\": {")
-        settings.splice(index, 5)
+        const index = settings.findIndex(item => item.includes(`"${name}": {`))
+        if(index !== -1) settings.splice(index, 5)
     }
     let settingsText = settings.join("\n");
     fs.writeFile("./rougeSettings.json", settingsText, function (err) {
         if (err) return console.log(err);
     });
 }
-const validateAction =  function (type,name) {
+const validateAction =  async function (type,name) {
     if (type === 'create') {
         if (fs.existsSync(`./app${name}`)) {
             console.log(`The app ${name} already exists`)
@@ -154,7 +190,7 @@ const validateAction =  function (type,name) {
         return true
     }
     if(type === 'destroy') {
-        inquirer.prompt([
+        await inquirer.prompt([
             {
                 type: "input",
                 message: "Are you sure ? It can NOT be undone all data and files will be lost. Type YES to confirm",
@@ -164,7 +200,7 @@ const validateAction =  function (type,name) {
                         console.log('Type YES (all caps) to confirm')
                         return
                     }
-                    return true;
+                    return true
                 }
             }])
         return true
@@ -188,6 +224,7 @@ const alterApp = function (type) {
 
         const validated = await validateAction(type,name)
 
+        console.log('validated : ', validated)
         if(!validated) {
             return
         }
@@ -195,8 +232,8 @@ const alterApp = function (type) {
         console.log(`${type} Folder and Files : OK`)
         handleWebpack(type , name, nameLower)
         console.log(`${type} Webpack config : OK`)
-        handleConfig(type , name)
-        console.log(`${type} Config : OK`)
+        handleSettings(type , name)
+        console.log(`${type} Settings : OK`)
         handleData(type , name)
         console.log(`${type} Data : OK`)
 
@@ -238,7 +275,7 @@ export async function cli() {
                     }
                 ],
                 validate: function (answer) {
-                    if (answer.length < 1) {y
+                    if (answer.length < 1) {
                         return "Please choose an action";
                     }
 
