@@ -122,6 +122,13 @@ require('./styles.css')`
 }
 
 const handleWebpack = function (type, name, nameLower) {
+    if (!fs.existsSync(`./webpack.config.dev.js`)) {
+        fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
+            if (err) throw err;
+            console.log("webpack.config.dev.js.example was copied to webpack.config.dev.js");
+        });
+    }
+
     let data = fs.readFileSync("./webpack.config.dev.js").toString().split("\n");
 
     if(type === 'create') {
@@ -142,12 +149,6 @@ const handleWebpack = function (type, name, nameLower) {
     });
 }
 const handleSettings = function (type, name) {
-    if (!fs.existsSync(`./webpack.config.dev.js`)) {
-        fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
-            if (err) throw err;
-            console.log("webpack.config.dev.js.example was copied to webpack.config.dev.js");
-        });
-    }
 
     if (!fs.existsSync(`./rougeSettings.json`)) {
         fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
