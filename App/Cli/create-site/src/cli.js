@@ -121,9 +121,9 @@ require('./styles.css')`
     }
 }
 
-const handleWebpack = function (type, name, nameLower) {
+const handleWebpack = async function (type, name, nameLower) {
     if (!fs.existsSync(`./webpack.config.dev.js`)) {
-        fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
+        await fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
             if (err) throw err;
             console.log("webpack.config.dev.js.example was copied to webpack.config.dev.js");
         });
@@ -148,17 +148,10 @@ const handleWebpack = function (type, name, nameLower) {
         if (err) return console.log(err);
     });
 }
-const handleSettings = function (type, name) {
+const handleSettings = async function (type, name) {
 
     if (!fs.existsSync(`./rougeSettings.json`)) {
-        fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
-            if (err) throw err;
-            console.log("rougeSettings.json.example was copied to rougeSettings.json");
-        });
-    }
-
-    if (!fs.existsSync(`./rougeSettings.json`)) {
-        fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
+        await fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
             if (err) throw err;
             console.log("rougeSettings.json.example was copied to rougeSettings.json");
         });
