@@ -4,7 +4,6 @@ node_modules
 npm-debug.log
 .vscode
 .history
-rougeSettings.json
 static/*
 rfData*
 app*/*
@@ -14,7 +13,7 @@ App/Tests/css/*
 App/Tests/js/*
 App/Tests/index.html
 App/Tests/jest-results.json
-rougeSettings.jso
+rougeSettings.json
 webpack.config.dev.js
 
 App/Tests/Cypress/screenshots/*

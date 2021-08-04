@@ -3,7 +3,7 @@ const fs = require("fs");
 const loki = require("lokijs");
 const lfsa = require("lokijs/src/loki-fs-structured-adapter.js");
 const adapter = new lfsa();
-const db = new loki("rfData.db", {
+const db = new loki("./App/Data/rfData.db", {
     adapter: adapter,
 });
 
@@ -102,7 +102,7 @@ block head
         script var ENVIRONMENT = "development"
         script(src="/app${name}-bundle.js")
 block body
-block content`;
+    block content`;
 
         fs.writeFileSync(`./app${name}/views/layout/header.pug`, headerFileContent);
         fs.mkdirSync(`./static/${nameLower}`);

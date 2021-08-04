@@ -18,10 +18,10 @@ const recursiveUpdateParentCollection = function (destinationNode, movingNode, i
         }
     }
 };
-const generateStructureFromFileList = function (views) {
+const generateStructureFromFileList = function (views = "[]") {
     const structure = {};
 
-    const parsedFiles = JSON.parse(views || '[]');
+    const parsedFiles = JSON.parse(views);
     let indexOffset = 0;
     parsedFiles.forEach(function (e, index) {
         if (e.indexOf(".pug") !== -1) {
