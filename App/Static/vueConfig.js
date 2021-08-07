@@ -148,7 +148,6 @@ window.addEventListener("load", function () {
 
 });
 if (!process.env.ISTEST) {
-
     axios
         .get("/appapi/settings/")
         .then(response => {

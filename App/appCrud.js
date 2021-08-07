@@ -4,27 +4,32 @@ import path from "path";
 import multer from "multer";
 import {generateCSSFile} from "./Ui/cssFileGenerator";
 import {configModel, validateData} from "./utils";
+import globalSettings, {defaultApp, activeApps} from "../rougeSettings.json"
 
 const upload = multer();
 
 
-const appCrud = function appCrud(appDb, app, currentApp) {
+export default function settingCrud(appDb, app) {
     const dataRouter = express.Router();
     dataRouter.route("/all/").get(function (req, res) {
-        res.json(appDb.get(currentApp.applicationName).value());
+        res.json(appDb.find());
     });
 
     dataRouter
-        .route("/settings/")
+        .route("/settings/:app?")
         .get(function (req, res) {
-            res.json(currentApp);
+            if(req.params.app && !activeApps.includes(req.params.app)) {
+                return res.status(404).send("This app doesn't exist");
+            } else {
+                res.json(appDb.findOne({applicationName: req.params.app || app.get('appName') }));
+            }
         })
         .put(upload.none(), function (req, res) {
             let errors = validateData(configModel, req.body);
             if (!errors) {
                 appDb
                     .get("config")
-                    .find({id: currentApp.id})
+                    .find({id: defaultApp})
                     .assign(req.body)
                     .write();
                 res.send("Config modified successfully");
@@ -36,11 +41,11 @@ const appCrud = function appCrud(appDb, app, currentApp) {
         /**
          * @type {object}
          */
-        let data = appDb.get(currentApp.applicationName).find({id: currentApp.styleSet}).value();
+        let data = appDb.find({_id: defaultApp.styleSet});
         if (!data) {
             res.status(404).send(`No style collection named ${req.params.styleId}`);
         }
-        data.storedColorSet = appDb.get("colorSetPresets").find({id: data.colorCombinationId}).value();
+        data.storedColorSet = appDb.find({id: data.colorCombinationId});
         res.json(data);
     }).post((req, res) => {
         if (req.body.styleSet === "") {
@@ -48,25 +53,25 @@ const appCrud = function appCrud(appDb, app, currentApp) {
         }
 
         appDb
-            .get(currentApp.applicationName)
+            .get(defaultApp.applicationName)
             // @ts-ignore
             .push(req.body)
             .write();
 
         //TODO don't saveStyleSet if this fails
-        generateCSSFile(currentApp.applicationName, req.body);
+        generateCSSFile(defaultApp.applicationName, req.body);
 
-        res.send(`settings for ${currentApp.applicationName} saved`);
+        res.send(`settings for ${defaultApp.applicationName} saved`);
     });
     dataRouter.route("/overwrite").post((req, res) => {
         appDb
-            .get(currentApp.applicationName)
+            .get(defaultApp.applicationName)
             .find({
                 id: req.body.id
             })
             .assign(req.body)
             .write();
-        res.send(`StyleSet ${req.body.id} for ${currentApp.applicationName} updated`);
+        res.send(`StyleSet ${req.body.id} for ${defaultApp.applicationName} updated`);
 
     });
     dataRouter.route("/fonts").get((req, res) => {
@@ -91,7 +96,7 @@ const appCrud = function appCrud(appDb, app, currentApp) {
             /**
              * @type {object}
              */
-            let data = appDb.get(currentApp.applicationName).find({id: req.params.styleId}).value();
+            let data = appDb.get(defaultApp.applicationName).find({id: req.params.styleId}).value();
             if (!data.styleCollection) {
                 res.status(404).send(`No style collection named ${req.params.styleId}`);
             }
@@ -103,8 +108,8 @@ const appCrud = function appCrud(appDb, app, currentApp) {
         })
         .delete(function (req, res) {
             //TODO double check this can't be done without being logged
-            if (appDb.get(currentApp.applicationName).find({id: req.params.styleId}).value()) {
-                appDb.get(currentApp.applicationName).remove({id: req.params.styleId}).write();
+            if (appDb.get(defaultApp.applicationName).find({id: req.params.styleId}).value()) {
+                appDb.get(defaultApp.applicationName).remove({id: req.params.styleId}).write();
                 res.send(`styleset ${req.params.styleId} DELETED`);
             } else {
                 res.status(500).send("This style set does not exist or has already been deleted");
@@ -114,4 +119,3 @@ const appCrud = function appCrud(appDb, app, currentApp) {
 
     return dataRouter;
 };
-export default appCrud;

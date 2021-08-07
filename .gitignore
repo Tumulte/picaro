@@ -13,6 +13,7 @@ App/Tests/css/*
 App/Tests/js/*
 App/Tests/index.html
 App/Tests/jest-results.json
+App/Dist
 rougeSettings.json
 webpack.config.dev.js
 

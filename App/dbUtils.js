@@ -1,4 +1,4 @@
-import shortid from "shortid";
+import {nanoid} from "nanoid";
 import {makeTableName} from "./utils";
 
 const filterFromQuery = function filterFromQuery(o, query) {
@@ -132,7 +132,7 @@ class DataWriteHandler {
         this.data = data;
         this.relations = [];
 
-        this.data["id"] = shortid.generate();
+        this.data["id"] = nanoid();
 
         const addExistingID = function (item) {
             const attributeName = item.replace("existing_", "");

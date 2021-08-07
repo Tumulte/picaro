@@ -4,28 +4,12 @@ html(lang=language)
 
         link(rel="stylesheet" type="text/css" href="/static/normalize.css")
         link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css")
-        script.
-            var isLogged = #{isLogged}
-            var appName = "#{appName}"
+
         block head
         body
             v-app(id="rf-vue-container")
                 if(isLogged)
                     admin-tool-bar(views=views id="rf-admin")
-                    if(isDev && integrationReport)
-                        #rf-app-status
-                            span(class="_status") Integration :
-                                if(integrationReport.stats.failures === 0)
-                                    span(class="-success") &nbsp;ok
-                                else
-                                    span(class="-failure") &nbsp;#{integrationReport.stats.failures} failed
-                                | &nbsp;(#{intEnd})
-                            span(class="_status") Unit tests :
-                                if(unitReport.numFailedTests === 0)
-                                    span(class="-success") &nbsp;ok
-                                else
-                                    span(class="-failure") &nbsp;#{unitReport.numFailedTests} failed
-                                | &nbsp;(#{unitEnd})
                 div(class="rf-content-container")
                     rf-app
                         rf-nav

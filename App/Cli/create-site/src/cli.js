@@ -6,8 +6,10 @@ const adapter = new lfsa();
 const db = new loki("./App/Data/rfData.db", {
     adapter: adapter,
 });
+import {nanoid} from "nanoid"
+let id = nanoid()
 
-const handleData = function (type, name) {
+const handleData = function (type,name) {
     if(type === 'create') {
         const newApp = db.getCollection(name);
 
@@ -16,20 +18,19 @@ const handleData = function (type, name) {
             return;
         }
         if (db.getCollection("settings") === null) { //first init
-            db.addCollection("settings");
-            db.addCollection("users");
+            db.addCollection("settings",{unique: ['id']});
+            db.addCollection("users",{unique: ['id', 'username']});
         }
         const settings = db.getCollection("settings");
         // log some random event data as part of our example
         settings.insert({
-            "id": name,
-            "name": name,
+            "id": id,
             "styleSet": "",
             "language": "",
             "title": name,
             "devMode": true,
             "messageTimeOut": 10000,
-            "applicationName": "Demo",
+            "applicationName": name,
             "navStructure": {},
             "layoutCollection": {},
             "availableFilterCollection": {
@@ -48,37 +49,37 @@ const handleData = function (type, name) {
                 console.log("database saved.");
             }
         });
+
+
     } else if(type === 'destroy') {
-        db.loadDatabase({}, function(err) {
+
+        console.log("database loaded.");
+        db.removeCollection(name)
+        const settings = db.getCollection("settings");
+        settings.findAndRemove({applicationName : name})
+        db.saveDatabase((err) => {
             if (err) {
                 console.log("error : " + err);
             }
             else {
-                console.log("database loaded.");
-                db.removeCollection(name)
-                const settings = db.getCollection("settings");
-                settings.findAndRemove({id : name})
-                db.saveDatabase((err) => {
-                    if (err) {
-                        console.log("error : " + err);
-                    }
-                    else {
-                        console.log("database saved.");
-                    }
-                });
-
+                console.log("database saved.");
             }
         });
+
     }
 }
 
-const handleFiles = function(type, name, nameLower) {
+const handleFiles = function(type, name) {
     if(type === 'create') {
 
         if (!fs.existsSync(`./static`)) {
             fs.mkdirSync(`./static`);
             fs.mkdirSync(`./static/fonts`);
             console.log("Init static folders (first run) : OK")
+        }
+        if (!fs.existsSync(`./App/Data`)) {
+            fs.mkdirSync(`./App/Data`);
+            console.log("Init Data folders (first run) : OK")
         }
         // App folder
         fs.mkdirSync(`./app${name}`);
@@ -105,23 +106,23 @@ block body
     block content`;
 
         fs.writeFileSync(`./app${name}/views/layout/header.pug`, headerFileContent);
-        fs.mkdirSync(`./static/${nameLower}`);
+        fs.mkdirSync(`./static/${name}`);
 
         const staticContent = `require('./baseStyle.css')
 require('./styles.css')`
 
         // Static folder
-        fs.writeFileSync(`./static/${nameLower}/main.js`, staticContent);
-        fs.writeFileSync(`./static/${nameLower}/baseStyle.css`, "");
-        fs.writeFileSync(`./static/${nameLower}/styles.css`, "");
+        fs.writeFileSync(`./static/${name}/main.js`, staticContent);
+        fs.writeFileSync(`./static/${name}/baseStyle.css`, "");
+        fs.writeFileSync(`./static/${name}/styles.css`, "");
 
     } else if (type === "destroy") {
         fs.rmdirSync(`./app${name}`, { recursive: true });
-        fs.rmdirSync(`./static/${nameLower}`, { recursive: true });
+        fs.rmdirSync(`./static/${name}`, { recursive: true });
     }
 }
 
-const handleWebpack = async function (type, name, nameLower) {
+const handleWebpack = async function (type, name) {
     if (!fs.existsSync(`./webpack.config.dev.js`)) {
         await fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
             if (err) throw err;
@@ -133,7 +134,7 @@ const handleWebpack = async function (type, name, nameLower) {
 
     if(type === 'create') {
         let newData = `        app${name}: [
-            path.resolve(__dirname, "static/${nameLower}/main.js"),
+            path.resolve(__dirname, "static/${name}/main.js"),
             path.resolve(__dirname, "App/Static/main.js")
         ],`
         data.splice(14, 0, newData);
@@ -149,29 +150,25 @@ const handleWebpack = async function (type, name, nameLower) {
     });
 }
 const handleSettings = async function (type, name) {
-
     if (!fs.existsSync(`./rougeSettings.json`)) {
         await fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
             if (err) throw err;
             console.log("rougeSettings.json.example was copied to rougeSettings.json");
         });
     }
+    let settings = fs.readFileSync("./rougeSettings.json")
+    settings = JSON.parse(settings)
 
-    let settings = fs.readFileSync("./rougeSettings.json").toString().split("\n");
+    if(!settings.defaultApp) settings.defaultApp = name
+
     if(type === 'create') {
-        const newSettingsData = `    "${name}": {
-      "styleSet": "default",
-      "language": "fr",
-      "title": "Mon Application"
-    },`
-        settings.splice(4, 0, newSettingsData);
-
+        settings.activeApps.push(name)
     } else if (type === 'destroy') {
-        const index = settings.findIndex(item => item.includes(`"${name}": {`))
-        if(index !== -1) settings.splice(index, 5)
+        settings.activeApps = settings.activeApps.filter(item => item !== name)
     }
-    let settingsText = settings.join("\n");
-    fs.writeFile("./rougeSettings.json", settingsText, function (err) {
+    //Copy and create globalSettings if it does not exist
+
+    fs.writeFile("./rougeSettings.json", JSON.stringify(settings,null, 2), function (err) {
         if (err) return console.log(err);
     });
 }
@@ -201,7 +198,6 @@ const validateAction =  async function (type,name) {
     }
 }
 const alterApp = function (type) {
-
     inquirer.prompt([{
         type: "input",
         message: "What is the name of your app (only lowercase letters) ?",
@@ -213,18 +209,20 @@ const alterApp = function (type) {
             return true;
         }
     }]).then(async answers => {
-        let nameLower = answers.name.toLowerCase();
-        let name = nameLower.charAt(0).toUpperCase() + nameLower.slice(1);
-
-        const validated = await validateAction(type,name)
+        let name = answers.name.toLowerCase();
+        if(type !== 'create') {
+            id = db.getCollection('settings').findOne({applicationName: name}).id
+            console.log(id)
+        }
+        const validated = await validateAction(type, name)
 
         console.log('validated : ', validated)
         if(!validated) {
             return
         }
-        handleFiles(type , name, nameLower)
-        console.log(`${type} Folder and Files : OK`)
-        handleWebpack(type , name, nameLower)
+        handleFiles(type , name)
+        console.log(`${type} Folders and Files : OK`)
+        handleWebpack(type , name)
         console.log(`${type} Webpack config : OK`)
         handleSettings(type , name)
         console.log(`${type} Settings : OK`)
@@ -232,7 +230,7 @@ const alterApp = function (type) {
         console.log(`${type} Data : OK`)
 
         if(type === 'create'){
-            console.log(`Start the server npm run start:dev\n and check your new app at the address http://localhost:3000/${nameLower}`);
+            console.log(`Start the server npm run start:dev\n and check your new app at the address http://localhost:3000/public/${name}`);
         }
 
     });
@@ -278,7 +276,13 @@ export async function cli() {
             }
         ])
         .then(answers => {
-            alterApp(answers.action);
+            db.loadDatabase({}, function(err) {
+                if (err) {
+                    console.log("error : " + err);
+                } else {
+                    alterApp(answers.action);
+                }
+            });
         }).catch(error => {
         console.info(`CLI FAILED : ${error}.`);
     });

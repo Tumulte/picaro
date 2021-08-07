@@ -3,11 +3,11 @@ import express from "express";
 import Loki from 'lokijs'
 import Lfsa from 'lokijs/src/loki-fs-structured-adapter'
 /* rougeFramework default Params */
-import settings from "../rougeSettings.json"
+import {defaultApp, activeApps} from "../rougeSettings.json"
 
 //rougeFramework Back End
 import crud from "./crud.js";
-import appCrud from "./appCrud.js";
+import settingCrud from "./appCrud.js";
 
 /* API TOOLS */
 import bodyParser from "body-parser";
@@ -17,7 +17,7 @@ import methodOverride from "method-override";
 import basicRouting from "./routing";
 
 const adapter = new Lfsa();
-const db = new Loki('rfData.db', {
+const db = new Loki('./App/Data/rfData.db', {
     adapter : adapter,
     autoload: true,
     autoloadCallback : databaseInitialize,
@@ -26,13 +26,14 @@ const db = new Loki('rfData.db', {
 });
 
 const isProd = process.env.NODE_ENV === "production";
-const currentApplicationSettings = {}
 
 function databaseInitialize() {
     const settingsDb = db.getCollection("settings")
     const userDb = db.getCollection("users")
-    currentApplicationSettings.applicationName = settings.applications.defaultApp;
-    const appDb = db.getCollection(currentApplicationSettings.applicationName)
+    const appDb = []
+    for(let activeApp of activeApps){
+        appDb.push(db.getCollection(activeApp))
+    }
 
     console.log("DB loaded")
     if(settingsDb === null) {
@@ -42,7 +43,7 @@ function databaseInitialize() {
     startApp(settingsDb,userDb, appDb)
 }
 
-const startApp = function(settingsDb,userDb, appDb){
+const  startApp = function(settingsDb,userDb, appDb){
     /*****************************************************************
     /*                      Server Params
     /*****************************************************************/
@@ -52,6 +53,7 @@ const startApp = function(settingsDb,userDb, appDb){
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.set('appName', defaultApp)
 
     /**************************************************************************
     /*      method override allows the usage of put/post/delete methods...
@@ -86,10 +88,10 @@ const startApp = function(settingsDb,userDb, appDb){
      /*                     Per Apps Static Files
      /*****************************************************************/
 
-    for (let application in settings.applications) {
+    for (let application of activeApps) {
         app.use(
-            `/${settings.applications[application]}/static`,
-            express.static(`app/${settings.applications[application]}/static`)
+            `/${application}/static`,
+            express.static(`app/${application}/static`)
         );
     }
 
@@ -98,43 +100,23 @@ const startApp = function(settingsDb,userDb, appDb){
     /*****************************************************************/
 
     //auth(app)
+    app.set("isLogged", true);  //req.isAuthenticated();
 
     /*****************************************************************
     /*                        APIs
     /*****************************************************************/
 
-    const appApi = appCrud(settingsDb, app, currentApplicationSettings);
-    app.use("/appapi", appApi);
+    const settingApi = settingCrud(settingsDb, app);
+    app.use("/appapi", settingApi);
     const api = crud(appDb);
     app.use("/api", api);
 
 
     /*****************************************************************
-    /*                 Front-end global variables
-    /*****************************************************************/
-    app.use(function (req, res, next) {
-        res.locals.environment = process.env.NODE_ENV;
-        res.locals.title = currentApplicationSettings.title;
-        res.locals.language = currentApplicationSettings.language;
-        res.locals.settings = currentApplicationSettings;
-        res.locals.appName = currentApplicationSettings.applicationName;
-
-        res.locals.isLogged = currentApplicationSettings.devMode ? true : true //req.isAuthenticated();
-
-        next();
-    });
-    if (!isProd) {
-        app.use(function (req, res, next) {
-            res.locals.isDev = true;
-            next();
-        });
-    }
-
-    /*****************************************************************
     /*                   Routing
     /*****************************************************************/
 
-    basicRouting(app, currentApplicationSettings)
+    basicRouting(app)
 
     /*****************************************************************
     /*                    Start Server

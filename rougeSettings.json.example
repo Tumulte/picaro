@@ -1,8 +1,7 @@
 {
+  "defaultApp": "",
   "sessionSecret": "secret",
   "warningTimeout": 10000,
-  "applications": {
-      "defaultApp": "Demo"
-  },
-  "googleFontKey": ""
+  "googleFontKey": "",
+  "activeApps": []
 }

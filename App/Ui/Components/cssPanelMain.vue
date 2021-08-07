@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import settings from "../../../rougeSettings.json";
+import globalSettings from "../../../rougeSettings.json";
 import {generateColorSet} from "../colorGenerator";
 import axios from "axios";
 import shortid from "shortid";

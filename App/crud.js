@@ -22,15 +22,9 @@ const crud = function crud(db) {
     });
 
     dataRouter.use("/:app/:table/:itemId", function (req, res, next) {
-        if (db.has(makeTableName(req)).value()) {
-            let data = new RelationHandler(db, req);
-            data = data.get().getRelations();
-            if (data === false) {
-                res.status(404).send(`Item "${req.params.itemId}" does not exist`);
-            } else {
-                req.data = data;
+        if (db[req.params.app]) {
+                req.data = db[req.params.app].find({id: req.params.itemId});
                 next();
-            }
         } else {
             res.status(404).send(`this data ${makeTableName(req)} does not exist`);
         }
@@ -49,7 +43,7 @@ const crud = function crud(db) {
         .post(upload.none(), function (req, res) {
             const data = new DataWriteHandler(db, req);
             data.save();
-            res.send("Sauvegardé");
+            res.send("Saved");
         });
 
     dataRouter

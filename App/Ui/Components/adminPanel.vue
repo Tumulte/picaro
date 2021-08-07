@@ -4,13 +4,13 @@
         div(class="px-5 py-5")
             v-form(id="_admin-form" method="POST" @submit.prevent="saveConfig($event)")
                 v-text-field(name="navStructureString" v-model="navStructureString" dense)
-                v-text-field(name="id" v-model="settings.id" dense)
-                v-text-field(name="name" v-model="settings.applicationName" label="App Name" dense outlined)
+                v-text-field(name="id" v-model="globalSettings.id" dense)
+                v-text-field(name="name" v-model="globalSettings.applicationName" label="App Name" dense outlined)
                 v-text-field(name="styleSet" v-model="styleSet.id" dense)
-                v-text-field(name="language" v-model="settings.language" label="App Language" dense outlined)
-                v-text-field(name="title" v-model="settings.title" label="App Title" dense outlined)
-                v-text-field(v-model="settings.messageTimeOut" label="Message Timeout (in ms)" dense outlined)
-                v-switch(v-model="settings.devMode" label="Dev Mode" dense)
+                v-text-field(name="language" v-model="globalSettings.language" label="App Language" dense outlined)
+                v-text-field(name="title" v-model="globalSettings.title" label="App Title" dense outlined)
+                v-text-field(v-model="globalSettings.messageTimeOut" label="Message Timeout (in ms)" dense outlined)
+                v-switch(v-model="globalSettings.devMode" label="Dev Mode" dense)
                 button(@click.prevent="saveConfig($event,true)" id="_admin-form-ext-submit") submit
 </template>
 <script>
