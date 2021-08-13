@@ -458,7 +458,6 @@ export default {
                 return this.$store.getters.navStructure;
             } else {
                 this.$store.commit("navStructure", generateStructureFromFileList(this.$props.views));
-
                 return this.$store.getters.navStructure;
             }
         },

@@ -12,16 +12,16 @@
   "scripts": {
     "start": "node ./App/server.js",
     "init": "node ./App/initiateApp.js",
-    "start:dev": "npm-run-all --parallel start:front open:src",
-    "open:src": "set NODE_ENV='development' && nodemon --exec babel-node ./App/server.js  --watch App/  --ignore App/Static/ App/Dist/",
+    "start:dev": "npm-run-all --parallel start:front start:back",
+    "start:back": "export NODE_ENV='development' set NODE_ENV='development' && nodemon --exec babel-node ./App/server.js  --watch App/  --ignore App/Static/ App/Dist/",
     "security-check": "npm audit",
     "test": "node App/Tests/testCron.js",
     "jest": "jest --coverage",
     "test:int": "cypress run",
     "test:watch": "jest --watch",
     "build": "webpack --mode=production --config webpack.config.prod.js",
-    "build:dev": "webpack --mode=development --config webpack.config.dev.js.example",
-    "start:front": "webpack serve --config webpack.config.dev.js.example"
+    "build:dev": "webpack --mode=development --config webpack.config.dev.js",
+    "start:front": "webpack serve --config webpack.config.dev.js --progress"
   },
   "keywords": [
     "cli",
@@ -83,6 +83,11 @@
     "cypress": "^8.0.0",
     "D": "^1.0.0",
     "deepmerge": "^4.2.2",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.16.0",
     "esm": "^3.2.25",
     "fibers": "^5.0.0",
     "filesystem": "^1.0.1",
@@ -131,8 +136,7 @@
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.46.0",
     "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack-dev-server": "^3.11.2"
   },
   "jest": {
     "testResultsProcessor": "./node_modules/jest-stare",

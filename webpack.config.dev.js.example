@@ -45,7 +45,7 @@ const myWebpackConfig = {
     output: {
         path: path.resolve(__dirname, "App/Dist"),
         filename: "[name]-bundle.js",
-        publicPath: "/dev-bundle/"
+        publicPath: "/"
     },
     module: {
         rules: [

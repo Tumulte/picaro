@@ -1,7 +1,6 @@
-import {createLocalVue} from "@vue/test-utils";
 import Vuetify from "vuetify";
 import Vue from "vue";
-import {generateColorSet} from "../Ui/colorGenerator";
+import { generateColorSet } from "../Ui/colorGenerator";
 
 import * as styleSetCollection from "./testData.json";
 import Vuex from "vuex";
@@ -9,7 +8,6 @@ import userStore from "../Store/user";
 import adminStore from "../Store/admin";
 import Vuelidate from "vuelidate";
 
-process.env.ISTEST = true;
 const styleSet = styleSetCollection[0];
 
 const app = document.createElement("div");
@@ -21,10 +19,8 @@ const mainConfigSubmit = document.createElement("div");
 mainConfigSubmit.setAttribute("id", "_admin-form-ext-submit");
 mainConfigSubmit.setAttribute("class", "__altfont");
 
-
 cssTestDiv.innerHTML = "test";
 cssTestDiv2.innerHTML = "test 2";
-
 
 confirm.setAttribute("class", "rf-alert-button");
 cssTestDiv.setAttribute("class", "css-test");
@@ -38,20 +34,21 @@ document.body.appendChild(confirm);
 container.appendChild(mainConfigSubmit);
 container.appendChild(cssTestDiv);
 container.appendChild(cssTestDiv2);
-document.head.insertAdjacentHTML("beforeend", "<style type='text/css' id='rf-live-styles' ></style>");
-
+document.head.insertAdjacentHTML(
+  "beforeend",
+  "<style id='rf-live-styles' ></style>"
+);
 
 Vue.use(Vuetify);
 
 export const colorSet = new generateColorSet(styleSet.dominant);
 
-
 Vue.use(Vuex);
 export const store = new Vuex.Store({
-    modules: {
-        user: userStore,
-        admin: adminStore
-    }
+  modules: {
+    user: userStore,
+    admin: adminStore
+  }
 });
 
 export const vuetify = new Vuetify();

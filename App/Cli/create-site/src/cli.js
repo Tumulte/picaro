@@ -4,97 +4,120 @@ const loki = require("lokijs");
 const lfsa = require("lokijs/src/loki-fs-structured-adapter.js");
 const adapter = new lfsa();
 const db = new loki("./App/Data/rfData.db", {
-    adapter: adapter,
+  adapter: adapter
 });
-import {nanoid} from "nanoid"
-let id = nanoid()
+import { nanoid } from "nanoid";
+let id = nanoid();
+let styleSetId = nanoid();
 
-const handleData = function (type,name) {
-    if(type === 'create') {
-        const newApp = db.getCollection(name);
+const handleData = function(type, name) {
+  if (type === "create") {
+    const newApp = db.getCollection(name);
 
-        if (newApp !== null) {
-            console.log(`The app ${name} already exist`);
-            return;
-        }
-        if (db.getCollection("settings") === null) { //first init
-            db.addCollection("settings",{unique: ['id']});
-            db.addCollection("users",{unique: ['id', 'username']});
-        }
-        const settings = db.getCollection("settings");
-        // log some random event data as part of our example
-        settings.insert({
-            "id": id,
-            "styleSet": "",
-            "language": "",
-            "title": name,
-            "devMode": true,
-            "messageTimeOut": 10000,
-            "applicationName": name,
-            "navStructure": {},
-            "layoutCollection": {},
-            "availableFilterCollection": {
-                "categories": [],
-                "tags": []
-            },
-            "layoutCommonCollection": [],
-            "modelCollection": {}
-        });
-        db.addCollection(name);
-        db.saveDatabase((err) => {
-            if (err) {
-                console.log("error : " + err);
-            }
-            else {
-                console.log("database saved.");
-            }
-        });
-
-
-    } else if(type === 'destroy') {
-
-        console.log("database loaded.");
-        db.removeCollection(name)
-        const settings = db.getCollection("settings");
-        settings.findAndRemove({applicationName : name})
-        db.saveDatabase((err) => {
-            if (err) {
-                console.log("error : " + err);
-            }
-            else {
-                console.log("database saved.");
-            }
-        });
-
+    if (newApp !== null) {
+      console.log(`The app ${name} already exist`);
+      return;
     }
-}
+    if (db.getCollection("settings") === null) {
+      //first init
+      db.addCollection("settings", { unique: ["id"] });
+      db.addCollection("users", { unique: ["id", "username"] });
+      db.addCollection("styleset", { unique: ["id"] });
+    }
+    const settings = db.getCollection("settings");
+    const styleset = db.getCollection("styleset");
+    // log some random event data as part of our example
+    settings.insert({
+      id: id,
+      styleSet: styleSetId,
+      language: "",
+      title: name,
+      devMode: true,
+      messageTimeOut: 10000,
+      applicationName: name,
+      navStructure: {},
+      layoutCollection: {},
+      layoutLinkCollection: {},
+      defaultLayout: "",
+      availableFilterCollection: {
+        categories: [],
+        tags: []
+      },
+      layoutCommonCollection: [],
+      modelCollection: {}
+    });
+    styleset.insert({
+      dominant: "#000000",
+      colorParameterCollection: [],
+      variationLightAmt: 5,
+      variationSatAmt: 5,
+      selectorCollection: {},
+      fontOrigin: "local",
+      "font-size": "16",
+      id: styleSetId,
+      setName: "",
+      fontFamilyMain: "",
+      fontFamilyAlt: "",
+      fontFamilyTitle: "",
+      ratioCollection: {
+        html: {},
+        h1: {},
+        h2: {},
+        h3: {},
+        h4: {},
+        h5: {},
+        h6: {},
+        p: {}
+      }
+    });
+    db.addCollection(name);
+    db.saveDatabase(err => {
+      if (err) {
+        console.log("error : " + err);
+      } else {
+        console.log("database saved.");
+      }
+    });
+  } else if (type === "destroy") {
+    console.log("database loaded.");
+    db.removeCollection(name);
+    const settings = db.getCollection("settings");
+    settings.findAndRemove({ applicationName: name });
+    db.saveDatabase(err => {
+      if (err) {
+        console.log("error : " + err);
+      } else {
+        console.log("database saved.");
+      }
+    });
+  }
+};
 
 const handleFiles = function(type, name) {
-    if(type === 'create') {
+  if (type === "create") {
+    if (!fs.existsSync(`./static`)) {
+      fs.mkdirSync(`./static`);
+      fs.mkdirSync(`./static/fonts`);
+      console.log("Init static folders (first run) : OK");
+    }
+    if (!fs.existsSync(`./App/Data`)) {
+      fs.mkdirSync(`./App/Data`);
+      console.log("Init Data folders (first run) : OK");
+    }
+    // App folder
+    fs.mkdirSync(`./app${name}`);
+    fs.mkdirSync(`./app${name}/controllers`);
+    fs.mkdirSync(`./app${name}/views`);
 
-        if (!fs.existsSync(`./static`)) {
-            fs.mkdirSync(`./static`);
-            fs.mkdirSync(`./static/fonts`);
-            console.log("Init static folders (first run) : OK")
-        }
-        if (!fs.existsSync(`./App/Data`)) {
-            fs.mkdirSync(`./App/Data`);
-            console.log("Init Data folders (first run) : OK")
-        }
-        // App folder
-        fs.mkdirSync(`./app${name}`);
-        fs.mkdirSync(`./app${name}/controllers`);
-        fs.mkdirSync(`./app${name}/views`);
-
-        const indexFileContent = `extends layout/header.pug
+    const indexFileContent = `extends layout/header.pug
 block content
-    rf-layout`
+    rf-layout`;
 
-        fs.writeFileSync(`./app${name}/views/index.pug`, indexFileContent);
+    fs.writeFileSync(`./app${name}/views/index.pug`, indexFileContent);
 
-        fs.mkdirSync(`./app${name}/views/layout`);
+    fs.mkdirSync(`./app${name}/views/layout`);
 
-        const headerFileContent = `extends ../../../App/Views/rougeHead.pug
+    const headerFileContent = `extends ../../../App/Views/rougeHead.pug
 block head
     title My ${name} app
     if environment === 'production'
@@ -105,185 +128,210 @@ block head
 block body
     block content`;
 
-        fs.writeFileSync(`./app${name}/views/layout/header.pug`, headerFileContent);
-        fs.mkdirSync(`./static/${name}`);
+    fs.writeFileSync(`./app${name}/views/layout/header.pug`, headerFileContent);
+    fs.mkdirSync(`./static/${name}`);
 
-        const staticContent = `require('./baseStyle.css')
-require('./styles.css')`
+    const staticContent = `require('./baseStyle.css')
+require('./styles.css')`;
 
-        // Static folder
-        fs.writeFileSync(`./static/${name}/main.js`, staticContent);
-        fs.writeFileSync(`./static/${name}/baseStyle.css`, "");
-        fs.writeFileSync(`./static/${name}/styles.css`, "");
+    // Static folder
+    fs.writeFileSync(`./static/${name}/main.js`, staticContent);
+    fs.writeFileSync(`./static/${name}/baseStyle.css`, "");
+    fs.writeFileSync(`./static/${name}/styles.css`, "");
+  } else if (type === "destroy") {
+    fs.rmdirSync(`./app${name}`, { recursive: true });
+    fs.rmdirSync(`./static/${name}`, { recursive: true });
+  }
+};
 
-    } else if (type === "destroy") {
-        fs.rmdirSync(`./app${name}`, { recursive: true });
-        fs.rmdirSync(`./static/${name}`, { recursive: true });
-    }
-}
+const handleWebpack = async function(type, name) {
+  if (!fs.existsSync(`./webpack.config.dev.js`)) {
+    await fs.copyFile(
+      "webpack.config.dev.js.example",
+      "webpack.config.dev.js",
+      err => {
+        if (err) throw err;
+        console.log(
+          "webpack.config.dev.js.example was copied to webpack.config.dev.js"
+        );
+      }
+    );
+  }
 
-const handleWebpack = async function (type, name) {
-    if (!fs.existsSync(`./webpack.config.dev.js`)) {
-        await fs.copyFile("webpack.config.dev.js.example", "webpack.config.dev.js", (err) => {
-            if (err) throw err;
-            console.log("webpack.config.dev.js.example was copied to webpack.config.dev.js");
-        });
-    }
+  let data = fs
+    .readFileSync("./webpack.config.dev.js")
+    .toString()
+    .split("\n");
 
-    let data = fs.readFileSync("./webpack.config.dev.js").toString().split("\n");
-
-    if(type === 'create') {
-        let newData = `        app${name}: [
+  if (type === "create") {
+    let newData = `        app${name}: [
             path.resolve(__dirname, "static/${name}/main.js"),
             path.resolve(__dirname, "App/Static/main.js")
-        ],`
-        data.splice(14, 0, newData);
+        ],`;
+    data.splice(14, 0, newData);
+  } else if (type === "destroy") {
+    const webpackIndex = data.findIndex(item => item.includes(`app${name}: [`));
+    if (webpackIndex !== -1) data.splice(webpackIndex, 4);
+  }
+  let text = data.join("\n");
 
-    } else if (type === 'destroy') {
-        const webpackIndex = data.findIndex(item => item.includes(`app${name}: [`))
-        if(webpackIndex !== -1) data.splice(webpackIndex, 4)
+  fs.writeFile("./webpack.config.dev.js", text, function(err) {
+    if (err) return console.log(err);
+  });
+};
+const handleSettings = async function(type, name) {
+  if (!fs.existsSync(`./rougeSettings.json`)) {
+    await fs.copyFile(
+      "rougeSettings.json.example",
+      "rougeSettings.json",
+      err => {
+        if (err) throw err;
+        console.log(
+          "rougeSettings.json.example was copied to rougeSettings.json"
+        );
+      }
+    );
+  }
+  let settings = fs.readFileSync("./rougeSettings.json");
+  settings = JSON.parse(settings);
+
+  if (!settings.defaultApp) settings.defaultApp = name;
+
+  if (type === "create") {
+    settings.activeApps.push(name);
+  } else if (type === "destroy") {
+    settings.activeApps = settings.activeApps.filter(item => item !== name);
+  }
+  //Copy and create globalSettings if it does not exist
+
+  fs.writeFile(
+    "./rougeSettings.json",
+    JSON.stringify(settings, null, 2),
+    function(err) {
+      if (err) return console.log(err);
     }
-    let text = data.join("\n");
-
-    fs.writeFile("./webpack.config.dev.js", text, function (err) {
-        if (err) return console.log(err);
-    });
-}
-const handleSettings = async function (type, name) {
-    if (!fs.existsSync(`./rougeSettings.json`)) {
-        await fs.copyFile("rougeSettings.json.example", "rougeSettings.json", (err) => {
-            if (err) throw err;
-            console.log("rougeSettings.json.example was copied to rougeSettings.json");
-        });
+  );
+};
+const validateAction = async function(type, name) {
+  if (type === "create") {
+    if (fs.existsSync(`./app${name}`)) {
+      console.log(`The app ${name} already exists`);
+      return false;
     }
-    let settings = fs.readFileSync("./rougeSettings.json")
-    settings = JSON.parse(settings)
-
-    if(!settings.defaultApp) settings.defaultApp = name
-
-    if(type === 'create') {
-        settings.activeApps.push(name)
-    } else if (type === 'destroy') {
-        settings.activeApps = settings.activeApps.filter(item => item !== name)
-    }
-    //Copy and create globalSettings if it does not exist
-
-    fs.writeFile("./rougeSettings.json", JSON.stringify(settings,null, 2), function (err) {
-        if (err) return console.log(err);
-    });
-}
-const validateAction =  async function (type,name) {
-    if (type === 'create') {
-        if (fs.existsSync(`./app${name}`)) {
-            console.log(`The app ${name} already exists`)
-            return false
+    return true;
+  }
+  if (type === "destroy") {
+    await inquirer.prompt([
+      {
+        type: "input",
+        message:
+          "Are you sure ? It can NOT be undone all data and files will be lost. Type YES to confirm",
+        name: "name",
+        validate: function(answer) {
+          if (answer !== "YES") {
+            console.log("Type YES (all caps) to confirm");
+            return;
+          }
+          return true;
         }
-        return true
-    }
-    if(type === 'destroy') {
-        await inquirer.prompt([
-            {
-                type: "input",
-                message: "Are you sure ? It can NOT be undone all data and files will be lost. Type YES to confirm",
-                name: "name",
-                validate: function (answer) {
-                    if (answer !== "YES") {
-                        console.log('Type YES (all caps) to confirm')
-                        return
-                    }
-                    return true
-                }
-            }])
-        return true
-    }
-}
-const alterApp = function (type) {
-    inquirer.prompt([{
+      }
+    ]);
+    return true;
+  }
+};
+const alterApp = function(type) {
+  inquirer
+    .prompt([
+      {
         type: "input",
         message: "What is the name of your app (only lowercase letters) ?",
         name: "name",
-        validate: function (answer) {
-            if (!answer || !answer.match(/[a-zA-Z]/)) {
-                return "Please enter a correct name";
-            }
-            return true;
+        validate: function(answer) {
+          if (!answer || !answer.match(/[a-zA-Z]/)) {
+            return "Please enter a correct name";
+          }
+          return true;
         }
-    }]).then(async answers => {
-        let name = answers.name.toLowerCase();
-        if(type !== 'create') {
-            id = db.getCollection('settings').findOne({applicationName: name}).id
-            console.log(id)
-        }
-        const validated = await validateAction(type, name)
+      }
+    ])
+    .then(async answers => {
+      let name = answers.name.toLowerCase();
+      if (type !== "create") {
+        id = db.getCollection("settings").findOne({ applicationName: name }).id;
+        console.log(id);
+      }
+      const validated = await validateAction(type, name);
 
-        console.log('validated : ', validated)
-        if(!validated) {
-            return
-        }
-        handleFiles(type , name)
-        console.log(`${type} Folders and Files : OK`)
-        handleWebpack(type , name)
-        console.log(`${type} Webpack config : OK`)
-        handleSettings(type , name)
-        console.log(`${type} Settings : OK`)
-        handleData(type , name)
-        console.log(`${type} Data : OK`)
+      console.log("validated : ", validated);
+      if (!validated) {
+        return;
+      }
+      handleFiles(type, name);
+      console.log(`${type} Folders and Files : OK`);
+      handleWebpack(type, name);
+      console.log(`${type} Webpack config : OK`);
+      handleSettings(type, name);
+      console.log(`${type} Settings : OK`);
+      handleData(type, name);
+      console.log(`${type} Data : OK`);
 
-        if(type === 'create'){
-            console.log(`Start the server npm run start:dev\n and check your new app at the address http://localhost:3000/public/${name}`);
-        }
-
+      if (type === "create") {
+        console.log(
+          `Start the server npm run start:dev\n and check your new app at the address http://localhost:3000/public/${name}`
+        );
+      }
     });
 };
 
 export async function cli() {
-    inquirer
-        .prompt([
-            {
-                type: "list",
-                message: "Select an action",
-                name: "action",
-                choices: [
-                    new inquirer.Separator("What do you want to do ?"),
-                    {
-                        name: "Create a new App",
-                        value: "create"
-                    },
-                    {
-                        name: "Rename an Existing App",
-                        value: "edit"
-                    },
-                    {
-                        name: "Activate an Existing App",
-                        value: "activate"
-                    },
-                    {
-                        name: "Deactivate an existing App",
-                        value: "deactivate"
-                    },
-                    {
-                        name: "Destroy an existing App (can't be undone)",
-                        value: "destroy"
-                    }
-                ],
-                validate: function (answer) {
-                    if (answer.length < 1) {
-                        return "Please choose an action";
-                    }
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Select an action",
+        name: "action",
+        choices: [
+          new inquirer.Separator("What do you want to do ?"),
+          {
+            name: "Create a new App",
+            value: "create"
+          },
+          {
+            name: "Rename an Existing App",
+            value: "edit"
+          },
+          {
+            name: "Activate an Existing App",
+            value: "activate"
+          },
+          {
+            name: "Deactivate an existing App",
+            value: "deactivate"
+          },
+          {
+            name: "Destroy an existing App (can't be undone)",
+            value: "destroy"
+          }
+        ],
+        validate: function(answer) {
+          if (answer.length < 1) {
+            return "Please choose an action";
+          }
 
-                    return true;
-                }
-            }
-        ])
-        .then(answers => {
-            db.loadDatabase({}, function(err) {
-                if (err) {
-                    console.log("error : " + err);
-                } else {
-                    alterApp(answers.action);
-                }
-            });
-        }).catch(error => {
-        console.info(`CLI FAILED : ${error}.`);
+          return true;
+        }
+      }
+    ])
+    .then(answers => {
+      db.loadDatabase({}, function(err) {
+        if (err) {
+          console.log("error : " + err);
+        } else {
+          alterApp(answers.action);
+        }
+      });
+    })
+    .catch(error => {
+      console.info(`CLI FAILED : ${error}.`);
     });
 }
