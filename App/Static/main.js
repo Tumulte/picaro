@@ -1,2 +1,2 @@
 import "./vueConfig";
-import "../../App/Static/appStyles.css";
+import "./appStyles.css";

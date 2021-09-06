@@ -59,23 +59,6 @@ const RelationHandler = function RelationHandler(db, req) {
     }
     return dbQuery;
   };
-  const findRelationnalProperties = function(data, db) {
-    for (let item in data) {
-      const lastChar = item.substr(item.length - 1);
-      if (
-        data[item] !== null &&
-        typeof data[item] === "object" &&
-        data[item].hasOwnProperty("id")
-      ) {
-        data[item] = findRelationnalProperties(data[item], db);
-      } else if (lastChar === relationEndMarker) {
-        const table = item.replace("_", "s");
-
-        data[table] = replaceIDByData(data, item, db);
-      }
-    }
-    return data;
-  };
   const detachObject = function(data) {
     data = JSON.parse(JSON.stringify(data));
     return data;
@@ -115,21 +98,6 @@ class DataWriteHandler {
     this.db = db;
     this.req = req;
   }
-
-  saveNewRelations(db, data, appname) {
-    data.forEach(function(element) {
-      const table = element.type.replace("_", "s");
-      if (element.hasOwnProperty("id") && element.id) {
-        db.get(`${appname}_${table}`)
-          .push({
-            id: element.id,
-            name: element.name,
-            model: element.model
-          })
-          .write();
-      }
-    });
-  }
   standardizePostData(data) {
     this.data = data;
     this.relations = [];
@@ -163,8 +131,7 @@ class DataWriteHandler {
         this.relations.push({
           id: id,
           name: element.trim(),
-          type: item.replace("new_", ""),
-          model: relationCollection[0]
+          type: item.replace("new_", "")
         });
       });
 
@@ -220,12 +187,12 @@ class DataWriteHandler {
     return this;
   }
   save() {
-    const data = this.#standardizePostData(this.req.body);
+    const data = this.standardizePostData(this.req.body);
     this.db
       .get(makeTableName(this.req))
       .push(data.data)
       .write();
-    this.#saveNewRelations(this.db, data.relations, this.req.params.app);
+    this.saveNewRelations(this.db, data.relations, this.req.params.app);
     return data;
   }
 }

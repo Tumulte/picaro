@@ -43,154 +43,167 @@
             v-btn(text=true @click="addColor" class="_color-button" v-if="!miniVariant" data-jest="addColor") Add Color
 </template>
 <script>
-import {colorHelper} from "../colorHelper";
-import {mapGetters} from "vuex";
+import { colorHelper } from "../colorHelper";
+import { mapGetters } from "vuex";
 
 const colorUtils = new colorHelper();
 
-const generateNewColorSet = function (dominant, combination) {
-    const newCombination = {};
-    newCombination.hueVariation =
-        parseInt(combination.hue) - parseInt(dominant.hue);
-    if (parseInt(combination.saturation) !== parseInt(dominant.saturation)) {
-        newCombination.saturation = parseInt(combination.saturation);
-    }
-    if (parseInt(combination.light) !== parseInt(dominant.light)) {
-        newCombination.light = parseInt(combination.light);
-    }
-    return newCombination;
+const generateNewColorSet = function(dominant, combination) {
+  const newCombination = {};
+  newCombination.hueVariation =
+    parseInt(combination.hue) - parseInt(dominant.hue);
+  if (parseInt(combination.saturation) !== parseInt(dominant.saturation)) {
+    newCombination.saturation = parseInt(combination.saturation);
+  }
+  if (parseInt(combination.light) !== parseInt(dominant.light)) {
+    newCombination.light = parseInt(combination.light);
+  }
+  return newCombination;
 };
 
 export default {
-    props: ["panelOpened", "miniVariant"],
-    data() {
-        return {
-            isMounted: false,
-            dominantColorParams: null
-        };
+  props: ["panelOpened", "miniVariant"],
+  data() {
+    return {
+      isMounted: false,
+      dominantColorParams: null,
+      ready: 0
+    };
+  },
+  watch: {
+    isMounted() {
+      if (this.isMounted === true) {
+        this.ready += 1;
+      }
     },
-    methods: {
-        resetSetting(setting, index) {
-            let newSettings = this.styleSet.colorParameterCollection[index];
-            delete newSettings[setting];
-
-            this.$set(this.styleSet.colorParameterCollection, index, newSettings);
-            this.regenerateColorSet();
-        },
-        bgColor: function (color) {
-            return `background:${colorUtils.getString(color)}`;
-        },
-        getStringColor: function (color, hueOnly) {
-            if (hueOnly) {
-                color = JSON.parse(JSON.stringify(color));
-                color.light = 50;
-                color.saturation = 100;
-            }
-            return colorUtils.hslToHex(color).getString();
-        },
-        checkNum: function (number, min, max) {
-            min = min ? min : 0;
-            number = number < min ? min : number;
-            number = number > max ? max : number;
-            return isNaN(parseInt(number)) ? min : number;
-        },
-        updateColor: function () {
-            if (!this.isMounted && !this.loaded) {//prevent initial trigger
-                return;
-            }
-            this.$set(
-                this.styleSet,
-                "dominant",
-                colorUtils
-                    .hslToHex(this.dominantColorParams)
-                    .getString()
-            );
-            this.colorSet
-                .updateColor(this.dominantColorParams)
-                .generate(
-                    this.styleSet.colorParameterCollection,
-                    parseInt(this.styleSet.variationLightAmt),
-                    parseInt(this.styleSet.variationSatAmt)
-                );
-        },
-
-        updateCombinationColor: function (index) {
-            this.$set(
-                this.styleSet.colorParameterCollection,
-                index,
-                generateNewColorSet(
-                    this.dominantColorParams,
-                    this.colorSet.colorCollection.combinationCollection[index]
-                )
-            );
-
-            this.regenerateColorSet();
-        },
-        regenerateColorSet: function () {
-            this.colorSet.generate(
-                this.styleSet.colorParameterCollection,
-                parseInt(this.styleSet.variationLightAmt),
-                parseInt(this.styleSet.variationSatAmt)
-            );
-        },
-        isMainColor: function (color, subColor) {
-            return color === subColor;
-        },
-        stringify: function (item) {
-            return JSON.stringify(item);
-        },
-        addColor: function () {
-            const newColorSet = this.styleSet.colorParameterCollection;
-            newColorSet.push({
-                hueVariation: 0
-            });
-            this.colorSet.generate(
-                this.styleSet.colorParameterCollection,
-                parseInt(this.styleSet.variationLightAmt),
-                parseInt(this.styleSet.variationSatAmt)
-            );
-        },
-        removeColor: function (index) {
-            this.colorSet.colorCollection.combinationCollection.splice(index, 1);
-            this.styleSet.colorParameterCollection.splice(index, 1);
-        },
-        updateVariationAmt: function () {
-            this.colorSet.generate(
-                this.styleSet.colorParameterCollection,
-                parseInt(this.styleSet.variationLightAmt),
-                parseInt(this.styleSet.variationSatAmt)
-            );
-        },
-        storeColorCoordinate: function (coordinates) {
-            this.$store.commit("currentColor", coordinates);
-            this.$store.dispatch("triggerNewStyle");
-        }
+    loaded() {
+      if (this.loaded === true) {
+        this.ready += 1;
+      }
     },
-    mounted() {
-        this.isMounted = true;
-    },
-    watch: {
-        loaded() {
-            if (this.loaded === true) {
-                this.dominantColorParams = colorUtils
-                    .hexToHsl(this.$store.getters.styleSet.dominant)
-                    .getValueCollection();
-            }
-        }
-
-    },
-    computed: {
-        ...mapGetters(["loaded"]),
-        styleSet() {
-            return this.$store.getters.styleSet;
-        },
-        colorSet: {
-            get() {
-                return this.$store.getters.colorSet;
-            }, set(value) {
-                this.$store.commit("colorSet", value);
-            }
-        }
+    ready() {
+      if (this.ready >= 2) {
+        this.dominantColorParams = colorUtils
+          .hexToHsl(this.styleSet.dominant)
+          .getValueCollection();
+      }
     }
+  },
+  mounted() {
+    this.isMounted = true;
+    if (this.loaded === true) {
+      this.ready += 1;
+    }
+  },
+  methods: {
+    resetSetting(setting, index) {
+      let newSettings = this.styleSet.colorParameterCollection[index];
+      delete newSettings[setting];
+
+      this.$set(this.styleSet.colorParameterCollection, index, newSettings);
+      this.regenerateColorSet();
+    },
+    bgColor: function(color) {
+      return `background:${colorUtils.getString(color)}`;
+    },
+    getStringColor(color, hueOnly) {
+      if (hueOnly) {
+        color = JSON.parse(JSON.stringify(color));
+        color.light = 50;
+        color.saturation = 100;
+      }
+      return colorUtils.hslToHex(color).getString();
+    },
+    checkNum: function(number, min, max) {
+      min = min ? min : 0;
+      number = number < min ? min : number;
+      number = number > max ? max : number;
+      return isNaN(parseInt(number)) ? min : number;
+    },
+    updateColor: function() {
+      if (!this.isMounted && !this.loaded) {
+        //prevent initial trigger
+        return;
+      }
+      this.$set(
+        this.styleSet,
+        "dominant",
+        colorUtils.hslToHex(this.dominantColorParams).getString()
+      );
+      this.colorSet
+        .updateColor(this.dominantColorParams)
+        .generate(
+          this.styleSet.colorParameterCollection,
+          parseInt(this.styleSet.variationLightAmt),
+          parseInt(this.styleSet.variationSatAmt)
+        );
+    },
+
+    updateCombinationColor: function(index) {
+      this.$set(
+        this.styleSet.colorParameterCollection,
+        index,
+        generateNewColorSet(
+          this.dominantColorParams,
+          this.colorSet.colorCollection.combinationCollection[index]
+        )
+      );
+
+      this.regenerateColorSet();
+    },
+    regenerateColorSet: function() {
+      this.colorSet.generate(
+        this.styleSet.colorParameterCollection,
+        parseInt(this.styleSet.variationLightAmt),
+        parseInt(this.styleSet.variationSatAmt)
+      );
+    },
+    isMainColor: function(color, subColor) {
+      return color === subColor;
+    },
+    stringify: function(item) {
+      return JSON.stringify(item);
+    },
+    addColor: function() {
+      const newColorSet = this.styleSet.colorParameterCollection;
+      newColorSet.push({
+        hueVariation: 0
+      });
+      this.colorSet.generate(
+        this.styleSet.colorParameterCollection,
+        parseInt(this.styleSet.variationLightAmt),
+        parseInt(this.styleSet.variationSatAmt)
+      );
+    },
+    removeColor: function(index) {
+      this.colorSet.colorCollection.combinationCollection.splice(index, 1);
+      this.styleSet.colorParameterCollection.splice(index, 1);
+    },
+    updateVariationAmt: function() {
+      this.colorSet.generate(
+        this.styleSet.colorParameterCollection,
+        parseInt(this.styleSet.variationLightAmt),
+        parseInt(this.styleSet.variationSatAmt)
+      );
+    },
+    storeColorCoordinate: function(coordinates) {
+      this.$store.commit("currentColor", coordinates);
+      this.$store.dispatch("triggerNewStyle");
+    }
+  },
+  computed: {
+    ...mapGetters(["loaded"]),
+    styleSet() {
+      return this.$store.getters.styleSet;
+    },
+    colorSet: {
+      get() {
+        return this.$store.getters.colorSet;
+      },
+      set(value) {
+        this.$store.commit("colorSet", value);
+      }
+    }
+  }
 };
 </script>

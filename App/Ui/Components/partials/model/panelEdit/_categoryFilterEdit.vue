@@ -15,41 +15,36 @@
 
 </template>
 <script>
-import editFieldCommons from "../../../mixins/modelEditCommons";
 import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
 
-
 export default {
-    name: "categoryFilter",
-    data: function () {
-        return {
-            type: "CategoryFilter",
-            options: []
-        };
-    },
-    mixins: [editFieldCommons],
-    components: {
-        formFieldEditCommon,
-    },
-    methods: {
-        getCommonData(event) {
-            event.type = "Text";
-            event.regex = this.regex;
-            this.commonData = event;
-        },
-        removeOption(index) {
-            this.options.splice(index, 1);
-        },
-        addOption() {
-            this.options.push({label: ""});
-        }
-
-    },
-    created() {
-        if (this.fieldData.options.length > 0) {
-            this.options = this.fieldData.options;
-        }
+  name: "CategoryFilter",
+  components: {
+    formFieldEditCommon
+  },
+  data: function() {
+    return {
+      type: "CategoryFilter",
+      options: []
+    };
+  },
+  created() {
+    if (this.fieldData.options.length > 0) {
+      this.options = this.fieldData.options;
     }
+  },
+  methods: {
+    getCommonData(event) {
+      event.type = "Text";
+      event.regex = this.regex;
+      this.commonData = event;
+    },
+    removeOption(index) {
+      this.options.splice(index, 1);
+    },
+    addOption() {
+      this.options.push({ label: "" });
+    }
+  }
 };
-
 </script>

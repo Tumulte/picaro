@@ -19,42 +19,37 @@
 
 </template>
 <script>
-import editFieldCommons from "../../../mixins/modelEditCommons";
 import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
 import rfRadio from "../edit/_radio.vue";
 import rfSelect from "../edit/_select.vue";
 import rfCheckbox from "../edit/_checkbox.vue";
 
-
 export default {
-    name: "multiChoicePanelEdit",
-    data: function () {
-        return {
-            type: "rfRadio",
-            options: []
-        };
+  name: "MultiChoicePanelEdit",
+  components: {
+    formFieldEditCommon,
+    rfRadio,
+    rfSelect,
+    rfCheckbox
+  },
+  data: function() {
+    return {
+      type: "rfRadio",
+      options: []
+    };
+  },
+  methods: {
+    getCommonData(event) {
+      event.type = "Text";
+      event.regex = this.regex;
+      this.commonData = event;
     },
-    mixins: [editFieldCommons],
-    components: {
-        formFieldEditCommon,
-        rfRadio,
-        rfSelect,
-        rfCheckbox
+    removeOption(index) {
+      this.options.splice(index, 1);
     },
-    methods: {
-        getCommonData(event) {
-            event.type = "Text";
-            event.regex = this.regex;
-            this.commonData = event;
-        },
-        removeOption(index) {
-            this.options.splice(index, 1);
-        },
-        addOption() {
-            this.options.push({label: ""});
-        }
-
-    },
+    addOption() {
+      this.options.push({ label: "" });
+    }
+  }
 };
-
 </script>

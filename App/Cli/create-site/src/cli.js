@@ -60,14 +60,46 @@ const handleData = function(type, name) {
       fontFamilyAlt: "",
       fontFamilyTitle: "",
       ratioCollection: {
-        html: {},
-        h1: {},
-        h2: {},
-        h3: {},
-        h4: {},
-        h5: {},
-        h6: {},
-        p: {}
+        html: {
+          "font-size": "16",
+          "line-height": "1.6"
+        },
+        h1: {
+          "font-size": "3.2",
+          "line-height": "3.2",
+          "margin-bottom": "1",
+          "margin-top": "1.6"
+        },
+        h2: {
+          "font-size": "2.8",
+          "line-height": "2.8",
+          "margin-bottom": "1",
+          "margin-top": "1.6"
+        },
+        h3: {
+          "font-size": "2.2",
+          "line-height": "2.2",
+          "margin-bottom": "1",
+          "margin-top": "1.6"
+        },
+        h4: {
+          "font-size": "1.8",
+          "line-height": "1.8",
+          "margin-bottom": "0.8",
+          "margin-top": "1"
+        },
+        h5: {
+          "font-size": "1.5",
+          "line-height": "1.5",
+          "margin-bottom": "0.8",
+          "margin-top": "1"
+        },
+        h6: {
+          "font-size": "1",
+          "line-height": "1",
+          "margin-bottom": "0.8",
+          "margin-top": "1"
+        }
       }
     });
     db.addCollection(name);

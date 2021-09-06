@@ -17,44 +17,43 @@
                             v-btn(@click="discardMessage" data-jest="discard-button" outlined) Ok
 </template>
 <script>
-
 export default {
-    methods: {
-        confirmCallbackMessage(key, index) {
-            this.$store.dispatch("addAlertConfirmation", {key: key, index: index});
-        },
-        discardCallbackMessage(key, index) {
-            this.$store.dispatch("addAlertDiscard", {key: key, index: index});
-        },
-        discardMessage(index) {
-            this.$store.dispatch("removeAlert", index);
-        },
-
+  name: "Alert",
+  computed: {
+    alertCollection() {
+      return this.$store.getters.alertCollection;
     },
-    computed: {
-        alertCollection() {
-            return this.$store.getters.alertCollection;
-        },
-        alertCallbackCollection() {
-            return this.$store.getters.alertCallbackCollection;
-        }
+    alertCallbackCollection() {
+      return this.$store.getters.alertCallbackCollection;
     }
+  },
+  methods: {
+    confirmCallbackMessage(key, index) {
+      this.$store.dispatch("addAlertConfirmation", { key: key, index: index });
+    },
+    discardCallbackMessage(key, index) {
+      this.$store.dispatch("addAlertDiscard", { key: key, index: index });
+    },
+    discardMessage(index) {
+      this.$store.dispatch("removeAlert", index);
+    }
+  }
 };
 </script>
 <style scoped>
 li {
-    list-style: none;
+  list-style: none;
 }
 
 button {
-    margin: 10px;
+  margin: 10px;
 }
 
 #rf-alert-container {
-    width: 620px;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 999999;
+  width: 620px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
 }
 </style>

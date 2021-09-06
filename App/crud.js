@@ -1,5 +1,5 @@
 import express from "express";
-import { makeTableName } from "./utils";
+import { makeTableName, cleanData } from "./utils";
 import multer from "multer";
 
 const upload = multer();
@@ -22,7 +22,7 @@ const crud = function crud(db) {
 
   dataRouter.use("/:table/:itemId", function(req, res, next) {
     if (db[req.params.app]) {
-      req.data = db[req.params.app].find({ id: req.params.itemId });
+      req.data = db.find({ id: req.params.itemId });
       next();
     } else {
       res.status(404).send(`this data ${makeTableName(req)} does not exist`);
@@ -35,7 +35,7 @@ const crud = function crud(db) {
       res.json(db.find());
     })
     .post(upload.none(), function(req, res) {
-      data.save();
+      db.insert(cleanData(req.body));
       res.send("Saved");
     });
 

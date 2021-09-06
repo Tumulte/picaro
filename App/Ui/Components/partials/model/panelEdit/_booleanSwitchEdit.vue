@@ -12,21 +12,18 @@
 
 </template>
 <script>
-import editFieldCommons from "../../../mixins/modelEditCommons";
 import formFieldEditCommon from "./formEditCommons/_formFieldEditCommon.vue";
 
 export default {
-    name: "BooleanPanelEdit",
-    mixins: [editFieldCommons],
-    components: {
-        formFieldEditCommon
-    },
-    methods: {
-        getCommonData(event) {
-            event.type = "Boolean";
-            this.commonData = event;
-        },
-
+  name: "BooleanPanelEdit",
+  components: {
+    formFieldEditCommon
+  },
+  methods: {
+    getCommonData(event) {
+      event.type = "Boolean";
+      this.commonData = event;
     }
+  }
 };
 </script>

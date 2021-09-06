@@ -1,13 +1,26 @@
 <template lang="pug">
-    div
-        v-toolbar(dense=true fixed=true)
-            v-btn(@click="togglePanel('admin')" :dark="!panels.admin" :outlined="panels.admin" :depressed="panels.admin" color="rgb(79, 103, 156)" class="ml-2" x-small=true) Admin
-            v-btn(@click="togglePanel('nav')" :dark="!panels.nav" :outlined="panels.nav" :depressed="panels.nav" color="rgb(79, 103, 156)" class="ml-2" x-small=true) Nav
-            v-btn(@click="togglePanel('css')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(79, 103, 156)" class="ml-2" x-small=true) CSS
-            v-btn(@click="togglePanel('models')" :dark="!panels.models" :outlined="panels.models" :depressed="panels.models" color="rgb(176, 91, 48)" class="ml-2" x-small=true) Models
-            v-btn(@click="togglePanel('users')" :dark="!panels.css" :outlined="panels.css" :depressed="panels.css" color="rgb(228, 167, 94)" class="ml-2" x-small=true) Users
-
-        v-navigation-drawer(v-model="panels.css" fixed=true width="auto" right=true)
+    .toolbar-container
+        #rf-toolbar(:class="{mini:!displayToolbar}")
+            img(src="svg/rflogo.svg" id="rf-logo" @click="toggleBar()")
+            .toolbar-section(v-if="displayToolbar" id="rf-toolbar--design")
+                .toolbar-section-title Design
+                v-btn(@click="openPanel('css')" dark :outlined="openedPanel !== 'css'" :depressed="openedPanel === 'css'" class="ml-2" x-small) CSS
+                v-btn(@click="openPanel('typography')" dark :outlined="openedPanel !== 'typography'" :depressed="openedPanel === 'typography'" class="ml-2" x-small) Typography
+                v-btn(@click="openPanel('colors')" :dark="!editLayout" :outlined="!editLayout" :depressed="editLayout" class="ml-2" x-small) Colors
+                .toolbar-save-button
+                    v-btn(@click="saveStyleSet" data-jest="add-common-row" small class="ml-2 toolbar-save-button")
+                        v-icon(color="white") mdi-content-save
+                    v-btn( data-jest="add-common-row" small class="ml-2 toolbar-save-button")
+                        v-icon(color="white") mdi-cog-outline
+            .toolbar-section(v-if="displayToolbar" id="rf-toolbar--structure")
+                .toolbar-section-title Data & Structure
+                v-btn(@click="openPanel('admin')" :dark="openedPanel !== 'admin'" :outlined="openedPanel !== 'admin'" :depressed="openedPanel !== 'admin'" class="ml-2" x-small) Admin
+                v-btn(@click="editCommonLayout = !editCommonLayout;editLayout = false;openedPanel=''" dark :outlined="!editCommonLayout" :depressed="editCommonLayout" class="ml-2" x-small=true) Layout
+                v-btn(@click="openPanel('models')" dark :outlined="openedPanel !== 'models'" :depressed="openedPanel === 'models'" class="ml-2" x-small=true) Models
+                v-btn(@click="openPanel('users')" dark :outlined="openedPanel !== 'css'" :depressed="openedPanel !== 'css'" class="ml-2" x-small=true) Users
+                v-btn(@click="saveDataAndStructure" data-jest="add-common-row" small class="rf-common-layout--save" class="ml-2 toolbar-save-button")
+                    v-icon(color="white") mdi-content-save
+        v-navigation-drawer(:value="openedPanel === 'css'" fixed=true width="auto" right=true)
             v-container
                 v-row
                     v-col
@@ -15,79 +28,300 @@
                             css-panel-selector
                     v-col
                         v-btn(@click="setOpenPanel('color')" text=true) open
-                        div(class="subpanels" :class="{'__open': subpanelOpenned('color')}")
-                            css-panel-color(:mini-variant="openPanel !== 'color'" :panel-opened="openPanel === 'color'")
+                        div(class="subpanels" :class="{'__open': openedPanel ==='color'}")
+                            css-panel-color(:mini-variant="openedPanel !== 'color'" :panel-opened="openedPanel === 'color'")
                     v-col
-                        v-btn(@click="setOpenPanel('ratio')" text=true) open
-                        div(class="subpanels" :class="{'__open': subpanelOpenned('ratio')}")
-                            css-panel-ratio(:mini-variant="openPanel !== 'ratio'")
-                    v-col
-                        v-btn(@click="setOpenPanel('main')" text=true) open
-                        div(class="subpanels" :class="{'__open': subpanelOpenned('main')}")
-                            css-panel-main(:mini-variant="openPanel !== 'main'")
-        v-navigation-drawer(v-model="panels.admin" right=true fixed=true width="300")
+                        v-btn(@click="setopenedPanel('ratio')" text=true) open
+                        div(class="subpanels" :class="{'__open': openedPanel ==='ratio'}")
+                            css-panel-ratio(:mini-variant="openedPanel !== 'ratio'")
+        v-navigation-drawer(:value="openedPanel === 'admin'" right=true fixed=true width="300")
             admin-panel
-        v-navigation-drawer(v-model="panels.nav" right=true fixed=true width="300")
-            nav-panel(:views="views")
-        v-navigation-drawer(v-model="panels.models" right=true fixed=true width="400")
-            model-panel
+
+        v-navigation-drawer(class="rf-vertical-panel --structure" :value="openedPanel === 'models'" right=true fixed=true width="400" hide-overlay)
+            model-panel()
+            v-btn(@click="saveDataAndStructure" small class="rf-settings--save-button_structure float-right mr-6")
+                v-icon(color="white") mdi-content-save
+        .horizontal-navigation-drawer(:class="{opened :openedPanel === 'typography'}")
+            css-panel-typography
+        .horizontal-navigation-drawer( v-if="false" :class="{opened :openedPanel === 'designSettings'}")
+            v-select(outlined :items="styleSetCollection" v-model="selectedStyleSet" item-value="id" item-text="setName" label="Style Set" @change="updateStyleSet()" return-object=true)
+            v-btn(text=true class="_container"  v-if="styleSet.id !== 'default'" @click.prevent="saveStyleSet()") Save
+            v-text-field(type="text" class="css-panel__input" label="Config name" name="setName" v-model="styleSet.setName")
+            v-btn(text=true @click.prevent="saveNewStyleSet()") Save a new Style Set
+            v-btn(text=true class="_container"  @click.prevent="deleteStyleSet()"  v-if="styleSet.id !== 'default'" type="button") Delete Style Set
 
 </template>
 <script>
-import adminPanel from "./adminPanel.vue";
-import modelPanel from "./modelPanel.vue";
-import navPanel from "./navPanel.vue";
-import cssPanelSelector from "./cssPanelSelector.vue";
-import cssPanelRatio from "./cssPanelRatio.vue";
-import cssPanelColor from "./cssPanelColor.vue";
+import axios from "axios";
+
+const modelPanel = () => import("./modelPanel.vue");
+const cssPanelSelector = () => import("./cssPanelSelector.vue");
+const cssPanelRatio = () => import("./cssPanelRatio.vue");
+const cssPanelColor = () => import("./cssPanelColor.vue");
+const adminPanel = () => import("./adminPanel.vue");
+const cssPanelTypography = () => import("./cssPanelTypography.vue");
+import { nanoid } from "nanoid";
+import { generateColorSet } from "../colorGenerator";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-    props: ["views"],
-    components: {adminPanel, modelPanel, navPanel, cssPanelSelector, cssPanelColor, cssPanelRatio},
-    data: function () {
-        return {
-            panels: {
-                css: false,
-                admin: false,
-                nav: false,
-                styleSet: false,
-                models: false
-            },
-            openPanel: ""
-        };
+  components: {
+    adminPanel,
+    modelPanel,
+    cssPanelSelector,
+    cssPanelColor,
+    cssPanelRatio,
+    cssPanelTypography
+  },
+  props: ["views"],
+  data: function() {
+    return {
+      displayToolbar: true,
+      openedPanel: ""
+    };
+  },
+  computed: {
+    ...mapGetters(["settings"]),
+    editCommonLayout: {
+      get() {
+        return this.$store.state.admin.editCommonLayout;
+      },
+      set(value) {
+        this.$store.commit("editCommonLayout", value);
+      }
     },
-    methods: {
-        togglePanel(panel) {
-            this.closeAllBut(panel);
-            this.panels[panel] = !this.panels[panel];
-        },
-        setOpenPanel(type) {
-            if (this.openPanel === type) {
-                this.openPanel = "";
-                return;
-            }
-            this.openPanel = type;
-        },
-        closeAllBut(clickedPanel) {
-            for (let panel in this.panels) {
-                if (panel !== clickedPanel) {
-                    this.panels[panel] = false;
-                }
-            }
-        },
-        subpanelOpenned(name) {
-            return this.openPanel === name;
-        }
+    editLayout: {
+      get() {
+        return this.$store.state.admin.editLayout;
+      },
+      set(value) {
+        this.$store.commit("editLayout", value);
+      }
+    },
+    styleSet: {
+      get() {
+        return this.$store.getters.styleSet;
+      },
+      set(value) {
+        this.$store.commit("styleSet", value);
+      }
     }
+  },
+  mounted() {
+    this.applyStyleSet(this.styleSet);
+    this.$store.commit("styleSetLoaded", true);
+    this.triggerNewStyle();
+    this.getAllStyleSet();
+
+    if (this.displayToolbar) {
+      document.querySelector("#rf-vue-container").classList.add("toolbar-open");
+    }
+  },
+  methods: {
+    ...mapActions(["triggerNewStyle", "addAlert", "awaitConfirmation"]),
+    openPanel(name) {
+      if (name === this.openedPanel) {
+        this.openedPanel = "";
+      } else {
+        this.openedPanel = name;
+      }
+      this.editCommonLayout = false;
+      this.editLayout = false;
+    },
+    getAllStyleSet() {
+      axios
+        .get("/settingapi/styleset/all")
+        .then(response => {
+          this.styleSetCollection = response.data;
+        })
+        .catch(error => {
+          this.addAlert({
+            type: "error",
+            text: `Request failed.  Returned status of ${error}`
+          });
+        });
+    },
+    setOpenPanel(type) {
+      if (this.openPanel === type) {
+        this.openPanel = "";
+        return;
+      }
+      this.openPanel = type;
+    },
+    toggleBar() {
+      if (this.displayToolbar) {
+        this.displayToolbar = false;
+        document
+          .querySelector("#rf-vue-container")
+          .classList.remove("toolbar-open");
+      } else {
+        this.displayToolbar = true;
+        document
+          .querySelector("#rf-vue-container")
+          .classList.add("toolbar-open");
+      }
+    },
+    async deleteStyleSet() {
+      await this.awaitConfirmation({
+        text: "Are you sure you want to delete this style set ?",
+        type: "warning"
+      });
+      axios
+        .delete(`/settingapi/${this.styleSet.id}`)
+        .then(() => {
+          this.addAlert({
+            type: "success",
+            text: "This style set  was deleted"
+          });
+
+          this.getAllStyleSet();
+          this.applyStyleSet(this.styleSetCollection[0]);
+          document.getElementById("_admin-form-ext-submit").click();
+        })
+        .catch(errors => {
+          this.addAlert({
+            type: "error",
+            text: errors
+          });
+        });
+    },
+    saveNewStyleSet() {
+      const id = nanoid();
+      const previousID = this.styleSet.id;
+      this.styleSet.id = id;
+      axios
+        .post("/settingapi/styleset", this.styleSet)
+        .then(() => {
+          this.addAlert({
+            type: "success",
+            text: `${this.styleSet.setName} saved successfully`
+          });
+          document.getElementById("_admin-form-ext-submit").click();
+        })
+        .catch(errors => {
+          this.addAlert({
+            type: "error",
+            text: `Request failed.  Returned status of ${errors}`
+          });
+          this.styleSet.id = previousID;
+        });
+      this.getAllStyleSet();
+    },
+    async saveStyleSet() {
+      await this.awaitConfirmation({
+        text: "Are you sure you want to overwrite this style set ?",
+        type: "warning"
+      });
+      axios
+        .put("/settingapi/styleset", this.styleSet)
+        .then(() => {
+          this.addAlert({
+            type: "success",
+            text: "Style Set saved successfully"
+          });
+          this.getAllStyleSet();
+          this.toggleIndex("cssPanelIndex");
+          document.getElementById("_admin-form-ext-submit").click();
+        })
+        .catch(errors => {
+          this.addAlert({
+            type: "error",
+            text: `Request failed.  Returned status of ${errors}`
+          });
+        });
+    },
+    applyStyleSet(styleSet, callback) {
+      this.styleSet = styleSet;
+
+      const colorSet = new generateColorSet(styleSet.dominant);
+
+      colorSet.generate(
+        styleSet.colorParameterCollection,
+        parseInt(styleSet.variationLightAmt),
+        parseInt(styleSet.variationSatAmt)
+      );
+      this.$store.commit("loaded", true);
+      this.$store.commit("colorSet", colorSet);
+
+      this.$store.commit("styleSet", styleSet);
+      if (callback) {
+        callback();
+      }
+    },
+
+    saveDataAndStructure() {
+      axios
+        .put("/settingapi/", this.settings)
+        .then(() => {
+          this.$store.dispatch("addAlert", {
+            type: "success",
+            text: `The layout have been updated`
+          });
+        })
+        .catch(errors => {
+          this.$store.dispatch("addAlert", {
+            type: "error",
+            text: `There was a problem : ${errors}`
+          });
+        });
+    }
+  }
 };
-
 </script>
-<style scoped="true">
-.subpanels {
-    width: 50px;
+<style scoped>
+#rf-logo {
+  height: 100%;
 }
-
+.toolbar-container /deep/ .v-toolbar__content {
+  padding-left: 0;
+}
+.subpanels {
+  width: 50px;
+}
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  border-top: 10px solid;
+  position: relative;
+  flex: 50%;
+}
+.toolbar-section-title {
+  top: -15px;
+  left: 0;
+  position: absolute;
+  color: #fff;
+  font-size: 15px;
+  text-transform: uppercase;
+}
 .subpanels.__open {
-    width: 300px;
+  width: 300px;
+}
+#rf-toolbar {
+  &.mini {
+    width: 50px;
+  }
+  height: 48px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  box-shadow: #aaa 0 0 5px;
+}
+.toolbar-save-button {
+  margin-left: auto !important;
+  margin-right: 10px;
+}
+.horizontal-navigation-drawer {
+  &.opened {
+    top: 48px;
+  }
+  top: -105px;
+  position: fixed;
+  left: 0px;
+  width: 100%;
+  transition: top 0.2s ease;
+  box-shadow: #ddd 0 5px 5px;
+  background: #fff;
 }
 </style>

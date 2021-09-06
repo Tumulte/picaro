@@ -1,6 +1,128 @@
+:root {
+    --bg: #EEE6DF;
+    --bgMedium: #E5D2C1;
+    --highlight: #EB420E;
+    --main: #A83515;
+    --secondaryDark: #577876;
+    --secondary: #3C93A1;
+    --warning: #D29627;
+    --info: #983CA1;
+    --valid: #3CA14F;
+
+}
+
 #rf-alert-container {
     position: fixed;
     bottom: 0;
     right: 0;
     z-index: 999999;
+}
+#rf-vue-container.toolbar-open {
+    relative: relative;
+    top: 60px;
+}
+
+#rf-toolbar--design {
+    border-color: var(--main);
+    & .v-btn{
+        background-color : var(--main);
+    }
+    & .v-btn--outlined {
+        background-color: transparent;
+        color: var(--main);
+        caret-color: var(--main);
+    }
+}
+.v-btn.v-btn--has-bg.rf-settings--save-button_structure {
+    background-color: var(--secondary);
+}
+#rf-toolbar--structure {
+    border-color: var(--secondary);
+    .v-btn{
+        background-color: var(--secondary);
+    }
+    .v-btn--outlined {
+        background-color: transparent;
+        color: var(--secondary);
+        caret-color: var(--secondary);
+    }
+}
+.rf-setting-sheet {
+    .--title-with-cta {
+        display: flex;
+        .v-btn {
+
+        }
+    }
+    padding: 10px;
+    background: #f0f0f0;
+    margin: 10px 10px 30px;
+}
+.rf-vertical-panel {
+    h3 {
+        &.closed {
+            margin: 0;
+        }
+        font-weight: 300;
+        text-transform: uppercase;
+        margin: 0 10px 20px 10px;
+    }
+    .v-card .v-btn {
+        margin-left: 10px;
+    }
+    &.--structure {
+        h2 {
+            background-color: var(--secondary);
+            color: white;
+            line-height: 1;
+            text-transform: uppercase;
+            font-weight: 100;
+            margin-bottom: 30px;
+        }
+
+    }
+    .rf-side-button-container {
+        &:hover {
+            .v-btn {
+                border-color: #000
+            }
+        }
+        display: flex;
+        .v-btn {
+            height: 40px;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            margin-right: 20px;
+        }
+        .theme--dark.v-btn.v-btn--disabled.v-btn--has-bg {
+            background-color: #ddd !important;
+            color: #fff !important;
+        }
+        .v-input {
+            border-radius:  4px 0 0 4px;
+            margin-left: 20px;
+            fieldset {
+                border-right: none;
+            }
+        }
+        .theme--dark.v-btn.v-btn--has-bg {
+            background: var(--secondary);
+        }
+
+        .v-text-field--outlined fieldset {
+            top: -4px;
+        }
+    }
+}
+.common-layout-settings {
+    .v-input {
+        display: inline-block;
+        margin-right: 16px;
+    }
+    .v-text-field {
+        padding: 0;
+    }
+    .v-text-field__details {
+        display: none;
+    }
 }

@@ -48,10 +48,10 @@ import Vuetify, {
   VCheckbox,
   VCardActions,
   VScrollYReverseTransition,
-  VCombobox
+  VCombobox,
+  VSheet
 } from "vuetify/lib";
 // TODO add webpack chunks to exclude that in production
-import cssPanel from "../Ui/Components/cssPanelMain.vue";
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
 import userPanel from "../Ui/Components/userPanel.vue";
 import model from "../Ui/Components/modelForm.vue";
@@ -104,7 +104,8 @@ Vue.use(Vuetify, {
     VAlert,
     VDialog,
     VCheckbox,
-    VCombobox
+    VCombobox,
+    VSheet
   }
 });
 
@@ -119,7 +120,6 @@ Vue.component("RfApp", rfApp);
 Vue.component("RfLayout", rfLayout);
 
 Vue.component("AdminToolBar", adminToolBar);
-Vue.component("CssPanelMain", cssPanel);
 Vue.component("UserPanel", userPanel);
 Vue.component("RfModel", model);
 Vue.component("RfAlert", alert);

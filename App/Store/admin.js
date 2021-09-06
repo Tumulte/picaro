@@ -148,10 +148,10 @@ export default {
     triggerNewStyle(state, data) {
       state.triggerNewStyle = data;
     },
-    setEditCommonLayout(state, data) {
+    editCommonLayout(state, data) {
       state.editCommonLayout = data;
     },
-    setEditLayout(state, data) {
+    editLayout(state, data) {
       state.editLayout = data;
     }
   },

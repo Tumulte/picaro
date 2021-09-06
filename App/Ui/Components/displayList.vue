@@ -1,11 +1,16 @@
 <template lang="pug">
-    div
-        v-btn(@click="edit = !edit") Edit
-        model(:model-name="panelParams.model" @reloadData="loadListData" v-if="edit")
-        div(v-for="(item) in list" v-if="checkFilters(item)")
+    div(:key="key")
+        v-btn(@click="edit = !edit; newItem = false" small class="mr-6" :outlined="!edit" :dark="edit" ) Edit
+        v-btn(@click="newItem = !newItem; edit = false" small :outlined="!newItem" :dark="newItem") New
+        v-card( class="pa-6 my-6"  v-if="newItem")
+            v-card-title
+                h2 New Item
+            model(:model-name="panelParams.model" @reloadData="loadListData" :panel-params="panelParams")
+        div(v-for="(item) in filteredList" v-if="checkFilters(item)")
             rf-model-field(:field-data="item"  :field-name='index' v-for="(field, index) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="index")
-            model(:model-name="panelParams.model" @reloadData="reloadListData" :model-data="item" v-if="edit" :is-edit="edit")
-            model-item-edit(:model-name="panelParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()" v-if="edit")
+            v-card( v-if="edit" class="pa-6 my-6")
+                model(:model-name="panelParams.model" @reloadData="loadListData()" :model-data="item" :is-edit="edit" :panel-params="panelParams")
+                model-item-edit(:model-name="panelParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()")
 
 
 </template>
@@ -24,6 +29,8 @@ export default {
   data: function() {
     return {
       edit: false,
+      newItem: false,
+      key: true,
       listItemData: {},
       activeFilterCollection: []
     };
@@ -38,7 +45,7 @@ export default {
           .get(`/api/${this.panelParams.model}`)
           .then(response => {
             this.$store.dispatch("addItemToList", {
-              model: this.model,
+              model: this.panelParams.model,
               listData: response.data
             });
             this.edit = false;
@@ -56,13 +63,39 @@ export default {
   computed: {
     ...mapGetters(["filterCollectionExpanded", "selectedCategories"]),
     list() {
-      return this.$store.getters.list[this.model];
+      return this.$store.getters.list[this.panelParams.model];
+    },
+    filteredList() {
+      this.key = !this.key;
+      if (!this.list) {
+        return [];
+      }
+      return this.list.filter(item => {
+        const applyFilter = function(method, item, checkedValue) {
+          if (method === "eq") {
+            return item === checkedValue[0];
+          }
+        };
+        if (!this.listFilters) {
+          return this.list;
+        }
+        for (const [, filterParameters] of Object.entries(this.listFilters)) {
+          if (!item[filterParameters.field]) {
+            return false;
+          }
+          return applyFilter(
+            filterParameters.method,
+            item[filterParameters.field],
+            filterParameters.value
+          );
+        }
+      });
     },
     tags() {
       return this.$store.getters.tags;
     },
     listFilters() {
-      return this.filterCollectionExpanded[this.model];
+      return this.filterCollectionExpanded[this.panelParams.model];
     }
   }
 };

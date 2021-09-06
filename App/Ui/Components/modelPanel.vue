@@ -1,53 +1,54 @@
 <template lang="pug">
     div
         categories
-        //TODO add proper class for "selected"
-        //TODO allow adding field to existing model
-        .create-model-container
-            v-text-field(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name" lapel="New model name" )
-            v-btn(v-if="displayNewModelButton" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique") Add new model
+
+        h2 Models
+        .rf-side-button-container
+            v-text-field(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name" outlined dense label="New model name" )
+            v-btn(v-if="!currentModelName" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique" elevation="0" dark) Add
 
         .current-model-elements(v-for="(model,index) in modelCollection")
-            v-card(class="pa-3 my-3" outlined :class="{'elevation-6':(index === currentEditModelName)}" v-if="noEdition(index)")
-                v-card-title
-                    h2 {{index}}
-                        v-btn(v-if="currentEditModelName !== index && !currentModelName" @click="currentEditModelName = index" outlined class="mx-2") Edit
-                        v-btn(v-else @click="cancelEditModel" outlined class="mx-2") Cancel
-                            div(class="model-preview" v-if="currentModelName")
-                .model-type
-                    .select-container(v-if="index === currentEditModelName || modelNameInput")
-                        select(data-jest="select-input" v-model="selectedFieldType" )
-                            option(value="none") Select…
-                            option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
-                component( v-if="selectedFieldType !== 'none'" :is="fieldType[selectedFieldType].component" edit=true :ref="selectedFieldType" @addFieldData="addFieldToModel")
-                div(v-if="index === currentEditModelName")
-                    v-card-text
-                        div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
-                            v-btn(v-if="currentMovingField !== null &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination' outlined color="primary") Move here
-                            v-card(outlined class="pa-1 my-2"  :loading="subIndex === currentMovingField")
-                                component(:is="fieldType[field.type].component" :fieldData="field" @deletField="deleteField(subIndex)" :ref="field.type" @updateEditedFieldData="saveEditedField($event,subIndex)")
-                                div(class="d-flex justify-end")
-                                    v-btn(class="mr-3 mt-3" data-jest='move-field' @click="moveField(subIndex)" v-if="model.length > 1 && subIndex !== currentMovingField" color="primary" outlined) Move
-                                    v-btn(data-jest='delete-button' @click="deleteField(subIndex)" color="error" text class="mr-3 mt-3" ) Delete
-                            v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary") Move here
-                    v-card-actions(class="justify-end")
-                        v-btn(@click="saveModel" color="success" data-jest="saveStyleSet model") Save
-        //todo add delete
-        //todo test whole process
+            .rf-setting-sheet
+                v-card(class="pa-3 my-3" outlined :class="{'elevation-6':(index === currentEditModelName)}" v-if="noEdition(index)")
+                    div(class="--title-with-cta")
+                        h3(:class="{closed: currentEditModelName !== index}")
+                            span(v-if="currentEditModelName === index") Editing :
+                            span {{index}}
+                        v-btn(v-if="currentEditModelName !== index && !currentModelName" @click="currentEditModelName = index" outlined class="mx-2" small) Edit
+                        v-btn(v-else @click="cancelEditModel" outlined class="mx-2" small) Cancel
+                    .model-type
+                        .select-container(v-if="index === currentEditModelName || modelNameInput")
+                            select(data-jest="select-input" v-model="selectedFieldType" )
+                                option(value="none") Select…
+                                option(v-for="(type, index) in fieldType" :value="index") {{type.name}}
+
+                    ModelField(v-if="selectedFieldType !== 'none'" :is-created="true" :ref="selectedFieldType" :type="selectedFieldType" @addFieldData="addFieldToModel")
+                    div(v-if="index === currentEditModelName")
+                        v-card-text
+                            div(v-if="index === currentEditModelName" v-for="(field, subIndex) in model")
+                                v-btn(v-if="currentMovingField !== null &&  subIndex < currentMovingField" @click="moveField(subIndex)" data-jest='move-field-destination' outlined color="primary") Move here
+                                v-card(outlined class="pa-1 my-2"  :loading="subIndex === currentMovingField")
+                                    ModelField(:fieldData="field" @deletField="deleteField(subIndex)" :type="field.type" :ref="field.type" @updateEditedFieldData="saveEditedField($event,subIndex)")
+                                    span
+                                        v-btn(data-jest='move-field' @click="moveField(subIndex)" v-if="model.length > 1 && subIndex !== currentMovingField" outlined small) Move
+                                        v-btn(data-jest='delete-button' @click="deleteField(subIndex)" text x-small)
+                                            v-icon mdi-delete-outline
+                                v-btn(v-if="currentMovingField !== null && subIndex > currentMovingField" @click="moveField(subIndex)"  data-jest='move-field-destination' outlined color="primary" small) Move here
 </template>
 <script>
-import textField from "./partials/model/panelEdit/_text.vue";
+import textField from "./partials/model/panelEdit/_modelField.vue";
 import booleanField from "./partials/model/panelEdit/_booleanSwitchEdit.vue";
 import arrayMove from "array-move";
 import richText from "./partials/model/panelEdit/_richText.vue";
 import multiChoice from "./partials/model/panelEdit/_multiChoiceEdit.vue";
 import categoryFilter from "./partials/model/panelEdit/_categoryFilterEdit.vue";
 import categories from "./categories.vue";
+import ModelField from "./partials/model/panelEdit/_modelField.vue";
 
 import { mapGetters } from "vuex";
 
 export default {
-  components: { categoryFilter, categories },
+  components: { categoryFilter, categories, ModelField },
   data: function() {
     return {
       modelNameInput: "",
@@ -176,8 +177,8 @@ select {
   border: 1px solid black;
   position: relative;
   border-radius: 5px;
-  width: 70%;
   background: #fefefe;
+  margin: 20px 0;
 }
 
 .select-container::after {

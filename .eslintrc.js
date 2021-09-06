@@ -8,8 +8,9 @@ module.exports = {
     "plugin:vue/recommended"
   ],
   parserOptions: {
-    ecmaVersion: 2019,
-    sourceType: "module"
+    parser: "babel-eslint",
+    sourceType: "module",
+    allowImportExportEverywhere: true
   },
   env: {
     browser: true,

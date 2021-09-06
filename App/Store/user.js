@@ -1,6 +1,7 @@
 import Vue from "vue";
-import warningTimeout from "../../rougeSettings.json";
+import settings from "../../rougeSettings.json";
 import router from "../Router/router";
+import { nanoid } from "nanoid";
 
 function updateRoute(filterCollection) {
   let globalFilters = "~";
@@ -19,12 +20,12 @@ function updateRoute(filterCollection) {
   let modelFiltersArray = [];
   let modelParamsArray = [];
   if (Object.entries(filterCollection.modelFilters).length !== 0) {
-    for (const [key, value] of Object.entries(filterCollection.modelFilters)) {
+    for (const [key, filter] of Object.entries(filterCollection.modelFilters)) {
       let itemFilters = [];
       let itemParams = [];
-      for (const [subkey, subvalue] of Object.entries(value)) {
+      for (const [subkey, { value, method, field }] of Object.entries(filter)) {
         itemFilters.push(subkey);
-        itemParams.push(subvalue.join("--"));
+        itemParams.push(`${method}${field}..${value.join("--")}`);
       }
       modelFiltersArray.push(
         `${JSON.parse(key).join("--")}__${itemFilters.join("--")}`
@@ -149,9 +150,17 @@ export default {
       if (!temporaryFilterCollection.modelFilters[models]) {
         temporaryFilterCollection.modelFilters[models] = {};
       }
-
       temporaryFilterCollection.modelFilters[models][type] = params;
       updateRoute(temporaryFilterCollection);
+    },
+    deleteFromFilterCollection({ state }, { type, models }) {
+      Vue.delete(state.filterCollection.modelFilters[models], type);
+      if (
+        Object.keys(state.filterCollection.modelFilters[models]).length === 0
+      ) {
+        Vue.delete(state.filterCollection.modelFilters, models);
+      }
+      updateRoute(state.filterCollection);
     },
     updateFilterCommonCollection({ state }, { type, params }) {
       params = typeof params === "string" ? [params] : params;
@@ -170,7 +179,6 @@ export default {
       Vue.set(state.settings.availableFilterCollection, property, value);
     },
     updateLinkedPanel({ state }, { coordinates }) {
-      console.debug("caca", coordinates, state.pendingLinkedPanel);
       Vue.set(
         state.settings.layoutLinkCollection,
         state.pendingLinkedPanel,
@@ -197,12 +205,9 @@ export default {
         return;
       }
       state.alertCollection.push(data);
-      setTimeout(
-        () => {
-          state.alertCollection.shift();
-        },
-        data.timeOut ? data.timeOut : warningTimeout
-      );
+      setTimeout(() => {
+        state.alertCollection.shift();
+      }, data.timeOut || settings.warningTimeout || 10000);
     },
     removeAlert({ state }, data) {
       state.alertCollection.splice(data, 1);
@@ -223,9 +228,7 @@ export default {
       });
     },
     awaitConfirmation({ state, dispatch }, data) {
-      const key = Math.random()
-        .toString(36)
-        .substring(2, 15);
+      const key = nanoid();
       const removeAlert = function() {
         dispatch(
           "removeAlertCallback",
@@ -237,28 +240,33 @@ export default {
         state.alertCallbackCollection.filter(item => data.text === item.text)
           .length > 0;
 
-      return new Promise(function(resolve) {
+      return new Promise((resolve, reject) => {
         if (duplicates) {
           return;
         }
         data.key = key;
         state.alertCallbackCollection.push(data);
-        const alertButtons = document.getElementsByClassName("rf-alert-button");
-        Array.from(alertButtons).forEach(function(element) {
-          element.addEventListener("click", () => {
-            if (
-              state.alertConfirmationStatus[key] &&
-              state.alertConfirmationStatus[key].status === true
-            ) {
-              removeAlert();
-              resolve();
-            } else if (
-              state.alertConfirmationStatus[key] &&
-              state.alertConfirmationStatus[key].status === false
-            ) {
-              removeAlert();
-            }
-          });
+        const alertButtons = document.getElementById("rf-alert-container");
+        alertButtons.addEventListener("click", event => {
+          if (
+            !event.target.classList.contains("rf-alert-button") &&
+            !event.target.parentNode.classList.contains("rf-alert-button")
+          ) {
+            return;
+          }
+          if (
+            state.alertConfirmationStatus[key] &&
+            state.alertConfirmationStatus[key].status === true
+          ) {
+            removeAlert();
+            resolve();
+          } else if (
+            state.alertConfirmationStatus[key] &&
+            state.alertConfirmationStatus[key].status === false
+          ) {
+            reject("User Cancelled");
+            removeAlert();
+          }
         });
       });
     }
