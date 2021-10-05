@@ -1,12 +1,12 @@
 <template lang="pug">
     v-container(v-if="loaded")
-        v-row
-            v-col(cols="8" class="pa-0 -ratio-text-container rf-content-container")
+        v-row(class="reset-margin-bottom")
+            v-col(cols="8" class="pa-0 rf-ratio-text-container")
                 template(v-for="(data, tag) in styleSet.ratioCollection")
-                    div(class="-ratio-container" @click="storeRatioCoordinate(tag)"  :class="{'__mini': miniVariant}")
-                        component(v-if="tag !== 'html'" :is="tag" @click="storeRatioCoordinate(tag)") Size for {{tag}}
-                            v-btn(v-if="!miniVariant" class="-ratio-container-button" @click.stop="selectTag(tag)" text=true) edit
-            v-col(cols="4" class="pa-0" v-if="selectedTag && selectedTag !== 'p' && !miniVariant")
+                    div(class="rf-ratio--text-example" :class="{'--selected-tag': tag === selectedTag}"  @click="selectTag(tag)" )
+                        component(v-if="tag !== 'html'" :is="tag" class="--inner-text-example") Size for {{tag}}
+                div(class="rf-ratio--text-example" ) Size for base text
+            v-col(cols="4" class="pa-0" v-if="selectedTag && selectedTag !== 'p'")
                 v-text-field(type="number" step="0.1" data-jest="ratio-fs" label="Font size" v-model="styleSet.ratioCollection[selectedTag]['font-size']" @input="updateTextParams('font-size', selectedTag)")
                 v-text-field(type="number" step="0.1" data-jest="ratio-lh" label="Line height" v-model="styleSet.ratioCollection[selectedTag]['line-height']" @input="updateTextParams('line-height', selectedTag)")
                 v-text-field(type="number" step="0.1" data-jest="ratio-mb" label="Margin bottom" v-model="styleSet.ratioCollection[selectedTag]['margin-bottom']" @input="updateTextParams('margin-bottom',selectedTag)")
@@ -18,11 +18,6 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  props: ["miniVariant"],
-
-  /**
-   * @type {function}
-   */
   data() {
     return {
       selectedTag: ""
@@ -48,10 +43,6 @@ export default {
         }`
       });
       this.triggerNewStyle();
-    },
-    storeRatioCoordinate(coordinates) {
-      this.$store.commit("currentRatio", coordinates);
-      this.$store.dispatch("triggerNewStyle");
     }
   },
   computed: {
@@ -59,3 +50,30 @@ export default {
   }
 };
 </script>
+<style scoped>
+.rf-ratio--text-example {
+  overflow: hidden;
+
+  &:nth-child(odd) {
+    border-left: 15px #555555 solid;
+  }
+  &:nth-child(even) {
+    border-left: 15px #aaa solid;
+  }
+}
+#rf-content-container {
+  .--selected-tag {
+    background: var(--secondary);
+    color: #fff;
+    .--inner-text-example {
+      background: var(--secondaryDark);
+    }
+  }
+  .--inner-text-example {
+    background: #eee;
+  }
+}
+.reset-margin-bottom {
+  margin-bottom: 0;
+}
+</style>

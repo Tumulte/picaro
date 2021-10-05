@@ -1,9 +1,9 @@
 <template lang="pug">
     div(:class="{'layout-is-edited': editLayout}")
-        v-btn(fab small @click="editLayout = !editLayout;$store.commit('editCommonLayout', false)")
+        v-btn(fab small @click="editLayout = !editLayout;$store.commit('editCommonLayout', false)" v-if="isLogged")
             v-icon mdi-cog-outline
         v-row(v-for="(layoutLine, index) in selectedLayout" v-if="selectedLayout" :key="index" class="rf-layout--container")
-            v-col(v-for="(panel, columnIndex) in layoutLine" :key="panel.id" class="rf-layout--container" :cols="panel.cols")
+            v-col(v-for="(panel, columnIndex) in layoutLine" :key="panel.id" class="rf-layout--container rf-panel-container" :cols="panel.cols")
                 span(class="common-layout-settings")
                     v-text-field(type="number" v-if="editLayout" @input="$set(panel, 'cols', parseInt($event))" label="Width" min="0" max="11")
                     v-select(:items="availableLayout" label="Type" @change="$set(panel, 'type', $event)" :value="panel.type" v-if="editLayout")
@@ -21,15 +21,20 @@
 </template>
 
 <script>
-import filterLayout from "./filterCategories.vue";
 import filterLink from "./filterLink.vue";
 import list from "./displayList.vue";
 import { mapActions, mapGetters } from "vuex";
 import FilterSelector from "./partials/_filterSelector.vue";
+import filterCategories from "./filterCategories.vue";
 
 export default {
   name: "Default",
-  components: { FilterSelector, filterLayout, filterLink, list },
+  components: {
+    FilterSelector,
+    filterLink,
+    list,
+    filterCategories
+  },
   props: {
     selectedEditLayout: {
       type: String,
@@ -44,7 +49,7 @@ export default {
   },
   data() {
     return {
-      availableLayout: ["filterLink", "list"],
+      availableLayout: ["filterLink", "list", "filterCategories"],
       componentKey: 0,
       editLayout: false
     };
@@ -54,7 +59,8 @@ export default {
       "modelCollectionNames",
       "pendingLinkedPanel",
       "filterCollection",
-      "settings"
+      "settings",
+      "isLogged"
     ]),
     selectedLayoutName() {
       return (
@@ -130,7 +136,7 @@ export default {
 }
 .rf-layout--add-row {
   position: absolute;
-  right: 0;
+  right: 50%;
   bottom: 0;
 }
 .rf-layout--add-row-in-panel {

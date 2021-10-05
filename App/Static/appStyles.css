@@ -3,7 +3,7 @@
     --bgMedium: #E5D2C1;
     --highlight: #EB420E;
     --main: #A83515;
-    --secondaryDark: #577876;
+    --secondaryDark: #355a60;
     --secondary: #3C93A1;
     --warning: #D29627;
     --info: #983CA1;
@@ -18,7 +18,7 @@
     z-index: 999999;
 }
 #rf-vue-container.toolbar-open {
-    relative: relative;
+    position: relative;
     top: 60px;
 }
 
@@ -125,4 +125,20 @@
     .v-text-field__details {
         display: none;
     }
+}
+.mdi-chevron-down::before {
+    background: #fff;
+    border-radius: 100%;
+}
+.color-panel--sample .__is-hidden {
+    background: linear-gradient(45deg, #ddd 12.5%, #fff 12.5%, #fff 37.5%, #ddd 37.5%, #ddd 62.5%, #fff 62.5%, #fff 87.5%, #ddd 87.5%) !important;
+    background-size: 50px 50px;
+    background-position: 50px 50px;
+}
+#rf-content-container .is-default-layout {
+    padding: 0;
+}
+/* vuetify reset */
+#rf-content-container .row{
+    margin: 0;
 }

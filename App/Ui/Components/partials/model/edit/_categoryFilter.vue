@@ -4,49 +4,50 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
-    name: "rfCategoryFilter",
-    data: function () {
-        return {
-            selected: ""
-        };
+  name: "RfCategoryFilter",
+  props: {
+    fieldParams: {
+      default() {
+        return {};
+      },
+      type: Object
     },
-    props: {
-        modelParams: {
-            default() {
-                return {};
-            }, type: Object
-        },
-        fieldData: {type: Object, default: null},
-        isEdit: {type: Boolean, default: false}
+    fieldData: { type: Object, default: null },
+    isEdit: { type: Boolean, default: false }
+  },
+  data: function() {
+    return {
+      selected: ""
+    };
+  },
+  watch: {
+    selected() {
+      this.$emit("updateData", {
+        name: this.fieldParams.name,
+        value: this.formatedData
+      });
+    }
+  },
+  computed: {
+    ...mapGetters(["modelCollection"]),
+    formatedData() {
+      return { content: this.selected, fieldType: "category-filter" };
     },
-    watch: {
-        selected() {
-            this.$emit("updateData", {
-                name: this.modelParams.name,
-                value: this.formatedData
-            });
-        }
-    },
-    computed: {
-        ...mapGetters(["modelCollection"]),
-        formatedData() {
-            return {content: this.selected, fieldType: "category-filter"};
-        },
-        categories() {
-            return this.modelCollection.appFilters.find(item => item.name === "categories");
-        }
-    },
-    created() {
-        if (this.fieldData) {
-            this.selected = this.fieldData.content;
-        }
-    },
+    categories() {
+      return this.modelCollection.appFilters.find(
+        item => item.name === "categories"
+      );
+    }
+  },
+  created() {
+    if (this.fieldData) {
+      this.selected = this.fieldData.content;
+    }
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

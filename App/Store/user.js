@@ -2,6 +2,7 @@ import Vue from "vue";
 import settings from "../../rougeSettings.json";
 import router from "../Router/router";
 import { nanoid } from "nanoid";
+import { applyFilter } from "../Ui/Components/Utils/filter";
 
 function updateRoute(filterCollection) {
   let globalFilters = "~";
@@ -10,7 +11,7 @@ function updateRoute(filterCollection) {
   let globalParamsArray = [];
   for (const [key, value] of Object.entries(filterCollection.all)) {
     globalFiltersArray.push(key);
-    globalParamsArray.push(value.join("--"));
+    globalParamsArray.push(value.method + value.field + "." + value.value);
   }
   if (globalParamsArray.length > 0) {
     globalFilters = globalFiltersArray.join("__");
@@ -49,7 +50,7 @@ function updateRoute(filterCollection) {
 
 export default {
   state: {
-    list: {},
+    list: [],
     tagCollection: {},
     alertCollection: [],
     dialog: {},
@@ -139,6 +140,14 @@ export default {
     }
   },
   actions: {
+    getFilteredList({ state }, { currentModelFilter }) {
+      return state.list.filter(item => {
+        return (
+          applyFilter(item, currentModelFilter) &&
+          applyFilter(item, state.filterCollection.all)
+        );
+      });
+    },
     updateFilterCollection({ state }, { filterParams, models, type }) {
       const temporaryFilterCollection = JSON.parse(
         JSON.stringify(state.filterCollection)
@@ -166,7 +175,7 @@ export default {
       params = typeof params === "string" ? [params] : params;
       const temporaryFilterCollection = JSON.parse(
         JSON.stringify(state.filterCollection)
-      ); //filterCollection will be leter updater on route change
+      ); //filterCollection will be later updater on route change
 
       temporaryFilterCollection.all[type] = params;
       temporaryFilterCollection.modelFilters = {}; //model specific filters dont carry over layout chages
@@ -225,6 +234,16 @@ export default {
       Vue.set(state.alertConfirmationStatus, data.key, {
         status: false,
         index: data.index
+      });
+    },
+    getImageFromLibrary() {
+      return new Promise(function(resolve) {
+        const uploadPanel = document.getElementById("rf-upload-panel");
+        uploadPanel.addEventListener("click", event => {
+          if (event.target.classList.contains("rf-upload-panel-thumb")) {
+            resolve(event.target.getAttribute("data-src"));
+          }
+        });
       });
     },
     awaitConfirmation({ state, dispatch }, data) {

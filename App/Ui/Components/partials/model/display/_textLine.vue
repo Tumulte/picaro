@@ -1,15 +1,15 @@
 <template lang="pug">
-    span {{ fieldData.content }}
+    conponent(:is="fieldParams.template || 'span'" v-if="fieldData.content") {{ fieldData.content }}
 </template>
 
 <script>
 export default {
-    name: "textLine",
-    props: {fieldData: {type: Object, default: ""}},
-
+  name: "TextLine",
+  props: {
+    fieldData: { type: Object, default: () => {} },
+    fieldParams: { type: Object, default: () => {} }
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

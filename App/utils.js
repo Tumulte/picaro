@@ -28,8 +28,8 @@ export function makeFontFamilyName(name) {
 export function makeRatio(sizes) {
   const ratio =
     parseFloat(sizes["line-height"]) +
-    parseFloat(sizes["margin-top"]) +
-    parseFloat(sizes["margin-bottom"]);
+    parseFloat(sizes["margin-top"] || 0) +
+    parseFloat(sizes["margin-bottom"] || 0);
   return `${Math.round(ratio * 100) / 100}rem`;
 }
 

@@ -20,15 +20,6 @@ const crud = function crud(db) {
     db.set(req.params.app + "_" + req.params.modelname, []).write();
   });
 
-  dataRouter.use("/:table/:itemId", function(req, res, next) {
-    if (db[req.params.app]) {
-      req.data = db.find({ id: req.params.itemId });
-      next();
-    } else {
-      res.status(404).send(`this data ${makeTableName(req)} does not exist`);
-    }
-  });
-
   dataRouter
     .route("/:table")
     .get(function(req, res) {
@@ -37,6 +28,11 @@ const crud = function crud(db) {
     .post(upload.none(), function(req, res) {
       db.insert(cleanData(req.body));
       res.send("Saved");
+    })
+    .put((req, res) => {
+      console.info(req.body);
+      db.update(req.body);
+      res.send("content saved");
     });
 
   dataRouter
@@ -58,11 +54,7 @@ const crud = function crud(db) {
       res.send("updated !");
     })
     .delete(function(req, res) {
-      db.get(makeTableName(req))
-        .remove({
-          id: req.params.itemId
-        })
-        .write();
+      db.findAndRemove({ id: req.params.itemId });
       res.send("Item deleted");
     });
 

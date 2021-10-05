@@ -1,50 +1,46 @@
 <template lang="pug">
-    div(id="_color" class="_panel" v-if="loaded")
-        v-card(v-if="!miniVariant" class="_container pa-3 ma-3" id="_range-light-container")
+    div(id="_color" class="_panel" v-if="displayPanel")
+        v-card(class="_container pa-3 ma-3" id="_range-light-container")
             v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="styleSet.variationLightAmt" @change="updateVariationAmt()" )
             v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="styleSet.variationSatAmt" @change="updateVariationAmt()" )
-        v-expansion-panels
-            v-expansion-panel(:style="bgColor(dominantColorParams)" v-if="!miniVariant" data-jest="dominant-preview")
-                v-expansion-panel-header(data-jest="dominantExpansion")
-                v-expansion-panel-content(:style="bgColor(dominantColorParams)" class="mb-0")
-                    v-slider(min="0" max="360" v-model="dominantColorParams.hue" @change="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColorParams, true)" ref="dominantHue")
-                    v-slider(min="0" label="light" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.light" ref="dominantLight")
-                    v-slider(min="0" max="100"  thumb-label="always" @change="updateColor()"  v-model="dominantColorParams.saturation" ref="dominantSat")
-            v-row(class="px-3")
-                v-card(v-for="(subColor, index) in colorSet.colorCollection.dominantSubCollection" :key="index" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColorParams))}" v-on:click="storeColorCoordinate(['dominant', index])" class="pa-3" v-bind:style="bgColor(subColor)")
-            v-card(v-for="(color, index) in colorSet.colorCollection.combinationCollection" :key="index" class="sub-color-parameters")
-                v-expansion-panel(v-bind:style="bgColor(color)"  v-if="!miniVariant"  :data-jest="`sub-preview${index}`")
-                    v-expansion-panel-header
-                    v-expansion-panel-content
-                        v-slider(min="0" max="360" v-model="color.hue" label="Hue" ref="subHue" thumb-label="always" :thumb-color="getStringColor(color, true)" @change="updateCombinationColor(index)")
-                        v-slider(label="Light" thumb-label="always" min="0" max="100"  v-model="color.light" @change="updateCombinationColor(index)")
-                        v-btn(v-if="color.light !== dominantColorParams.light" @click.stop="resetSetting('light', index, color)" ) reset
-                        v-slider(label="Sat." thumb-label="always" min="0" max="100"  v-model="color.saturation" @change="updateCombinationColor(index)")
-                v-row(class="px-3")
-                    v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" v-on:click="storeColorCoordinate([index, subIndex])" :style="bgColor(subColor)" class="pa-3" data-jest="sub-combination-square")
-                v-card-actions
-                    v-btn(text=true @click="removeColor(index)" class="center" v-if="!miniVariant"  :data-jest="`remove-color-${index}`") Remove Color
-        v-row(class="px-3")
-            div(v-for="(subColor, index) in colorSet.colorCollection.graySubCollection" v-on:click="storeColorCoordinate(['gray', index])")
+        div(:style="bgColor(dominantColorParams)" data-jest="dominant-preview")
+            div(:style="bgColor(dominantColorParams)" class="mb-0")
+                v-slider(min="0" max="360" v-model="dominantColorParams.hue" @change="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColorParams, true)" ref="dominantHue")
+                v-slider(min="0" label="light" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.light" ref="dominantLight")
+                v-slider(min="0" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.saturation" ref="dominantSat")
+            .color-panel--sample
+                v-card(v-for="(subColor, index) in colorSet.colorCollection.dominantSubCollection" :key="index" @click="toggleColor('dominant',index)" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColorParams)), '__is-hidden': colorIsHidden('dominant', index)}" class="pa-3" v-bind:style="bgColor(subColor)")
+        v-card(v-for="(color, index) in colorSet.colorCollection.combinationCollection" :key="index" class="sub-color-parameters")
+            div(:style="bgColor(color)" :data-jest="`sub-preview${index}`")
+                v-slider(min="0" max="360" v-model="color.hue" label="Hue" ref="subHue" thumb-label="always" :thumb-color="getStringColor(color, true)" @change="updateCombinationColor(index)")
+                v-slider(label="Light" thumb-label="always" min="0" max="100" v-model="color.light" @change="updateCombinationColor(index)")
+                v-btn(v-if="color.light !== dominantColorParams.light" @click.stop="resetSetting('light', index, color)" ) reset
+                v-slider(label="Sat." thumb-label="always" min="0" max="100" v-model="color.saturation" @change="updateCombinationColor(index)")
+            .color-panel--sample
+                v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" @click="toggleColor('sub', subIndex, index)" :style="bgColor(subColor)" class="pa-3" data-jest="sub-combination-square" :class="{'__is-hidden': colorIsHidden('sub',subIndex,index)}")
+            v-card-actions
+                v-btn(text=true @click="removeColor(index)" class="center" :data-jest="`remove-color-${index}`") Remove Color
+        .color-panel--sample
+            div(v-for="(subColor, index) in colorSet.colorCollection.graySubCollection")
                 v-card(class="pa-3" :style="bgColor(subColor)")
-        v-row(class="px-3")
-            div(v-for="(subColor, index) in colorSet.colorCollection.alertSubCollection" v-on:click="storeColorCoordinate(['alert', index])" class="sub-combination" )
+        .color-panel--sample
+            div(v-for="(subColor, index) in colorSet.colorCollection.alertSubCollection" class="sub-combination" )
                 v-card(v-bind:style="bgColor(subColor)")
-        v-row(class="px-3")
-            div(v-for="(subColor, index) in colorSet.colorCollection.warningSubCollection" v-on:click="storeColorCoordinate(['warning', index])" class="sub-combination")
+        .color-panel--sample
+            div(v-for="(subColor, index) in colorSet.colorCollection.warningSubCollection" class="sub-combination")
                 v-card(v-bind:style="bgColor(subColor)" )
-        v-row(class="px-3")
-            div(v-for="(subColor, index) in colorSet.colorCollection.successSubCollection" v-on:click="storeColorCoordinate(['success', index])" class="sub-combination")
+        .color-panel--sample
+            div(v-for="(subColor, index) in colorSet.colorCollection.successSubCollection" class="sub-combination")
                 v-card(v-bind:style="bgColor(subColor)")
-        v-row(class="px-3")
-            div(v-for="(subColor, index) in colorSet.colorCollection.infoSubCollection" v-on:click="storeColorCoordinate(['info', index])" class="sub-combination" )
+        .color-panel--sample
+            div(v-for="(subColor, index) in colorSet.colorCollection.infoSubCollection" class="sub-combination" )
                 v-card(v-bind:style="bgColor(subColor)")
         v-card-actions
-            v-btn(text=true @click="addColor" class="_color-button" v-if="!miniVariant" data-jest="addColor") Add Color
+            v-btn(text=true @click="addColor" class="_color-button" data-jest="addColor") Add Color
 </template>
 <script>
 import { colorHelper } from "../colorHelper";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 const colorUtils = new colorHelper();
 
@@ -96,6 +92,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["updateSettings"]),
     resetSetting(setting, index) {
       let newSettings = this.styleSet.colorParameterCollection[index];
       delete newSettings[setting];
@@ -174,10 +171,12 @@ export default {
         parseInt(this.styleSet.variationLightAmt),
         parseInt(this.styleSet.variationSatAmt)
       );
+      this.styleSet.hiddenCombination.sub.push([]);
     },
     removeColor: function(index) {
       this.colorSet.colorCollection.combinationCollection.splice(index, 1);
       this.styleSet.colorParameterCollection.splice(index, 1);
+      this.styleSet.hiddenCombination.sub.splice(index, 1);
     },
     updateVariationAmt: function() {
       this.colorSet.generate(
@@ -189,10 +188,46 @@ export default {
     storeColorCoordinate: function(coordinates) {
       this.$store.commit("currentColor", coordinates);
       this.$store.dispatch("triggerNewStyle");
+    },
+    toggleColor(location, index, locationIndex) {
+      if (location === "dominant") {
+        const existingItemIndex = this.styleSet.hiddenCombination[
+          location
+        ].findIndex(item => item === index);
+        if (existingItemIndex === -1) {
+          this.styleSet.hiddenCombination[location].push(index);
+        } else {
+          this.styleSet.hiddenCombination[location].splice(
+            existingItemIndex,
+            1
+          );
+        }
+      } else if (location === "sub") {
+        const existingItemIndex = this.styleSet.hiddenCombination[location][
+          locationIndex
+        ].findIndex(item => item === index);
+        if (existingItemIndex === -1) {
+          this.styleSet.hiddenCombination[location][locationIndex].push(index);
+        } else {
+          this.styleSet.hiddenCombination[location][locationIndex].splice(
+            existingItemIndex,
+            1
+          );
+        }
+      }
+    },
+    colorIsHidden(location, index, subIndex) {
+      let hiddenCombination;
+      if (location === "dominant") {
+        hiddenCombination = this.styleSet.hiddenCombination[location];
+      } else if (location === "sub") {
+        hiddenCombination = this.styleSet.hiddenCombination[location][subIndex];
+      }
+      return hiddenCombination.find(item => item === index) !== undefined;
     }
   },
   computed: {
-    ...mapGetters(["loaded"]),
+    ...mapGetters(["loaded", "settings"]),
     styleSet() {
       return this.$store.getters.styleSet;
     },
@@ -203,7 +238,15 @@ export default {
       set(value) {
         this.$store.commit("colorSet", value);
       }
+    },
+    displayPanel() {
+      return this.ready === 2;
     }
   }
 };
 </script>
+<style>
+.color-panel--sample {
+  display: flex;
+}
+</style>

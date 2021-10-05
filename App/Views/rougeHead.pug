@@ -10,8 +10,8 @@ html(lang=language)
         body
             v-app(id="rf-vue-container")
                 if(isLogged)
-                    admin-tool-bar(views=views id="rf-admin")
-                div(class="rf-content-container")
+                    admin-tool-bar(id="rf-admin" :is-logged="true")
+                div(id="rf-content-container")
                     rf-app
                         rf-nav
                         block body

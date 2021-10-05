@@ -1,73 +1,69 @@
 <template lang="pug">
     div
-        v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="label" :name="name")
+        v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="fieldParams.label" :name="fieldParams.name")
 
 </template>
 
 <script>
-
 export default {
-    name: "textLineEdit",
-    data() {
-        return {
-            text: "",
-            textRules: [
-                v => (!this.required || !!v) || "Name is required",
-                v => {
-                    if (!this.regex) {
-                        return true;
-                    }
-                    let regex = new RegExp(this.regex);
-                    return regex.test(v) || "this is not the correct pattern";
-
-                }
-            ],
-        };
+  name: "TextLineEdit",
+  props: {
+    fieldParams: { type: Object, required: true },
+    fieldData: {
+      type: Object,
+      default() {
+        return {};
+      }
     },
-    props: {
-        required: {type: Boolean, default: false},
-        label: {type: String, default: ""},
-        name: {type: String, default: ""},
-        regex: {type: String, default: ""},
-        fieldData: {
-            type: Object, default() {
-                return {};
-            }
-        },
-        isEdit: {type: Boolean, default: false},
-    },
-    watch: {
-        text() {
-            if (!this.isEdit) {
-                this.$emit("updateData", {
-                    name: this.name,
-                    value: this.formatedData
-                });
-            }
+    isEdit: { type: Boolean, default: false }
+  },
+  data() {
+    return {
+      text: "",
+      textRules: [
+        v => !this.fieldParams.required || !!v || "Name is required",
+        v => {
+          if (!this.fieldParams.regex) {
+            return true;
+          }
+          let regex = new RegExp(this.fieldParams.regex);
+          return regex.test(v) || "this is not the correct pattern";
         }
-    },
-    methods: {
-        saveEdit() {
-            this.$emit("saveEdit", this.formatedData);
-            this.$emit("endEdit");
-        },
-        cancelEdit() {
-            this.$emit("endEdit");
-        },
-    },
-    created() {
-        if (this.isEdit) {
-            this.text = this.fieldData.content;
-        }
-    },
-    computed: {
-        formatedData() {
-            return {content: this.text, fieldType: "text-line", required: this.required};
-        }
+      ]
+    };
+  },
+  computed: {
+    formatedData() {
+      return {
+        content: this.text,
+        fieldType: "text-line",
+        required: this.fieldParams.required
+      };
     }
+  },
+  watch: {
+    text() {
+      this.$emit("updateData", {
+        name: this.fieldParams.name,
+        value: this.formatedData
+      });
+    }
+  },
+  created() {
+    if (this.isEdit) {
+      this.text = this.fieldData.content;
+    }
+  },
+  methods: {
+    saveEdit() {
+      this.$emit("saveEdit", this.formatedData);
+      this.$emit("endEdit");
+    },
+    cancelEdit() {
+      this.$emit("endEdit");
+    }
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

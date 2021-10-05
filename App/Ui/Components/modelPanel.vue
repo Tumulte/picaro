@@ -4,8 +4,8 @@
 
         h2 Models
         .rf-side-button-container
-            v-text-field(v-if="!currentModelName" v-model="modelNameInput" data-jest="model-name" outlined dense label="New model name" )
-            v-btn(v-if="!currentModelName" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique" elevation="0" dark) Add
+            v-text-field(v-if="!currentEditModelName" v-model="modelNameInput" data-jest="model-name" outlined dense label="New model name" )
+            v-btn(v-if="!currentEditModelName" data-jest="add-model" @click="createNewModel" :disabled="!modelNameInput || !modelNameIsUnique" elevation="0" dark) Add
 
         .current-model-elements(v-for="(model,index) in modelCollection")
             .rf-setting-sheet
@@ -14,7 +14,7 @@
                         h3(:class="{closed: currentEditModelName !== index}")
                             span(v-if="currentEditModelName === index") Editing :
                             span {{index}}
-                        v-btn(v-if="currentEditModelName !== index && !currentModelName" @click="currentEditModelName = index" outlined class="mx-2" small) Edit
+                        v-btn(v-if="currentEditModelName !== index && !currentEditModelName" @click="currentEditModelName = index" outlined class="mx-2" small) Edit
                         v-btn(v-else @click="cancelEditModel" outlined class="mx-2" small) Cancel
                     .model-type
                         .select-container(v-if="index === currentEditModelName || modelNameInput")
@@ -56,7 +56,6 @@ export default {
       displayNewModelButton: true,
       currentEditModelName: null,
       selectedFieldType: "none",
-      currentModelName: "",
       currentMovingField: null,
       standardFieldType: {
         Boolean: { name: "Boolean", component: booleanField },
@@ -71,8 +70,8 @@ export default {
       if (this.currentMovingField === null) {
         this.currentMovingField = index;
       } else {
-        let selectedModel = this.currentModelName
-          ? this.currentModelName
+        let selectedModel = this.currentEditModelName
+          ? this.currentEditModelName
           : this.currentEditModelName;
         this.modelCollection[selectedModel] = arrayMove(
           this.modelCollection[selectedModel],
@@ -84,7 +83,7 @@ export default {
       }
     },
     async cancelEditModel() {
-      if (this.currentModelName) {
+      if (this.currentEditModelName) {
         await this.$store.dispatch("awaitConfirmation", {
           text:
             "Are you sure you want to abandon the creation of this new model ?",
@@ -95,31 +94,29 @@ export default {
           key: this.modelNameInput
         });
         this.modelNameInput = "";
-        this.currentModelName = null;
+        this.currentEditModelName = null;
         this.displayNewModelButton = true;
       }
       this.currentEditModelName = null;
     },
     deleteField(index) {
-      this.modelCollection[this.currentModelName].splice(index, 1);
+      this.modelCollection[this.currentEditModelName].splice(index, 1);
       this.$store.commit("modelCollection", this.modelCollection);
     },
     addFieldToModel(event) {
       let model = "";
-      if (this.currentModelName) {
-        model = this.currentModelName;
+      if (this.currentEditModelName) {
+        model = this.currentEditModelName;
       } else {
         model = this.currentEditModelName;
       }
       this.modelCollection[model].push(event);
       this.$store.commit("modelCollection", this.modelCollection);
       this.selectedFieldType = "none";
-      this.currentEditModelName = this.currentModelName;
     },
     saveEditedField(event, index) {
       if (event.isTrusted) delete event.isTrusted;
-
-      this.modelCollection[this.currentModelName][index] = event;
+      this.modelCollection[this.currentEditModelName][index] = event;
       this.$store.commit("modelCollection", this.modelCollection);
     },
     createNewModel() {
@@ -128,7 +125,7 @@ export default {
         key: this.modelNameInput,
         value: []
       });
-      this.currentModelName = this.modelNameInput;
+      this.currentEditModelName = this.modelNameInput;
       this.displayNewModelButton = false;
     },
     async deleteModel() {
@@ -149,7 +146,7 @@ export default {
       document.getElementById("_admin-form-ext-submit").click();
     },
     noEdition: function(index) {
-      return !this.currentModelName || index === this.currentModelName;
+      return !this.currentEditModelName || index === this.currentEditModelName;
     }
   },
   computed: {

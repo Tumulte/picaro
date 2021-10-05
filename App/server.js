@@ -4,7 +4,7 @@ import express from "express";
 import Loki from "lokijs";
 import Lfsa from "lokijs/src/loki-fs-structured-adapter";
 /* rougeFramework default Params */
-import { defaultApp, activeApps } from "../rougeSettings.json";
+import { defaultApp, activeApps, upload, devMode } from "../rougeSettings.json";
 
 //rougeFramework Back End
 import crud from "./crud.js";
@@ -14,7 +14,14 @@ import settingCrud from "./settingCrud.js";
 import bodyParser from "body-parser";
 import methodOverride from "method-override";
 
+//File uploads
+import fileHandling from "./fileHandling.js";
+import fileUpload from "express-fileupload";
+
 //Authentication
+import auth from "./auth.js";
+
+//Basic Routing
 import basicRouting from "./routing";
 
 const adapter = new Lfsa();
@@ -28,8 +35,10 @@ const db = new Loki("./App/Data/rfData.db", {
 
 function databaseInitialize() {
   const settingsDb = db.getCollection("settings");
-  const userDb = db.getCollection("users");
+  const usersDb = db.getCollection("users");
   const styleSetDb = db.getCollection("styleset");
+  const filesDb = db.getCollection("files");
+
   const appDb = {};
   for (let activeApp of activeApps) {
     appDb[activeApp] = db.getCollection(activeApp);
@@ -42,10 +51,10 @@ function databaseInitialize() {
     );
     process.exit(1);
   }
-  startApp(settingsDb, userDb, styleSetDb, appDb);
+  startApp(settingsDb, usersDb, styleSetDb, appDb, filesDb);
 }
 
-const startApp = function(settingsDb, userDb, styleSetDb, appDb) {
+const startApp = function(settingsDb, userDb, styleSetDb, appDb, filesDb) {
   /*****************************************************************
     /*                      Server Params
     /*****************************************************************/
@@ -87,6 +96,7 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb) {
   app.use("/images", express.static("App/Static/images"));
   app.use("/svg", express.static("App/Static/svg"));
   app.use("/fonts", express.static("App/Static/fonts"));
+  app.use("/uploaded", express.static("App/Static/uploaded"));
 
   /*****************************************************************
      /*                     Per Apps Static Files
@@ -100,11 +110,33 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb) {
   }
 
   /*****************************************************************
-    /*                     AUTH (tba)
+    /*                           AUTH
     /*****************************************************************/
 
-  //auth(app)
-  app.set("isLogged", true); //req.isAuthenticated();
+  if (process.env.NODE_ENV === "development" && devMode === true) {
+    app.set("isLogged", true);
+  } else {
+    auth(app, userDb);
+  }
+  app.post("*", (req, res, next) => {
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401).send("Unauthorized");
+    }
+  });
+  app.put("*", (req, res, next) => {
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401).send("Unauthorized");
+    }
+  });
+  app.get("*", (req, res, next) => {
+    console.debug(req.isAuthenticated());
+    app.set("isLogged", req.isAuthenticated());
+    next();
+  });
 
   /*****************************************************************
     /*                        APIs
@@ -114,6 +146,17 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb) {
   app.use("/settingapi", settingApi);
   const api = crud(appDb[app.get("appName")], app);
   app.use("/api", api);
+
+  /*****************************************************************
+   /*                   File Uploads
+   /*****************************************************************/
+  app.use(
+    fileUpload({
+      limits: { fileSize: upload.maxSize * 1024 * 1024 }
+    })
+  );
+  const file = fileHandling(appDb[app.get("appName")].name, filesDb);
+  app.use("/file", file);
 
   /*****************************************************************
     /*                   Routing

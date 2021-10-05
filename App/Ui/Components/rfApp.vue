@@ -13,10 +13,16 @@ function filterRouteToStore({
   if (!globalFilters) return;
   let filterParams = { all: {}, modelFilters: {} };
   if (globalFilters !== "~") {
-    globalFilters = decodeURI(globalFilters).split("__");
-    globalParams = decodeURI(globalParams).split("__");
+    globalFilters = decodeURI(globalFilters).split(".");
+
+    globalParams = decodeURI(globalParams).split("..");
+
     globalFilters.forEach((item, index) => {
-      filterParams.all[item] = globalParams[index].split("--");
+      const params = globalParams[index];
+      const [action, filters] = params.split(".");
+      const method = action.substr(0, 2);
+      const field = action.substr(2);
+      filterParams.all[item] = { value: filters, method: method, field: field };
     });
   }
   if (modelFilters !== "~") {
@@ -46,6 +52,12 @@ function filterRouteToStore({
 
 export default {
   name: "RfApp",
+  props: {
+    isLogged: {
+      type: Boolean,
+      default: false
+    }
+  },
   watch: {
     $route(to) {
       if (to.params.globalFilters)

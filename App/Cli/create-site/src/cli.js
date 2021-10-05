@@ -2,6 +2,9 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const loki = require("lokijs");
 const lfsa = require("lokijs/src/loki-fs-structured-adapter.js");
+import randomWords from "random-words";
+import cryptoJs from "crypto-js";
+import settings from "../../../../rougeSettings.json";
 const adapter = new lfsa();
 const db = new loki("./App/Data/rfData.db", {
   adapter: adapter
@@ -9,6 +12,63 @@ const db = new loki("./App/Data/rfData.db", {
 import { nanoid } from "nanoid";
 let id = nanoid();
 let styleSetId = nanoid();
+const basicCss = {
+  html: {
+    "font-size": "16",
+    "line-height": "1.6"
+  },
+  h1: {
+    "font-size": "3.2",
+    "line-height": "3.2",
+    "margin-bottom": "1",
+    "margin-top": "1.6"
+  },
+  h2: {
+    "font-size": "2.8",
+    "line-height": "2.8",
+    "margin-bottom": "1",
+    "margin-top": "1.6"
+  },
+  h3: {
+    "font-size": "2.2",
+    "line-height": "2.2",
+    "margin-bottom": "1",
+    "margin-top": "1.6"
+  },
+  h4: {
+    "font-size": "1.8",
+    "line-height": "1.8",
+    "margin-bottom": "0.8",
+    "margin-top": "1"
+  },
+  h5: {
+    "font-size": "1.5",
+    "line-height": "1.5",
+    "margin-bottom": "0.8",
+    "margin-top": "1"
+  },
+  h6: {
+    "font-size": "1",
+    "line-height": "1",
+    "margin-bottom": "0.8",
+    "margin-top": "1"
+  }
+};
+
+let basicCssRem = {};
+for (const [key, value] of Object.entries(basicCss)) {
+  let cssValue = Object.entries(value).map(([key, value]) => [
+    key,
+    value + "rem"
+  ]);
+  basicCssRem[key] = Object.fromEntries(cssValue);
+}
+basicCssRem.html["font-size"] = basicCssRem.html["font-size"].replace(
+  "rem",
+  "px"
+);
+basicCssRem[".rf-panel-container"] = {};
+basicCssRem[".rf-panel-container"].padding = { data: "html", type: "ratio" };
 
 const handleData = function(type, name) {
   if (type === "create") {
@@ -23,9 +83,26 @@ const handleData = function(type, name) {
       db.addCollection("settings", { unique: ["id"] });
       db.addCollection("users", { unique: ["id", "username"] });
       db.addCollection("styleset", { unique: ["id"] });
+      db.addCollection("files", { unique: ["id"] });
+      const styleset = db.getCollection("styleset");
+      styleset.insert({
+        dominant: "#700000",
+        colorParameterCollection: [],
+        variationLightAmt: 5,
+        variationSatAmt: 5,
+        selectorCollection: basicCssRem,
+        fontOrigin: "local",
+        "font-size": "16",
+        id: styleSetId,
+        setName: "",
+        fontFamilyMain: "",
+        fontFamilyAlt: "",
+        fontFamilyTitle: "",
+        ratioCollection: basicCss,
+        hiddenCombination: { dominant: [], sub: [] }
+      });
     }
     const settings = db.getCollection("settings");
-    const styleset = db.getCollection("styleset");
     // log some random event data as part of our example
     settings.insert({
       id: id,
@@ -39,69 +116,14 @@ const handleData = function(type, name) {
       layoutCollection: {},
       layoutLinkCollection: {},
       defaultLayout: "",
+      layoutCommonCollection: [],
+      modelCollection: {},
       availableFilterCollection: {
         categories: [],
         tags: []
-      },
-      layoutCommonCollection: [],
-      modelCollection: {}
-    });
-    styleset.insert({
-      dominant: "#000000",
-      colorParameterCollection: [],
-      variationLightAmt: 5,
-      variationSatAmt: 5,
-      selectorCollection: {},
-      fontOrigin: "local",
-      "font-size": "16",
-      id: styleSetId,
-      setName: "",
-      fontFamilyMain: "",
-      fontFamilyAlt: "",
-      fontFamilyTitle: "",
-      ratioCollection: {
-        html: {
-          "font-size": "16",
-          "line-height": "1.6"
-        },
-        h1: {
-          "font-size": "3.2",
-          "line-height": "3.2",
-          "margin-bottom": "1",
-          "margin-top": "1.6"
-        },
-        h2: {
-          "font-size": "2.8",
-          "line-height": "2.8",
-          "margin-bottom": "1",
-          "margin-top": "1.6"
-        },
-        h3: {
-          "font-size": "2.2",
-          "line-height": "2.2",
-          "margin-bottom": "1",
-          "margin-top": "1.6"
-        },
-        h4: {
-          "font-size": "1.8",
-          "line-height": "1.8",
-          "margin-bottom": "0.8",
-          "margin-top": "1"
-        },
-        h5: {
-          "font-size": "1.5",
-          "line-height": "1.5",
-          "margin-bottom": "0.8",
-          "margin-top": "1"
-        },
-        h6: {
-          "font-size": "1",
-          "line-height": "1",
-          "margin-bottom": "0.8",
-          "margin-top": "1"
-        }
       }
     });
+
     db.addCollection(name);
     db.saveDatabase(err => {
       if (err) {
@@ -211,7 +233,7 @@ const handleWebpack = async function(type, name) {
     if (err) return console.log(err);
   });
 };
-const handleSettings = async function(type, name) {
+const handleFilesCopy = async function(type, name) {
   if (!fs.existsSync(`./rougeSettings.json`)) {
     await fs.copyFile(
       "rougeSettings.json.example",
@@ -228,6 +250,7 @@ const handleSettings = async function(type, name) {
   settings = JSON.parse(settings);
 
   if (!settings.defaultApp) settings.defaultApp = name;
+  settings.secret = randomWords(5).join(" ");
 
   if (type === "create") {
     settings.activeApps.push(name);
@@ -243,7 +266,15 @@ const handleSettings = async function(type, name) {
       if (err) return console.log(err);
     }
   );
+  await fs.copyFile(
+    "./App/Cli/create-site/assets/htmldemo.pug",
+    `./app${name}/views/htmldemo.pug`,
+    err => {
+      if (err) console.debug(err);
+    }
+  );
 };
+
 const validateAction = async function(type, name) {
   if (type === "create") {
     if (fs.existsSync(`./app${name}`)) {
@@ -290,7 +321,6 @@ const alterApp = function(type) {
       let name = answers.name.toLowerCase();
       if (type !== "create") {
         id = db.getCollection("settings").findOne({ applicationName: name }).id;
-        console.log(id);
       }
       const validated = await validateAction(type, name);
 
@@ -302,7 +332,7 @@ const alterApp = function(type) {
       console.log(`${type} Folders and Files : OK`);
       handleWebpack(type, name);
       console.log(`${type} Webpack config : OK`);
-      handleSettings(type, name);
+      handleFilesCopy(type, name);
       console.log(`${type} Settings : OK`);
       handleData(type, name);
       console.log(`${type} Data : OK`);
@@ -314,7 +344,55 @@ const alterApp = function(type) {
       }
     });
 };
+const createUser = function() {
+  inquirer
+    .prompt([
+      {
+        name: "username",
+        message: "username"
+      },
+      {
+        name: "password",
+        message: "password",
+        type: "password"
+      },
+      {
+        name: "passwordConfirm",
+        message: "confirm password",
+        type: "password",
+        validate(confirm, answers) {
+          console.info(confirm, answers);
 
+          const done = this.async();
+          if (confirm !== answers.password) {
+            done("Passwords don't match");
+            return;
+          }
+          done(null, true);
+        }
+      }
+    ])
+    .then(answers => {
+      const userDb = db.getCollection("users");
+      const encrypted = cryptoJs.AES.encrypt(
+        answers.password,
+        settings.secret
+      ).toString();
+
+      userDb.insert({
+        username: answers.username,
+        password: encrypted,
+        id: nanoid(6)
+      });
+      db.saveDatabase(err => {
+        if (err) {
+          console.log("error : " + err);
+        } else {
+          console.log("database saved.");
+        }
+      });
+    });
+};
 export async function cli() {
   inquirer
     .prompt([
@@ -329,20 +407,12 @@ export async function cli() {
             value: "create"
           },
           {
-            name: "Rename an Existing App",
-            value: "edit"
-          },
-          {
-            name: "Activate an Existing App",
-            value: "activate"
-          },
-          {
-            name: "Deactivate an existing App",
-            value: "deactivate"
-          },
-          {
             name: "Destroy an existing App (can't be undone)",
             value: "destroy"
+          },
+          {
+            name: "Create a user",
+            value: "createUser"
           }
         ],
         validate: function(answer) {
@@ -358,6 +428,8 @@ export async function cli() {
       db.loadDatabase({}, function(err) {
         if (err) {
           console.log("error : " + err);
+        } else if (answers.action === "createUser") {
+          createUser();
         } else {
           alterApp(answers.action);
         }

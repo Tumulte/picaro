@@ -1,12 +1,13 @@
 <template lang="pug">
     .toolbar-container
-        #rf-toolbar(:class="{mini:!displayToolbar}")
-            img(src="svg/rflogo.svg" id="rf-logo" @click="toggleBar()")
+        #rf-toolbar
+            img(src="/public/svg/rflogo.svg" id="rf-logo" @click="toggleBar()")
             .toolbar-section(v-if="displayToolbar" id="rf-toolbar--design")
                 .toolbar-section-title Design
                 v-btn(@click="openPanel('css')" dark :outlined="openedPanel !== 'css'" :depressed="openedPanel === 'css'" class="ml-2" x-small) CSS
                 v-btn(@click="openPanel('typography')" dark :outlined="openedPanel !== 'typography'" :depressed="openedPanel === 'typography'" class="ml-2" x-small) Typography
                 v-btn(@click="openPanel('colors')" :dark="!editLayout" :outlined="!editLayout" :depressed="editLayout" class="ml-2" x-small) Colors
+                v-btn(@click="openPanel('ratio')" dark :outlined="openedPanel !== 'ratio'" :depressed="openedPanel === 'ratio'" class="ml-2" x-small) Ratio & sizes
                 .toolbar-save-button
                     v-btn(@click="saveStyleSet" data-jest="add-common-row" small class="ml-2 toolbar-save-button")
                         v-icon(color="white") mdi-content-save
@@ -14,28 +15,20 @@
                         v-icon(color="white") mdi-cog-outline
             .toolbar-section(v-if="displayToolbar" id="rf-toolbar--structure")
                 .toolbar-section-title Data & Structure
-                v-btn(@click="openPanel('admin')" :dark="openedPanel !== 'admin'" :outlined="openedPanel !== 'admin'" :depressed="openedPanel !== 'admin'" class="ml-2" x-small) Admin
+                v-btn(@click="openPanel('upload')" :dark="openedPanel !== 'upload'" :outlined="openedPanel !== 'upload'" :depressed="openedPanel !== 'upload'" class="ml-2" x-small) Uploads
                 v-btn(@click="editCommonLayout = !editCommonLayout;editLayout = false;openedPanel=''" dark :outlined="!editCommonLayout" :depressed="editCommonLayout" class="ml-2" x-small=true) Layout
                 v-btn(@click="openPanel('models')" dark :outlined="openedPanel !== 'models'" :depressed="openedPanel === 'models'" class="ml-2" x-small=true) Models
                 v-btn(@click="openPanel('users')" dark :outlined="openedPanel !== 'css'" :depressed="openedPanel !== 'css'" class="ml-2" x-small=true) Users
                 v-btn(@click="saveDataAndStructure" data-jest="add-common-row" small class="rf-common-layout--save" class="ml-2 toolbar-save-button")
                     v-icon(color="white") mdi-content-save
-        v-navigation-drawer(:value="openedPanel === 'css'" fixed=true width="auto" right=true)
-            v-container
-                v-row
-                    v-col
-                        div(class="subpanels __open")
-                            css-panel-selector
-                    v-col
-                        v-btn(@click="setOpenPanel('color')" text=true) open
-                        div(class="subpanels" :class="{'__open': openedPanel ==='color'}")
-                            css-panel-color(:mini-variant="openedPanel !== 'color'" :panel-opened="openedPanel === 'color'")
-                    v-col
-                        v-btn(@click="setopenedPanel('ratio')" text=true) open
-                        div(class="subpanels" :class="{'__open': openedPanel ==='ratio'}")
-                            css-panel-ratio(:mini-variant="openedPanel !== 'ratio'")
-        v-navigation-drawer(:value="openedPanel === 'admin'" right=true fixed=true width="300")
-            admin-panel
+        v-navigation-drawer(:value="openedPanel === 'css'" fixed=true width="450" right=true)
+            css-panel-selector
+        v-navigation-drawer(:value="openedPanel === 'ratio'" fixed=true width="450" right=true)
+            css-panel-ratio
+        v-navigation-drawer(:value="openedPanel === 'colors'" fixed=true width="auto" right=true)
+            css-panel-color
+        v-navigation-drawer(:value="openedPanel === 'upload'" right=true fixed=true width="300")
+            upload-panel
 
         v-navigation-drawer(class="rf-vertical-panel --structure" :value="openedPanel === 'models'" right=true fixed=true width="400" hide-overlay)
             model-panel()
@@ -58,7 +51,7 @@ const modelPanel = () => import("./modelPanel.vue");
 const cssPanelSelector = () => import("./cssPanelSelector.vue");
 const cssPanelRatio = () => import("./cssPanelRatio.vue");
 const cssPanelColor = () => import("./cssPanelColor.vue");
-const adminPanel = () => import("./adminPanel.vue");
+const uploadPanel = () => import("./uploadPanel.vue");
 const cssPanelTypography = () => import("./cssPanelTypography.vue");
 import { nanoid } from "nanoid";
 import { generateColorSet } from "../colorGenerator";
@@ -66,14 +59,16 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   components: {
-    adminPanel,
+    uploadPanel,
     modelPanel,
     cssPanelSelector,
     cssPanelColor,
     cssPanelRatio,
     cssPanelTypography
   },
-  props: ["views"],
+  props: {
+    isLogged: { type: Boolean, default: false }
+  },
   data: function() {
     return {
       displayToolbar: true,
@@ -213,7 +208,7 @@ export default {
         type: "warning"
       });
       axios
-        .put("/settingapi/styleset", this.styleSet)
+        .put("/settingapi/styleset/" + this.styleSet.id, this.styleSet)
         .then(() => {
           this.addAlert({
             type: "success",
@@ -265,6 +260,9 @@ export default {
           });
         });
     }
+  },
+  created() {
+    this.$store.commit("isLogged", this.isLogged);
   }
 };
 </script>
@@ -300,6 +298,7 @@ export default {
   &.mini {
     width: 50px;
   }
+  background-color: #fff;
   height: 48px;
   position: fixed;
   top: 0;
@@ -307,6 +306,7 @@ export default {
   width: 100%;
   display: flex;
   box-shadow: #aaa 0 0 5px;
+  z-index: 9999;
 }
 .toolbar-save-button {
   margin-left: auto !important;
@@ -318,6 +318,7 @@ export default {
   }
   top: -105px;
   position: fixed;
+  z-index: 100000;
   left: 0px;
   width: 100%;
   transition: top 0.2s ease;

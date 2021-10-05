@@ -68,7 +68,8 @@ export default {
     styleSetLoaded: false,
     triggerNewStyle: false,
     editCommonLayout: false,
-    editLayout: false
+    editLayout: false,
+    isLogged: false
   },
   mutations: {
     /**
@@ -153,6 +154,9 @@ export default {
     },
     editLayout(state, data) {
       state.editLayout = data;
+    },
+    isLogged(state, data) {
+      state.isLogged = data;
     }
   },
   getters: {
@@ -187,6 +191,9 @@ export default {
     },
     triggerNewStyle(state) {
       return state.triggerNewStyle;
+    },
+    isLogged(state) {
+      return state.isLogged;
     }
   },
   actions: {

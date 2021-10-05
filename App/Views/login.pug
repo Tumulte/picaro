@@ -1,18 +1,12 @@
 extends rougeHead.pug
 block  head
-    script(src="/appDemo-bundle.js")
-    if environment === 'production'
-        link(rel='stylesheet', href='/appDemo.css')
 block body
     div(id="rf-login")
-        if (messages.error)
-            div #{messages.error}
-        form(action="/admin/login" method="post" class="css-panel_sketchy" )
-            label(class="css-panel_sketchy") Username:
-                input(type="text" name="username"  )
-                svg(class="css-panel-svg-box")
-            label(class="css-panel_sketchy") Password:
-                input(type="password" name="password")
-                svg(class="css-panel-svg-box")
-            button(type="submit" class="css-panel_sketchy" ) Log In
-                svg(class="css-panel-svg-highlight")
+        form(action="/admin/login" method="post")
+            div
+                label Username:
+                    input(type="text" name="username"  )
+            div
+                label Password:
+                    input(type="password" name="password")
+            button(type="submit") Log In

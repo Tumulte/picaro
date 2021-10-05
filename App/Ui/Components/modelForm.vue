@@ -2,11 +2,12 @@
     div(:key="key")
         v-form(v-model="valid")
             v-switch(v-model="valid" class="ma-4" label="Valid" readonly)
-            div(v-for="modelParams in modelCollection[panelParams.model]" data-jest="form-element")
-                component(:is="`rf${modelParams.type}`" :is-edit="isEdit" :required="modelParams.required" :label="modelParams.label" :regex="modelParams.regex" :name="modelParams.name" :model="panelParams.model" :field-data="modelData[modelParams.name]" @updateData="updateData")
-            div(v-for="modelParams in modelCollection.appFilters" data-jest="form-element")
-                component(:is="`rf${modelParams.type}`" :model-params="modelParams" @updateData="updateData" :is-edit="true" :field-data="modelData[modelParams.name]")
-            v-btn(@click="sendForm" small outlined) Submit
+            div(v-for="fieldParams in modelCollection[panelParams.model]" data-jest="form-element")
+                component(:is="`rf${fieldParams.type}`" :is-edit="isEdit" :field-params="fieldParams" :panel-params="panelParams" :field-data="modelData[fieldParams.name]" @updateData="updateData")
+            div(v-for="fieldParams in modelCollection.appFilters" data-jest="form-element")
+                component(:is="`rf${fieldParams.type}`" :model-params="fieldParams" @updateData="updateData" :is-edit="true" :field-data="modelData[fieldParams.name]")
+            v-btn(@click="sendForm()" small outlined) Submit
+            v-select(multiple :items="availableFilterCollection.categories" item-text="label" item-value="id" @input="currentModelData.categories = $event" :value="panelCategories")
 </template>
 <script>
 import axios from "axios";
@@ -34,7 +35,7 @@ export default {
     },
     isEdit: { type: Boolean, default: false }
   },
-  data: function() {
+  data() {
     return {
       valid: true,
       currentModelData: {},
@@ -47,22 +48,14 @@ export default {
       this.$set(this.currentModelData, data.name, data.value);
     },
     sendForm() {
-      if (this.panelParams.categories) {
-        this.currentModelData.categories = this.panelParams.categories.map(
-          item => {
-            return {
-              id: item.id
-            };
-          }
-        );
-      }
+      let action = "post";
+      if (Object.keys(this.modelData).length > 0) action = "put";
       this.currentModelData.id = nanoid(8);
       this.$nextTick(() => {
-        axios
-          .post(
-            `/api/${encodeURI(this.panelParams.model)}`,
-            this.currentModelData
-          )
+        axios[action](
+          `/api/${encodeURI(this.panelParams.model)}`,
+          this.currentModelData
+        )
           .then(() => {
             this.addAlert({
               type: "success",
@@ -81,7 +74,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["modelCollection", "settings"])
+    ...mapGetters(["modelCollection", "availableFilterCollection"]),
+    panelCategories() {
+      return this.panelParams.categories?.map(item => {
+        return item.id;
+      });
+    }
   },
   watch: {
     modelCollection() {
@@ -89,7 +87,14 @@ export default {
     }
   },
   created() {
-    this.currentModelData = this.modelData;
+    this.currentModelData.categories = this.panelParams.categories?.map(
+      item => {
+        return item.id;
+      }
+    );
+    if (Object.keys(this.modelData).length > 0) {
+      this.currentModelData = this.modelData;
+    }
   }
 };
 </script>

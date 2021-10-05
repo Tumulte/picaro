@@ -76,7 +76,7 @@ describe("Handles the saveStyleSet and the fonts", () => {
     let testDom = document.querySelector("h3");
     let computedCss = window.getComputedStyle(testDom);
     expect(computedCss.getPropertyValue("font-family")).toBe("Condensed");
-    testDom = document.querySelector(".rf-content-container");
+    testDom = document.querySelector("#rf-content-container");
     computedCss = window.getComputedStyle(testDom);
     expect(computedCss.getPropertyValue("font-family")).toBe(
       "EBGAramond-InitialsF1"

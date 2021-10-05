@@ -49,7 +49,10 @@ import Vuetify, {
   VCardActions,
   VScrollYReverseTransition,
   VCombobox,
-  VSheet
+  VSheet,
+  VFileInput,
+  VTabs,
+  VTab
 } from "vuetify/lib";
 // TODO add webpack chunks to exclude that in production
 import adminToolBar from "../Ui/Components/adminToolBar.vue";
@@ -69,6 +72,8 @@ Vue.use(Vuex);
 Vue.use(Vuelidate);
 Vue.use(Vuetify, {
   components: {
+    VTabs,
+    VTab,
     VInput,
     VSelect,
     VTextField,
@@ -105,7 +110,8 @@ Vue.use(Vuetify, {
     VDialog,
     VCheckbox,
     VCombobox,
-    VSheet
+    VSheet,
+    VFileInput
   }
 });
 

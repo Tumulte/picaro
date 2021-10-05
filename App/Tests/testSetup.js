@@ -25,7 +25,7 @@ cssTestDiv2.innerHTML = "test 2";
 confirm.setAttribute("class", "rf-alert-button");
 cssTestDiv.setAttribute("class", "css-test");
 cssTestDiv2.setAttribute("class", "css-test2");
-container.setAttribute("class", "rf-content-container");
+container.setAttribute("id", "rf-content-container");
 
 app.setAttribute("data-app", true);
 document.body.appendChild(app);

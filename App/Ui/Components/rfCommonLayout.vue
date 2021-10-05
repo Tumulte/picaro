@@ -2,7 +2,7 @@
 
     div(class="rf-common-layout--container" :class="{'common-layout-is-edited':editCommonLayout}")
         v-row(v-for="(layoutCommonLine, index) in layoutCommonCollection" :key="index" class="rf-common-layout--container")
-            v-col(v-for="(layoutCommonColumn, subIndex) in layoutCommonLine" :key="subIndex" class="rf-common-layout--container" :cols="layoutCommonColumn.cols")
+            v-col(v-for="(layoutCommonColumn, subIndex) in layoutCommonLine" :key="subIndex" class="rf-common-layout--container rf-panel-container"  :class="{'is-default-layout': layoutCommonColumn.type === 'Layout'}" :cols="layoutCommonColumn.cols")
                 span(class="common-layout-settings")
                     v-text-field(type="number" v-if="editCommonLayout" @input="$set(layoutCommonColumn, 'cols', parseInt($event))" label="Width" dense min="0" max="12" class="common-layout-panel-size")
                     v-select(:items="components" item-text="name" item-value="value" :value="layoutCommonColumn.type || null" @change="changePanel($event, index, subIndex)" v-if="editCommonLayout" outlined dense)

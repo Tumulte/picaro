@@ -3,18 +3,17 @@
         ul
             li
                 a(@click="deleteLink")  all
-            li(v-for="item in list" v-if="checkFilters(item)")
+            li(v-for="item in filteredList")
                 component(:is="htmlTag" class="extraClass")
                     span(v-if="selectedId === item.id" class="selected") {{item[field].content}}
                     a(v-else @click="addFilter(item.id)" ) {{item[field].content}}
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import checkFilters from "./mixins/checkFilters";
+import { applyFilter } from "./Utils/filter";
 
 export default {
   name: "FilterLink",
-  mixins: [checkFilters],
   props: {
     field: { type: String, default: "title" },
     panelParams: { type: Object, required: true },
@@ -45,9 +44,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["selectedCategories", "filterCollectionExpanded"]),
-    list: function() {
-      return this.$store.getters.list[this.panelParams.model];
+    ...mapGetters([
+      "selectedCategories",
+      "filterCollection",
+      "filterCollectionExpanded"
+    ]),
+    list() {
+      return this.$store.getters.list[this.panelParams.model] || [];
+    },
+    filteredList() {
+      return this.list.filter(item => {
+        return applyFilter(item, this.filterCollection.all);
+      });
+    },
+    listFilters() {
+      return this.filterCollectionExpanded[this.panelParams.model];
     }
   },
   mounted() {
@@ -61,7 +72,7 @@ export default {
 .selected {
   text-decoration: underline;
 }
-ul {
+.v-application ul {
   margin: 0;
   padding: 0;
 }

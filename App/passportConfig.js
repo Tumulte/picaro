@@ -1,53 +1,35 @@
-import {Strategy as LocalStrategy} from "passport-local";
-import bcrypt from "bcryptjs";
+import { Strategy as LocalStrategy } from "passport-local";
+import cryptoJs from "crypto-js";
+import settings from "../rougeSettings.json";
 
-/**
- * @param {import('passport').PassportStatic} passport
- * @param {function} getUser
- */
 function initialize(passport, getUser) {
-    /**
-     *
-     * @param {string} username
-     * @param {string} password
-     * @param {function} done
-     */
-    const authenticateUser = async function (username, password, done) {
-        const user = getUser(username);
-        if (!user) {
-            return done(null, false, {message: "No user with that username"});
-        }
-        try {
-            if (await bcrypt.compare(password, user.password)) {
-                return done(null, user);
-            } else {
-                return done(null, false, {message: "Password incorrect"});
-            }
-        } catch (e) {
-            return done(e);
-        }
-    };
+  const authenticateUser = async function(username, password, done) {
+    const user = getUser(username);
+    if (!user) {
+      return done(null, false, { message: "No user with that username" });
+    }
+    try {
+      const clearPassword = cryptoJs.AES.decrypt(
+        user.password,
+        settings.secret
+      ).toString(cryptoJs.enc.Utf8);
+      if (password === clearPassword) {
+        return done(null, user);
+      } else {
+        return done(null, false, { message: "Password incorrect" });
+      }
+    } catch (e) {
+      return done(e);
+    }
+  };
 
-    passport.use(new LocalStrategy(authenticateUser));
-
-    passport.serializeUser(
-        /**
-         * @param {object} user
-         * @param {function} done
-         */
-        function (user, done) {
-            done(null, user.id);
-        }
-    );
-    passport.deserializeUser(
-        /**
-         * @param {string} id
-         * @param {function} done
-         */
-        function (id, done) {
-            done(null, getUser(id, "id"));
-        }
-    );
+  passport.use(new LocalStrategy(authenticateUser));
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+  passport.deserializeUser((id, done) => {
+    done(null, getUser(id, "id"));
+  });
 }
 
 export default initialize;

@@ -1,6 +1,6 @@
 v-container
     v-row
-        v-col(cols="8" class="pa-0 -ratio-text-container" class="rf-content-container")
+        v-col(cols="8" class="pa-0 -ratio-text-container")
 
             template(v-for="(data, tag) in ratioCollection")
                 div(class="-ratio-container" @click="storeRatioCoordinate(tag)"  :class="{'__mini': miniVariant}")
