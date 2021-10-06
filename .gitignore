@@ -5,7 +5,6 @@ npm-debug.log
 .vscode
 .history
 static/*
-rfData*
 app*/*
 App/Tests/Cypress/videos/*
 App/mochawesome.json
