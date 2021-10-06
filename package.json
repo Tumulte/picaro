@@ -10,18 +10,19 @@
     "rfcli": "./App/Cli/create-site/bin/cli.js"
   },
   "scripts": {
-    "start": "node ./App/server.js",
+    "start": "build && node ./App/Dist/server.js",
     "init": "node ./App/initiateApp.js",
     "start:dev": "npm-run-all --parallel start:front start:back",
-    "start:back": "export NODE_ENV='development' set NODE_ENV='development' && nodemon --exec babel-node ./App/server.js  --watch App/  --ignore App/Static/ App/Dist/",
-    "security-check": "npm audit",
+    "start:back": "export NODE_ENV='development' set NODE_ENV='development' && nodemon --exec babel-node ./App/Src/server.js  --watch App/  --ignore App/Static/ App/Dist/",
+    "start:front": "webpack serve --config webpack.config.dev.js --progress",
     "test": "node App/Tests/testCron.js",
     "jest": "jest --coverage",
     "test:int": "cypress run",
     "test:watch": "jest --watch",
-    "build": "webpack --mode=production --config webpack.config.prod.js",
-    "build:dev": "webpack --mode=development --config webpack.config.dev.js",
-    "start:front": "webpack serve --config webpack.config.dev.js --progress"
+    "build": "npm-run-all --parallel build:front build:back",
+    "build:front": "webpack --mode=production --config webpack.config.prod.js",
+    "build:back": "babel ./App/server.js -d ./App/Dist",
+    "build:dev": "webpack --mode=development --config webpack.config.dev.js"
   },
   "keywords": [
     "cli",
@@ -72,7 +73,7 @@
   "devDependencies": {
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.8",
-    "@babel/node": "^7.14.7",
+    "@babel/node": "^7.15.4",
     "@babel/plugin-transform-modules-commonjs": "^7.14.5",
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-react": "^7.14.5",
