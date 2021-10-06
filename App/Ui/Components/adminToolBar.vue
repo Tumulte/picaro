@@ -56,6 +56,7 @@ const cssPanelTypography = () => import("./cssPanelTypography.vue");
 import { nanoid } from "nanoid";
 import { generateColorSet } from "../colorGenerator";
 import { mapActions, mapGetters } from "vuex";
+import { VNavigationDrawer } from "vuetify/lib";
 
 export default {
   components: {
@@ -64,7 +65,8 @@ export default {
     cssPanelSelector,
     cssPanelColor,
     cssPanelRatio,
-    cssPanelTypography
+    cssPanelTypography,
+    VNavigationDrawer
   },
   props: {
     isLogged: { type: Boolean, default: false }

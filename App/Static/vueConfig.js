@@ -18,7 +18,6 @@ import Vuetify, {
   VTextField,
   VListItem,
   VListItemGroup,
-  VDivider,
   VSwitch,
   VLabel,
   VExpansionPanels,
@@ -27,23 +26,18 @@ import Vuetify, {
   VExpansionPanelContent,
   VToolbar,
   VToolbarItems,
-  VNavigationDrawer,
   VCard,
   VCardTitle,
   VCardSubtitle,
   VCardText,
-  VAlert,
   VDialog,
   VApp,
   VBtn,
-  VForm,
   VContainer,
   VCol,
   VRow,
   VRadio,
   VRadioGroup,
-  VSlider,
-  VColorPicker,
   VIcon,
   VCheckbox,
   VCardActions,
@@ -55,10 +49,6 @@ import Vuetify, {
   VTab
 } from "vuetify/lib";
 // TODO add webpack chunks to exclude that in production
-import adminToolBar from "../Ui/Components/adminToolBar.vue";
-import userPanel from "../Ui/Components/userPanel.vue";
-import model from "../Ui/Components/modelForm.vue";
-
 import VueRouter from "vue-router";
 import vuetify from "vuetify";
 import Vuex from "vuex";
@@ -79,7 +69,6 @@ Vue.use(Vuetify, {
     VTextField,
     VListItem,
     VListItemGroup,
-    VDivider,
     VSwitch,
     VLabel,
     VExpansionPanels,
@@ -88,7 +77,6 @@ Vue.use(Vuetify, {
     VExpansionPanelContent,
     VToolbar,
     VToolbarItems,
-    VNavigationDrawer,
     VCard,
     VScrollYReverseTransition,
     VCardTitle,
@@ -96,17 +84,13 @@ Vue.use(Vuetify, {
     VCardText,
     VApp,
     VBtn,
-    VForm,
     VContainer,
     VCol,
     VRow,
     VRadio,
     VRadioGroup,
-    VSlider,
-    VColorPicker,
     VIcon,
     VCardActions,
-    VAlert,
     VDialog,
     VCheckbox,
     VCombobox,
@@ -125,9 +109,9 @@ Vue.component("RfModelField", modelField);
 Vue.component("RfApp", rfApp);
 Vue.component("RfLayout", rfLayout);
 
-Vue.component("AdminToolBar", adminToolBar);
-Vue.component("UserPanel", userPanel);
-Vue.component("RfModel", model);
+Vue.component("AdminToolBar", () =>
+  import("../Ui/Components/adminToolBar.vue")
+);
 Vue.component("RfAlert", alert);
 
 const store = new Vuex.Store({

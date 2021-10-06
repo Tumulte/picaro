@@ -16,9 +16,10 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
+import { VForm } from "vuetify/lib";
 
 export default {
-  components: {},
+  components: { VForm },
   methods: {
     createNewModel() {
       axios

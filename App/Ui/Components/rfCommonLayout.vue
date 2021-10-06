@@ -6,13 +6,14 @@
                 span(class="common-layout-settings")
                     v-text-field(type="number" v-if="editCommonLayout" @input="$set(layoutCommonColumn, 'cols', parseInt($event))" label="Width" dense min="0" max="12" class="common-layout-panel-size")
                     v-select(:items="components" item-text="name" item-value="value" :value="layoutCommonColumn.type || null" @change="changePanel($event, index, subIndex)" v-if="editCommonLayout" outlined dense)
+                    v-btn(@click="deleteColumn(index, subIndex)" data-jest="remove-common-column" fab small v-if="editCommonLayout")
+                        v-icon mdi-delete-outline
                 component(:is="layoutCommonColumn.type" v-if="layoutCommonColumn.type !== 'Layout'")
                 span(v-else)
                     span(class="common-layout-settings")
                         v-select(label="Choose a Layout to edit" :items="layoutCollection" item-text="name" item-value="name" v-model="selectedLayout" v-if="layoutCollection.length > 0 && editCommonLayout")
                         v-select(label="Default Layout (index)" :items="layoutCollection" item-text="name" item-value="name" v-model="defaultLayout" v-if="layoutCollection.length > 0 && editCommonLayout")
                         v-text-field(label="Layout Name" v-model="createdLayoutName"  v-if="editCommonLayout")
-                        v-btn(v-if="createdLayoutName" @click="createLayout") create new layout
                     layout(:selected-edit-layout="selectedLayout")
                     v-btn(@click="layoutCommonLine.splice(index + 1,0 , {})" data-jest="add-common-column" fab small v-if="editCommonLayout" class="rf-common-layout--add-column")
                         v-icon mdi-table-column-plus-after
@@ -47,6 +48,16 @@ export default {
     ...mapActions(["updateSettings", "addLayoutToCollection"]),
     addRow() {
       this.layoutCommonCollection.push([""]);
+    },
+    deleteColumn(line, column) {
+      this.$store
+        .dispatch("awaitConfirmation", {
+          text: "Are you sure you want to delete the panel ?",
+          type: "warning"
+        })
+        .then(() => {
+          this.layoutCommonCollection[line].splice(column, 1);
+        });
     },
     createLayout() {
       this.addLayoutToCollection({ key: this.createdLayoutName, value: [] });

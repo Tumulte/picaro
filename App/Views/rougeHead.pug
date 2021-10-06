@@ -1,11 +1,14 @@
 html(lang=language)
     head
         title #{title}
-
         link(rel="stylesheet" type="text/css" href="/static/normalize.css")
         link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css")
         if(isLogged)
             style(id="rf-live-styles")
+        if(env.NODE_ENV === "production")
+            include webpackBundles
+        else
+            script(src="/app-bundle.js")
         block head
         body
             v-app(id="rf-vue-container")

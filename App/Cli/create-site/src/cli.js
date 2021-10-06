@@ -361,8 +361,6 @@ const createUser = function() {
         message: "confirm password",
         type: "password",
         validate(confirm, answers) {
-          console.info(confirm, answers);
-
           const done = this.async();
           if (confirm !== answers.password) {
             done("Passwords don't match");

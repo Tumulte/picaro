@@ -41,6 +41,7 @@
 <script>
 import { colorHelper } from "../colorHelper";
 import { mapGetters, mapActions } from "vuex";
+import { VSlider } from "vuetify/lib";
 
 const colorUtils = new colorHelper();
 
@@ -58,6 +59,7 @@ const generateNewColorSet = function(dominant, combination) {
 };
 
 export default {
+  components: { VSlider },
   props: ["panelOpened", "miniVariant"],
   data() {
     return {

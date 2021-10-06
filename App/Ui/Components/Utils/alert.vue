@@ -17,8 +17,10 @@
                             v-btn(@click="discardMessage" data-jest="discard-button" outlined) Ok
 </template>
 <script>
+import { VScrollYReverseTransition, VAlert } from "vuetify/lib";
 export default {
   name: "Alert",
+  components: { VScrollYReverseTransition, VAlert },
   computed: {
     alertCollection() {
       return this.$store.getters.alertCollection;

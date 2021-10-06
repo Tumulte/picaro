@@ -16,15 +16,16 @@
 
 <script>
 import axios from "axios";
-import ModelItemEdit from "./modelItemEdit.vue";
-import Model from "./modelForm.vue";
 import { mapGetters } from "vuex";
 import checkFilters from "./mixins/checkFilters";
 import { applyFilter } from "./Utils/filter";
 
 export default {
   name: "RfList",
-  components: { Model, ModelItemEdit },
+  components: {
+    model: () => import("./modelForm.vue"),
+    "model-item-edit": () => import("./modelItemEdit.vue")
+  },
   mixins: [checkFilters],
   props: { panelParams: { type: Object, required: true } },
   data: function() {

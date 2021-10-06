@@ -112,29 +112,26 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb, filesDb) {
   /*****************************************************************
     /*                           AUTH
     /*****************************************************************/
-
-  if (process.env.NODE_ENV === "development" && devMode === true) {
-    app.set("isLogged", true);
-  } else {
+  const isDevMode = process.env.NODE_ENV === "development" && devMode === true;
+  if (!isDevMode) {
     auth(app, userDb);
   }
   app.post("*", (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || isDevMode) {
       next();
     } else {
       res.status(401).send("Unauthorized");
     }
   });
   app.put("*", (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || isDevMode) {
       next();
     } else {
       res.status(401).send("Unauthorized");
     }
   });
   app.get("*", (req, res, next) => {
-    console.debug(req.isAuthenticated());
-    app.set("isLogged", req.isAuthenticated());
+    app.set("isLogged", req.isAuthenticated() || isDevMode);
     next();
   });
 
@@ -163,6 +160,12 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb, filesDb) {
     /*****************************************************************/
 
   basicRouting(app);
+
+  /*****************************************************************
+ /*                   Local Variables
+ /*****************************************************************/
+
+  app.locals.env = process.env;
 
   /*****************************************************************
     /*                    Start Server
