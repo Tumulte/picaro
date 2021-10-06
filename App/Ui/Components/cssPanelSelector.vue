@@ -30,9 +30,9 @@
 
 </template>
 <script>
-import { colorHelper } from "../colorHelper";
+import { colorHelper } from "../../Src/colorHelper";
 
-import { isHexColor } from "../../utils";
+import { isHexColor } from "../../Src/utils";
 import messages from "../../Messages/messages.json";
 import { mapGetters, mapActions } from "vuex";
 import ColorPalette from "./colorPalette.vue";

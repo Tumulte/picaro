@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { generateCSS } from "../Ui/cssGenerator";
+import { generateCSS } from "../Src/cssGenerator";
 
 const ratioCollection = {
   h1: {

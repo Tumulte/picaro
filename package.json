@@ -10,7 +10,7 @@
     "rfcli": "./App/Cli/create-site/bin/cli.js"
   },
   "scripts": {
-    "start": "npm run build:front && npm run build: back && node ./App/Dist/server.js",
+    "start": "npm run build:front && npm run build:back && node ./App/Dist/server.js",
     "init": "node ./App/initiateApp.js",
     "start:dev": "npm-run-all --parallel start:front start:back",
     "start:back": "export NODE_ENV='development' set NODE_ENV='development' && nodemon --exec babel-node ./App/Src/server.js  --watch App/  --ignore App/Static/ App/Dist/",

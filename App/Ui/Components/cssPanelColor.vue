@@ -39,7 +39,7 @@
             v-btn(text=true @click="addColor" class="_color-button" data-jest="addColor") Add Color
 </template>
 <script>
-import { colorHelper } from "../colorHelper";
+import { colorHelper } from "../../Src/colorHelper";
 import { mapGetters, mapActions } from "vuex";
 import { VSlider } from "vuetify/lib";
 
