@@ -19,7 +19,7 @@
     "jest": "jest --coverage",
     "test:int": "cypress run",
     "test:watch": "jest --watch",
-    "build": "npm-run-all --parallel build:front build:back",
+    "build": "build:front && build:back",
     "build:front": "webpack --mode=production --config webpack.config.prod.js",
     "build:back": "babel ./App/Src -d ./App/Dist",
     "build:dev": "webpack --mode=development --config webpack.config.dev.js"
