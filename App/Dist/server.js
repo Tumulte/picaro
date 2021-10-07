@@ -94,7 +94,7 @@ const startApp = function startApp(settingsDb, userDb, styleSetDb, appDb, filesD
 
   app.use("/static", _express.default.static("static"));
   app.use("/static", _express.default.static("node_modules/normalize.css"));
-  app.use("/static", _express.default.static("App/Dist"));
+  app.use("/dist", _express.default.static("App/Dist"));
   app.use("/fonts", _express.default.static("static/fonts"));
   /*****************************************************************
      /*                        Static Assets

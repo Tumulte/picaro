@@ -1,4 +1,3 @@
-const path = require("path");
 const sass = require("sass");
 const fibers = require("fibers");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
@@ -76,14 +75,6 @@ module.exports = {
         ]
       }
     ]
-  },
-  resolve: {
-    alias: {
-      vue: "vue/dist/vue.js",
-      "@components": path.resolve(__dirname, "App/Ui/Components"),
-      "@store": path.resolve(__dirname, "App/Store")
-    },
-    extensions: [".js", ".vue", ".json"]
   },
   plugins: [new VueLoaderPlugin()]
 };

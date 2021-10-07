@@ -59,6 +59,14 @@ const myWebpackConfig = merge(commonConfig, {
         }
       }
     }
+  },
+  resolve: {
+    alias: {
+      vue: "vue/dist/vue.min",
+      "@components": path.resolve(__dirname, "App/Ui/Components"),
+      "@store": path.resolve(__dirname, "App/Store")
+    },
+    extensions: [".js", ".vue", ".json"]
   }
 });
 module.exports = myWebpackConfig;
