@@ -8,7 +8,7 @@ exports.isUserAuthenticated = isUserAuthenticated;
 
 var _passport = _interopRequireDefault(require("passport"));
 
-var _expressSession = _interopRequireDefault(require("express-session"));
+var _cookieSession = _interopRequireDefault(require("cookie-session"));
 
 var _nanoid = require("nanoid");
 
@@ -35,7 +35,7 @@ function _default(app, userDb) {
   appName = app.get("appName");
   db = userDb;
   (0, _passportConfig.default)(_passport.default, getUser);
-  app.use((0, _expressSession.default)({
+  app.use((0, _cookieSession.default)({
     secret: (0, _nanoid.nanoid)(20),
     resave: true,
     saveUninitialized: false

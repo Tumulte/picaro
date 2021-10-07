@@ -13,7 +13,7 @@ var _passportLocal = require("passport-local");
 
 var _cryptoJs = _interopRequireDefault(require("crypto-js"));
 
-var _rougeSettings = _interopRequireDefault(require("../../rougeSettings.json"));
+var _nanoid = require("nanoid");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28,7 +28,7 @@ function initialize(passport, getUser) {
     }
 
     try {
-      const clearPassword = _cryptoJs.default.AES.decrypt(user.password, _rougeSettings.default.secret).toString(_cryptoJs.default.enc.Utf8);
+      const clearPassword = _cryptoJs.default.AES.decrypt(user.password, (0, _nanoid.nanoid)(21)).toString(_cryptoJs.default.enc.Utf8);
 
       if (password === clearPassword) {
         return done(null, user);
