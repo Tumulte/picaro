@@ -91,7 +91,7 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb, filesDb) {
 
   app.use("/static", express.static("static"));
   app.use("/static", express.static("node_modules/normalize.css"));
-  app.use("/static", express.static("App/Dist"));
+  app.use("/dist", express.static("App/Dist"));
   app.use("/fonts", express.static("static/fonts"));
 
   /*****************************************************************
