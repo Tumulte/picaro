@@ -13,7 +13,7 @@ function _default(app) {
   app.get("/:app", function (req, res) {
     if (_rougeSettings.activeApps.includes(req.params.app)) {
       app.set("appName", req.params.app);
-      app.set("views", "".concat(__dirname, "/../app").concat(req.params.app, "/views"));
+      app.set("views", "".concat(__dirname, "/../../app").concat(req.params.app, "/views"));
       res.render("index", {
         isLogged: app.get("isLogged"),
         appName: req.params.app
@@ -33,7 +33,7 @@ function _default(app) {
 
   app.get("/", function (req, res) {
     app.set("appName", _rougeSettings.defaultApp);
-    app.set("views", "".concat(__dirname, "/../app").concat(_rougeSettings.defaultApp, "/views"));
+    app.set("views", "".concat(__dirname, "/../../app").concat(_rougeSettings.defaultApp, "/views"));
     res.render("index", {
       isLogged: app.get("isLogged"),
       appName: _rougeSettings.defaultApp
@@ -46,7 +46,7 @@ function _default(app) {
 
     const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
     app.set("appName", req.params.app);
-    app.set("views", "".concat(__dirname, "/../app").concat(upperCasedApp, "/views"));
+    app.set("views", "".concat(__dirname, "/../../app").concat(upperCasedApp, "/views"));
     res.render(req.params.view, {
       isLogged: app.get("isLogged"),
       appName: req.params.app
