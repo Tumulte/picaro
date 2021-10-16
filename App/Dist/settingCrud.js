@@ -29,7 +29,7 @@ function settingCrud(settingDb, styleSetDb, app) {
     res.json(settingDb.find());
   });
   dataRouter.route("/fonts").get((req, res) => {
-    const directoryPath = _path.default.join(__dirname, "../static/fonts");
+    const directoryPath = _path.default.join(__dirname, "../../static/fonts");
     /**
      * @type {array}
      */

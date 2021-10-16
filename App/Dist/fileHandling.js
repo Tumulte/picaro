@@ -42,7 +42,7 @@ function _default(appName, filesDb) {
       return res.status(401).send("This file type isn't allowed");
     }
 
-    uploadPath = __dirname + "/Static/uploaded/";
+    uploadPath = __dirname + "/../Static/uploaded/";
 
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
       _rougeSettings.upload.availableWidth.forEach(width => {

@@ -18,6 +18,7 @@ var _colorGenerator = require("./colorGenerator");
 var _utils = require("./utils");
 
 const prefixClass = "#rf-content-container";
+const adminPrefixClass = ".rf-toolbar-container";
 const headerTags = "".concat(prefixClass, " h1,\n").concat(prefixClass, " h2,\n").concat(prefixClass, " h3,\n").concat(prefixClass, " h4,\n").concat(prefixClass, " h5,\n").concat(prefixClass, " h6");
 /**
  *
@@ -142,7 +143,7 @@ const generateCSS = function generateCSS(styleSet) {
     } else if (selector === "h1, h2, h3, h4, h5, h6") {
       headerProperties = propertiesString;
     } else if (propertiesString) {
-      extraParameters += "".concat(prefixClass, " ").concat(selectorText, " {\n").concat(propertiesString, "\n}\n");
+      extraParameters += "".concat(prefixClass, " ").concat(selectorText, ", ").concat(adminPrefixClass, " ").concat(selectorText, "  {\n").concat(propertiesString, "\n}\n");
     }
   }
 

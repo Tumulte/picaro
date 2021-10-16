@@ -35,7 +35,6 @@ const crud = function crud(db) {
     db.insert((0, _utils.cleanData)(req.body));
     res.send("Saved");
   }).put((req, res) => {
-    console.info(req.body);
     db.update(req.body);
     res.send("content saved");
   });
