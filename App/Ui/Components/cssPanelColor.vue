@@ -69,6 +69,12 @@ export default {
     };
   },
   watch: {
+    styleSet: {
+      deep: true,
+      handler() {
+        this.$store.dispatch("triggerNewStyle");
+      }
+    },
     isMounted() {
       if (this.isMounted === true) {
         this.ready += 1;
@@ -189,7 +195,6 @@ export default {
     },
     storeColorCoordinate: function(coordinates) {
       this.$store.commit("currentColor", coordinates);
-      this.$store.dispatch("triggerNewStyle");
     },
     toggleColor(location, index, locationIndex) {
       if (location === "dominant") {

@@ -10,7 +10,6 @@
     --valid: #3CA14F;
 
 }
-
 #rf-alert-container {
     position: fixed;
     bottom: 0;
@@ -141,4 +140,13 @@
 /* vuetify reset */
 #rf-content-container .row{
     margin: 0;
+}
+.v-application {
+    line-height: unset;
+}
+#rf-toolbar {
+    line-height: 1.5;
+}
+#rf-toolbar .v-btn {
+    font-size: 10px;
 }

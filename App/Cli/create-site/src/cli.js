@@ -67,8 +67,8 @@ basicCssRem.html["font-size"] = basicCssRem.html["font-size"].replace(
   "rem",
   "px"
 );
-basicCssRem[".rf-panel-container"] = {};
-basicCssRem[".rf-panel-container"].padding = { data: "html", type: "ratio" };
+basicCssRem[".rf-module-container"] = {};
+basicCssRem[".rf-module-container"].padding = { data: "html", type: "ratio" };
 
 const handleData = function(type, name) {
   if (type === "create") {

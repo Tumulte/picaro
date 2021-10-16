@@ -3,17 +3,17 @@
         v-btn(fab small @click="editLayout = !editLayout;$store.commit('editCommonLayout', false)" v-if="isLogged")
             v-icon mdi-cog-outline
         v-row(v-for="(layoutLine, index) in selectedLayout" v-if="selectedLayout" :key="index" class="rf-layout--container")
-            v-col(v-for="(panel, columnIndex) in layoutLine" :key="panel.id" class="rf-layout--container rf-panel-container" :cols="panel.cols")
+            v-col(v-for="(module, columnIndex) in layoutLine" :key="module.id" class="rf-layout--container rf-module-container" :cols="module.cols")
                 span(class="common-layout-settings")
-                    v-text-field(type="number" v-if="editLayout" @input="$set(panel, 'cols', parseInt($event))" label="Width" min="0" max="11")
-                    v-select(:items="availableLayout" label="Type" @change="$set(panel, 'type', $event)" :value="panel.type" v-if="editLayout")
-                    v-select(:items="modelCollectionNames" label="Model" @change="$set(panel, 'model', $event)" :value="panel.model" v-if="editLayout")
-                    filter-selector(type="categories" :savedFilters="panel.categories" @updateSelectedFilter="$set(panel, 'categories', $event.data)" v-if="editLayout")
-                component(:is="panel.type ? panel.type : 'div'" :panelParams=" panel" :key="index + componentKey")
-                v-btn(fab color="primary" v-if="editLayout" small @click="layoutLine.splice(index + 1,0 , initPanel(panel))" data-jest="add-column" class="rf-layout--add-column")
+                    v-text-field(type="number" v-if="editLayout" @input="$set(module, 'cols', parseInt($event))" label="Width" min="0" max="11")
+                    v-select(:items="availableLayout" label="Type" @change="$set(module, 'type', $event)" :value="module.type" v-if="editLayout")
+                    v-select(:items="modelCollectionNames" label="Model" @change="$set(module, 'model', $event)" :value="module.model" v-if="editLayout")
+                    filter-selector(type="categories" :savedFilters="module.categories" @updateSelectedFilter="$set(module, 'categories', $event.data)" v-if="editLayout")
+                component(:is="module.type ? module.type : 'div'" :moduleParams=" module" :key="index + componentKey")
+                v-btn(fab color="primary" v-if="editLayout" small @click="layoutLine.splice(index + 1,0 , initModule(module))" data-jest="add-column" class="rf-layout--add-column")
                     v-icon mdi-table-column-plus-after
 
-            v-btn(fab color="primary" v-if="editLayout" small @click="selectedLayout.splice(index + 1, 0, [ initPanel(layoutLine[0])])" data-jest="add-row-inner" class="rf-layout--add-row-in-panel")
+            v-btn(fab color="primary" v-if="editLayout" small @click="selectedLayout.splice(index + 1, 0, [ initModule(layoutLine[0])])" data-jest="add-row-inner" class="rf-layout--add-row-in-module")
                 v-icon mdi-table-row-plus-after
         v-btn(fab color="primary" small v-if="editLayout" @click="selectedLayout.push([{model:null, type:null, categories: null}])" data-jest="add-row" class="rf-layout--add-row")
             v-icon mdi-table-row-plus-after
@@ -40,7 +40,7 @@ export default {
       type: String,
       required: true
     },
-    changingPanel: {
+    changingModule: {
       type: Object,
       default() {
         return {};
@@ -57,7 +57,7 @@ export default {
   computed: {
     ...mapGetters([
       "modelCollectionNames",
-      "pendingLinkedPanel",
+      "pendingLinkedModule",
       "filterCollection",
       "settings",
       "isLogged"
@@ -79,33 +79,33 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["updateLinkedPanel"]),
+    ...mapActions(["updateLinkedModule"]),
 
-    linkPanel(line, column) {
-      if (!this.pendingLinkedPanel) {
+    linkModule(line, column) {
+      if (!this.pendingLinkedModule) {
         this.$store.commit(
-          "pendingLinkedPanel",
+          "pendingLinkedModule",
           JSON.stringify([this.selectedLayoutName, line, column])
         );
       } else {
-        this.updateLinkedPanel({
+        this.updateLinkedModule({
           coordinates: [line, column]
         });
-        this.$store.commit("pendingLinkedPanel", "");
+        this.$store.commit("pendingLinkedModule", "");
         this.componentKey += 1; //reload component
       }
     },
-    getLinkedPanelParams(line, column, panel, type) {
-      const linkedPanel = this.layoutLinkCollection[
+    getLinkedmoduleParams(line, column, module, type) {
+      const linkedModule = this.layoutLinkCollection[
         JSON.stringify([this.selectedLayoutName, line, column])
       ];
-      if (linkedPanel) {
-        return linkedPanel[type];
+      if (linkedModule) {
+        return linkedModule[type];
       } else {
-        return panel[type];
+        return module[type];
       }
     },
-    initPanel({ model, category }) {
+    initModule({ model, category }) {
       if (model && category) {
         return { model, type: "div", category };
       } else {
@@ -139,7 +139,7 @@ export default {
   right: 50%;
   bottom: 0;
 }
-.rf-layout--add-row-in-panel {
+.rf-layout--add-row-in-module {
   position: absolute;
   right: 50%;
   bottom: 0;

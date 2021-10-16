@@ -16,7 +16,7 @@ export default {
   name: "FilterLink",
   props: {
     field: { type: String, default: "title" },
-    panelParams: { type: Object, required: true },
+    moduleParams: { type: Object, required: true },
     htmlTag: { type: String, default: "span" },
     extraClass: { type: String, default: "" }
   },
@@ -29,7 +29,7 @@ export default {
       if (this.selectedId !== id) {
         this.selectedId = id;
         this.selectedPath = this.updateFilterCollection({
-          models: [this.panelParams.model],
+          models: [this.moduleParams.model],
           type: "link",
           filterParams: { value: [id], field: "id", method: "eq" }
         });
@@ -37,7 +37,7 @@ export default {
     },
     deleteLink() {
       this.deleteFromFilterCollection({
-        models: JSON.stringify([this.panelParams.model]),
+        models: JSON.stringify([this.moduleParams.model]),
         type: "link"
       });
       this.selectedId = "";
@@ -50,20 +50,24 @@ export default {
       "filterCollectionExpanded"
     ]),
     list() {
-      return this.$store.getters.list[this.panelParams.model] || [];
+      return this.$store.getters.list[this.moduleParams.model] || [];
     },
     filteredList() {
       return this.list.filter(item => {
-        return applyFilter(item, this.filterCollection.all);
+        return applyFilter(
+          item,
+          [this.filterCollection.all],
+          this.moduleParams
+        );
       });
     },
     listFilters() {
-      return this.filterCollectionExpanded[this.panelParams.model];
+      return this.filterCollectionExpanded[this.moduleParams.model];
     }
   },
   mounted() {
     this.selectedId =
-      this.filterCollectionExpanded[this.panelParams.model]?.link?.value[0] ||
+      this.filterCollectionExpanded[this.moduleParams.model]?.link?.value[0] ||
       "";
   }
 };

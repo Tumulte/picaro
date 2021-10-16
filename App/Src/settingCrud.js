@@ -13,7 +13,7 @@ export default function settingCrud(settingDb, styleSetDb, app) {
   });
 
   dataRouter.route("/fonts").get((req, res) => {
-    const directoryPath = path.join(__dirname, "../static/fonts");
+    const directoryPath = path.join(__dirname, "../../static/fonts");
     /**
      * @type {array}
      */

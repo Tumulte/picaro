@@ -4,36 +4,42 @@
 </template>
 
 <script>
-import {Editor, EditorContent} from "@tiptap/vue-2";
+import { Editor } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Video from "../../../../rte/tiptap-video";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
 
 let editor;
 
 export default {
-    name: "richText",
-    data: function () {
-        return {
-            html: ""
-        };
-    },
-    props: {fieldData: {type: Object, default: ""}},
-    mounted() {
-        editor = new Editor({
-            extensions: [
-                StarterKit
-            ],
-        });
-        editor.commands.setContent(this.fieldData);
-        this.html = editor.getHTML();
-    },
-    beforeDestroy() {
-        editor.destroy();
-    },
-
+  name: "RichText",
+  props: {
+    fieldData: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  data: function() {
+    return {
+      html: ""
+    };
+  },
+  mounted() {
+    editor = new Editor({
+      extensions: [StarterKit, Image, Link, Video, BulletList, ListItem]
+    });
+    editor.commands.setContent(this.fieldData);
+    this.html = editor.getHTML();
+  },
+  beforeDestroy() {
+    editor.destroy();
+  }
 };
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

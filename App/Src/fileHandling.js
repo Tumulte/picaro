@@ -21,7 +21,7 @@ export default function(appName, filesDb) {
     if (!allowedMimetype.includes(file.mimetype)) {
       return res.status(401).send("This file type isn't allowed");
     }
-    uploadPath = __dirname + "/Static/uploaded/";
+    uploadPath = __dirname + "/../Static/uploaded/";
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
       upload.availableWidth.forEach(width => {
         sharp(file.data)

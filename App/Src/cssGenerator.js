@@ -2,6 +2,7 @@ import { generateColorSet } from "./colorGenerator";
 import { webSafeFonts, makeFontFamilyName, makeRatio } from "./utils";
 
 const prefixClass = "#rf-content-container";
+const adminPrefixClass = ".rf-toolbar-container";
 const headerTags = `${prefixClass} h1,
 ${prefixClass} h2,
 ${prefixClass} h3,
@@ -134,7 +135,7 @@ export const generateCSS = function(styleSet) {
     } else if (selector === "h1, h2, h3, h4, h5, h6") {
       headerProperties = propertiesString;
     } else if (propertiesString) {
-      extraParameters += `${prefixClass} ${selectorText} {
+      extraParameters += `${prefixClass} ${selectorText}, ${adminPrefixClass} ${selectorText}  {
 ${propertiesString}
 }\n`;
     }

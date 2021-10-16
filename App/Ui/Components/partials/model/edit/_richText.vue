@@ -17,12 +17,18 @@
                 v-icon mdi-format-header-2
             span( :class="{ 'is-active': editor.isActive('heading',{ level: 3 }) }" @click.stop="editor.chain().focus().toggleHeading({ level: 3 }).run()")
                 v-icon mdi-format-header-3
+            span( @click="editor.chain().focus().toggleBulletList().run()" :class="{ 'is-active': editor.isActive('bulletList') }")
+                v-icon mdi-format-list-bulleted
             span( :class="{ 'is-active': editor.isActive('codeBlock') }" @click.stop="editor.chain().focus().toggleCodeBlock().run()")
                 v-icon mdi-code-array
+            span( :class="{ 'is-active': editor.isActive('link') }" @click="setUrl")
+                v-icon mdi-link
             span( :class="{ 'is-active': editor.isActive('code') }" @click.stop="editor.chain().focus().toggleCode().run()")
                 v-icon mdi-code-not-equal-variant
             span(:class="{ 'is-active': awaitImg }"  @click.stop="addImage")
                 v-icon mdi-image
+            span(:class="{ 'is-active': awaitVideo }"  @click.stop="addVideo")
+                v-icon mdi-video
         editor-content(:editor="editor" class="editor-textarea")
 
 
@@ -31,6 +37,11 @@
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
+import Video from "../../../../rte/tiptap-video";
+
 import rougeSettings from "./../../../../../../rougeSettings.json";
 
 import StarterKit from "@tiptap/starter-kit";
@@ -51,14 +62,40 @@ export default {
       temporaryContent: null,
       selectedImg: null,
       availableImgWidth: rougeSettings.upload.availableWidth,
-      awaitImg: false
+      awaitImg: false,
+      awaitVideo: false,
+      toggleUrlInput: false,
+      currentUrl: ""
     };
   },
   methods: {
-    ...mapActions(["awaitConfirmation", "getImageFromLibrary"]),
+    ...mapActions(["awaitConfirmation", "getMediaFromLibrary"]),
     async save() {
       this.$emit("saveEdit", this.temporaryContent);
       this.$emit("endEdit");
+    },
+    setUrl() {
+      const previousUrl = this.editor.getAttributes("link").href;
+      const url = window.prompt("URL", previousUrl);
+      if (url === null) {
+        return;
+      }
+      if (url === "") {
+        this.editor
+          .chain()
+          .focus()
+          .extendMarkRange("link")
+          .unsetLink()
+          .run();
+
+        return;
+      }
+      this.editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
     },
     async cancel() {
       if (this.temporaryContent) {
@@ -91,10 +128,14 @@ export default {
     async addImage() {
       this.awaitImg = true;
 
-      const fileName = await this.getImageFromLibrary();
+      const fileName = await this.getMediaFromLibrary();
 
       if (fileName) {
         const [name, ext] = fileName.split(".");
+        if (
+          !["jpg", "jpeg", "png", "gif", "webp", "apng", "avif"].includes(ext)
+        )
+          return;
         this.editor
           .chain()
           .focus()
@@ -105,11 +146,30 @@ export default {
         this.selectedImg = name + "-thumb." + ext;
         this.awaitImg = false;
       }
+    },
+    async addVideo() {
+      this.awaitVideo = true;
+
+      const fileName = await this.getMediaFromLibrary();
+
+      if (fileName) {
+        const [name, ext] = fileName.split(".");
+        if (ext !== "webm") return;
+        this.editor
+          .chain()
+          .focus()
+          .setVideo({
+            src: "/public/uploaded/" + name + "-original." + ext,
+            type: "video/webm"
+          })
+          .run();
+        this.awaitVideo = false;
+      }
     }
   },
   mounted() {
     this.editor = new Editor({
-      extensions: [StarterKit, Image],
+      extensions: [StarterKit, Image, Link, Video, BulletList, ListItem],
       content: this.fieldData,
       onUpdate: ({ editor }) => {
         const content = Object.assign({}, editor.getJSON(), {

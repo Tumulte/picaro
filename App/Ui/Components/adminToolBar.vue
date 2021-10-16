@@ -275,6 +275,9 @@ export default {
 .toolbar-container /deep/ .v-toolbar__content {
   padding-left: 0;
 }
+.toolbar-container /deep/ .v-navigation-drawer {
+  z-index: 10000;
+}
 .subpanels {
   width: 50px;
 }

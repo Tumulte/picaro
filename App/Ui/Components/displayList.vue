@@ -6,18 +6,17 @@
             v-card( class="pa-6 my-6"  v-if="newItem")
                 v-card-title
                     h2 New Item
-                model(:model-name="panelParams.model" @reloadData="loadListData" :panel-params="panelParams")
-        div(v-for="(item) in filteredList" v-if="checkFilters(item)")
-            rf-model-field(:field-data="item"  :field-name='key' v-for="(field, key) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="key" :field-params="modelCollection[panelParams.model].find(item=> item.name === key)" :panel-params="panelParams")
+                model(:model-name="moduleParams.model" @reloadData="loadListData" :module-params="moduleParams")
+        div(v-for="(item) in filteredList")
+            rf-model-field(:field-data="item"  :field-name='key' v-for="(field, key) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="key" :field-params="modelCollection[moduleParams.model].find(item=> item.name === key)" :module-params="moduleParams")
             v-card( v-if="edit" class="pa-6 my-6")
-                model(:model-name="panelParams.model" @reloadData="loadListData()" :model-data="item" :is-edit="edit" :panel-params="panelParams")
-                model-item-edit(:model-name="panelParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()")
+                model(:model-name="moduleParams.model" @reloadData="loadListData()" :model-data="item" :is-edit="edit" :module-params="moduleParams")
+                model-item-edit(:model-name="moduleParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()")
 </template>
 
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import checkFilters from "./mixins/checkFilters";
 import { applyFilter } from "./Utils/filter";
 
 export default {
@@ -26,8 +25,7 @@ export default {
     model: () => import("./modelForm.vue"),
     "model-item-edit": () => import("./modelItemEdit.vue")
   },
-  mixins: [checkFilters],
-  props: { panelParams: { type: Object, required: true } },
+  props: { moduleParams: { type: Object, required: true } },
   data: function() {
     return {
       edit: false,
@@ -47,12 +45,12 @@ export default {
   },
   methods: {
     loadListData() {
-      if (this.panelParams.model) {
+      if (this.moduleParams.model) {
         axios
-          .get(`/api/${this.panelParams.model}`)
+          .get(`/api/${this.moduleParams.model}`)
           .then(response => {
             this.$store.dispatch("addItemToList", {
-              model: this.panelParams.model,
+              model: this.moduleParams.model,
               listData: response.data
             });
             this.edit = false;
@@ -75,13 +73,14 @@ export default {
       "isLogged"
     ]),
     list() {
-      return this.$store.getters.list[this.panelParams.model] || [];
+      return this.$store.getters.list[this.moduleParams.model] || [];
     },
     filteredList() {
       return this.list.filter(item => {
-        return (
-          applyFilter(item, this.listFilters) &&
-          applyFilter(item, this.filterCollection.all)
+        return applyFilter(
+          item,
+          [this.listFilters, this.filterCollection.all],
+          this.moduleParams
         );
       });
     },
@@ -89,7 +88,7 @@ export default {
       return this.$store.getters.tags;
     },
     listFilters() {
-      return this.filterCollectionExpanded[this.panelParams.model];
+      return this.filterCollectionExpanded[this.moduleParams.model];
     }
   }
 };

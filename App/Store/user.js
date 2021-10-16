@@ -60,7 +60,7 @@ export default {
     modelCollection: {},
     navStructure: {},
     filterCollection: { all: {}, modelFilters: {} },
-    pendingLinkedPanel: ""
+    pendingLinkedModule: ""
   },
   mutations: {
     // @ts-ignore
@@ -81,8 +81,8 @@ export default {
     filterCollection(state, data) {
       state.filterCollection = data;
     },
-    pendingLinkedPanel(state, data) {
-      state.pendingLinkedPanel = data;
+    pendingLinkedModule(state, data) {
+      state.pendingLinkedModule = data;
     },
     navStructure(state, data) {
       state.navStructure = data;
@@ -135,8 +135,8 @@ export default {
     selectedCategories(state) {
       return state.filterCollection.all.categories || [];
     },
-    pendingLinkedPanel(state) {
-      return state.pendingLinkedPanel;
+    pendingLinkedModule(state) {
+      return state.pendingLinkedModule;
     }
   },
   actions: {
@@ -187,10 +187,10 @@ export default {
     updateAvailableFilters({ state }, { property, value }) {
       Vue.set(state.settings.availableFilterCollection, property, value);
     },
-    updateLinkedPanel({ state }, { coordinates }) {
+    updateLinkedModule({ state }, { coordinates }) {
       Vue.set(
         state.settings.layoutLinkCollection,
-        state.pendingLinkedPanel,
+        state.pendingLinkedModule,
         coordinates
       );
     },
@@ -236,10 +236,10 @@ export default {
         index: data.index
       });
     },
-    getImageFromLibrary() {
+    getMediaFromLibrary() {
       return new Promise(function(resolve) {
-        const uploadPanel = document.getElementById("rf-upload-panel");
-        uploadPanel.addEventListener("click", event => {
+        const uploadModule = document.getElementById("rf-upload-panel");
+        uploadModule.addEventListener("click", event => {
           if (event.target.classList.contains("rf-upload-panel-thumb")) {
             resolve(event.target.getAttribute("data-src"));
           }
