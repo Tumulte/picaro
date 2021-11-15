@@ -121,7 +121,7 @@ export default {
         .chain()
         .focus()
         .setImage({
-          src: `/public/uploaded/${name}-${width}.${ext}`
+          src: `/uploaded/${name}-${width}.${ext}`
         })
         .run();
     },
@@ -140,7 +140,7 @@ export default {
           .chain()
           .focus()
           .setImage({
-            src: "/public/uploaded/" + name + "-thumb." + ext
+            src: "/uploaded/" + name + "-thumb." + ext
           })
           .run();
         this.selectedImg = name + "-thumb." + ext;
@@ -159,7 +159,7 @@ export default {
           .chain()
           .focus()
           .setVideo({
-            src: "/public/uploaded/" + name + "-original." + ext,
+            src: "/uploaded/" + name + "-original." + ext,
             type: "video/webm"
           })
           .run();

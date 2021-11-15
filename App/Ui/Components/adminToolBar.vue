@@ -321,7 +321,7 @@ export default {
   &.opened {
     top: 48px;
   }
-  top: -105px;
+  top: -120px;
   position: fixed;
   z-index: 100000;
   left: 0px;

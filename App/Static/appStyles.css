@@ -113,7 +113,7 @@
         }
     }
 }
-.common-layout-settings {
+.rf-layout-settings {
     .v-input {
         display: inline-block;
         margin-right: 16px;
@@ -136,6 +136,111 @@
 }
 #rf-content-container .is-default-layout {
     padding: 0;
+}
+.rf-dynamic-module-container {
+    position: relative;
+    &:hover {
+        .rf-module-label {
+            display: block;
+        }
+    }
+}
+.rf-module-label {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 10px;
+    font-family: roboto;
+    background: #fff;
+    color: var(--secondary);
+    border-radius: 50px;
+    padding: 0 10px;
+    border: 1px solid var(--secondary);
+    cursor: pointer;
+    z-index: 9999;
+}
+.rf-layout--container {
+    position: relative;
+}
+.edit-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+.rf-common-layout-is-edited,
+.rf-layout-is-edited {
+    .rf-module-container:hover {
+        .rf-layout--add-column {
+            display: block;
+        }
+    }
+    .rf-row-container:hover {
+        .rf-layout--add-row {
+            display: block;
+        }
+    }
+}
+.rf-layout--add-column {
+    display: none;
+    position: absolute;
+    right: -1px;
+    bottom: 50%;
+    transform: translateY(16px);
+    background: #fff;
+    border: 1px solid var(--secondary);
+    border-right: 1px solid #fff;
+    padding: 15px 0;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+}
+
+.rf-layout--add-row {
+    display: none;
+    position: absolute;
+    right: 50%;
+    bottom: 24px;
+    transform: translate(50%, 100%);
+    color: var(--secondary);
+    background: #fff;
+    padding: 0 15px;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    border: 1px solid var(--secondary);
+    border-bottom: none;
+}
+.rf-common-layout-is-edited {
+    .rf-common-module-container {
+        margin: 0;
+        margin: 0;
+        border: 1px solid #ddd;
+        border-radius: 0;
+        &:hover {
+            box-shadow: inset rgba(100, 100, 100, 0.3) 0px 0px 10px 2px;
+            border: 1px solid var(--secondary);
+        }
+    }
+}
+.rf-layout-is-edited {
+    .rf-module-container {
+        margin: 0;
+        margin: 0;
+        border: 1px solid #ddd;
+        border-radius: 0;
+        &:hover {
+            box-shadow: inset rgba(100, 100, 100, 0.3) 0px 0px 10px 2px;
+            border: 1px solid var(--secondary);
+        }
+    }
+}
+.rf-layout-module-size,
+.rf-layout-module-size /deep/ .v-input__control,
+.rf-layout-module-size /deep/ .v-input__slot {
+    width: 64px;
+}
+.rf-layout-settings /deep/ .v-input {
+    flex: initial;
+    margin-right: 16px;
 }
 /* vuetify reset */
 #rf-content-container .row{
