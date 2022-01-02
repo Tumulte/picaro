@@ -1,9 +1,25 @@
 "use strict";
 
+require("core-js/modules/es.symbol.js");
+
+require("core-js/modules/es.symbol.description.js");
+
+require("core-js/modules/es.symbol.iterator.js");
+
+require("core-js/modules/es.array.iterator.js");
+
+require("core-js/modules/es.string.iterator.js");
+
+require("core-js/modules/web.dom-collections.iterator.js");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.colorHelper = colorHelper;
+
+require("core-js/modules/es.parse-int.js");
+
+require("core-js/modules/es.object.to-string.js");
 
 require("core-js/modules/es.regexp.to-string.js");
 
@@ -11,11 +27,21 @@ require("core-js/modules/es.regexp.exec.js");
 
 require("core-js/modules/es.string.replace.js");
 
+require("core-js/modules/es.array.join.js");
+
+require("core-js/modules/es.array.map.js");
+
 require("core-js/modules/es.string.split.js");
+
+require("core-js/modules/es.array.concat.js");
 
 require("core-js/modules/es.array.sort.js");
 
 require("core-js/modules/es.regexp.constructor.js");
+
+require("core-js/modules/es.array.index-of.js");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /**
  * @class
@@ -25,7 +51,7 @@ function colorHelper() {
    *
    * @param {string} hex #RRGGBB
    */
-  const parseHex = function parseHex(hex) {
+  var parseHex = function parseHex(hex) {
     return parseInt(hex, 16);
   };
   /**
@@ -34,8 +60,8 @@ function colorHelper() {
    */
 
 
-  const toHex = function toHex(number) {
-    let hex = number.toString(16);
+  var toHex = function toHex(number) {
+    var hex = number.toString(16);
 
     if (hex.length === 1) {
       hex = "0".concat(hex);
@@ -43,10 +69,6 @@ function colorHelper() {
 
     return hex.toUpperCase();
   };
-  /**
-   * @param {import("../Typings/global").Color} color
-   */
-
 
   this.hexToRgb = function (color) {
     this.color = color;
@@ -55,7 +77,7 @@ function colorHelper() {
       return this;
     }
 
-    let hex = this.color.replace("#", "");
+    var hex = this.color.replace("#", "");
 
     if (hex.length === 3) {
       //if 3 digit hex : double each digit
@@ -69,9 +91,9 @@ function colorHelper() {
       }).join("");
     }
 
-    const red = parseHex(hex.substring(0, 2));
-    const green = parseHex(hex.substring(2, 4));
-    const blue = parseHex(hex.substring(4, 6));
+    var red = parseHex(hex.substring(0, 2));
+    var green = parseHex(hex.substring(2, 4));
+    var blue = parseHex(hex.substring(4, 6));
     this.color = {
       red: red,
       green: green,
@@ -79,10 +101,6 @@ function colorHelper() {
     };
     return this;
   };
-  /**
-   * @param  {import("../Typings/global").Color} color
-   */
-
 
   this.rgbToHex = function (color) {
     this.color = color;
@@ -99,14 +117,14 @@ function colorHelper() {
 
   this.rgbToHsl = function (color) {
     this.color = color;
-    const rgbArray = [this.color.red / 255, this.color.green / 255, this.color.blue / 255];
+    var rgbArray = [this.color.red / 255, this.color.green / 255, this.color.blue / 255];
     rgbArray.sort(function (a, b) {
       return a - b;
     });
-    const min = rgbArray[0];
-    const mid = rgbArray[1];
-    const max = rgbArray[2];
-    const light = Math.round((min + max) * 100 / 2); //In case on gray
+    var min = rgbArray[0];
+    var mid = rgbArray[1];
+    var max = rgbArray[2];
+    var light = Math.round((min + max) * 100 / 2); //In case on gray
 
     if (max === min && mid === min) {
       this.color = {
@@ -117,7 +135,7 @@ function colorHelper() {
       return this;
     }
 
-    let saturation;
+    var saturation;
 
     if (light > 50) {
       saturation = (max - min) / (2 - max - min);
@@ -126,7 +144,7 @@ function colorHelper() {
     }
 
     saturation = Math.round(saturation * 100);
-    let hue;
+    var hue;
 
     if (max === this.color.red / 255) {
       hue = (this.color.green - this.color.blue) / 255 / (max - min);
@@ -152,12 +170,12 @@ function colorHelper() {
 
   this.hslToRgb = function (color) {
     this.color = color;
-    const light = this.color.light / 100;
-    const sat = this.color.saturation / 100;
-    const hue = this.color.hue / 360;
+    var light = this.color.light / 100;
+    var sat = this.color.saturation / 100;
+    var hue = this.color.hue / 360;
 
     if (this.color.saturation === 0) {
-      const lightTo255 = Math.round(light * 255);
+      var lightTo255 = Math.round(light * 255);
       this.color = {
         red: lightTo255,
         green: lightTo255,
@@ -166,7 +184,7 @@ function colorHelper() {
       return this;
     }
 
-    let tempFormula; //I can't find what this is formula is supposed to be.
+    var tempFormula; //I can't find what this is formula is supposed to be.
 
     if (light < 0.5) {
       tempFormula = light * (1 + sat);
@@ -174,9 +192,9 @@ function colorHelper() {
       tempFormula = light + sat - light * sat;
     }
 
-    const tempFormula2 = 2 * light - tempFormula;
+    var tempFormula2 = 2 * light - tempFormula;
 
-    const hueToRgb = function hueToRgb(tempFormula, tempFormula2, hue) {
+    var hueToRgb = function hueToRgb(tempFormula, tempFormula2, hue) {
       if (hue < 0) {
         hue += 1;
       } else if (hue > 1) {
@@ -194,9 +212,9 @@ function colorHelper() {
       }
     };
 
-    const red = hueToRgb(tempFormula2, tempFormula, hue + 1 / 3);
-    const green = hueToRgb(tempFormula2, tempFormula, hue);
-    const blue = hueToRgb(tempFormula2, tempFormula, hue - 1 / 3);
+    var red = hueToRgb(tempFormula2, tempFormula, hue + 1 / 3);
+    var green = hueToRgb(tempFormula2, tempFormula, hue);
+    var blue = hueToRgb(tempFormula2, tempFormula, hue - 1 / 3);
     this.color = {
       red: Math.round(red * 255),
       green: Math.round(green * 255),
@@ -259,26 +277,27 @@ function colorHelper() {
       this.color = color;
     }
 
-    const re = new RegExp(/^#([0-9a-f]{3}){1,2}$/i);
+    var re = new RegExp(/^#([0-9a-f]{3}){1,2}$/i);
 
-    if (typeof this.color === "object") {
+    if (_typeof(this.color) === "object") {
       return this.color;
     } else if (this.color.indexOf("rgb(") > -1) {
-      let colorValues = this.color.split(")")[0].split(",");
+      var colorValues = this.color.split(")")[0].split(",");
       return {
         red: colorValues[0],
         green: colorValues[1],
         blue: colorValues[2]
       };
     } else if (this.color.indexOf("hsl(") > -1) {
-      const colorValues = this.color.split("(")[1].split(")")[0].split(",");
+      var _colorValues = this.color.split("(")[1].split(")")[0].split(",");
+
       return {
-        hue: parseInt(colorValues[0]),
-        saturation: parseInt(colorValues[1]),
-        light: parseInt(colorValues[2])
+        hue: parseInt(_colorValues[0]),
+        saturation: parseInt(_colorValues[1]),
+        light: parseInt(_colorValues[2])
       };
     } else if (re.test(this.color)) {
-      const hex = this.color;
+      var hex = this.color;
       return {
         hexred: hex.substring(1, 3),
         hexgreen: hex.substring(3, 5),

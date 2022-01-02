@@ -5,6 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = settingCrud;
 
+require("core-js/modules/es.array.find.js");
+
+require("core-js/modules/es.array.join.js");
+
+require("core-js/modules/web.dom-collections.for-each.js");
+
+require("core-js/modules/es.array.includes.js");
+
 require("core-js/modules/es.string.includes.js");
 
 var _express = _interopRequireDefault(require("express"));
@@ -22,20 +30,20 @@ var _cssFileGenerator = require("./cssFileGenerator");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function settingCrud(settingDb, styleSetDb, app) {
-  const dataRouter = _express.default.Router(); // All app settings
+  var dataRouter = _express.default.Router(); // All app settings
 
 
   dataRouter.route("/all/").get(function (req, res) {
     res.json(settingDb.find());
   });
-  dataRouter.route("/fonts").get((req, res) => {
-    const directoryPath = _path.default.join(__dirname, "../../static/fonts");
+  dataRouter.route("/fonts").get(function (req, res) {
+    var directoryPath = _path.default.join(__dirname, "../../static/fonts");
     /**
      * @type {array}
      */
 
 
-    const localFonts = [];
+    var localFonts = [];
 
     _fs.default.readdir(directoryPath, function (err, files) {
       if (err) {
@@ -52,7 +60,7 @@ function settingCrud(settingDb, styleSetDb, app) {
   }); // All style set
 
   dataRouter.route("/styleset/all").get(function (req, res) {
-    let data = styleSetDb.find();
+    var data = styleSetDb.find();
     res.json(data);
   }); // Specific style set
 
@@ -64,7 +72,7 @@ function settingCrud(settingDb, styleSetDb, app) {
     /**
      * @type {object}
      */
-    let data = styleSetDb.findOne({
+    var data = styleSetDb.findOne({
       id: req.params.styleId
     });
 
@@ -73,12 +81,12 @@ function settingCrud(settingDb, styleSetDb, app) {
     }
 
     res.json(data);
-  }).put((req, res) => {
-    let styleSet = req.body;
+  }).put(function (req, res) {
+    var styleSet = req.body;
     styleSetDb.update(styleSet);
     (0, _cssFileGenerator.generateCSSFile)(app.get("appName"), req.body);
     res.send("Settings Saved !");
-  }).post((req, res) => {
+  }).post(function (req, res) {
     styleSetDb.insert((0, _utils.cleanData)(req.body));
     (0, _cssFileGenerator.generateCSSFile)(app.get("appName"), req.body);
     res.send("Settings Saved !");
@@ -101,9 +109,9 @@ function settingCrud(settingDb, styleSetDb, app) {
     if (req.params.app && !_rougeSettings.activeApps.includes(req.params.app)) {
       return res.status(404).send("This app doesn't exist");
     } else {
-      const queryResult = settingDb.chain().find({
+      var queryResult = settingDb.chain().find({
         applicationName: req.params.app || app.get("appName")
-      }, true).eqJoin(styleSetDb, "styleSet", "id", (left, right) => {
+      }, true).eqJoin(styleSetDb, "styleSet", "id", function (left, right) {
         return {
           settings: left,
           styleSet: right
@@ -113,11 +121,11 @@ function settingCrud(settingDb, styleSetDb, app) {
       })[0];
       res.json(queryResult);
     }
-  }).put((req, res) => {
-    let styleSet = req.body;
+  }).put(function (req, res) {
+    var styleSet = req.body;
     settingDb.update(styleSet);
     res.send("settings saved");
-  }).post(req => {
+  }).post(function (req) {
     settingDb.insert((0, _utils.cleanData)(req.body));
   });
   return dataRouter;

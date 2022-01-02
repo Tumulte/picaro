@@ -5,9 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.generateColorSet = generateColorSet;
 
+require("core-js/modules/web.dom-collections.for-each.js");
+
 var _colorHelper = require("./colorHelper");
 
-const colorUtils = new _colorHelper.colorHelper();
+var colorUtils = new _colorHelper.colorHelper();
 /**
  *
  * @param {string} dominant Hexadecimal of the main color
@@ -30,14 +32,14 @@ function generateColorSet(dominant) {
     dominant: dominant,
     combinationCollection: []
   };
-  const self = this;
+  var self = this;
   /**
    *
    * @param {number} angle
    * @returns {number}
    */
 
-  const base360 = function base360(angle) {
+  var base360 = function base360(angle) {
     if (angle > 360) {
       return angle - 360;
     } else if (angle < 0) {
@@ -54,10 +56,10 @@ function generateColorSet(dominant) {
    */
 
 
-  const getSubValues = function getSubValues(baseValue, variation) {
-    let offset = 0;
+  var getSubValues = function getSubValues(baseValue, variation) {
+    var offset = 0;
 
-    for (let i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 5; i++) {
       if (baseValue + (i - 1) * variation > 100) {
         offset += 1;
       } else if (baseValue - i * variation < 0) {
@@ -66,13 +68,13 @@ function generateColorSet(dominant) {
     }
 
     offset = offset * variation;
-    const valueCollection = [];
+    var valueCollection = [];
 
-    for (let i = 1; i <= 10; i++) {
-      if (i <= 5) {
-        valueCollection[i - 1] = baseValue - (6 - i) * variation - offset;
+    for (var _i = 1; _i <= 10; _i++) {
+      if (_i <= 5) {
+        valueCollection[_i - 1] = baseValue - (6 - _i) * variation - offset;
       } else {
-        valueCollection[i - 1] = baseValue + (i - 6) * variation - offset;
+        valueCollection[_i - 1] = baseValue + (_i - 6) * variation - offset;
       }
     }
 
@@ -87,9 +89,9 @@ function generateColorSet(dominant) {
       */
 
 
-  const addCombination = function addCombination(combination) {
+  var addCombination = function addCombination(combination) {
     combination.hue = base360(combination.hue);
-    const hex = colorUtils.hslToHex(combination).getString();
+    var hex = colorUtils.hslToHex(combination).getString();
     self.colorCollection.combinationCollection.push({
       hex: hex,
       hue: combination.hue,
@@ -105,12 +107,12 @@ function generateColorSet(dominant) {
       */
 
 
-  const createSubCombinationArray = function createSubCombinationArray(combination, gray) {
-    const lightCollection = getSubValues(combination.light, self.lightVariation);
-    const satCollection = getSubValues(combination.saturation, self.satVariation);
-    let subCombination = [];
+  var createSubCombinationArray = function createSubCombinationArray(combination, gray) {
+    var lightCollection = getSubValues(combination.light, self.lightVariation);
+    var satCollection = getSubValues(combination.saturation, self.satVariation);
+    var subCombination = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       subCombination[i] = {
         hue: combination.hue,
         light: lightCollection[i],
@@ -145,9 +147,9 @@ function generateColorSet(dominant) {
    */
 
 
-  const addSubCombination = function addSubCombination() {
-    const combinationCollection = self.colorCollection.combinationCollection;
-    const lastEntry = combinationCollection[combinationCollection.length - 1];
+  var addSubCombination = function addSubCombination() {
+    var combinationCollection = self.colorCollection.combinationCollection;
+    var lastEntry = combinationCollection[combinationCollection.length - 1];
     lastEntry.subCombination = createSubCombinationArray(lastEntry);
   };
   /**
@@ -168,16 +170,16 @@ function generateColorSet(dominant) {
   };
 
   this.combination = function () {
-    const tonic = this.hsl;
+    var tonic = this.hsl;
     tonic.hue = this.hsl.hue + 180;
     addCombination(tonic);
     return this.colorCollection;
   };
 
   this.splitCombination = function () {
-    const baseHue = this.hsl.hue;
-    const tonic = this.hsl;
-    const split = 30;
+    var baseHue = this.hsl.hue;
+    var tonic = this.hsl;
+    var split = 30;
     tonic.hue = this.hsl.hue + (180 + split);
     addCombination(tonic);
     tonic.hue = baseHue;
@@ -195,15 +197,17 @@ function generateColorSet(dominant) {
 
 
   this.generate = function (colors, lightVariation, satVariation) {
+    var _this = this;
+
     this.lightVariation = lightVariation;
     this.satVariation = satVariation;
     this.colorCollection.dominantSubCollection = createSubCombinationArray(this.hsl);
     this.colorCollection.combinationCollection = [];
-    colors.forEach(item => {
-      const saturation = item.saturation !== undefined ? item.saturation : this.hsl.saturation;
-      const light = item.light !== undefined ? item.light : this.hsl.light;
-      const combination = {
-        hue: this.hsl.hue + item.hueVariation,
+    colors.forEach(function (item) {
+      var saturation = item.saturation !== undefined ? item.saturation : _this.hsl.saturation;
+      var light = item.light !== undefined ? item.light : _this.hsl.light;
+      var combination = {
+        hue: _this.hsl.hue + item.hueVariation,
         saturation: saturation,
         light: light
       };

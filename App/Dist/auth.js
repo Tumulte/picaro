@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = _default;
 exports.isUserAuthenticated = isUserAuthenticated;
 
+require("core-js/modules/es.array.concat.js");
+
 var _passport = _interopRequireDefault(require("passport"));
 
 var _cookieSession = _interopRequireDefault(require("cookie-session"));
@@ -16,17 +18,17 @@ var _passportConfig = _interopRequireDefault(require("./passportConfig.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-let db;
-let prefix = "";
-let appName = "";
+var db;
+var prefix = "";
+var appName = "";
 
 if (process.env.NODE_ENV === "development") {
   prefix = "/public";
 }
 
-const getUser = function getUser(value) {
-  let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "username";
-  const parameters = {};
+var getUser = function getUser(value) {
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "username";
+  var parameters = {};
   parameters[type] = value;
   return db.findOne(parameters);
 };
@@ -47,11 +49,11 @@ function _default(app, userDb) {
     failureRedirect: "/admin/login",
     failureFlash: true
   }));
-  app.get("/admin/login", isUserAuthenticated, (req, res) => {
+  app.get("/admin/login", isUserAuthenticated, function (req, res) {
     app.set("views", "".concat(__dirname, "/Views"));
     res.render("login");
   });
-  app.get("/admin/logout", (req, res) => {
+  app.get("/admin/logout", function (req, res) {
     req.logOut();
     res.redirect("".concat(prefix, "/").concat(app.get("appName")));
   });

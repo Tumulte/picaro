@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es.array.find.js");
+
 var _express = _interopRequireDefault(require("express"));
 
 var _utils = require("./utils");
@@ -13,14 +15,14 @@ var _multer = _interopRequireDefault(require("multer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const upload = (0, _multer.default)();
+var upload = (0, _multer.default)();
 
-const updateItem = function updateItem(db, req) {
+var updateItem = function updateItem(db, req) {
   db.assign(req.body).write();
 };
 
-const crud = function crud(db) {
-  const dataRouter = _express.default.Router();
+var crud = function crud(db) {
+  var dataRouter = _express.default.Router();
 
   dataRouter.route("/newmodel/:modelname").post(function (req, res) {
     if (db.has(req.params.app + req.params.modelname).value()) {
@@ -34,7 +36,7 @@ const crud = function crud(db) {
   }).post(upload.none(), function (req, res) {
     db.insert((0, _utils.cleanData)(req.body));
     res.send("Saved");
-  }).put((req, res) => {
+  }).put(function (req, res) {
     db.update(req.body);
     res.send("content saved");
   });

@@ -5,7 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = _default;
 
+require("core-js/modules/es.array.includes.js");
+
 require("core-js/modules/es.string.includes.js");
+
+require("core-js/modules/es.array.concat.js");
 
 var _rougeSettings = require("../../rougeSettings.json");
 
@@ -44,9 +48,8 @@ function _default(app) {
       return next();
     }
 
-    const upperCasedApp = req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
     app.set("appName", req.params.app);
-    app.set("views", "".concat(__dirname, "/../../app").concat(upperCasedApp, "/views"));
+    app.set("views", "".concat(__dirname, "/../../app").concat(req.params.app, "/views"));
     res.render(req.params.view, {
       isLogged: app.get("isLogged"),
       appName: req.params.app

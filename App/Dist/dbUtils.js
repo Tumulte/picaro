@@ -5,21 +5,41 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es.array.index-of.js");
+
 require("core-js/modules/es.regexp.exec.js");
 
 require("core-js/modules/es.string.replace.js");
 
+require("core-js/modules/es.array.find.js");
+
+require("core-js/modules/es.array.concat.js");
+
+require("core-js/modules/es.array.filter.js");
+
 require("core-js/modules/es.string.split.js");
 
+require("core-js/modules/web.dom-collections.for-each.js");
+
 require("core-js/modules/es.string.trim.js");
+
+require("core-js/modules/es.array.join.js");
+
+require("core-js/modules/es.array.slice.js");
 
 var _nanoid = require("nanoid");
 
 var _utils = require("./utils");
 
-const filterFromQuery = function filterFromQuery(o, query) {
-  for (let property in query) {
-    const reqQuery = query[property];
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var filterFromQuery = function filterFromQuery(o, query) {
+  for (var property in query) {
+    var reqQuery = query[property];
 
     if (property === "tag_" && o.tags_) {
       return o.tags_.indexOf(reqQuery) !== -1;
@@ -31,7 +51,7 @@ const filterFromQuery = function filterFromQuery(o, query) {
   return true;
 };
 
-const trimAroundComma = function trimAroundComma(data) {
+var trimAroundComma = function trimAroundComma(data) {
   if (typeof data === "string") {
     return data.replace(", ", ",").replace(" ,", ",");
   }
@@ -52,24 +72,25 @@ const trimAroundComma = function trimAroundComma(data) {
  */
 
 
-const RelationHandler = function RelationHandler(db, req) {
+var RelationHandler = function RelationHandler(db, req) {
   this.data = {};
-  const appName = req.params.app;
-  const relationEndMarker = "_";
+  var appName = req.params.app;
+  var relationEndMarker = "_";
 
-  const replaceIDByData = function replaceIDByData(data, item, db) {
-    let dbQuery = false;
+  var replaceIDByData = function replaceIDByData(data, item, db) {
+    var dbQuery = false;
 
     if (data[item] === false) {
       return dbQuery;
     } else if (typeof data[item] === "string") {
-      let table = item.replace("_", "s");
+      var table = item.replace("_", "s");
       dbQuery = db.get("".concat(appName, "_").concat(table)).find({
         id: data[item]
       }).value();
     } else if (typeof data[item] !== "undefined") {
-      const table = item.replace("_", "s");
-      dbQuery = db.get("".concat(appName, "_").concat(table)).filter(function (o) {
+      var _table = item.replace("_", "s");
+
+      dbQuery = db.get("".concat(appName, "_").concat(_table)).filter(function (o) {
         return data[item].indexOf(o.id) !== -1;
       }).value();
     }
@@ -77,7 +98,7 @@ const RelationHandler = function RelationHandler(db, req) {
     return dbQuery;
   };
 
-  const detachObject = function detachObject(data) {
+  var detachObject = function detachObject(data) {
     data = JSON.parse(JSON.stringify(data));
     return data;
   };
@@ -101,118 +122,125 @@ const RelationHandler = function RelationHandler(db, req) {
       return this.data = false;
     }
 
-    const data = detachObject(this.data);
+    var data = detachObject(this.data);
     this.data = findRelationnalProperties(data, db);
     return this.data;
   };
 }; //POST HANDLER
 
 
-class DataWriteHandler {
-  constructor(db, req) {
+var DataWriteHandler = /*#__PURE__*/function () {
+  function DataWriteHandler(db, req) {
+    _classCallCheck(this, DataWriteHandler);
+
     this.db = db;
     this.req = req;
   }
 
-  standardizePostData(data) {
-    this.data = data;
-    this.relations = [];
-    this.data["id"] = (0, _nanoid.nanoid)();
+  _createClass(DataWriteHandler, [{
+    key: "standardizePostData",
+    value: function standardizePostData(data) {
+      this.data = data;
+      this.relations = [];
+      this.data["id"] = (0, _nanoid.nanoid)();
 
-    const addExistingID = function addExistingID(item) {
-      const attributeName = item.replace("existing_", "");
-      let idCollection = this.data[item].split("__")[1];
+      var addExistingID = function addExistingID(item) {
+        var attributeName = item.replace("existing_", "");
+        var idCollection = this.data[item].split("__")[1];
 
-      if (idCollection.indexOf(",") !== -1) {
-        idCollection = idCollection.split(",");
-      }
+        if (idCollection.indexOf(",") !== -1) {
+          idCollection = idCollection.split(",");
+        }
 
-      this.data[attributeName] = idCollection;
-      delete this.data[item];
-      return this;
-    };
+        this.data[attributeName] = idCollection;
+        delete this.data[item];
+        return this;
+      };
 
-    const handleNewRelations = function handleNewRelations(item) {
-      if (this.data[item] === "") {
-        return false;
-      } else if (typeof this.data[item] === "string") {
-        let relationCollection = this.data[item].split("__");
-        this.data[item] = relationCollection[1].split(",");
-      }
+      var handleNewRelations = function handleNewRelations(item) {
+        if (this.data[item] === "") {
+          return false;
+        } else if (typeof this.data[item] === "string") {
+          var relationCollection = this.data[item].split("__");
+          this.data[item] = relationCollection[1].split(",");
+        }
 
-      const newRelationsID = [];
-      this.data[item].forEach(function (element) {
-        const id = (0, _nanoid.nanoid)();
-        newRelationsID.push(id);
-        this.relations.push({
-          id: id,
-          name: element.trim(),
-          type: item.replace("new_", "")
+        var newRelationsID = [];
+        this.data[item].forEach(function (element) {
+          var id = (0, _nanoid.nanoid)();
+          newRelationsID.push(id);
+          this.relations.push({
+            id: id,
+            name: element.trim(),
+            type: item.replace("new_", "")
+          });
         });
-      });
-      return newRelationsID.join();
-    };
+        return newRelationsID.join();
+      };
 
-    const standardizeIdList = function standardizeIdList(list) {
-      if (list.charAt(0) === ",") {
-        list = list.slice(1);
-      }
-
-      list = trimAroundComma(list);
-      return list.split(",");
-    };
-
-    const concatenate = function concatenate(existingData, newData) {
-      if (!existingData) {
-        return newData;
-      } else if (!newData) {
-        return existingData;
-      }
-
-      if (typeof existingData === "string") {
-        existingData = existingData.split(",");
-      }
-
-      return existingData.concat(newData);
-    };
-
-    const populateRelations = function populateRelations() {
-      for (let item in data) {
-        if (item.indexOf("existing_") !== -1 && this.data[item] !== "") {
-          addExistingID(item);
+      var standardizeIdList = function standardizeIdList(list) {
+        if (list.charAt(0) === ",") {
+          list = list.slice(1);
         }
-      }
 
-      for (let item in data) {
-        if (item.indexOf("new_") !== -1) {
-          const attributeName = item.replace("new_", "");
+        list = trimAroundComma(list);
+        return list.split(",");
+      };
 
-          if (!this.data[attributeName] && this.data[item] === "") {
-            this.data[attributeName] = false;
-          } else if (this.data[item] !== "") {
-            const relations = handleNewRelations(item);
-            this.data[attributeName] = concatenate(this.data[attributeName], standardizeIdList(relations));
+      var concatenate = function concatenate(existingData, newData) {
+        if (!existingData) {
+          return newData;
+        } else if (!newData) {
+          return existingData;
+        }
+
+        if (typeof existingData === "string") {
+          existingData = existingData.split(",");
+        }
+
+        return existingData.concat(newData);
+      };
+
+      var populateRelations = function populateRelations() {
+        for (var item in data) {
+          if (item.indexOf("existing_") !== -1 && this.data[item] !== "") {
+            addExistingID(item);
           }
-
-          delete this.data[item];
         }
-      }
 
+        for (var _item in data) {
+          if (_item.indexOf("new_") !== -1) {
+            var attributeName = _item.replace("new_", "");
+
+            if (!this.data[attributeName] && this.data[_item] === "") {
+              this.data[attributeName] = false;
+            } else if (this.data[_item] !== "") {
+              var relations = handleNewRelations(_item);
+              this.data[attributeName] = concatenate(this.data[attributeName], standardizeIdList(relations));
+            }
+
+            delete this.data[_item];
+          }
+        }
+
+        return this;
+      };
+
+      populateRelations();
       return this;
-    };
+    }
+  }, {
+    key: "save",
+    value: function save() {
+      var data = this.standardizePostData(this.req.body);
+      this.db.get((0, _utils.makeTableName)(this.req)).push(data.data).write();
+      this.saveNewRelations(this.db, data.relations, this.req.params.app);
+      return data;
+    }
+  }]);
 
-    populateRelations();
-    return this;
-  }
-
-  save() {
-    const data = this.standardizePostData(this.req.body);
-    this.db.get((0, _utils.makeTableName)(this.req)).push(data.data).write();
-    this.saveNewRelations(this.db, data.relations, this.req.params.app);
-    return data;
-  }
-
-}
+  return DataWriteHandler;
+}();
 
 var _default = {
   DataWriteHandler: DataWriteHandler,
