@@ -20,9 +20,6 @@ export function colorHelper() {
     }
     return hex.toUpperCase();
   };
-  /**
-   * @param {import("../Typings/global").Color} color
-   */
   this.hexToRgb = function(color) {
     this.color = color;
     if (this.color.red !== undefined) {
@@ -55,9 +52,6 @@ export function colorHelper() {
     };
     return this;
   };
-  /**
-   * @param  {import("../Typings/global").Color} color
-   */
   this.rgbToHex = function(color) {
     this.color = color;
 

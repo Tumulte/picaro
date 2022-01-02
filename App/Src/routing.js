@@ -36,10 +36,8 @@ export default function(app) {
     if (req.params.app === "dev-bundle") {
       return next();
     }
-    const upperCasedApp =
-      req.params.app.charAt(0).toUpperCase() + req.params.app.slice(1);
     app.set("appName", req.params.app);
-    app.set("views", `${__dirname}/../../app${upperCasedApp}/views`);
+    app.set("views", `${__dirname}/../../app${req.params.app}/views`);
     res.render(req.params.view, {
       isLogged: app.get("isLogged"),
       appName: req.params.app

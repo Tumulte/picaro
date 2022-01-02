@@ -9,6 +9,7 @@ import tags from "../Ui/Components/tags.vue";
 import nav from "../Ui/Components/nav.vue";
 import alert from "../Ui/Components/Utils/alert.vue";
 import rfApp from "../Ui/Components/rfApp.vue";
+import rfSelect from "../Ui/Components/rfSelect.vue";
 
 import modelField from "../Ui/Components/modelField.vue";
 import router from "../Router/router";
@@ -108,6 +109,7 @@ Vue.component("RfAlert", alert);
 Vue.component("RfModelField", modelField);
 Vue.component("RfApp", rfApp);
 Vue.component("RfLayout", rfLayout);
+Vue.component("RfSelect", rfSelect);
 
 Vue.component("AdminToolBar", () =>
   import("../Ui/Components/adminToolBar.vue")

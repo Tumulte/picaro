@@ -255,3 +255,56 @@
 #rf-toolbar .v-btn {
     font-size: 10px;
 }
+.rf-module-container:hover > .common-layout-settings {
+    display: block;
+}
+.rf-layout-is-edited .common-layout-settings {
+    > div:nth-child(odd) {
+        background: #f0f0f0;
+    }
+    .theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+        border: none;
+    }
+    .v-text-field__details {
+        display: none;
+    }
+    .v-select.v-text-field input {
+        width: 5px;
+    }
+    .v-select__selection {
+        width: 100%;
+    }
+    .v-text-field.v-input--dense {
+        padding: 11px 5px 0 5px;
+        margin: 0;
+    }
+    .v-chip.v-size--small{
+        height: 20px;
+    }
+    .v-autocomplete{
+        padding-top: 9px;
+    }
+    .v-input__slot {
+        margin: 0;
+    }
+    .v-application--is-ltr .v-text-field .v-label{
+        top: 3px
+    }
+    border-bottom: 1px solid var(--secondaryDark);
+    border-right: 1px solid var(--secondaryDark);
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: #fff;
+}
+.common-layout-settings > div {
+    display: inline-block;
+}
+.common-layout-settings > .v-input {
+    font-size: 12px;
+}
+.common-layout-settings .v-label {
+    font-size: 12px;
+}

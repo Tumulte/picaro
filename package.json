@@ -30,6 +30,8 @@
   "author": "Étienne Rouge",
   "license": "MIT",
   "dependencies": {
+    "@rougefw/colorgenerator": "^1.0.0",
+    "@rougefw/colorhelper": "^1.0.0",
     "@tiptap/extension-bullet-list": "^2.0.0-beta.18",
     "@tiptap/extension-image": "^2.0.0-beta.15",
     "@tiptap/extension-link": "^2.0.0-beta.21",
@@ -75,7 +77,6 @@
     "@babel/node": "^7.15.4",
     "@babel/plugin-transform-modules-commonjs": "^7.14.5",
     "@babel/preset-env": "^7.14.8",
-    "@babel/preset-react": "^7.14.5",
     "@mdi/font": "^5.9.55",
     "@nuxtjs/vuetify": "^1.12.1",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.24",

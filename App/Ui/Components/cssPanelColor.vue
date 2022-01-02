@@ -1,6 +1,9 @@
 <template lang="pug">
     div(id="_color" class="_panel" v-if="displayPanel")
         v-card(class="_container pa-3 ma-3" id="_range-light-container")
+            v-slider(label="Move" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="styleSet.move" @change="updateVariationAmt()" )
+            v-slider(label="Curve" ticks=true tick-size="3" min="0" max="6" name="variation-light-amt" v-model="styleSet.curve" @change="updateVariationAmt()" )
+            v-slider(label="Count" ticks=true tick-size="3" min="3" max="10" name="variation-light-amt" v-model="styleSet.count" @change="updateVariationAmt()" )
             v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="styleSet.variationLightAmt" @change="updateVariationAmt()" )
             v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="styleSet.variationSatAmt" @change="updateVariationAmt()" )
         div(:style="bgColor(dominantColorParams)" data-jest="dominant-preview")
@@ -140,7 +143,10 @@ export default {
         .generate(
           this.styleSet.colorParameterCollection,
           parseInt(this.styleSet.variationLightAmt),
-          parseInt(this.styleSet.variationSatAmt)
+          parseInt(this.styleSet.variationSatAmt),
+          parseInt(this.styleSet.count),
+          parseInt(this.styleSet.move),
+          parseInt(this.styleSet.curve)
         );
     },
 
@@ -190,7 +196,10 @@ export default {
       this.colorSet.generate(
         this.styleSet.colorParameterCollection,
         parseInt(this.styleSet.variationLightAmt),
-        parseInt(this.styleSet.variationSatAmt)
+        parseInt(this.styleSet.variationSatAmt),
+        parseInt(this.styleSet.count),
+        parseInt(this.styleSet.move),
+        parseInt(this.styleSet.curve)
       );
     },
     storeColorCoordinate: function(coordinates) {

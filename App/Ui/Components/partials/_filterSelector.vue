@@ -1,6 +1,6 @@
 <template lang="pug">
-    span
-        v-combobox(multiple small-chips :items="filterList" v-model="currentFilterList" item-text="label" item-value="id" @change="checkForNewElement")
+    div
+        v-combobox(label="Categories" multiple small-chips :items="filterList" v-model="currentFilterList" item-text="label" item-value="id" @change="checkForNewElement")
         v-btn(v-if="displaySave" @click="saveFilterList") Save
 </template>
 

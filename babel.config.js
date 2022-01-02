@@ -1,17 +1,10 @@
 const presets = [
-  "@babel/preset-react",
   [
     "@babel/preset-env",
     {
-      targets: {
-        edge: "17",
-        firefox: "60",
-        chrome: "67",
-        safari: "11.1",
-        node: "current"
-      },
+      targets: "> 0.25%, not dead",
       useBuiltIns: "usage",
-      corejs: "3.6.4"
+      corejs: "3"
     }
   ]
 ];
