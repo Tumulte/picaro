@@ -129,7 +129,7 @@
     "replace-in-file-webpack-plugin": "^1.0.6",
     "sass": "~1.32.12",
     "sass-loader": "^12.1.0",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "style-loader": "^3.2.1",
     "stylelint": "^13.13.1",
     "stylelint-config-recommended": "^5.0.0",
