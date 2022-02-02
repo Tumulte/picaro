@@ -30,8 +30,10 @@
   "author": "Étienne Rouge",
   "license": "MIT",
   "dependencies": {
-    "@rougefw/colorgenerator": "^1.0.0",
-    "@rougefw/colorhelper": "^1.0.0",
+    "@babel/plugin-transform-runtime": "^7.16.7",
+    "@babel/runtime": "^7.16.7",
+    "@picaro/colorhelper": "^1.0.0",
+    "@picaro/colorgenerator": "^1.1.0",
     "@tiptap/extension-bullet-list": "^2.0.0-beta.18",
     "@tiptap/extension-image": "^2.0.0-beta.15",
     "@tiptap/extension-link": "^2.0.0-beta.21",

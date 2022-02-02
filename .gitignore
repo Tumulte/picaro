@@ -7,6 +7,8 @@ npm-debug.log
 static/*
 app*/*
 App/Tests/Cypress/videos/*
+App/Dist/*
+App/Views/webpackBundles.pug
 App/mochawesome.json
 App/Tests/css/*
 App/Tests/js/*

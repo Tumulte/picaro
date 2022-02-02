@@ -54,7 +54,7 @@ const cssPanelColor = () => import("./cssPanelColor.vue");
 const uploadPanel = () => import("./uploadPanel.vue");
 const cssPanelTypography = () => import("./cssPanelTypography.vue");
 import { nanoid } from "nanoid";
-import { generateColorSet } from "../../Src/colorGenerator";
+import { generateColorSet } from "@picaro/colorgenerator";
 import { mapActions, mapGetters } from "vuex";
 import { VNavigationDrawer } from "vuetify/lib";
 
@@ -234,8 +234,7 @@ export default {
 
       colorSet.generate(
         styleSet.colorParameterCollection,
-        parseInt(styleSet.variationLightAmt),
-        parseInt(styleSet.variationSatAmt)
+        this.styleSet.colorGeneratorParams
       );
       this.$store.commit("loaded", true);
       this.$store.commit("colorSet", colorSet);

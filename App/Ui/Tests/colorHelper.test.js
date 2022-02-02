@@ -17,7 +17,7 @@ describe("hexadecimal is converted to decimal", () => {
   });
 });
 describe("The color type stays the same if it is already the correct one", () => {
-  it("return the RGB if it is already a RGB", () => {
+  it("return the RGB if it is already a RGB", () => {
     const color = { red: 23, green: 189, blue: 38 };
     const rgb = colorUtils.hexToRgb(color).getValueCollection();
     expect(rgb).toEqual(color);

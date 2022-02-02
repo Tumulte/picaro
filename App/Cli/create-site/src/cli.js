@@ -88,8 +88,14 @@ const handleData = function(type, name) {
       styleset.insert({
         dominant: "#700000",
         colorParameterCollection: [],
-        variationLightAmt: 5,
-        variationSatAmt: 5,
+        colorGeneratorParams: {
+          count: 10,
+          text: { light: 50, saturation: 0, hue: 0 },
+          hue: { variation: 0, curve: 0, move: 0 },
+          light: { variation: 5, move: 0, curve: 0 },
+          saturation: { variation: 0, move: 0, curve: 0 },
+          full: true
+        },
         selectorCollection: basicCssRem,
         fontOrigin: "local",
         "font-size": "16",

@@ -1,4 +1,4 @@
-import { generateColorSet } from "./colorGenerator";
+import { generateColorSet } from "@picaro/colorgenerator";
 import { webSafeFonts, makeFontFamilyName, makeRatio } from "./utils";
 
 const prefixClass = "#rf-content-container";
@@ -102,8 +102,7 @@ const getRatioCSSVariables = function(ratioCollection) {
 export const generateCSS = function(styleSet) {
   const colorSet = new generateColorSet(styleSet.dominant).generate(
     styleSet.colorParameterCollection,
-    parseInt(styleSet.variationLightAmt),
-    parseInt(styleSet.variationSatAmt)
+    styleSet.colorGeneratorParams
   );
 
   const customCSS = styleSet.selectorCollection;

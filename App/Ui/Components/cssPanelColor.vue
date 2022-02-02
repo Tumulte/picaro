@@ -1,45 +1,59 @@
 <template lang="pug">
     div(id="_color" class="_panel" v-if="displayPanel")
         v-card(class="_container pa-3 ma-3" id="_range-light-container")
-            v-slider(label="Move" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="styleSet.move" @change="updateVariationAmt()" )
-            v-slider(label="Curve" ticks=true tick-size="3" min="0" max="6" name="variation-light-amt" v-model="styleSet.curve" @change="updateVariationAmt()" )
-            v-slider(label="Count" ticks=true tick-size="3" min="3" max="10" name="variation-light-amt" v-model="styleSet.count" @change="updateVariationAmt()" )
-            v-slider(label="Light variation" ticks=true tick-size="3" min="0" max="10" name="variation-light-amt" v-model="styleSet.variationLightAmt" @change="updateVariationAmt()" )
-            v-slider(label="Saturation variation" ticks=true tick-size="3" min="0" max="10" name="variation-sat-amt" v-model="styleSet.variationSatAmt" @change="updateVariationAmt()" )
-        div(:style="bgColor(dominantColorParams)" data-jest="dominant-preview")
-            div(:style="bgColor(dominantColorParams)" class="mb-0")
-                v-slider(min="0" max="360" v-model="dominantColorParams.hue" @change="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColorParams, true)" ref="dominantHue")
-                v-slider(min="0" label="light" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.light" ref="dominantLight")
-                v-slider(min="0" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.saturation" ref="dominantSat")
+            v-slider(label="Count" ticks=true tick-size="3" min="3" max="10" v-model="styleSet.colorGeneratorParams.count" @change="generateColors()" )
+            h3 hue
+            v-slider(label="variation" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.hue.variation" @change="generateColors()" )
+            v-slider(label="curve" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.hue.curve" @change="generateColors()" )
+            v-slider(label="move" ticks=true tick-size="3" min="-8" max="8"  v-model="styleSet.colorGeneratorParams.hue.move" @change="generateColors()" )
+            h3 Light
+            v-slider(label="variation" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.light.variation" @change="generateColors()" )
+            v-slider(label="curve" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.light.curve" @change="generateColors()" )
+            v-slider(label="move" ticks=true tick-size="3" min="-8" max="8"  v-model="styleSet.colorGeneratorParams.light.move" @change="generateColors()" )
+            h3 Saturation
+            v-slider(label="variation" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.saturation.variation" @change="generateColors()" )
+            v-slider(label="curve" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.saturation.curve" @change="generateColors()" )
+            v-slider(label="move" ticks=true tick-size="3" min="-8" max="8"  v-model="styleSet.colorGeneratorParams.saturation.move" @change="generateColors()" )
+            h3 text
+            v-slider(label="variation" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.text.variation" @change="generateColors()" )
+            v-slider(label="curve" ticks=true tick-size="3" min="0" max="10"  v-model="styleSet.colorGeneratorParams.text.curve" @change="generateColors()" )
+            v-slider(label="move" ticks=true tick-size="3" min="-8" max="8"  v-model="styleSet.colorGeneratorParams.text.move" @change="generateColors()" )
+
+        div
+            div(:style="bgColor(dominantColorParams)" data-jest="dominant-preview")
+                div(:style="bgColor(dominantColorParams)" class="mb-0")
+                    v-slider(min="0" max="360" v-model="dominantColorParams.hue" @change="updateColor()" label="Hue" thumb-label="always" :thumb-color="getStringColor(dominantColorParams, true)" ref="dominantHue")
+                    v-slider(min="0" label="light" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.light" ref="dominantLight")
+                    v-slider(min="0" max="100" thumb-label="always" @change="updateColor()" v-model="dominantColorParams.saturation" ref="dominantSat")
+                .color-panel--sample
+                    v-card(v-for="(subColor, index) in colorSet.colorCollection.dominantSubCollection" :key="index" @click="toggleColor('dominant',index)" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColorParams)), '__is-hidden': colorIsHidden('dominant', index)}" class="pa-3" v-bind:style="bgColor(subColor)")
+            v-card(v-for="(color, index) in colorSet.colorCollection.combinationCollection" :key="index" class="sub-color-parameters")
+                div(:style="bgColor(color)" :data-jest="`sub-preview${index}`")
+                    v-slider(min="0" max="360" v-model="color.hue" label="Hue" ref="subHue" thumb-label="always" :thumb-color="getStringColor(color, true)" @change="updateCombinationColor(index)")
+                    v-slider(label="Light" thumb-label="always" min="0" max="100" v-model="color.light" @change="updateCombinationColor(index)")
+                    v-btn(v-if="color.light !== dominantColorParams.light" @click.stop="resetSetting('light', index, color)" ) reset
+                    v-slider(label="Sat." thumb-label="always" min="0" max="100" v-model="color.saturation" @change="updateCombinationColor(index)")
+                .color-panel--sample
+                    v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" @click="toggleColor('sub', subIndex, index)" :style="bgColor(subColor)" class="pa-3" data-jest="sub-combination-square" :class="{'__is-hidden': colorIsHidden('sub',subIndex,index)}")
+                v-card-actions
+                    v-btn(text=true @click="removeColor(index)" class="center" :data-jest="`remove-color-${index}`") Remove Color
             .color-panel--sample
-                v-card(v-for="(subColor, index) in colorSet.colorCollection.dominantSubCollection" :key="index" @click="toggleColor('dominant',index)" :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColorParams)), '__is-hidden': colorIsHidden('dominant', index)}" class="pa-3" v-bind:style="bgColor(subColor)")
-        v-card(v-for="(color, index) in colorSet.colorCollection.combinationCollection" :key="index" class="sub-color-parameters")
-            div(:style="bgColor(color)" :data-jest="`sub-preview${index}`")
-                v-slider(min="0" max="360" v-model="color.hue" label="Hue" ref="subHue" thumb-label="always" :thumb-color="getStringColor(color, true)" @change="updateCombinationColor(index)")
-                v-slider(label="Light" thumb-label="always" min="0" max="100" v-model="color.light" @change="updateCombinationColor(index)")
-                v-btn(v-if="color.light !== dominantColorParams.light" @click.stop="resetSetting('light', index, color)" ) reset
-                v-slider(label="Sat." thumb-label="always" min="0" max="100" v-model="color.saturation" @change="updateCombinationColor(index)")
+                div(v-for="(subColor, index) in colorSet.colorCollection.graySubCollection")
+                    v-card(class="pa-3" :style="bgColor(subColor)")
             .color-panel--sample
-                v-card(v-for="(subColor, subIndex) in color.subCombination" :key="subIndex" @click="toggleColor('sub', subIndex, index)" :style="bgColor(subColor)" class="pa-3" data-jest="sub-combination-square" :class="{'__is-hidden': colorIsHidden('sub',subIndex,index)}")
+                div(v-for="(subColor, index) in colorSet.colorCollection.alertSubCollection" class="sub-combination" )
+                    v-card(v-bind:style="bgColor(subColor)")
+            .color-panel--sample
+                div(v-for="(subColor, index) in colorSet.colorCollection.warningSubCollection" class="sub-combination")
+                    v-card(v-bind:style="bgColor(subColor)" )
+            .color-panel--sample
+                div(v-for="(subColor, index) in colorSet.colorCollection.successSubCollection" class="sub-combination")
+                    v-card(v-bind:style="bgColor(subColor)")
+            .color-panel--sample
+                div(v-for="(subColor, index) in colorSet.colorCollection.infoSubCollection" class="sub-combination" )
+                    v-card(v-bind:style="bgColor(subColor)")
             v-card-actions
-                v-btn(text=true @click="removeColor(index)" class="center" :data-jest="`remove-color-${index}`") Remove Color
-        .color-panel--sample
-            div(v-for="(subColor, index) in colorSet.colorCollection.graySubCollection")
-                v-card(class="pa-3" :style="bgColor(subColor)")
-        .color-panel--sample
-            div(v-for="(subColor, index) in colorSet.colorCollection.alertSubCollection" class="sub-combination" )
-                v-card(v-bind:style="bgColor(subColor)")
-        .color-panel--sample
-            div(v-for="(subColor, index) in colorSet.colorCollection.warningSubCollection" class="sub-combination")
-                v-card(v-bind:style="bgColor(subColor)" )
-        .color-panel--sample
-            div(v-for="(subColor, index) in colorSet.colorCollection.successSubCollection" class="sub-combination")
-                v-card(v-bind:style="bgColor(subColor)")
-        .color-panel--sample
-            div(v-for="(subColor, index) in colorSet.colorCollection.infoSubCollection" class="sub-combination" )
-                v-card(v-bind:style="bgColor(subColor)")
-        v-card-actions
-            v-btn(text=true @click="addColor" class="_color-button" data-jest="addColor") Add Color
+                v-btn(text=true @click="addColor" class="_color-button" data-jest="addColor") Add Color
 </template>
 <script>
 import { colorHelper } from "../../Src/colorHelper";
@@ -142,11 +156,7 @@ export default {
         .updateColor(this.dominantColorParams)
         .generate(
           this.styleSet.colorParameterCollection,
-          parseInt(this.styleSet.variationLightAmt),
-          parseInt(this.styleSet.variationSatAmt),
-          parseInt(this.styleSet.count),
-          parseInt(this.styleSet.move),
-          parseInt(this.styleSet.curve)
+          this.styleSet.colorGeneratorParams
         );
     },
 
@@ -165,8 +175,7 @@ export default {
     regenerateColorSet: function() {
       this.colorSet.generate(
         this.styleSet.colorParameterCollection,
-        parseInt(this.styleSet.variationLightAmt),
-        parseInt(this.styleSet.variationSatAmt)
+        this.styleSet.colorGeneratorParams
       );
     },
     isMainColor: function(color, subColor) {
@@ -182,8 +191,7 @@ export default {
       });
       this.colorSet.generate(
         this.styleSet.colorParameterCollection,
-        parseInt(this.styleSet.variationLightAmt),
-        parseInt(this.styleSet.variationSatAmt)
+        this.styleSet.colorGeneratorParams
       );
       this.styleSet.hiddenCombination.sub.push([]);
     },
@@ -192,14 +200,10 @@ export default {
       this.styleSet.colorParameterCollection.splice(index, 1);
       this.styleSet.hiddenCombination.sub.splice(index, 1);
     },
-    updateVariationAmt: function() {
+    generateColors() {
       this.colorSet.generate(
         this.styleSet.colorParameterCollection,
-        parseInt(this.styleSet.variationLightAmt),
-        parseInt(this.styleSet.variationSatAmt),
-        parseInt(this.styleSet.count),
-        parseInt(this.styleSet.move),
-        parseInt(this.styleSet.curve)
+        this.styleSet.colorGeneratorParams
       );
     },
     storeColorCoordinate: function(coordinates) {
@@ -262,6 +266,9 @@ export default {
 };
 </script>
 <style>
+#_color {
+  display: flex;
+}
 .color-panel--sample {
   display: flex;
 }

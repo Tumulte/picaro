@@ -2,13 +2,13 @@
     div(:class="{'rf-layout-is-edited':editLayout}" class="rf-dynamic-module-container")
         div(@click="editLayout = !editLayout;$store.commit('editCommonLayout', false)" v-if="isLogged" class="rf-module-label") DYNAMIC LAYOUT
         v-row(v-for="(layoutLine, index) in selectedLayout" v-if="selectedLayout" :key="index" class="rf-layout--container rf-row-container")
-            v-col(v-for="(module, columnIndex) in layoutLine" :key="module.id" class="rf-layout--container rf-module-container" :cols="module.cols")
+            v-col(v-for="(module, columnIndex) in layoutLine" :key="module.id" class="rf-layout--container rf-module-container" :class="makeClass(module)" :cols="module.cols")
                 div(class="common-layout-settings")
                     v-text-field(dense type="number" v-if="editLayout" @input="$set(module, 'cols', parseInt($event))" label="Width" min="0" max="11" :value="module.cols || 0")
                     rf-select(:items="availableLayout" label="Type" @change="$set(module, 'type', $event)" :value="module.type" v-if="editLayout")
                     rf-select(:items="modelCollectionNames" label="Model" @change="$set(module, 'model', $event)" :value="module.model" v-if="editLayout")
                     filter-selector(type="categories" :savedFilters="module.categories" @updateSelectedFilter="$set(module, 'categories', $event.data)" v-if="editLayout")
-                component(:is="module.type ? module.type : 'div'" :moduleParams=" module" :key="index + componentKey")
+                component(:is="module.type ? module.type : 'div'" :moduleParams="module" :key="index + componentKey")
                 div(v-if="editLayout" @click="layoutLine.splice(index + 1,0 , initModule(module))" data-jest="add-column" class="rf-layout--add-column")
                     v-icon mdi-table-column-plus-after
 
@@ -78,7 +78,13 @@ export default {
   },
   methods: {
     ...mapActions(["updateLinkedModule"]),
-
+    makeClass(moduleParams) {
+      return `rf-module-type-${moduleParams.type} rf-module-model-${
+        moduleParams.model
+      } ${moduleParams.categories
+        ?.map(item => `rf-module-category-${item.id}`)
+        .join(" ")}`;
+    },
     linkModule(line, column) {
       if (!this.pendingLinkedModule) {
         this.$store.commit(
