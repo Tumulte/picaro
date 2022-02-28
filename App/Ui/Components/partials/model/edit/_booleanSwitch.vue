@@ -1,7 +1,6 @@
 <template lang="pug">
     v-switch(data-jest="boolean-field"  v-model.trim="bool" :rules="boolRules" :label="label" :name="name")
 </template>
-
 <script>
 
 export default {
@@ -29,7 +28,6 @@ export default {
     }
 };
 </script>
-
 <style scoped>
 
 </style>

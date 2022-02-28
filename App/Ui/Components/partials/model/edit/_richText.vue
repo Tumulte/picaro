@@ -33,7 +33,6 @@
 
 
 </template>
-
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Image from "@tiptap/extension-image";

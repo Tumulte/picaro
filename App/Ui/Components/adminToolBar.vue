@@ -217,7 +217,6 @@ export default {
             text: "Style Set saved successfully"
           });
           this.getAllStyleSet();
-          this.toggleIndex("cssPanelIndex");
           document.getElementById("_admin-form-ext-submit").click();
         })
         .catch(errors => {

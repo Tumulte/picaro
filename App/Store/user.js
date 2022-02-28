@@ -56,8 +56,8 @@ export default {
     dialog: {},
     alertCallbackCollection: [],
     alertConfirmationStatus: {},
-    settings: { modelCollection: {}, navStructureString: "{}" },
-    modelCollection: {},
+    settings: { modelCollection: [], navStructureString: "{}" },
+    modelCollection: [],
     navStructure: {},
     filterCollection: { all: {}, modelFilters: {} },
     pendingLinkedModule: ""
@@ -92,6 +92,14 @@ export default {
     // @ts-ignore
     list: function(state) {
       return state.list;
+    },
+    urlPrefix(state) {
+      let prefix = ""
+      // eslint-disable-next-line no-undef
+      if(ENVIRONMENT === "development") {
+        prefix = "public/"
+      }
+      return `/${prefix}${state.settings.applicationName}`
     },
     // @ts-ignore
     tagCollection: function(state) {

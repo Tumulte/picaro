@@ -2,7 +2,6 @@
 
     v-btn(@click="deleteField" small outlined) delete
 </template>
-
 <script>
 import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
@@ -48,5 +47,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

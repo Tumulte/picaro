@@ -1,6 +1,7 @@
 import { generateColorSet } from "@picaro/colorgenerator";
 import { webSafeFonts, makeFontFamilyName, makeRatio } from "./utils";
 
+
 const prefixClass = "#rf-content-container";
 const adminPrefixClass = ".rf-toolbar-container";
 const headerTags = `${prefixClass} h1,
@@ -45,7 +46,7 @@ const getParameter = function(coordinates, styleSet, colorSet) {
  * @param {string} font The name of the google font.
  */
 //TODO a condition for local fonts
-const addFont = function(font, type) {
+const addFont = function(font, type, name) {
   if (webSafeFonts.includes(font)) return "";
   if (type === "google") {
     return `@import url("https://fonts.googleapis.com/css?family=${encodeURI(
@@ -56,7 +57,12 @@ const addFont = function(font, type) {
     return `@font-face {
     font-family: "${makeFontFamilyName(font)}";
     src: url("/fonts/${encodeURI(font)}");
-}`;
+}
+@font-face {
+    font-family: "${name}";
+    src: url("/fonts/${encodeURI(font)}");
+}
+`;
   }
 };
 const getColorCSSVariables = function(colorSet) {
@@ -141,17 +147,17 @@ ${propertiesString}
   }
   let fontFace = `${
     styleSet.fontFamilyMain
-      ? addFont(styleSet.fontFamilyMain, styleSet.fontOrigin)
+      ? addFont(styleSet.fontFamilyMain, styleSet.fontOrigin, "titlefont")
       : ""
   }
 ${
   styleSet.fontFamilyMain
-    ? addFont(styleSet.fontFamilyTitle, styleSet.fontOrigin)
+    ? addFont(styleSet.fontFamilyTitle, styleSet.fontOrigin, "mainfont")
     : ""
 }
 ${
   styleSet.fontFamilyAlt
-    ? addFont(styleSet.fontFamilyAlt, styleSet.fontOrigin)
+    ? addFont(styleSet.fontFamilyAlt, styleSet.fontOrigin, "altfont")
     : ""
 }`;
 

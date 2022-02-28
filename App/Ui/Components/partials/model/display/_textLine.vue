@@ -1,7 +1,6 @@
 <template lang="pug">
     conponent(:is="fieldParams.template || 'span'" v-if="fieldData.content") {{ fieldData.content }}
 </template>
-
 <script>
 export default {
   name: "TextLine",
@@ -11,5 +10,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

@@ -3,7 +3,6 @@
         v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="fieldParams.label" :name="fieldParams.name")
 
 </template>
-
 <script>
 export default {
   name: "TextLineEdit",
@@ -35,6 +34,8 @@ export default {
   computed: {
     formatedData() {
       return {
+        id: this.fieldParams.id,
+        name: this.fieldParams.name,
         content: this.text,
         fieldType: "text-line",
         required: this.fieldParams.required
@@ -65,5 +66,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

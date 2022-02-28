@@ -16,7 +16,7 @@
                                         v-text-field(@change="changeProperty($event, selector, property)" :value="property" data-jest="property-edit")
                                     v-row
                                         span(v-if="property.type === 'ratio'") {{makeRatio(property)}}
-                                        span(v-else contenteditable=true @keypress.enter.prevent.stop="saveEdit({selector:selector, property:property, value: true} , $event)" v-html="getProperty(value)")
+                                        v-text-field(v-else @keypress.enter.prevent.stop="changeValue({selector:selector, property:property, value: $event.target.value})" :value="getProperty(value)")
 
                                 v-col(cols="3")
                                     v-btn(class="w-auto pa-0" text=true @click="deleteProperty(selector,property)")
@@ -30,7 +30,7 @@
 
 </template>
 <script>
-import { colorHelper } from "../../Src/colorHelper";
+import { RfColorHelper } from "@picaro/colorhelper";
 
 import { isHexColor } from "../../Src/utils";
 import messages from "../../Messages/messages.json";
@@ -38,7 +38,7 @@ import { mapGetters, mapActions } from "vuex";
 import ColorPalette from "./colorPalette.vue";
 import RatioPalette from "./ratioPalette.vue";
 
-const colorUtils = new colorHelper();
+const colorUtils = new RfColorHelper();
 const getColorFromCollection = function(instance, data) {
   if (
     ["dominant", "warning", "alert", "info", "gray", "success"].includes(
@@ -198,7 +198,11 @@ export default {
           text: `The property ${event.toUpperCase()} already exists`
         });
       }
-    }
+    },
+    changeValue({property, selector, value}) {
+      console.debug(value)
+      this.$set(this.styleSet.selectorCollection[selector], property, value)
+    },
   },
   computed: {
     ...mapGetters(["styleSet", "colorSet", "ratioCollection", "loaded"]),

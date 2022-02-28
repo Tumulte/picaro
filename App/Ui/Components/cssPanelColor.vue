@@ -56,11 +56,11 @@
                 v-btn(text=true @click="addColor" class="_color-button" data-jest="addColor") Add Color
 </template>
 <script>
-import { colorHelper } from "../../Src/colorHelper";
+import { RfColorHelper } from "@picaro/colorhelper";
 import { mapGetters, mapActions } from "vuex";
 import { VSlider } from "vuetify/lib";
 
-const colorUtils = new colorHelper();
+const colorUtils = new RfColorHelper();
 
 const generateNewColorSet = function(dominant, combination) {
   const newCombination = {};
@@ -142,7 +142,7 @@ export default {
       number = number > max ? max : number;
       return isNaN(parseInt(number)) ? min : number;
     },
-    updateColor: function() {
+    updateColor() {
       if (!this.isMounted && !this.loaded) {
         //prevent initial trigger
         return;

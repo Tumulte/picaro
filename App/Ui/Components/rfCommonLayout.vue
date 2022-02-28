@@ -23,7 +23,6 @@
             v-icon mdi-table-row-plus-after
 
 </template>
-
 <script>
 import filterLayout from "./filterCategories.vue";
 import filterLink from "./filterLink.vue";
@@ -118,5 +117,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

@@ -84,30 +84,30 @@ const handleData = function(type, name) {
       db.addCollection("users", { unique: ["id", "username"] });
       db.addCollection("styleset", { unique: ["id"] });
       db.addCollection("files", { unique: ["id"] });
-      const styleset = db.getCollection("styleset");
-      styleset.insert({
-        dominant: "#700000",
-        colorParameterCollection: [],
-        colorGeneratorParams: {
-          count: 10,
-          text: { light: 50, saturation: 0, hue: 0 },
-          hue: { variation: 0, curve: 0, move: 0 },
-          light: { variation: 5, move: 0, curve: 0 },
-          saturation: { variation: 0, move: 0, curve: 0 },
-          full: true
-        },
-        selectorCollection: basicCssRem,
-        fontOrigin: "local",
-        "font-size": "16",
-        id: styleSetId,
-        setName: "",
-        fontFamilyMain: "",
-        fontFamilyAlt: "",
-        fontFamilyTitle: "",
-        ratioCollection: basicCss,
-        hiddenCombination: { dominant: [], sub: [] }
-      });
     }
+    const styleset = db.getCollection("styleset");
+    styleset.insert({
+      dominant: "#707000",
+      colorParameterCollection: [],
+      colorGeneratorParams: {
+        count: 10,
+        text: { light: 50, saturation: 0, hue: 0 },
+        hue: { variation: 0, curve: 0, move: 0 },
+        light: { variation: 5, move: 0, curve: 0 },
+        saturation: { variation: 0, move: 0, curve: 0 },
+        full: true
+      },
+      selectorCollection: basicCssRem,
+      fontOrigin: "local",
+      "font-size": "16",
+      id: styleSetId,
+      setName: "",
+      fontFamilyMain: "",
+      fontFamilyAlt: "",
+      fontFamilyTitle: "",
+      ratioCollection: basicCss,
+      hiddenCombination: { dominant: [], sub: [] }
+    });
     const settings = db.getCollection("settings");
     // log some random event data as part of our example
     settings.insert({
@@ -116,14 +116,14 @@ const handleData = function(type, name) {
       language: "",
       title: name,
       devMode: true,
-      messageTimeOut: 10000,
+      messageTimeOut: 10001,
       applicationName: name,
       navStructure: {},
       layoutCollection: {},
       layoutLinkCollection: {},
       defaultLayout: "",
       layoutCommonCollection: [],
-      modelCollection: {},
+      modelCollection: [],
       availableFilterCollection: {
         categories: [],
         tags: []
@@ -179,12 +179,6 @@ block content
 
     const headerFileContent = `extends ../../../App/Views/rougeHead.pug
 block head
-    title My ${name} app
-    if environment === 'production'
-        link(rel='stylesheet', href='/static/app${name}.css')
-    else
-        script var ENVIRONMENT = "development"
-        script(src="/app${name}-bundle.js")
 block body
     block content`;
 

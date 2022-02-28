@@ -3,7 +3,6 @@
         input(type="hidden" :name="name" v-model="selected")
         v-checkbox(v-for="(item, index) in data" :label="item.label" :key="index" :name="item.label")
 </template>
-
 <script>
     export default {
         name: "rfCheckbox",
@@ -15,7 +14,6 @@
         props: {data: Array, name: {type: String, default: ""}, label: {type: String, default: ""}}
     };
 </script>
-
 <style scoped>
 
 </style>

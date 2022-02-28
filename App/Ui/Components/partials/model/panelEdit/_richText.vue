@@ -5,7 +5,6 @@
         v-btn(v-if="isEdited" data-jest='save-boolean' @click="saveEdit" :disabled="!valid") Save
         v-btn(v-else-if="edit && !isEdited" data-jest="add-button" @click="addField" :disabled="!valid" outlined) Add field
 </template>
-
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
@@ -40,7 +39,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .editor-textarea {
   border: 1px solid #ddd;

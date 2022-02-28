@@ -2,7 +2,6 @@
     div(v-html="html")
 
 </template>
-
 <script>
 import { Editor } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
@@ -41,5 +40,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

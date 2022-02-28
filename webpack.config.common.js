@@ -47,10 +47,14 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: "vue-loader"
+        loader: "vue-loader",
+        options: {
+          compiler: require('vue-template-babel-compiler')
+        },
       },
       {
         test: /\.(jpg|png)$/,
+
         use: [
           {
             loader: "url-loader"

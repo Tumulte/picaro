@@ -8,12 +8,11 @@
                     h2 New Item
                 model(:model-name="moduleParams.model" @reloadData="loadListData" :module-params="moduleParams")
         div(v-for="(item) in filteredList")
-            rf-model-field(:field-data="item"  :field-name='key' v-for="(field, key) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="key" :field-params="modelCollection[moduleParams.model].find(item=> item.name === key)" :module-params="moduleParams")
+            rf-model-field(:field-data="item"  :field-name='field.id' v-for="(field, index) in item" v-if="field.fieldType && !edit" :is-edit="edit" :key="index" :field-params="currentModel.find(item=> item.id === field.id)" :module-params="moduleParams")
             v-card( v-if="edit" class="pa-6 my-6")
-                model(:model-name="moduleParams.model" @reloadData="loadListData()" :model-data="item" :is-edit="edit" :module-params="moduleParams")
-                model-item-edit(:model-name="moduleParams.model" :id="item.id" :is-edit="edit"  @reloadData="loadListData()")
+                model(:model-name="moduleParams.modelName" @reloadData="loadListData()" :model-data="item" :is-edit="edit" :module-params="moduleParams")
+                model-item-edit(:model-name="moduleParams.modelName" :id="item.id" :is-edit="edit"  @reloadData="loadListData()")
 </template>
-
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
@@ -25,7 +24,7 @@ export default {
     model: () => import("./modelForm.vue"),
     "model-item-edit": () => import("./modelItemEdit.vue")
   },
-  props: { moduleParams: { type: Object, required: true } },
+  props: { moduleParams: { type: Object, required: true }, displayAll: {type: Boolean, default: false} },
   data: function() {
     return {
       edit: false,
@@ -73,9 +72,12 @@ export default {
       "isLogged"
     ]),
     list() {
-      return this.$store.getters.list[this.moduleParams.model] || [];
+      return this.$store.getters.list[this.moduleParams.model]?.map(item => item.modelData) || [];
     },
     filteredList() {
+      if(this.displayAll) {
+        return this.list
+      }
       return this.list.filter(item => {
         return applyFilter(
           item,
@@ -89,7 +91,10 @@ export default {
     },
     listFilters() {
       return this.filterCollectionExpanded[this.moduleParams.model];
+    },
+    currentModel() {
+      return this.modelCollection.find(item => item.id === this.moduleParams.model).model
     }
-  }
+   }
 };
 </script>

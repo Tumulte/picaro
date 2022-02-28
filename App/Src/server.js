@@ -146,7 +146,11 @@ const startApp = function(settingsDb, userDb, styleSetDb, appDb, filesDb) {
 
   const settingApi = settingCrud(settingsDb, styleSetDb, app);
   app.use("/settingapi", settingApi);
-  const api = crud(appDb[app.get("appName")], app);
+  const api = crud(app);
+  app.use("/api", function(req, res, next) {
+    app.locals.db = appDb[app.get("appName")]
+    next()
+  })
   app.use("/api", api);
 
   /*****************************************************************

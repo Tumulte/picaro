@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { colorHelper } from "../../Src/colorHelper";
+import { RfColorHelper } from "@picaro/colorhelper";
 
 const pink = "#EA05CA";
 const grey = "777777";
 const green = "4B2";
 const darkBlue = "#148";
 
-const colorUtils = new colorHelper();
+const colorUtils = new RfColorHelper();
 
 describe("hexadecimal is converted to decimal", () => {
   it("return the decimal values", () => {

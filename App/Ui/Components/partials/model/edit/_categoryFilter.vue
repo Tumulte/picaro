@@ -2,7 +2,6 @@
     div(v-if="isEdit")
         v-select(v-model="selected" :items="categories.options" item-text="label" item-value="label" :label="categories.label" )
 </template>
-
 <script>
 import { mapGetters } from "vuex";
 
@@ -49,5 +48,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

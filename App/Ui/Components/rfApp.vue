@@ -2,7 +2,6 @@
     div
         slot
 </template>
-
 <script>
 function filterRouteToStore({
   globalFilters: globalFilters,
@@ -73,5 +72,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>
