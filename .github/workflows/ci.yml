@@ -1,0 +1,24 @@
+name: Picaro CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.17.1
+      - name: Install dependencies
+        run: pnpm install
+
+        # - name: Run linters
+        # run: pnpm run lint
+
+      - name: cypress
+        run: cd Picaro/Front && pnpm run cypress:run

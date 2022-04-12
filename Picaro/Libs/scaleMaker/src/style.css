@@ -1,0 +1,32 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+    margin-top: 60px;
+    max-width: 1280px;
+    margin: auto
+}
+
+#block {
+    display: flex;
+}
+
+#block > div {
+    background: #0c5460;
+    width: 10%;
+}
+
+#block > div:nth-of-type(odd) {
+    background: #9cB4C0;
+}
+
+#block > div > div:nth-of-type(odd) {
+    background: #ddd;
+}
+
+#pic-scale-container {
+    padding: 20px;
+    line-height: 1.8em;
+    font-size: 18px;
+}

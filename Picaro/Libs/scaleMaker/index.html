@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vite App</title>
+</head>
+<body>
+<div id="pic-scale-container">
+    <div id="pic-scale-input-container">
+        <label>
+            text size (px)
+            <input id="pic-main-text__size" type="number" min="2" value="20" name="size">
+        </label>
+        <label>
+            line height (em)
+            <input id="pic-main-text__line-height" type="number" min="0.1" step="0.1" value="1.8" name="lineHeight">
+        </label>
+        <label>
+            numerator
+            <input id="pic-scale__numerator" type="number" min="1" value="5" name="numerator">
+        </label>
+        <br/>
+        <label>
+            denominator
+            <input id="pic-scale__denominator" type="number" min="2" value="3" name="denominator">
+        </label>
+    </div>
+    <div id="app">
+        <h1>Hello</h1>
+        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking
+            at
+            its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
+            opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing
+            packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem
+            ipsum'
+            will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes
+            by
+            accident, sometimes on purpose (injected humour and the like).</p>
+        <h2>Hello number 2</h2>
+        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking
+            at
+            its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
+            opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing
+            packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem
+            ipsum'
+            will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes
+            by
+            accident, sometimes on purpose (injected humour and the like).</p>
+        <h3>Hello number 3</h3>
+    </div>
+</div>
+<div id="block"></div>
+<script type="module" src="/src/main.ts"></script>
+
+</body>
+</html>

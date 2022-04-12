@@ -1,0 +1,43 @@
+{
+  "name": "@picaro/colorhelper",
+  "version": "1.0.0",
+  "description": "converts common css color format into any other as object or string",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "build": "vite build"
+  },
+  "files": [
+    "dist"
+  ],
+  "module": "./dist/colorHelper.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/colorHelper.es.js",
+      "require": "./dist/colorHelper.umd.js"
+    }
+  },
+  "keywords": [
+    "color",
+    "conversion"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tumulte/colorhelper.git"
+  },
+  "author": "Tumulte",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.18.6",
+    "tslib": "^2.6.2",
+    "vite": "^5.1.3",
+    "vitest": "^0.10.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Tumulte/colorhelper/issues"
+  },
+  "homepage": "https://github.com/Tumult/colorhelper#readme"
+}

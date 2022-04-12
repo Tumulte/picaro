@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  title: Converted from index.yaml with typeconv
+  version: '1'
+  x-id: index.yaml
+  x-comment: >-
+    Generated from index.d.ts by core-types-json-schema
+    (https://github.com/grantila/core-types-json-schema) on behalf of typeconv
+    (https://github.com/grantila/typeconv)
+paths: {}
+components:
+  schemas:
+    Categories:
+      properties:
+        id:
+          title: Categories.id
+          type: string
+        label:
+          title: Categories.label
+          type: string
+      required:
+        - id
+        - label
+      additionalProperties: false
+      title: Categories
+      type: object
+    Layout:
+      properties:
+        model:
+          title: Layout.model
+          type: string
+        type:
+          title: Layout.type
+          type: string
+        categories:
+          items:
+            $ref: '#/components/schemas/Categories'
+            title: Layout.categories.[]
+          title: Layout.categories
+          type: array
+      required:
+        - model
+        - type
+        - categories
+      additionalProperties: false
+      title: Layout
+      type: object
+    Filter:
+      properties:
+        id:
+          title: Filter.id
+          type: string
+        label:
+          title: Filter.label
+          type: string
+      required:
+        - id
+        - label
+      additionalProperties: false
+      title: Filter
+      type: object
+    Model:
+      properties:
+        id:
+          title: Model.id
+          type: string
+        name:
+          title: Model.name
+          type: string
+        model:
+          items:
+            $ref: '#/components/schemas/ModelField'
+            title: Model.model.[]
+          title: Model.model
+          type: array
+      required:
+        - id
+        - name
+        - model
+      additionalProperties: false
+      title: Model
+      type: object
+    ModelField:
+      properties:
+        id:
+          title: ModelField.id
+          type: string
+        label:
+          title: ModelField.label
+          type: string
+        name:
+          title: ModelField.name
+          type: string
+        regex:
+          title: ModelField.regex
+          type: string
+        required:
+          title: ModelField.required
+          type: boolean
+        hidden:
+          title: ModelField.hidden
+          type: boolean
+        template:
+          title: ModelField.template
+          type: string
+        attributes:
+          title: ModelField.attributes
+          type: string
+        extraParams:
+          title: ModelField.extraParams
+          type: string
+        type:
+          title: ModelField.type
+          type: string
+      required:
+        - id
+        - label
+        - name
+        - regex
+        - required
+        - hidden
+        - template
+        - attributes
+        - extraParams
+        - type
+      additionalProperties: false
+      title: ModelField
+      type: object
+    Settings:
+      properties:
+        id:
+          title: Settings.id
+          type: string
+        styleSetId:
+          title: Settings.styleSetId
+          type: string
+        language:
+          title: Settings.language
+          type: string
+        devMode:
+          title: Settings.devMode
+          type: boolean
+        messageTimeOut:
+          title: Settings.messageTimeOut
+          type: number
+        applicationName:
+          title: Settings.applicationName
+          type: string
+        applicationType:
+          enum:
+            - Picaro
+            - Vue
+            - Solid
+            - React
+          title: Settings.applicationType
+          type: string
+        navStructure:
+          items: []
+          additionalItems: false
+          minItems: 0
+          title: Settings.navStructure
+          type: array
+        layoutCollection:
+          additionalProperties:
+            items:
+              items:
+                $ref: '#/components/schemas/Layout'
+                title: '[]'
+              title: '[]'
+              type: array
+            type: array
+          title: Settings.layoutCollection
+          type: object
+        LayoutLinkCollection:
+          items: []
+          additionalItems: false
+          minItems: 0
+          title: Settings.LayoutLinkCollection
+          type: array
+        defaultLayout:
+          title: Settings.defaultLayout
+          type: string
+        layoutCommonCollection:
+          additionalProperties:
+            items:
+              items:
+                $ref: '#/components/schemas/Layout'
+                title: '[]'
+              title: '[]'
+              type: array
+            type: array
+          title: Settings.layoutCommonCollection
+          type: object
+        modelCollection:
+          items:
+            $ref: '#/components/schemas/Model'
+            title: Settings.modelCollection.[]
+          title: Settings.modelCollection
+          type: array
+        filterCollection:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/Filter'
+              title: '[]'
+            title: '[]'
+            type: array
+          title: Settings.filterCollection
+          type: object
+      required:
+        - id
+        - styleSetId
+        - language
+        - devMode
+        - messageTimeOut
+        - applicationName
+        - applicationType
+        - navStructure
+        - layoutCollection
+        - LayoutLinkCollection
+        - defaultLayout
+        - layoutCommonCollection
+        - modelCollection
+        - filterCollection
+      additionalProperties: false
+      title: Settings
+      type: object
+    SettingsCollection:
+      items:
+        $ref: '#/components/schemas/Settings'
+        title: SettingsCollection.[]
+      title: SettingsCollection.[]
+      type: array
+    ColorParameters:
+      properties:
+        hueVariation:
+          title: ColorParameters.hueVariation
+          type: number
+        saturation:
+          title: ColorParameters.saturation
+          type: number
+        light:
+          title: ColorParameters.light
+          type: number
+      required:
+        - hueVariation
+      additionalProperties: false
+      title: ColorParameters
+      type: object
+    CssParameters:
+      properties:
+        '"font-size"':
+          title: CssParameters."font-size"
+          type: string
+        '"line-height"':
+          title: CssParameters."line-height"
+          type: string
+        '"margin-bottom"':
+          title: CssParameters."margin-bottom"
+          type: string
+        '"margin-top"':
+          title: CssParameters."margin-top"
+          type: string
+      required:
+        - '"font-size"'
+        - '"line-height"'
+      additionalProperties: false
+      title: CssParameters
+      type: object
+    StyleSet:
+      properties:
+        dominant:
+          title: StyleSet.dominant
+          type: string
+        colorParameterCollection:
+          items:
+            $ref: '#/components/schemas/ColorParameters'
+            title: StyleSet.colorParameterCollection.[]
+          title: StyleSet.colorParameterCollection
+          type: array
+        colorGeneratorParams:
+          properties:
+            count:
+              title: StyleSet.colorGeneratorParams.count
+              type: number
+            text:
+              properties:
+                light:
+                  title: StyleSet.colorGeneratorParams.text.light
+                  type: number
+                saturation:
+                  title: StyleSet.colorGeneratorParams.text.saturation
+                  type: number
+                hue:
+                  title: StyleSet.colorGeneratorParams.text.hue
+                  type: number
+                curve:
+                  title: StyleSet.colorGeneratorParams.text.curve
+                  type: number
+              required:
+                - light
+                - saturation
+                - hue
+                - curve
+              additionalProperties: false
+              title: StyleSet.colorGeneratorParams.text
+              type: object
+            hue:
+              properties:
+                variation:
+                  title: StyleSet.colorGeneratorParams.hue.variation
+                  type: number
+                curve:
+                  title: StyleSet.colorGeneratorParams.hue.curve
+                  type: number
+                move:
+                  title: StyleSet.colorGeneratorParams.hue.move
+                  type: number
+              required:
+                - variation
+                - curve
+                - move
+              additionalProperties: false
+              title: StyleSet.colorGeneratorParams.hue
+              type: object
+            light:
+              properties:
+                variation:
+                  title: StyleSet.colorGeneratorParams.light.variation
+                  type: number
+                move:
+                  title: StyleSet.colorGeneratorParams.light.move
+                  type: number
+                curve:
+                  title: StyleSet.colorGeneratorParams.light.curve
+                  type: number
+              required:
+                - variation
+                - move
+                - curve
+              additionalProperties: false
+              title: StyleSet.colorGeneratorParams.light
+              type: object
+            saturation:
+              properties:
+                variation:
+                  title: StyleSet.colorGeneratorParams.saturation.variation
+                  type: number
+                move:
+                  title: StyleSet.colorGeneratorParams.saturation.move
+                  type: number
+                curve:
+                  title: StyleSet.colorGeneratorParams.saturation.curve
+                  type: number
+              required:
+                - variation
+                - move
+                - curve
+              additionalProperties: false
+              title: StyleSet.colorGeneratorParams.saturation
+              type: object
+            full:
+              title: StyleSet.colorGeneratorParams.full
+              type: boolean
+          required:
+            - count
+            - text
+            - hue
+            - light
+            - saturation
+            - full
+          additionalProperties: false
+          title: StyleSet.colorGeneratorParams
+          type: object
+        selectorCollection:
+          properties:
+            html:
+              $ref: '#/components/schemas/CssParameters'
+              title: StyleSet.selectorCollection.html
+          required:
+            - html
+          additionalProperties: false
+          title: StyleSet.selectorCollection
+          type: object
+        fontOrigin:
+          title: StyleSet.fontOrigin
+          type: string
+        '''font-size''':
+          title: StyleSet.'font-size'
+          type: string
+        id:
+          title: StyleSet.id
+          type: string
+        setName:
+          title: StyleSet.setName
+          type: string
+        fontFamilyMain:
+          title: StyleSet.fontFamilyMain
+          type: string
+        fontFamilyAlt:
+          title: StyleSet.fontFamilyAlt
+          type: string
+        fontFamilyTitle:
+          title: StyleSet.fontFamilyTitle
+          type: string
+        ratioCollection:
+          additionalProperties: false
+          title: StyleSet.ratioCollection
+          type: object
+        hiddenCombination:
+          properties:
+            dominant:
+              items: {}
+              title: StyleSet.hiddenCombination.dominant
+              type: array
+            sub:
+              items: {}
+              title: StyleSet.hiddenCombination.sub
+              type: array
+          required:
+            - dominant
+            - sub
+          additionalProperties: false
+          title: StyleSet.hiddenCombination
+          type: object
+      required:
+        - dominant
+        - colorParameterCollection
+        - colorGeneratorParams
+        - selectorCollection
+        - fontOrigin
+        - '''font-size'''
+        - id
+        - setName
+        - fontFamilyMain
+        - fontFamilyAlt
+        - fontFamilyTitle
+        - ratioCollection
+        - hiddenCombination
+      additionalProperties: false
+      title: StyleSet
+      type: object

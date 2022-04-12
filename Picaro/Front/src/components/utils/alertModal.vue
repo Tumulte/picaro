@@ -1,0 +1,74 @@
+<template>
+  <div id="pic-alert-container">
+    <ul>
+      <li
+        v-for="(alert, index) in alertCallbackCollection"
+        :key="index"
+        class="pic-alert"
+        :class="alert.type"
+      >
+        <div class="pic-alert__sub-container">
+          <span class="pic-alert__text">{{ alert.text }}</span>
+          <button class="pic-alert__button" @click="confirmCallbackMessage(alert.key, index)">
+            Confirm
+          </button>
+          <button class="pic-alert__button pic-button-secondary" @click="discardCallbackMessage(alert.key, index)">
+            Cancel
+          </button>
+        </div>
+      </li>
+    </ul>
+    <ul>
+      <li v-for="(alert, index) in alertCollection" :key="index">
+        <div>
+          {{ alert.text }}
+          <button @click="discardMessage">
+            Ok
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</template>
+<script setup lang="ts">
+import {computed} from "vue";
+import {useUtilsStore} from "@stores/utils";
+import {Message} from "@stores/utils.d";
+
+const utilsStore = useUtilsStore();
+const alertCollection = computed((): Message[] => {
+  return utilsStore.alertCollection
+});
+const alertCallbackCollection = computed((): Message[] => {
+  return utilsStore.alertCallbackCollection
+})
+
+function confirmCallbackMessage(key, index) {
+  utilsStore.addAlertConfirmation({key, index});
+}
+
+function discardCallbackMessage(key, index) {
+  utilsStore.addAlertDiscard({key, index});
+}
+
+function discardMessage(index) {
+  utilsStore.removeAlert(index);
+}
+</script>
+<style scoped>
+li {
+  list-style: none;
+}
+
+button {
+  margin: 10px;
+}
+
+#rf-alert-container {
+  width: 620px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+}
+</style>

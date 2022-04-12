@@ -1,0 +1,109 @@
+{
+  "id": "sHTMCv5178y9Hg65k3QCv",
+  "styleSet": "cOYtZHDy18EUlhI4zykH-",
+  "language": "",
+  "title": "demo",
+  "devMode": true,
+  "messageTimeOut": 10000,
+  "applicationName": "demo",
+  "navStructure": {},
+  "layoutCollection": {
+    "documentation": [
+      [
+        {
+          "model": null,
+          "type": "filterCategories",
+          "categories": null
+        }
+      ],
+      [
+        {
+          "model": "docpost",
+          "type": "filterLink",
+          "categories": [
+            {
+              "id": "uHJinv",
+              "label": "About rf"
+            }
+          ],
+          "cols": 2
+        },
+        {
+          "model": "docpost",
+          "type": "list",
+          "categories": [
+            {
+              "id": "uHJinv",
+              "label": "About rf"
+            }
+          ],
+          "cols": 6
+        }
+      ]
+    ]
+  },
+  "layoutLinkCollection": {},
+  "defaultLayout": "documentation",
+  "layoutCommonCollection": [
+    [],
+    [
+      {
+        "type": "Layout"
+      }
+    ]
+  ],
+  "modelCollection": {
+    "docpost": [
+      {
+        "label": "Title",
+        "name": "title",
+        "regex": "",
+        "required": false,
+        "hidden": false,
+        "template": "h2",
+        "attributes": "",
+        "type": "Text"
+      },
+      {
+        "label": "Article Text",
+        "name": "article",
+        "regex": "",
+        "required": false,
+        "hidden": false,
+        "template": "",
+        "attributes": "",
+        "type": "RichText"
+      },
+      {
+        "label": "quote",
+        "name": "quote",
+        "regex": "",
+        "required": false,
+        "hidden": false,
+        "template": "q",
+        "attributes": "",
+        "type": "Text"
+      }
+    ]
+  },
+  "availableFilterCollection": {
+    "categories": [
+      {
+        "id": "uHJinv",
+        "label": "About rf"
+      },
+      {
+        "id": "LAskav",
+        "label": "Getting Started"
+      }
+    ],
+    "tags": []
+  },
+  "meta": {
+    "revision": 12,
+    "created": 1632862024118,
+    "version": 0,
+    "updated": 1643928071344
+  },
+  "$loki": 1
+}

@@ -1,0 +1,91 @@
+{
+  "id": "TzYwYzjH1sgcoGoDzzgXU",
+  "styleSet": "eV5dHknlGhC-p6PTTSXp-",
+  "language": "",
+  "title": "pedalpedia",
+  "devMode": true,
+  "messageTimeOut": 10000,
+  "applicationName": "pedalpedia",
+  "navStructure": {},
+  "layoutCollection": {},
+  "layoutLinkCollection": {},
+  "defaultLayout": "",
+  "layoutCommonCollection": [],
+  "modelCollection": [
+    {
+      "id": "A_DdVd",
+      "modelName": "brand",
+      "model": [
+        {
+          "id": "BCYDlN",
+          "label": "name",
+          "name": "name",
+          "regex": "",
+          "required": false,
+          "hidden": false,
+          "template": "",
+          "attributes": "",
+          "extraParams": null,
+          "type": "Text"
+        },
+        {
+          "id": "SPecqm",
+          "label": "Country",
+          "name": "country",
+          "regex": "",
+          "required": false,
+          "hidden": false,
+          "template": "",
+          "attributes": "",
+          "extraParams": null,
+          "type": "Text"
+        }
+      ]
+    },
+    {
+      "id": "Ee28Jb",
+      "modelName": "pedal",
+      "model": [
+        {
+          "id": "mRJhfO",
+          "label": "Manufacturer",
+          "name": "manufacturer",
+          "regex": "",
+          "required": false,
+          "hidden": false,
+          "template": "",
+          "attributes": "",
+          "extraParams": {
+            "modelId": "A_DdVd",
+            "field": "BCYDlN",
+            "type": "relation"
+          },
+          "type": "Relation"
+        },
+        {
+          "id": "tuXMLU",
+          "label": "Name",
+          "name": "name",
+          "regex": "",
+          "required": false,
+          "hidden": false,
+          "template": "",
+          "attributes": "",
+          "extraParams": null,
+          "type": "Text"
+        }
+      ]
+    }
+  ],
+  "availableFilterCollection": {
+    "categories": [],
+    "tags": []
+  },
+  "meta": {
+    "revision": 12,
+    "created": 1644251520067,
+    "version": 0,
+    "updated": 1644863090970
+  },
+  "$loki": 3
+}

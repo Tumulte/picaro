@@ -1,0 +1,88 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Picaro API",
+    "description": "Picaro API",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "host": "localhost:3000",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/setup/all": {
+      "get": {
+        "summary": "Get all settings",
+        "description": "Get every settings and every stylesets for every apps",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of Settings Objects",
+            "schema": {
+              "$ref": "index.yaml#/components/schemas/SettingsCollection"
+            }
+          }
+        }
+      }
+    },
+    "/setup/create/{name}/{type}": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Create a new new app",
+        "description": "Create the app in the database and create the folder structure for the new app",
+        "responses": {
+          "200": {
+            "description": "App created",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/setup/delete/{name}": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Delete an app",
+        "description": "Delete the app from the database and delete the folder structure for the app",
+        "responses": {
+          "200": {
+            "description": "App deleted",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,749 @@
+{
+  "alertSubCollection": [
+    {
+      "hex": "#713339",
+      "hue": 354,
+      "light": 32,
+      "saturation": 38
+    },
+    {
+      "hex": "#823A42",
+      "hue": 354,
+      "light": 37,
+      "saturation": 38
+    },
+    {
+      "hex": "#94424B",
+      "hue": 354,
+      "light": 42,
+      "saturation": 38
+    },
+    {
+      "hex": "#A54A53",
+      "hue": 354,
+      "light": 47,
+      "saturation": 38
+    },
+    {
+      "hex": "#B3565F",
+      "hue": 354,
+      "light": 52,
+      "saturation": 38
+    },
+    {
+      "hex": "#BB6870",
+      "hue": 354,
+      "light": 57,
+      "saturation": 38
+    },
+    {
+      "hex": "#C37981",
+      "hue": 354,
+      "light": 62,
+      "saturation": 38
+    },
+    {
+      "hex": "#CB8B91",
+      "hue": 354,
+      "light": 67,
+      "saturation": 38
+    },
+    {
+      "hex": "#D39CA2",
+      "hue": 354,
+      "light": 72,
+      "saturation": 38
+    },
+    {
+      "hex": "#DBAEB3",
+      "hue": 354,
+      "light": 77,
+      "saturation": 38
+    }
+  ],
+  "alertTextSubCollection": [
+    {
+      "hex": "#E3C0C3",
+      "hue": 354,
+      "light": 82,
+      "saturation": 38
+    },
+    {
+      "hex": "#EAD1D4",
+      "hue": 354,
+      "light": 87,
+      "saturation": 38
+    },
+    {
+      "hex": "#F2E3E4",
+      "hue": 354,
+      "light": 92,
+      "saturation": 38
+    },
+    {
+      "hex": "#FAF4F5",
+      "hue": 354,
+      "light": 97,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 354,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 354,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#2A1315",
+      "hue": 354,
+      "light": 12,
+      "saturation": 38
+    },
+    {
+      "hex": "#3C1B1E",
+      "hue": 354,
+      "light": 17,
+      "saturation": 38
+    },
+    {
+      "hex": "#4D2327",
+      "hue": 354,
+      "light": 22,
+      "saturation": 38
+    },
+    {
+      "hex": "#5F2B30",
+      "hue": 354,
+      "light": 27,
+      "saturation": 38
+    }
+  ],
+  "combinationCollection": [],
+  "dominant": "#67BAA8",
+  "dominantSubCollection": [
+    {
+      "hex": "#337163",
+      "hue": 167,
+      "light": 32,
+      "saturation": 38
+    },
+    {
+      "hex": "#3A8273",
+      "hue": 167,
+      "light": 37,
+      "saturation": 38
+    },
+    {
+      "hex": "#429482",
+      "hue": 167,
+      "light": 42,
+      "saturation": 38
+    },
+    {
+      "hex": "#4AA592",
+      "hue": 167,
+      "light": 47,
+      "saturation": 38
+    },
+    {
+      "hex": "#56B39F",
+      "hue": 167,
+      "light": 52,
+      "saturation": 38
+    },
+    {
+      "hex": "#68BBA9",
+      "hue": 167,
+      "light": 57,
+      "saturation": 38
+    },
+    {
+      "hex": "#79C3B3",
+      "hue": 167,
+      "light": 62,
+      "saturation": 38
+    },
+    {
+      "hex": "#8BCBBD",
+      "hue": 167,
+      "light": 67,
+      "saturation": 38
+    },
+    {
+      "hex": "#9CD3C7",
+      "hue": 167,
+      "light": 72,
+      "saturation": 38
+    },
+    {
+      "hex": "#AEDBD1",
+      "hue": 167,
+      "light": 77,
+      "saturation": 38
+    }
+  ],
+  "dominantTextSubCollection": [
+    {
+      "hex": "#C0E3DB",
+      "hue": 167,
+      "light": 82,
+      "saturation": 38
+    },
+    {
+      "hex": "#D1EAE5",
+      "hue": 167,
+      "light": 87,
+      "saturation": 38
+    },
+    {
+      "hex": "#E3F2EF",
+      "hue": 167,
+      "light": 92,
+      "saturation": 38
+    },
+    {
+      "hex": "#F4FAF9",
+      "hue": 167,
+      "light": 97,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 167,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 167,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#132A25",
+      "hue": 167,
+      "light": 12,
+      "saturation": 38
+    },
+    {
+      "hex": "#1B3C35",
+      "hue": 167,
+      "light": 17,
+      "saturation": 38
+    },
+    {
+      "hex": "#234D44",
+      "hue": 167,
+      "light": 22,
+      "saturation": 38
+    },
+    {
+      "hex": "#2B5F54",
+      "hue": 167,
+      "light": 27,
+      "saturation": 38
+    }
+  ],
+  "graySubCollection": [
+    {
+      "hex": "#525252",
+      "hue": 167,
+      "light": 32,
+      "saturation": 0
+    },
+    {
+      "hex": "#5E5E5E",
+      "hue": 167,
+      "light": 37,
+      "saturation": 0
+    },
+    {
+      "hex": "#6B6B6B",
+      "hue": 167,
+      "light": 42,
+      "saturation": 0
+    },
+    {
+      "hex": "#787878",
+      "hue": 167,
+      "light": 47,
+      "saturation": 0
+    },
+    {
+      "hex": "#858585",
+      "hue": 167,
+      "light": 52,
+      "saturation": 0
+    },
+    {
+      "hex": "#919191",
+      "hue": 167,
+      "light": 57,
+      "saturation": 0
+    },
+    {
+      "hex": "#9E9E9E",
+      "hue": 167,
+      "light": 62,
+      "saturation": 0
+    },
+    {
+      "hex": "#ABABAB",
+      "hue": 167,
+      "light": 67,
+      "saturation": 0
+    },
+    {
+      "hex": "#B8B8B8",
+      "hue": 167,
+      "light": 72,
+      "saturation": 0
+    },
+    {
+      "hex": "#C4C4C4",
+      "hue": 167,
+      "light": 77,
+      "saturation": 0
+    }
+  ],
+  "grayTextSubCollection": [
+    {
+      "hex": "#D1D1D1",
+      "hue": 167,
+      "light": 82,
+      "saturation": 0
+    },
+    {
+      "hex": "#DEDEDE",
+      "hue": 167,
+      "light": 87,
+      "saturation": 0
+    },
+    {
+      "hex": "#EBEBEB",
+      "hue": 167,
+      "light": 92,
+      "saturation": 0
+    },
+    {
+      "hex": "#F7F7F7",
+      "hue": 167,
+      "light": 97,
+      "saturation": 0
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 167,
+      "light": 100,
+      "saturation": 0
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 167,
+      "light": 100,
+      "saturation": 0
+    },
+    {
+      "hex": "#1F1F1F",
+      "hue": 167,
+      "light": 12,
+      "saturation": 0
+    },
+    {
+      "hex": "#2B2B2B",
+      "hue": 167,
+      "light": 17,
+      "saturation": 0
+    },
+    {
+      "hex": "#383838",
+      "hue": 167,
+      "light": 22,
+      "saturation": 0
+    },
+    {
+      "hex": "#454545",
+      "hue": 167,
+      "light": 27,
+      "saturation": 0
+    }
+  ],
+  "infoSubCollection": [
+    {
+      "hex": "#333971",
+      "hue": 234,
+      "light": 32,
+      "saturation": 38
+    },
+    {
+      "hex": "#3A4282",
+      "hue": 234,
+      "light": 37,
+      "saturation": 38
+    },
+    {
+      "hex": "#424B94",
+      "hue": 234,
+      "light": 42,
+      "saturation": 38
+    },
+    {
+      "hex": "#4A53A5",
+      "hue": 234,
+      "light": 47,
+      "saturation": 38
+    },
+    {
+      "hex": "#565FB3",
+      "hue": 234,
+      "light": 52,
+      "saturation": 38
+    },
+    {
+      "hex": "#6870BB",
+      "hue": 234,
+      "light": 57,
+      "saturation": 38
+    },
+    {
+      "hex": "#7981C3",
+      "hue": 234,
+      "light": 62,
+      "saturation": 38
+    },
+    {
+      "hex": "#8B91CB",
+      "hue": 234,
+      "light": 67,
+      "saturation": 38
+    },
+    {
+      "hex": "#9CA2D3",
+      "hue": 234,
+      "light": 72,
+      "saturation": 38
+    },
+    {
+      "hex": "#AEB3DB",
+      "hue": 234,
+      "light": 77,
+      "saturation": 38
+    }
+  ],
+  "infoTextSubCollection": [
+    {
+      "hex": "#C0C3E3",
+      "hue": 234,
+      "light": 82,
+      "saturation": 38
+    },
+    {
+      "hex": "#D1D4EA",
+      "hue": 234,
+      "light": 87,
+      "saturation": 38
+    },
+    {
+      "hex": "#E3E4F2",
+      "hue": 234,
+      "light": 92,
+      "saturation": 38
+    },
+    {
+      "hex": "#F4F5FA",
+      "hue": 234,
+      "light": 97,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 234,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 234,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 234,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 234,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 234,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#2B305F",
+      "hue": 234,
+      "light": 27,
+      "saturation": 38
+    }
+  ],
+  "successSubCollection": [
+    {
+      "hex": "#3F7133",
+      "hue": 108,
+      "light": 32,
+      "saturation": 38
+    },
+    {
+      "hex": "#49823A",
+      "hue": 108,
+      "light": 37,
+      "saturation": 38
+    },
+    {
+      "hex": "#539442",
+      "hue": 108,
+      "light": 42,
+      "saturation": 38
+    },
+    {
+      "hex": "#5DA54A",
+      "hue": 108,
+      "light": 47,
+      "saturation": 38
+    },
+    {
+      "hex": "#69B356",
+      "hue": 108,
+      "light": 52,
+      "saturation": 38
+    },
+    {
+      "hex": "#78BB68",
+      "hue": 108,
+      "light": 57,
+      "saturation": 38
+    },
+    {
+      "hex": "#88C379",
+      "hue": 108,
+      "light": 62,
+      "saturation": 38
+    },
+    {
+      "hex": "#98CB8B",
+      "hue": 108,
+      "light": 67,
+      "saturation": 38
+    },
+    {
+      "hex": "#A7D39C",
+      "hue": 108,
+      "light": 72,
+      "saturation": 38
+    },
+    {
+      "hex": "#B7DBAE",
+      "hue": 108,
+      "light": 77,
+      "saturation": 38
+    }
+  ],
+  "successTextSubCollection": [
+    {
+      "hex": "#C7E3C0",
+      "hue": 108,
+      "light": 82,
+      "saturation": 38
+    },
+    {
+      "hex": "#D6EAD1",
+      "hue": 108,
+      "light": 87,
+      "saturation": 38
+    },
+    {
+      "hex": "#E6F2E3",
+      "hue": 108,
+      "light": 92,
+      "saturation": 38
+    },
+    {
+      "hex": "#F6FAF4",
+      "hue": 108,
+      "light": 97,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 108,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 108,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#182A13",
+      "hue": 108,
+      "light": 12,
+      "saturation": 38
+    },
+    {
+      "hex": "#213C1B",
+      "hue": 108,
+      "light": 17,
+      "saturation": 38
+    },
+    {
+      "hex": "#2B4D23",
+      "hue": 108,
+      "light": 22,
+      "saturation": 38
+    },
+    {
+      "hex": "#355F2B",
+      "hue": 108,
+      "light": 27,
+      "saturation": 38
+    }
+  ],
+  "warningSubCollection": [
+    {
+      "hex": "#716A33",
+      "hue": 54,
+      "light": 32,
+      "saturation": 38
+    },
+    {
+      "hex": "#827B3A",
+      "hue": 54,
+      "light": 37,
+      "saturation": 38
+    },
+    {
+      "hex": "#948C42",
+      "hue": 54,
+      "light": 42,
+      "saturation": 38
+    },
+    {
+      "hex": "#A59C4A",
+      "hue": 54,
+      "light": 47,
+      "saturation": 38
+    },
+    {
+      "hex": "#B3AA56",
+      "hue": 54,
+      "light": 52,
+      "saturation": 38
+    },
+    {
+      "hex": "#BBB368",
+      "hue": 54,
+      "light": 57,
+      "saturation": 38
+    },
+    {
+      "hex": "#C3BC79",
+      "hue": 54,
+      "light": 62,
+      "saturation": 38
+    },
+    {
+      "hex": "#CBC48B",
+      "hue": 54,
+      "light": 67,
+      "saturation": 38
+    },
+    {
+      "hex": "#D3CD9C",
+      "hue": 54,
+      "light": 72,
+      "saturation": 38
+    },
+    {
+      "hex": "#DBD6AE",
+      "hue": 54,
+      "light": 77,
+      "saturation": 38
+    }
+  ],
+  "warningTextSubCollection": [
+    {
+      "hex": "#E3DFC0",
+      "hue": 54,
+      "light": 82,
+      "saturation": 38
+    },
+    {
+      "hex": "#EAE8D1",
+      "hue": 54,
+      "light": 87,
+      "saturation": 38
+    },
+    {
+      "hex": "#F2F1E3",
+      "hue": 54,
+      "light": 92,
+      "saturation": 38
+    },
+    {
+      "hex": "#FAFAF4",
+      "hue": 54,
+      "light": 97,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 54,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#FFFFFF",
+      "hue": 54,
+      "light": 100,
+      "saturation": 38
+    },
+    {
+      "hex": "#2A2813",
+      "hue": 54,
+      "light": 12,
+      "saturation": 38
+    },
+    {
+      "hex": "#3C391B",
+      "hue": 54,
+      "light": 17,
+      "saturation": 38
+    },
+    {
+      "hex": "#4D4923",
+      "hue": 54,
+      "light": 22,
+      "saturation": 38
+    },
+    {
+      "hex": "#5F5A2B",
+      "hue": 54,
+      "light": 27,
+      "saturation": 38
+    }
+  ]
+}
+
