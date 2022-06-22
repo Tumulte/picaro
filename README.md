@@ -11,10 +11,10 @@ You can try the software but the main branch is was just a way to make sure it w
 ## but it's being built as a stable software
 
 Picaro is currently being rebuilt from the ground up (branch `next`):
-[ ] Full TDD
-[ ] Break down of the app into standalone modules (so far: https://www.npmjs.com/package/@picaro/colorhelper  https://www.npmjs.com/package/@picaro/colorgenerator )
-[ ] Backend change Express -> Fastify
-[ ] Conversion to Typescript
-[ ] Monorepo
-[ ] Removal of Vue to make it framework agnostic thanks to webcomponent (solid, react, vue...)
+* Full TDD
+* Breakdown of the app into standalone modules (so far: https://www.npmjs.com/package/@picaro/colorhelper  https://www.npmjs.com/package/@picaro/colorgenerator )
+* Backend change Express -> Fastify
+* Conversion to Typescript
+* Monorepo
+* Removal of Vue to make it framework agnostic thanks to webcomponent (solid, react, vue...)
 
