@@ -8,7 +8,7 @@ It's made to create small but highly customizable web-apps for all your ideas th
 
 You can try the software but the main branch is was just a way to make sure it was a good idea
 
-## but it's being built as a stable software
+## ...but it's being built as a stable software
 
 Picaro is currently being rebuilt from the ground up (branch `next`):
 * Full TDD
