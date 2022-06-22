@@ -18,3 +18,4 @@ Picaro is currently being rebuilt from the ground up (branch `next`):
 * Monorepo
 * Removal of Vue to make it framework agnostic thanks to webcomponent (solid, react, vue...)
 
+beta ETA : winter 2022
