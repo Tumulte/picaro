@@ -15,18 +15,15 @@
     </aside>
     <main class="pic-main pic-container">
       <div v-if="modelFormState === 'awaitingName'" class="pic-new-model">
-        <label v-if="!currentEditModelName">
-          New model name
-          <input v-model="modelNameInput" data-test="create-model-name-input">
-        </label>
-        <button
+        <v-text-field  v-if="!currentEditModelName" v-model="modelNameInput" label="New model name" data-test="create-model-name-input">
+        <v-btn
           v-if="!currentEditModelName"
           data-test="create-model-button"
           :disabled="!modelNameInput || !modelNameIsUnique"
           @click="createNewModel"
         >
           Create model
-        </button>
+        </v-btn>
       </div>
       <div v-if="currentEditModel">
         <h3 data-test="created-model-name">
@@ -92,16 +89,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import booleanField from "./partials/model/panelEdit/_booleanSwitchEdit.vue";
-import {arrayMoveMutable} from 'array-move';
-import {ref, computed, ComputedRef, onMounted} from "vue";
+import {ref, computed} from "vue";
 import type {Ref} from "vue"
-import richText from "./partials/model/panelEdit/_richText.vue";
-import multiChoice from "./partials/model/panelEdit/_multiChoiceEdit.vue";
-import categoryFilter from "./partials/model/panelEdit/_categoryFilterEdit.vue";
-import categories from "./categories.vue";
+
 import ModelField from "./partials/model/panelEdit/_modelField.vue";
-import RelationPanel from "./partials/model/panelEdit/_relation.vue"
 import {nanoid} from "nanoid";
 import {useSettingsStore} from '@/stores/settings'
 import {MESSAGE} from "@/utils/const";

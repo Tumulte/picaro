@@ -1,29 +1,20 @@
 <script lang="ts" setup>
 import RichText from "./formElements/display/RichText.vue";
 import Text from "./formElements/display/TextLine.vue";
-import {computed, ref} from "vue";
+import {FieldContent, FieldParams, ModuleParam} from "@types";
+import {PropType} from "vue";
 
 const props = defineProps({
-  fieldParams: {type: Object, require: true},
-  fieldData: {type: Array, require: true},
-  fieldName: {type: String, require: true},
-  moduleParams: {
-    type: Object, default: () => {
-    }
-  },
-  isEdit: {type: Boolean, default: false}
+  fieldParams: {type: Object as PropType<FieldParams>, required: true},
+  fieldContent: {type: Object as PropType<FieldContent>, required: false, default: null},
+  moduleParams: {type: Object as PropType<ModuleParam>, required: true}
 })
 
 const componentMap = {
-  "rich-text": RichText,
+  richText: RichText,
   text: Text
 }
 
-const edit = ref(false)
-
-function toggleEdit() {
-  edit.value = !edit.value;
-}
 
 function sendForm(data) {
   return data
@@ -32,13 +23,11 @@ function sendForm(data) {
 </script>
 <template>
   <component
-    :is="componentMap[fieldData.fieldType]"
-    v-if="fieldData"
-    :field-data="fieldData"
+    :is="componentMap[fieldParams.type]"
+    v-if="fieldContent"
+    :field-content="fieldContent.fieldContent"
     :module-params="moduleParams"
     :field-params="fieldParams"
-    :is-edit="isEdit"
     @saveEdit="sendForm($event)"
-    @endEdit="edit = false"
   />
 </template>

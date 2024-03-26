@@ -22,12 +22,12 @@
       v-icon mdi-table-row-plus-after
 </template>
 <script>
-import filterLayout from "@/src/components/dataConfig/filterCategories.vue";
-import filterLink from "@/src/components/dataConfig/filterLink.vue";
+import filterLayout from "@/src/components/filters/FilterCategories.vue";
+import filterLink from "@/src/components/filters/FilterLink.vue";
 import list from "./displayList.vue";
-import filterCategories from "@/src/components/dataConfig/filterCategories.vue";
+import filterCategories from "@/src/components/filters/FilterCategories.vue";
 import {mapActions, mapGetters, mapState} from "vuex";
-import Layout from "@/src/components/dataConfig/layout.vue";
+import Layout from "@/src/components/layout/Layout.vue";
 import axios from "axios";
 
 export default {

@@ -1,6 +1,6 @@
 <template lang="pug">
-div
-  div(v-for="item in selectedRelation" @click="addFilter(item.itemId)") {{ item.content }}
+  div
+    div(v-for="item in selectedRelation" @click="addFilter(item.itemId)") {{ item.content }}
 </template>
 <script>
 import axios from "axios";
@@ -9,9 +9,15 @@ import {mapActions} from "vuex";
 export default {
   name: "Relation",
   props: {
-    fieldData: { type: Object, default: () => {} },
-    fieldParams: { type: Object, default: () => {} },
-    moduleParams: { type: Object, default: null },
+    modelContent: {
+      type: Object, default: () => {
+      }
+    },
+    fieldParams: {
+      type: Object, default: () => {
+      }
+    },
+    moduleParams: {type: Object, default: null},
 
   },
   data() {
@@ -21,7 +27,7 @@ export default {
   },
   computed: {
     selectedRelation() {
-      return this.relationList.fields?.filter(item => this.fieldData.content.includes(item.itemId))
+      return this.relationList.fields?.filter(item => this.modelContent.content.includes(item.itemId))
     }
   },
   created() {
@@ -42,7 +48,7 @@ export default {
       this.updateFilterCollection({
         models: [this.moduleParams.model],
         type: "filter",
-        filterParams: { value: [id], field: this.fieldData.id, method: "fd" }
+        filterParams: {value: [id], field: this.modelContent.id, method: "fd"}
       });
     }
   }

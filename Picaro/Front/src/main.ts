@@ -1,6 +1,6 @@
 import {createApp} from 'vue'
 import './style.pcss'
-import picHeader from './components/elements/picHeader.vue'
+import picHeader from './components/customUiElements/picHeader.vue'
 import App from './components/Picaro.vue'
 import {createRouter, createWebHistory} from "vue-router";
 import {createPinia} from 'pinia'
@@ -18,7 +18,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
     const fromId = from.params.appId
     const toId = to.params.appId
-
+    
     if (fromId && !toId && to.name) {
         const toParams = {...to.params}
         toParams.appId = fromId
@@ -31,10 +31,10 @@ const myCustomLightTheme = {
     colors: {
         background: '#ffdd00',
         surface: '#FFFFFF',
-        primary: 'rgba(230,0,238,0.45)',
+        primary: '#d26147',
         'primary--text': '#6200EE',
         'primary-darken-1': '#3700B3',
-        secondary: '#03DAC6',
+        secondary: '#699eae',
         'secondary-darken-1': '#018786',
         error: '#B00020',
         info: '#2196F3',

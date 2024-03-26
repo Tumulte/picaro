@@ -112,6 +112,8 @@ function createNewStyle() {
   settingsStore.allStyleSets.push(newStyle);
   settingsStore.currentStyleSet = newStyle
   router.replace({params: {styleId: ""}});
+
+  refreshLiveStyle()
 }
 
 function setStyle(styleId: string) {
@@ -144,38 +146,48 @@ async function save() {
 </script>
 
 <template>
-  <div>
-    <v-btn @click="createNewStyle">
-      New Style
-    </v-btn>
-    <v-btn @click="refreshLiveStyle">
-      Refresh
-    </v-btn>
-    <v-select
-      :items="settingsStore.allStyleSets"
-      label="Select style"
-      item-title="setName"
-      item-value="id"
-      @update:modelValue="setStyle"
-    />
-    <template v-if="settingsStore.currentStyleSet">
-      <div class="pic-font-fix">
-        <v-text-field v-model="settingsStore.currentStyleSet.setName" />
-        <FontEdit @reload-settings="refreshLiveStyle()" />
-        <ColorEdit />
+  <div class="pt-4">
+    <div>
+      <div class="pic-container">
+        <v-select
+          v-if="settingsStore.allStyleSets.length > 0"
+          :items="settingsStore.allStyleSets"
+          label="Select style"
+          item-title="setName"
+          item-value="id"
+          @update:modelValue="setStyle"
+        />
+        <v-btn v-if="!settingsStore.currentStyleSet" color="primary" @click="createNewStyle">
+          New Style
+        </v-btn>
       </div>
 
-      <RatioEdit @reload-settings="refreshLiveStyle()" />
-    </template>
+      <template v-if="settingsStore.currentStyleSet">
+        <div class="pic-container">
+          <h3>Style name</h3>
+          <v-text-field v-model="settingsStore.currentStyleSet.setName" label="Style Name" />
+        </div>
+        <v-btn @click="refreshLiveStyle">
+          Refresh style
+        </v-btn>
+        <div class="pic-font-fix pic-container">
+          <FontEdit @reload-settings="refreshLiveStyle()" />
+        </div>
+        <div class="pic-container">
+          <ColorEdit />
+        </div>
+        <div class="pic-container">
+          <RatioEdit @reload-settings="refreshLiveStyle()" />
+          <v-btn color="primary" @click="save()">
+            Save Style
+            <v-icon class="ml-2">
+              mdi-content-save
+            </v-icon>
+          </v-btn>
+        </div>
+      </template>
+    </div>
   </div>
-  <v-btn @click="refreshLiveStyle">
-    Refresh
-  </v-btn>
-  <v-btn @click="save()">
-    <v-icon>
-      mdi-content-save
-    </v-icon>
-  </v-btn>
 </template>
 
 <style scoped>

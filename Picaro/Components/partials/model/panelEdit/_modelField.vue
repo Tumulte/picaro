@@ -1,13 +1,13 @@
 <template>
   <div
-    v-if="!isEdited && !isNew"
-    data-test="created-model-field"
-    class="pic-model-field-summary"
+      v-if="!isEdited && !isNew"
+      data-test="created-model-field"
+      class="pic-model-field-summary"
   >
     <button
-      data-test="edit-model-field-button"
-      class="pic-button--text"
-      @click="editField"
+        data-test="edit-model-field-button"
+        class="pic-button--text"
+        @click="editField"
     >
       Edit
     </button>
@@ -16,16 +16,16 @@
     {{ existingFieldData.name }}
 
     <span class="pic-sortable-handle">
-      <unicon name="draggabledots" />
+      <unicon name="draggabledots"/>
     </span>
   </div>
   <label v-if="isEdited">
     Field Type
     <select
-      v-show="noFieldSelected"
-      v-model="type"
-      data-test="select-model-field"
-      @change="noFieldSelected = type === 'none'"
+        v-show="noFieldSelected"
+        v-model="type"
+        data-test="select-model-field"
+        @change="noFieldSelected = type === 'none'"
     >
       <option value="none">
         Select a form element…
@@ -35,9 +35,9 @@
       </option>
     </select>
     <button
-      v-if="noFieldSelected"
-      class="pic-button--text"
-      @click="noFieldSelected = false; type = savedFieldType"
+        v-if="noFieldSelected"
+        class="pic-button--text"
+        @click="noFieldSelected = false; type = savedFieldType"
     >
       cancel
     </button>
@@ -51,68 +51,68 @@
     </div>
   </label>
   <span v-show="!noFieldSelected" v-if="isEdited">
-    <pic-input v-model="label" :validation="v$.label" label="Label" />
-    <pic-input v-model="name" :validation="v$.name" label="Name" />
+    <pic-input v-model="label" :validation="v$.label" label="Label"/>
+    <pic-input v-model="name" :validation="v$.name" label="Name"/>
     <pic-input
-      v-model="template"
-      :validation="v$.template"
-      label="template (or HTML tag)"
+        v-model="template"
+        :validation="v$.template"
+        label="template (or HTML tag)"
     />
 
     <label>
       Attributes
       <input
-        v-model.trim="attributes"
+          v-model.trim="attributes"
       >
     </label>
     <label>
       Required
       <input
-        v-model="required"
-        type="checkbox"
+          v-model="required"
+          type="checkbox"
       >
     </label>
     <label>
       hidden
       <input
-        v-model="hidden"
-        type="checkbox"
+          v-model="hidden"
+          type="checkbox"
       >
     </label>
     <label v-if="hasRegEx.includes(props.type)">
       Regex
       <input
-        v-model="regex"
+          v-model="regex"
       >
     </label>
 
     <button
-      v-if="modelFormState === 'editingField'"
-      data-test="save-model-field-button"
-      :disabled="v$.$invalid"
-      @click="saveEdit"
+        v-if="modelFormState === 'editingField'"
+        data-test="save-model-field-button"
+        :disabled="v$.$invalid"
+        @click="saveEdit"
     >
       Save
     </button>
     <button
-      v-if="modelFormState === 'editingField'"
-      data-test="delete-model-field-button"
-      class="pic-button--text"
-      @click="deleteField"
+        v-if="modelFormState === 'editingField'"
+        data-test="delete-model-field-button"
+        class="pic-button--text"
+        @click="deleteField"
     >
       delete
     </button>
     <button
-      v-else-if="modelFormState === 'addingField'"
-      data-test="add-field-button"
-      :disabled="v$.$invalid"
-      @click="addField"
+        v-else-if="modelFormState === 'addingField'"
+        data-test="add-field-button"
+        :disabled="v$.$invalid"
+        @click="addField"
     >
       Add field to model
     </button>
     <button
-      class="pic-button--text"
-      @click="cancelEdit"
+        class="pic-button--text"
+        @click="cancelEdit"
     >
       Cancel
     </button>
@@ -124,7 +124,7 @@ import {computed, ref} from "vue";
 import {nanoid} from "nanoid";
 import {useVuelidate} from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
-import PicInput from "@/components/elements/picInput.vue";
+import PicInput from "@components/customUiElements/picInput.vue";
 import {MESSAGE} from "@/utils/const";
 import {useUtilsStore} from "@/stores/utils";
 

@@ -25,7 +25,7 @@ export default {
   },
   props: {
     fieldParams: {type: Object, require: true},
-    fieldData: {type: Array, require: true},
+    modelContent: {type: Array, require: true},
     fieldName: {type: String, require: true},
     moduleParams: {
       type: Object, default: () => {
@@ -44,14 +44,14 @@ export default {
       this.edit = !this.edit;
     },
     sendForm(data) {
-      const currentFieldData = this.fieldData;
+      const currentFieldData = this.modelContent;
       currentFieldData[this.fieldName] = data;
       this.$nextTick(() => {
         axios
             .put(
                 `/api/${this.settings.applicationName}/${encodeURI(
                     this.$parent.model
-                )}/${this.fieldData.id}`,
+                )}/${this.modelContent.id}`,
                 currentFieldData
             )
             .then(() => {
@@ -74,7 +74,7 @@ export default {
   computed: {
     ...mapGetters(["settings"]),
     currentField() {
-      return this.fieldData.find(item => item.id === this.fieldName)
+      return this.modelContent.find(item => item.id === this.fieldName)
     }
   }
 };

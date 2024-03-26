@@ -1,62 +1,7 @@
-<template>
-  <h2><span>Models</span></h2>
-  <div class="pic-flex">
-    <aside class="pic-aside pic-container">
-      <button
-        v-if="modelFormState === 'noModel'"
-        data-test="new-model-button"
-        @click="modelFormState = 'awaitingName'"
-      >
-        New Model
-      </button>
-      <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
-        <div>
-          <a @click="selectModel(model)">
-            {{ model.name }}
-          </a>
-        </div>
-      </div>
-    </aside>
-    <main class="pic-main pic-container">
-      <v-tabs v-if="modelFormState !== 'noModel'">
-        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/`">
-          Edit Model
-        </v-tab>
-        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/content`">
-          Edit content
-        </v-tab>
-      </v-tabs>
-      <div v-if="modelFormState === 'awaitingName'" class="pic-new-model">
-        <label v-if="!currentEditModelName">
-          New model name
-          <input v-model="modelNameInput" data-test="create-model-name-input">
-        </label>
-        <button
-          v-if="!currentEditModelName"
-          data-test="create-model-button"
-          :disabled="!modelNameInput || !modelNameIsUnique"
-          @click="createNewModel"
-        >
-          Create model
-        </button>
-      </div>
-      <router-view
-        v-if="currentEditModel"
-        class="pic-main-container"
-        :current-edit-model="currentEditModel"
-        :model-form-state="modelFormState"
-        :model-collection="modelCollection"
-        :categories="settingsStore.currentAppSettings?.categories"
-        @updateModelFormState="modelFormState = $event"
-        @cancelEditModel="cancelEditModel($event)"
-      />
-    </main>
-  </div>
-</template>
 <script setup lang="ts">
 import {ref, computed, watch} from "vue";
 import {useSettingsStore} from '@stores/settings'
-import {Model, ModelState} from '@picTypes/index.d'
+import {Model, ModelState} from '@types'
 import {useRouter, useRoute} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
@@ -69,7 +14,7 @@ const router = useRouter()
 const route = useRoute()
 
 const modelFormState = ref<ModelState>("noModel");
-const currentEditModel = ref<Model | null>(null);
+const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
 
 const modelCollection = computed((): Model[] | [] => {
@@ -88,7 +33,6 @@ const modelNameIsUnique = computed(() => {
 
 function selectModel(model: Model) {
   if (settingsStore.currentAppSettings) {
-    modelFormState.value = "modelCreated";
     router.push({path: `/data/${settingsStore.currentAppSettings.id}/${model.id}`})
   } else {
     utilsStore.addAlert({
@@ -105,16 +49,18 @@ const currentAppModelCollection = computed((): Model[] | [] => {
 function createNewModel() {
   modelFormState.value = "modelCreated";
   modelNameInput.value = modelNameInput.value.toLowerCase()
+
   currentEditModel.value = {
     id: nanoid(8),
     name: modelNameInput.value,
     fieldCollection: []
   }
+
 }
 
-function cancelEditModel(state: ModelState) {
+function cancelEditModel() {
   modelFormState.value = 'noModel';
-  currentEditModel.value = null;
+  currentEditModel.value = undefined;
   modelNameInput.value = '';
   if (settingsStore.currentAppSettings) {
     router.push({path: `/data/${settingsStore.currentAppSettings.id}`})
@@ -128,19 +74,76 @@ function cancelEditModel(state: ModelState) {
 
 // region Model hydration
 function modelFromRoute() {
-  if (route?.params.modelId && settingsStore.currentAppSettings) {
-    currentEditModel.value = settingsStore.currentAppSettings.modelCollection.find(model => model.id === route.params.modelId) || null
+  if (route?.params.modelId && settingsStore.currentAppSettings && route?.params.modelId !== 'newModel') {
+    currentEditModel.value = settingsStore.currentAppSettings.modelCollection.find(model => model.id === route.params.modelId)
     modelFormState.value = "modelCreated";
   }
 }
 
-watch(() => settingsStore.currentAppSettings, (newVal) => {
+function newModelForm() {
+  router.replace({name: 'model', params: {appId: route.params.appId, modelId: 'newModel'}});
+  modelFormState.value = 'awaitingName';
+}
+
+watch(() => route.params.modelId, (newVal) => {
   if (newVal) {
     modelFromRoute()
   }
-})
-modelFromRoute()
+}, {immediate: true})
 // endregion
 </script>
+
+<template>
+  <div class="pic-flex">
+    <aside class="pic-aside pic-container">
+      <h3>
+        Model List
+      </h3>
+      <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
+        <a class="pic-aside-item" :class="{selected: model.id === route.params.modelId}" @click="selectModel(model)">
+          {{ model.name }}
+        </a>
+      </div>
+      <v-btn
+        color="primary"
+        data-test="new-model-button"
+        @click="newModelForm"
+      >
+        New Model
+      </v-btn>
+    </aside>
+    <main class="pic-main pic-container">
+      <v-tabs v-if="modelFormState !== 'noModel' && modelFormState !== 'awaitingName'">
+        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/`">
+          Edit Model
+        </v-tab>
+        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/content`">
+          Edit content
+        </v-tab>
+      </v-tabs>
+      <div v-if="modelFormState === 'awaitingName'" class="pic-new-model">
+        <v-text-field v-model="modelNameInput" data-test="create-model-name-input" label="New model name" />
+        <v-btn
+          v-if="!currentEditModelName"
+          data-test="create-model-button"
+          color="primary"
+          :disabled="!modelNameInput || !modelNameIsUnique"
+          @click="createNewModel"
+        >
+          Create model
+        </v-btn>
+      </div>
+      <router-view
+        v-if="currentEditModel"
+        class="mt-4"
+        :current-edit-model="currentEditModel"
+        :model-form-state="modelFormState"
+        :model-collection="modelCollection"
+        @updateModelFormState="modelFormState = $event"
+        @cancelEditModel="cancelEditModel()"
+      />
+    </main>
+  </div>
+</template>
 <style scoped lang="scss">
 </style>

@@ -13,7 +13,7 @@ export default {
       },
       type: Object
     },
-    fieldData: {type: Object, default: null},
+    modelContent: {type: Object, default: null},
     isEdit: {type: Boolean, default: false}
   },
   data: function () {
@@ -41,8 +41,8 @@ export default {
     }
   },
   created() {
-    if (this.fieldData) {
-      this.selected = this.fieldData.content;
+    if (this.modelContent) {
+      this.selected = this.modelContent.content;
     }
   }
 };

@@ -1,8 +1,8 @@
 <template lang="pug">
-div(v-html="html")
+  div(v-html="html")
 </template>
 <script>
-import { Editor } from "@tiptap/vue-3";
+import {Editor} from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -15,14 +15,14 @@ let editor;
 export default {
   name: "RichText",
   props: {
-    fieldData: {
+    modelContent: {
       type: Object,
       default() {
         return {};
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       html: ""
     };
@@ -31,7 +31,7 @@ export default {
     editor = new Editor({
       extensions: [StarterKit, Image, Link, Video, BulletList, ListItem]
     });
-    editor.commands.setContent(this.fieldData);
+    editor.commands.setContent(this.modelContent);
     this.html = editor.getHTML();
   },
   beforeUnmount() {

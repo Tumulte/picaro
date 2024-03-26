@@ -16,15 +16,16 @@
     --bgMedium: #f8e4c7;
     --bgDark: #8f4e3b;
     --greyLight: #f5f5f5;
+    --greyMedium: #babfc2;
     --grey: #6a6e70;
     --greyDark: #414141;
-    --secondaryDark: #225372;
-    --secondary: #6c94da;
+    --secondaryDark: #225271;
+    --secondary: #699eae;
     --secondaryLight: #9ee4f5;
-    --mainDark: #6a0967;
+    --mainDark: #591C1C;
     --main: #d36147;
+    --mainLight: #eaa89a;
     --mainTrans: #d3624888;
-    --mainLight: #f1abc5;
     --highlight: #63ef75;
     --highlight2: #dbdb35;
     --highlight2light: #fdff8a;
@@ -158,7 +159,7 @@
 }
 
 html {
-    font-family: knile, sans-serif;
+    font-family: knile, sans-serif !important;
     color: var(--greyDark);
     font-weight: 200;
     font-size: 20px;
@@ -176,20 +177,78 @@ html {
     line-height: 18px !important;
 }
 
+.pic-font-example {
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-title) !important;
+        color: #000 !important;
+        text-decoration: none;
+    }
+
+    .pic-font-main {
+        font-family: var(--font-main) !important;
+    }
+
+    .pic-font-alt {
+        font-family: var(--font-alt) !important;
+    }
+}
+
 *, *:before, *:after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+aside {
+    flex: calc(25% - 4rlh);
+
+    h2:first-of-type {
+        margin-top: 0 !important;
+        font-size: 4rem;
+
+    }
+
+    > div {
+        border-bottom: 1px solid var(--greyDark);
+
+        a:first-of-type {
+            margin-top: var(--xl);
+        }
+
+        a {
+            display: block !important;
+            margin: var(--xs);
+            text-decoration: none !important;
+            color: var(--secondaryDark) !important;
+            font-weight: 300 !important;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 0;
+            padding-left: 0;
+
+            i
+            &:hover {
+                background: var(--greyLight);
+            }
+        }
+    }
+
+    div:last-of-type {
+        margin-bottom: var(--xxl);
+    }
+}
+
+main {
+    flex: calc(75% - 4rlh);
+}
+
 body {
-    background: url("/so-white.jpg");
+    background: url("/bedge-grunge-dark.png");
 
     h1, h2, h3, h4, h5, h6 {
-        > span {
-            border-bottom: var(--xxs) solid;
-            display: inline-block;
-        }
+        font-family: abbey, sans-serif;
+        color: var(--secondaryDark) !important;
+        margin-bottom: var(--xl);
     }
 
     H1 {
@@ -218,7 +277,6 @@ body {
         line-height: 1;
         margin-top: var(--l);
         margin-bottom: var(--m);
-        text-shadow: -3px 5px 0 var(--bgMedium)
     }
 
     h4 {
@@ -377,11 +435,22 @@ body {
         color: var(--main)
     }
 
+
     .pic-container {
+        margin: var(--m);
         padding: var(--l);
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 0 var(--3xs) inset var(--greyMedium);
+        border-radius: var(--xxs);
+        border: 2px solid var(--greyDark);
+        border-right: 1px solid var(--greyLight);
 
         h2:first-of-type {
             margin-top: var(--xs);
+        }
+
+        h3:first-of-type {
+            margin-top: 0;
         }
     }
 
@@ -402,22 +471,79 @@ body {
         flex-wrap: wrap;
     }
 
-    .pic-main {
-        flex-grow: 1;
+    .pic-right {
+        align-self: end;
+    }
+
+    .pic-between {
+        justify-content: space-between;
+    }
+
+    .pic-display-edit {
+        .pic-display-list-item {
+            cursor: pointer;
+            border: 1px solid var(--greyMedium);
+            border-radius: var(--xxs);
+            margin: var(--xs) 0;
+            padding: var(--xs);
+            position: relative;
+
+            &::before {
+                transition: opacity 0.2s ease-in-out;
+                opacity: 0;
+                content: "edit";
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: var(--xxs);
+                background: var(--main);
+                color: #fff;
+            }
+
+            &:hover::before {
+                opacity: 1;
+            }
+        }
     }
 
     .pic-main-container {
-        flex-grow: 1;
+        margin-top: 6.5rem
+    }
+
+    .pic-aside-item.selected {
+        border-left: var(--xs) solid var(--main);
+        padding-left: var(--xs);
+    }
+
+    .pic-field-title {
+        font-family: knile;
+        font-size: 1.2rem;
     }
 
     .pic-tabs {
         box-shadow: 0 0 8px var(--grey);
         background: url("/inspiration-geometry.png");
-        padding: var(--xs);
+        background-color: #f8f8f8;
+        padding: var(--s);
         display: flex;
+        color: var(--greyDark);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+
+        .v-slide-group__content {
+            align-items: center;
+        }
+
+        a {
+            font-size: 1rem;
+
+        }
 
         img {
-            margin: 0 var(--xxs);
+            margin: 0 var(--m) 0 var(--xxs);
         }
 
         ul {
@@ -429,9 +555,30 @@ body {
         li::before {
             content: none;
         }
+
+        .v-tabs--density-default {
+            height: 55px;
+        }
+
+        .v-input__control {
+            margin-left: var(--s);
+        }
+    }
+
+    #pic-alert-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: var(--greyLight);
+        border-radius: var(--xxs);
+        padding: var(--xs) var(--m);
+        border: var(--4xs) solid var(--greyDark);
+        display: inline-block;
     }
 
     .pic-alert {
+
+
         &__sub-container {
             background: var(--bgLight);
             border-radius: var(--xxs);
@@ -502,8 +649,18 @@ body {
 
     .pic-sortable-handle {
         fill: var(--secondaryDark);
-        background: var(--greyLight);
-        padding: var(--xxs);
+        background: var(--secondary);
+        color: var(--secondaryLight);
+        font-size: 1.5rem;
+        padding: 15px 0;
+        margin: -21px 0;
+
+        &__category {
+            margin: 0;
+            background: none;
+            color: var(--secondaryDark);
+            padding: 10px 0;
+        }
 
         svg {
             vertical-align: middle;
@@ -514,5 +671,24 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: var(--s) 0;
+    }
+
+    .pic-model--field {
+        border: 1px dashed var(--greyDark);
+        border-top: none;
+    }
+
+    .pic-model--field:first-of-type {
+        border-top: 1px dashed var(--greyDark);
+        margin-top: var(--m);
+    }
+
+    .pic-model--field:last-of-type {
+        margin-bottom: var(--m);
+    }
+
+    .pic-add-new-field-button {
+        margin-bottom: var(--xl);
     }
 }

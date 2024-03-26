@@ -1,21 +1,22 @@
-import layout from "@/src/components/dataConfig/Layout.vue";
+import layout from "@/src/components/layout/Layout.vue";
+import {nanoid} from "nanoid";
 
 export type Categories = { id: string, label: string }
 export type Layout = { model: string, type: string, categories: Categories[] }
 export type Filter = { id: string, label: string }
 export type Model = { id: string, name: string, fieldCollection: ModelField[] }
-export type ModelField = {
-    id: string,
-    label: string,
-    name: string,
-    regex: string,
-    required: boolean,
-    hidden: boolean,
-    template: string,
-    attributes: string,
-    extraParams: string,
+
+export type RichTextContent = {
     type: string
+    attrs?: {
+        level?: number
+    }
+    content: {
+        type: string
+        text: string
+    }
 }
+
 export type Settings = {
     id: string,
     styleSetId: string,
@@ -33,8 +34,12 @@ export type Settings = {
     modelCollection: Model[],
     filterCollection: { all: Record<string, string>, modelFilter: Filter[] },
 }
-export type SettingsCollection = Settings[]
-export type ColorParameters = { hueVariation: number, saturation?: number, light?: number }
+
+export type ColorParameters = {
+    hueVariation: number
+    saturation?: number
+    light?: number
+}
 export type CssParameters = {
     "font-size": string,
     "line-height": string,
@@ -44,7 +49,7 @@ export type CssParameters = {
 
 export type ColorGeneratorParams = {
     count: number,
-    text: { variation: number, curve: number, move: number, curve: number },
+    text: { variation: number, curve: number, move: number },
     hue: { variation: number, curve: number, move: number },
     light: { variation: number, move: number, curve: number },
     saturation: { variation: number, move: number, curve: number },
@@ -62,6 +67,13 @@ type RatioParams = {
 export type FontOrigin = "google" | "local" | "webSafe"
 
 export type FontParams = { font: string, origin: FontOrigin }
+
+export interface SettingsStore {
+    currentAppSettings: Settings | undefined
+    allSettings: Settings[]
+    allStyleSets: StyleSet[]
+    currentStyleSet: StyleSet | undefined
+}
 
 export type StyleSet = {
     dominant: string,
@@ -90,16 +102,37 @@ export type StyleSet = {
     hiddenCombination: { dominant: Array<any>, sub: Array<any> },
 }
 
-export type FieldData = {
+export type FieldParams = {
+    id: string,
+    label: string,
     name: string,
-    content: string,
-    fieldType: "text",
+    regex: string,
     required: boolean,
-    position: number
+    hidden: boolean,
+    template: string,
+    attributes: string,
+    extraParams: string,
+    type: string
+}
+
+export type FieldContent = {
+    fieldContent: null | string | RichTextContent[]
+    fieldParamsId: string
+    contentId: string
+}
+
+export type ModelContent = {
+    categories: string[]
+    content: FieldContent[]
+    modelId: string
+}
+
+export type ModuleParam = {
+    model: string
+    categories: string[]
+    type: string
 }
 
 export type Hue = { hue: number, saturation: number, light: number }
-
-export type FieldDataWithId = { content: { [key: string]: FieldData }, categories: string[] }
 
 export type ModelState = "noModel" | "awaitingName" | "modelCreated" | "addingField" | "editingField"

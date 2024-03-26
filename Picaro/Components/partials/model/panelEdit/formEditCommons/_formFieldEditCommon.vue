@@ -8,7 +8,7 @@ export default {
       type: Boolean,
       default: false
     },
-    fieldData: Object
+    modelContent: Object
   },
   data() {
     return {
@@ -19,17 +19,17 @@ export default {
       nameRules: [
         v => !!v || "Name is required",
         v =>
-          /^[a-z0-9-]+$/.test(v) ||
-          'The name must use lower case letters, numbers or "-"'
+            /^[a-z0-9-]+$/.test(v) ||
+            'The name must use lower case letters, numbers or "-"'
       ]
     };
   },
 
   created() {
-    if (this.fieldData.label) {
-      this.label = this.fieldData.label;
-      this.name = this.fieldData.name;
-      this.required = this.fieldData.required;
+    if (this.modelContent.label) {
+      this.label = this.modelContent.label;
+      this.name = this.modelContent.name;
+      this.required = this.modelContent.required;
     }
   },
   methods: {

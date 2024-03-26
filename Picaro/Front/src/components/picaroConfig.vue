@@ -1,50 +1,3 @@
-<template>
-  <div class="pic-flex">
-    <aside class="pic-container">
-      <button @click="newAppForm">
-        New App
-      </button>
-      <div v-for="app in settings" :key="app.id">
-        <router-link class="pic-button--text" :to="{name: 'app', params: {appId: app.id}}">
-          {{ app.applicationName }}
-        </router-link>
-      </div>
-    </aside>
-    <main class="pic-container">
-      <template v-if="appFormState === 'selectedApp' && currentSettings?.applicationName">
-        <pic-header level="3">
-          Current App : {{ currentSettings.applicationName }}
-        </pic-header>
-        <pic-input v-model="currentSettings.title" :validation="v$.applicationName" label="Title" />
-        <pic-input v-model="currentSettings.messageTimeOut" :validation="v$.messageTimeOut" label="Message Timeout" />
-        <input v-model="currentSettings.devMode" type="checkbox">
-        <button @click="deleteApp">
-          Delete
-        </button>
-        <button @click="updateSettings(currentSettings)">
-          Update
-        </button>
-      </template>
-      <template v-if="appFormState === 'newApp'">
-        <pic-input v-model="newAppName" :validation="v$.newAppName" label="App Name" />
-        <label>
-          App Type
-          <select v-model="newAppType">
-            <option value="picaro">Picaro</option>
-            <option value="vue-ts">Vue Typescript</option>
-            <option value="vue-js">Vue Javascript</option>
-            <option value="empty">empty</option>
-          </select>
-        </label>
-
-        <button :disabled="v$.$invalid" @click="createApp">
-          Create App
-        </button>
-      </template>
-    </main>
-  </div>
-</template>
-
 <script lang="ts">
 import {computed, ref, watch} from "vue";
 import axios from "axios";
@@ -52,10 +5,11 @@ import {useSettingsStore} from '@stores/settings'
 import {useUtilsStore} from "@stores/utils";
 import {helpers, required} from "@vuelidate/validators";
 import {useVuelidate} from '@vuelidate/core'
-import PicInput from "./elements/picInput.vue";
-import {useRouter} from "vue-router";
+import PicInput from "@components/customUiElements/picInput.vue";
+import {useRoute, useRouter} from "vue-router";
 import {updateSettings} from "./utils/api";
 import {MESSAGE} from "@utils/const";
+import {copy} from "copy-anything"
 
 
 export default {
@@ -68,12 +22,13 @@ export default {
     const newAppName = ref('')
     const newAppType = ref<"picaro" | "vue-ts" | "vue-js" | "empty">('vue-ts')
     const router = useRouter()
+    const route = useRoute()
 
     const settings = computed(() => {
       return settingsStore.allSettings
     })
     const currentSettings = computed(() => {
-      return settingsStore.currentAppSettings
+      return copy(settingsStore.currentAppSettings)
     })
 
     function newAppForm() {
@@ -89,6 +44,12 @@ export default {
     if (settingsStore.currentAppSettings) {
       appFormState.value = 'selectedApp'
     }
+
+    watch(() => route.name, () => {
+      if (route.name === 'newApp') {
+        appFormState.value = 'newApp'
+      }
+    }, {immediate: true})
 
     function createApp() {
       axios.post(`/api/setup/create/${newAppName.value}/${newAppType.value}`).then((res) => {
@@ -114,15 +75,22 @@ export default {
       });
     }
 
+    function updateApp() {
+      updateSettings(currentSettings.value, settingsStore.currentAppSettings.applicationName)
+      emit('reloadSettings')
+    }
+
     return {
       appFormState,
       newAppName,
       settings,
+      settingsStore,
       currentSettings,
       newAppForm,
       createApp,
+      route,
       newAppType,
-      updateSettings,
+      updateApp,
       deleteApp,
       v$: useVuelidate({
         $autoDirty: true
@@ -134,6 +102,13 @@ export default {
       return v === '' || /^[a-z]+$/.test(v)
     })
     return {
+      title: {
+        required
+      },
+      applicationName: {
+        required,
+        alpha
+      },
       newAppName: {
         required,
         alpha
@@ -142,6 +117,100 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div v-if="!route.params.appId && route.name !== 'newApp'" class="pic-container">
+    <v-row>
+      <h2>
+        Select or create an application
+      </h2>
+    </v-row>
+    <v-row>
+      <v-col v-for="app in settings" :key="app.applicationName">
+        <v-card
+          height="100"
+          :title="app.applicationName"
+          color="primary"
+          :to="{name: 'app', params: {appId: app.id}}"
+        />
+      </v-col>
+      <v-col>
+        <v-card height="100" color="grey" :to="{name: 'newApp'}">
+          <v-card-title>
+            New App
+          </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
+  <template v-else>
+    <div class="pic-flex">
+      <aside class="pic-container pic-aside">
+        <h2>
+          App List
+        </h2>
+
+        <div v-for="app in settings" :key="app.id">
+          <router-link class="pic-button--text" :to="{name: 'app', params: {appId: app.id}}">
+            {{ app.applicationName }}
+          </router-link>
+        </div>
+
+        <v-btn color="primary" @click="newAppForm">
+          New App
+        </v-btn>
+      </aside>
+      <main class="pic-container">
+        <template v-if="appFormState === 'selectedApp'">
+          <h2>
+            {{ currentSettings.applicationName }}
+          </h2>
+          <v-text-field v-model="currentSettings.title" :validation="v$.title" label="Title" />
+          <v-text-field
+            v-model="currentSettings.applicationName"
+            :validation="v$.applicationName"
+            label="Application name"
+          />
+          <v-text-field
+            v-model="currentSettings.messageTimeOut"
+            :validation="v$.messageTimeOut"
+            label="Message Timeout"
+          />
+          <v-select
+            v-model="currentSettings.styleSet"
+            :items="settingsStore.allStyleSets"
+            label="Style Set"
+            item-title="setName"
+            item-value="id"
+          />
+
+          <v-checkbox
+            v-model="currentSettings.devMode"
+            type="checkbox"
+            label="Dev mode"
+          />
+          <div class="pic-flex pic-between">
+            <v-btn
+              color="primary"
+              @click="updateApp()"
+            >
+              Update
+            </v-btn>
+            <v-btn variant="text" class="pic-button--text" @click="deleteApp">
+              Delete
+            </v-btn>
+          </div>
+        </template>
+        <template v-if="appFormState === 'newApp'">
+          <v-text-field v-model="newAppName" :validation="v$.newAppName" label="App Name" />
+          <v-btn color="primary" @click="createApp">
+            Create App
+          </v-btn>
+        </template>
+      </main>
+    </div>
+  </template>
+</template>
 
 <style scoped>
 

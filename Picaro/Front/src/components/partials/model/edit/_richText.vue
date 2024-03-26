@@ -49,7 +49,7 @@ export default {
   components: {EditorContent},
   props: {
     fieldParams: {type: Object, required: true},
-    fieldData: {type: Object, default: null},
+    modelContent: {type: Object, default: null},
     isEdit: {type: Boolean, default: false}
   },
   data() {
@@ -167,7 +167,7 @@ export default {
   mounted() {
     this.editor = new Editor({
       extensions: [StarterKit, Image, Link, Video, BulletList, ListItem],
-      content: this.fieldData,
+      content: this.modelContent,
       onUpdate: ({editor}) => {
         const content = Object.assign({}, editor.getJSON(), {
           fieldType: "rich-text",

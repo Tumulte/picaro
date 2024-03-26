@@ -5,7 +5,6 @@
 </template>
 <script setup lang="ts">
 import axios from "axios";
-import {mapActions, mapGetters} from "vuex";
 
 const props = defineProps({
   modelName: {type: String, required: true},

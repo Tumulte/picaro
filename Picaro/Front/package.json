@@ -23,24 +23,24 @@
     "copy-anything": "^3.0.5",
     "nanoid": "^3.3.3",
     "pinia": "^2.0.23",
-    "vue": "^3.2.37",
-    "vue-router": "4",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.3.17"
+    "vuetify": "^3.5.9"
   },
   "devDependencies": {
     "@mdi/font": "6.6.96",
     "@types/cypress": "^1.1.3",
     "@types/node": "^18.11.18",
-    "@vitejs/plugin-vue": "^3.1.0",
+    "@vitejs/plugin-vue": "^5.0.4",
     "cypress": "^11.1.0",
     "postcss": "^8.4.31",
     "postcss-nested": "^6.0.1",
     "postcss-preset-env": "^9.1.4",
     "prettier": "^2.7.1",
-    "typescript": "^4.9.5",
-    "vite": "^3.1.0",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
     "vite-plugin-vuetify": "1.0.0-alpha.17",
-    "vue-tsc": "^0.40.4"
+    "vue-tsc": "^2.0.6"
   }
 }

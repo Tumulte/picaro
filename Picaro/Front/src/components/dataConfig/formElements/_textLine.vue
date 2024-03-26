@@ -12,7 +12,7 @@ import {helpers} from "@vuelidate/validators";
 const emit = defineEmits(["updateData", "saveEdit", "endEdit"])
 const props = defineProps({
   fieldParams: {type: Object, required: true},
-  fieldData: {
+  modelContent: {
     type: Object,
     default() {
       return {};
@@ -22,6 +22,7 @@ const props = defineProps({
   isEdit: {type: Boolean, default: false}
 })
 const state = ref({text: ""})
+state.value.text = props.modelContent.content
 const formattedData = computed(() => {
   return [
     props.fieldParams.id,
@@ -63,7 +64,7 @@ watch(() => state.value.text, async () => {
 
 
 if (props.isEdit) {
-  state.value.text = props.fieldData.content;
+  state.value.text = props.modelContent.content;
 }
 
 function saveEdit() {

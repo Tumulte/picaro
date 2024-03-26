@@ -3,7 +3,7 @@ import dataConfig from "./components/dataConfig/DataConfig.vue";
 import appConfig from "./components/picaroConfig.vue";
 import modelEdit from "./components/dataConfig/ModelEdit.vue";
 import contentEdit from "@components/dataConfig/ContentEdit.vue";
-import CommonLayoutEdit from "@components/dataConfig/CommonLayoutEdit.vue";
+import CommonLayoutEdit from "@components/layout/CommonLayoutEdit.vue";
 import StyleEdit from "@components/styleSet/StyleEdit.vue";
 
 export const routes: RouteRecordRaw[] = [
@@ -15,16 +15,19 @@ export const routes: RouteRecordRaw[] = [
         children:
             [
                 {
-                    path: ':modelId?',
+                    name: 'model',
+                    path: ':modelId',
                     component: modelEdit
                 },
                 {
-                    path: ':modelId?/content/:contentId?',
+                    name: 'content',
+                    path: ':modelId/content/:contentId?',
                     component: contentEdit
                 },
 
             ]
     },
+    {name: 'newApp', path: '/app/new', component: appConfig},
     {name: 'app', path: '/app/:appId?', component: appConfig},
     {name: 'layout', path: '/layout/:appId?', component: CommonLayoutEdit},
     {

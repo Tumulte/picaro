@@ -10,30 +10,30 @@ const {generateCSSFile} = require("./cssFileGenerator");
 async function routes(fastify, options) {
     fastify.get("/all", async function (request, reply) {
         const allSettingsDb = fastify.db.getCollection('settings')
-        const allStylesetsdB = fastify.db.getCollection('styleset')
-        return {allSettings: allSettingsDb.find(), allStylesets: allStylesetsdB.find()}
+        const allStyleSetsdB = fastify.db.getCollection('styleset')
+        return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
     });
     fastify.post('/create/:name/:type', async (request, reply) => {
-        const {name, type} = request.params;
-        console.info('creating', name, type)
-        if (!name || !type) {
+        const {id, name, type} = request.params;
+        console.info('creating', id, type)
+        if (!id || !type) {
             return reply.code(400).send({error: 'Missing name or type'})
         }
-        const newApp = fastify.db.getCollection(name)
+        const newApp = fastify.db.getCollection(id)
 
         if (newApp !== null) {
-            console.log(`The app ${name} already exist`)
+            console.log(`The app ${id} already exist`)
             return
         }
         const newSettings = {...defaultSettings}
-        const id = nanoid(8)
+        const settingsId = nanoid(8)
         try {
             const settings = fastify.db.getCollection('settings')
-            newSettings.id = id
+            newSettings.id = settingsId
             newSettings.applicationName = name
-            newSettings.title = name
+            newSettings.title = id
             settings.insert(newSettings)
-            fastify.db.addCollection(name)
+            fastify.db.addCollection(id)
             console.log(`The app ${name} has been created`)
         } catch (err) {
             throw new Error(err)
@@ -60,9 +60,17 @@ async function routes(fastify, options) {
         reply.send({appCreatedId: id})
     })
     fastify.put('/update/settings', async (request, reply) => {
+        if (request.body.oldName && request.body.oldName !== request.body.settings.applicationName) {
+            fs.renameSync(`../../app${request.body.oldName}`, `../../app${request.body.settings.applicationName}`)
+        }
+        if (request.body.settings.styleSet) {
+            fs.copyFileSync(`../../static/baseStyle-${request.body.settings.styleSet}.css`, `../../app${request.body.settings.applicationName}/public/baseStyle.css`)
+            fs.cpSync(`../../static/fonts`, `../../app${request.body.settings.applicationName}/public/fonts`, {recursive: true})
+        }
         try {
             const settings = fastify.db.getCollection('settings')
-            settings.update(request.body)
+            settings.update(request.body.settings)
+
         } catch (err) {
             throw new Error(err)
         }

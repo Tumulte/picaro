@@ -16,24 +16,21 @@
     ],
     "skipLibCheck": true,
     "paths": {
-      "baseUrl": [
-        "."
-      ],
       "@components/*": [
-        "src/components/*"
+        "./src/components/*"
       ],
       "@utils/*": [
-        "utils/*"
+        "./utils/*"
       ],
       "@stores/*": [
-        "stores/*"
+        "./stores/*"
       ],
       "@libs/*": [
-        "../Libs/*"
+        "./../Libs/*"
       ],
       "@types": [
-        "../Types"
-      ],
+        "./../Types"
+      ]
     }
   },
   "types": [
@@ -44,7 +41,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
+    "src/**/*.vue"
   ],
   "references": [
     {

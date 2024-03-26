@@ -1,17 +1,8 @@
 import {defineStore} from 'pinia'
-import {reactive} from "vue";
-import {Settings, StyleSet} from "../../Types";
-
-interface State {
-    currentAppSettings: Settings | undefined
-    allSettings: Settings[]
-    allStyleSets: StyleSet[]
-    currentStyleSet: StyleSet | undefined
-}
-
+import {SettingsStore} from "@types";
 
 export const useSettingsStore = defineStore('settings', {
-    state: (): State => ({
+    state: (): SettingsStore => ({
         allStyleSets: [],
         allSettings: [],
         currentStyleSet: undefined,

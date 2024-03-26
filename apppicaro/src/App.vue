@@ -1,0 +1,105 @@
+<script setup lang="ts">
+import {computed, ref, watch} from "vue";
+import axios from "axios";
+import type {Settings} from "@types";
+import FilterCategories from "@components/filters/FilterCategories.vue";
+import Layout from "@components/layout/Layout.vue";
+import {useRoute} from "vue-router";
+
+const appID = import.meta.env.VITE_APP_ID
+
+const route = useRoute()
+
+const components = {
+  Layout: Layout,
+  FilterLayout: "FilterLayout",
+  FilterLink: "FilterLink",
+  List: "List",
+  FilterCategories: FilterCategories,
+}
+
+const settings = ref<{ allSettings: Settings[], allStyleSets: [] }>({allSettings: [], allStyleSets: []})
+axios.get('/api/setup/all').then(res => {
+  settings.value.allSettings = res.data.allSettings
+  settings.value.allStyleSets = res.data.allStyleSets
+  currentApp.value.filterCollection = filterRouteToStore(route.params)
+})
+
+const currentApp = computed<Settings | undefined>(() => {
+  return settings.value.allSettings.find((app: Settings) => app.id === appID)
+})
+const layoutCommonCollection = computed<Settings["layoutCommonCollection"] | []>(() => {
+  return currentApp.value?.layoutCommonCollection || [];
+});
+
+watch(route, (to) => {
+  if (to.params.globalFilters && currentApp.value) {
+    currentApp.value.filterCollection = filterRouteToStore(to.params)
+  }
+}, {immediate: true})
+
+function filterRouteToStore({
+                              globalFilters,
+                              modelFilters,
+                              globalParams,
+                              modelFilterParams
+                            }) {
+  if (!globalFilters) return;
+  const filterParams = {all: {}, modelFilters: {}};
+  if (globalFilters !== "~") {
+    globalFilters = decodeURI(globalFilters).split("::");
+    globalParams = decodeURI(globalParams).split("::");
+    globalFilters.forEach((item, index) => {
+          const params = globalParams[index].split("++").map(subItem => {
+            // first two letters item
+            const method = subItem.slice(0, 2)
+            const [field, id] = subItem.slice(2).split("..")
+            return {method, field, id}
+          })
+          filterParams.all = params;
+        }
+    );
+  }
+  if (modelFilters !== "~") {
+    const params = decodeURI(modelFilterParams).split("~");
+    decodeURI(modelFilters).split("~").forEach((item, index) => {
+      let [models, filters] = item.split("::");
+      models = JSON.stringify(models.split("++"));
+      filters = filters.split("++");
+      const paramsArray = params[index].split("::");
+      filterParams.modelFilters[models] = {};
+      filters.forEach((subItem, subIndex) => {
+        filterParams.modelFilters[models][subItem] = paramsArray[subIndex].split("++");
+      });
+    });
+
+  }
+  return filterParams;
+}
+</script>
+
+<template>
+  <div v-if="currentApp" class="pic-layout--main-container pic-content-container">
+    <v-row
+      v-for="layoutCommonLine in layoutCommonCollection"
+      class="pic-layout-container pic-row-container"
+    >
+      <v-col
+        v-for="layoutCommonColumn in layoutCommonLine"
+        class="pic-layout--container pic-layout--common-module pic-module-container pic-col"
+        :cols="layoutCommonColumn.cols"
+      >
+        <component
+          :is="components[layoutCommonColumn.type]"
+          v-if="layoutCommonColumn.type !== 'Layout'"
+          :current-app="currentApp"
+        />
+        <span v-else>
+          <Layout :current-app="currentApp" />
+        </span>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<style scoped></style>

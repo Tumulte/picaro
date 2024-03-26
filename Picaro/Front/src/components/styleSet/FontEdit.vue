@@ -39,6 +39,7 @@ const fontType = ['Title', 'Main', 'Alt']
   <v-row
     v-for="type in fontType"
     :key="type"
+    class="pic-font-example"
   >
     <v-col cols="8">
       <FontSelectForm

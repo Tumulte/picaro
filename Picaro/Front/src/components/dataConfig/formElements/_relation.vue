@@ -1,5 +1,5 @@
 <template lang="pug">
-v-combobox(:items="relationList?.fields || []" item-value="itemId" item-text="content" multiple v-model="selectedRelationCollection")
+  v-combobox(:items="relationList?.fields || []" item-value="itemId" item-text="content" multiple v-model="selectedRelationCollection")
 </template>
 <script>
 import axios from "axios";
@@ -7,9 +7,9 @@ import axios from "axios";
 export default {
   name: "RelationEdit",
   props: {
-    fieldParams: { type: Object, required: true },
-    fieldData: { type: Object, default: null },
-    isEdit: { type: Boolean, default: false }
+    fieldParams: {type: Object, required: true},
+    modelContent: {type: Object, default: null},
+    isEdit: {type: Boolean, default: false}
   },
   data() {
     return {

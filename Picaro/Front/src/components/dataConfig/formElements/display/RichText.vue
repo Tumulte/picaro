@@ -15,7 +15,7 @@ let editor;
 export default {
   name: "RichText",
   props: {
-    fieldData: {
+    fieldContent: {
       type: Object,
       default() {
         return {};
@@ -29,9 +29,9 @@ export default {
   },
   mounted() {
     editor = new Editor({
-      extensions: [StarterKit, Image, Link, Video, BulletList, ListItem]
+      extensions: [StarterKit, Image, Link, Video]
     });
-    editor.commands.setContent(this.fieldData);
+    editor.commands.setContent(this.fieldContent);
     this.html = editor.getHTML();
   },
   beforeUnmount() {

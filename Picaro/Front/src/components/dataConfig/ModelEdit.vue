@@ -1,28 +1,27 @@
 <script setup lang="ts">
 import {updateSettings} from "@components/utils/api";
-import {computed, PropType, ref, watch} from "vue";
-import {Model, ModelState} from "@picTypes/index.d";
+import {computed, PropType, ref} from "vue";
+import {Model, ModelState} from "@types";
 import {MESSAGE} from "@utils/const";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
 import Draggable from "vuedraggable";
 import ModelField from "@components/partials/model/panelEdit/_modelField.vue";
-import rfdc from "rfdc";
+import {copy} from "copy-anything"
+
 import EditableField from "@components/utils/EditableField.vue";
 
-const clone = rfdc()
 const utilsStore = useUtilsStore()
 const settingsStore = useSettingsStore()
-const editTitle = ref(false)
 
 // region Props
 const props = defineProps({
   modelFormState: {type: String as PropType<ModelState>, required: true},
   currentEditModel: {type: Object as PropType<Model>, required: true},
-  modelCollection: {type: Array as PropType<Model[]>, required: true}
+  modelCollection: {type: Array as PropType<Model[]>, required: true},
 })
 
-const currentModelClone: Model | undefined = clone(props.currentEditModel)
+const currentModelClone = ref<Model>(copy(props.currentEditModel))
 
 // endregion
 
@@ -57,15 +56,15 @@ async function abandonEdition() {
 }
 
 function addField(event) {
-  if (currentModelClone) {
-    currentModelClone.fieldCollection.push(event);
+  if (currentModelClone.value) {
+    currentModelClone.value.fieldCollection.push(event);
     emit('updateModelFormState', "modelCreated");
   }
 }
 
 function deleteField(index) {
-  if (currentModelClone) {
-    currentModelClone.fieldCollection.splice(index, 1);
+  if (currentModelClone.value) {
+    currentModelClone.value.fieldCollection.splice(index, 1);
     emit('updateModelFormState', "modelCreated");
   }
 }
@@ -76,7 +75,7 @@ function deleteModel() {
     text: "Are you sure you want to delete this model ?",
     type: "warning"
   }).then(() => {
-    if (!settingsStore.currentAppSettings || !currentModelClone) {
+    if (!settingsStore.currentAppSettings || !currentModelClone.value) {
       utilsStore.addAlert({
         text: "No app or no model selected",
         type: "error"
@@ -84,7 +83,7 @@ function deleteModel() {
     } else {
       const modelCollection = settingsStore.currentAppSettings.modelCollection
       const index = modelCollection.findIndex(
-          item => item.id === currentModelClone.id
+          item => item.id === currentModelClone.value.id
       );
       modelCollection.splice(index, 1);
 
@@ -110,82 +109,87 @@ function saveModel() {
       text: "No app selected",
       type: "error"
     })
-  } else if (currentModelClone) {
-    const modelIndex = settingsStore.currentAppSettings.modelCollection.findIndex(model => model.id === currentModelClone.id)
+  } else if (currentModelClone.value) {
+    const modelIndex = settingsStore.currentAppSettings.modelCollection.findIndex(model => model.id === currentModelClone.value.id)
     if (modelIndex !== -1) {
-      settingsStore.currentAppSettings.modelCollection[modelIndex] = currentModelClone
+      settingsStore.currentAppSettings.modelCollection[modelIndex] = currentModelClone.value
     } else {
-      settingsStore.currentAppSettings.modelCollection.push(currentModelClone)
+      settingsStore.currentAppSettings.modelCollection.push(currentModelClone.value)
     }
+
     updateSettings(settingsStore.currentAppSettings)
     emit('updateModelFormState', 'modelCreated')
   }
 }
 
 function saveEditedField(event, index) {
-  if (currentModelClone) {
-    currentModelClone.fieldCollection[index] = event;
+  if (currentModelClone.value) {
+    currentModelClone.value.fieldCollection[index] = event;
     emit('updateModelFormState', "modelCreated");
   }
 }
+
 </script>
 
 <template>
   <div v-if="currentEditModel">
     <EditableField :value="currentModelClone.name" @update="currentModelClone.name = $event">
-      <h3 data-test="created-model-name">
+      <h2 data-test="created-model-name">
         <span>
-          Editing model : <span>{{ currentModelClone.name }}</span>
+          <span>{{ currentModelClone.name }}</span>
         </span>
-      </h3>
+      </h2>
     </EditableField>
 
-    <button v-if="props.modelFormState !== 'noModel' " class="pic-button-secondary" @click="abandonEdition()">
-      Cancel
-    </button>
+    <v-btn v-if="props.modelFormState !== 'noModel' " color="secondary" @click="abandonEdition()">
+      Cancel Edition
+    </v-btn>
     <Draggable
-        v-model="currentModelClone.fieldCollection"
-        ghost-class="pic-sortable-ghost"
-        handle=".pic-sortable-handle"
-        item-key="id"
+      v-model="currentModelClone.fieldCollection"
+      ghost-class="pic-sortable-ghost"
+      handle=".pic-sortable-handle"
+      item-key="id"
     >
       <template #item="{element,index}">
         <div class="pic-model--field">
           <ModelField
-              :model="currentEditModel"
-              :model-form-state="props.modelFormState"
-              :existing-field-data="element"
-              :current-edit-field="currentEditField"
-              @cancel-field="emit('updateModelFormState', 'modelCreated')"
-              @updateEditField="emit('updateModelFormState', 'editingField'); currentEditField = $event"
-              @deleteField="deleteField(index)"
-              @updateEditedFieldData="saveEditedField($event,index)"
+            :model="currentEditModel"
+            :model-form-state="props.modelFormState"
+            :existing-field-data="element"
+            :current-edit-field="currentEditField"
+            @cancel-field="emit('updateModelFormState', 'modelCreated')"
+            @updateEditField="emit('updateModelFormState', 'editingField'); currentEditField = $event"
+            @deleteField="deleteField(index)"
+            @updateEditedFieldData="saveEditedField($event,index)"
           />
         </div>
       </template>
     </Draggable>
     <ModelField
-        v-if="props.modelFormState === 'addingField'"
-        :is-new="true"
-        :model="currentEditModel"
-        :model-form-state="props.modelFormState"
-        @cancel-field="emit('updateModelFormState', 'modelCreated')"
-        @addFieldData="addField"
+      v-if="props.modelFormState === 'addingField'"
+      :is-new="true"
+      :model="currentEditModel"
+      :model-form-state="props.modelFormState"
+      @cancel-field="emit('updateModelFormState', 'modelCreated')"
+      @addFieldData="addField"
     />
-    <button
-        v-if="props.modelFormState === 'modelCreated'"
-        data-test="add-new-field-button"
-        @click="emit('updateModelFormState', 'addingField')"
+    <v-btn
+      v-if="props.modelFormState === 'modelCreated'"
+      data-test="add-new-field-button"
+      class="pic-add-new-field-button"
+      @click="emit('updateModelFormState', 'addingField')"
     >
       Add Field
-    </button>
+    </v-btn>
   </div>
-  <button v-if="props.modelFormState === 'modelCreated'" @click="saveModel">
-    Save
-  </button>
-  <button v-if="currentModelIsSaved" class="pic-button--text" @click="deleteModel">
-    delete
-  </button>
+  <div v-if="props.modelFormState === 'modelCreated'" class="pic-flex pic-between">
+    <v-btn color="primary" @click="saveModel">
+      Save
+    </v-btn>
+    <v-btn v-if="currentModelIsSaved" class="pic-button--text" variant="text" @click="deleteModel">
+      delete
+    </v-btn>
+  </div>
 </template>
 
 <style scoped>

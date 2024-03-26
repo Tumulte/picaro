@@ -2,8 +2,8 @@ import axios from "axios";
 import {Settings, StyleSet} from "@types";
 
 
-export function updateSettings(currentSettings: Settings) {
-    return axios.put('/api/setup/update/settings', currentSettings).catch((error) => {
+export function updateSettings(currentSettings: Settings, oldName?: string) {
+    return axios.put('/api/setup/update/settings', {settings: currentSettings, oldName}).catch((error) => {
         throw new Error(error);
     })
 }

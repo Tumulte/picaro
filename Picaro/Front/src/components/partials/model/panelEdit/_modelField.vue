@@ -1,13 +1,13 @@
 <template>
   <div
-      v-if="!isEdited && !isNew"
-      data-test="created-model-field"
-      class="pic-model-field-summary"
+    v-if="!isEdited && !isNew"
+    data-test="created-model-field"
+    class="pic-model-field-summary"
   >
     <button
-        data-test="edit-model-field-button"
-        class="pic-button--text"
-        @click="editField"
+      data-test="edit-model-field-button"
+      class="pic-button--text"
+      @click="editField"
     >
       Edit
     </button>
@@ -16,32 +16,31 @@
     {{ existingFieldData.name }}
 
     <span class="pic-sortable-handle">
-      <unicon name="draggabledots"/>
+      <v-icon>mdi-drag</v-icon>
     </span>
   </div>
-  <label v-if="isEdited">
-    Field Type
-    <select
-        v-show="noFieldSelected"
-        v-model="type"
-        data-test="select-model-field"
-        @change="noFieldSelected = type === 'none'"
+  <template v-if="isEdited">
+    <h3>
+      Add field:
+    </h3>
+
+    <v-btn
+      color="secondary"
+      class="mb-8"
+      @click="cancelEdit"
     >
-      <option value="none">
-        Select a form element…
-      </option>
-      <option v-for="{type, name} in fieldType" :key="type" :value="type">
-        {{ name }}
-      </option>
-    </select>
-    <button
-        v-if="noFieldSelected"
-        class="pic-button--text"
-        @click="noFieldSelected = false; type = savedFieldType"
-    >
-      cancel
-    </button>
-    <div v-show="!noFieldSelected">
+      Cancel edit
+    </v-btn>
+    <v-select
+      v-show="noFieldSelected"
+      v-model="type"
+      :items="fieldType"
+      item-value="type"
+      item-title="name"
+      data-test="select-model-field"
+      @update:modelValue="noFieldSelected = type === 'none'"
+    />
+    <div v-if="!noFieldSelected">
       <strong>
         <span>{{ type }}</span>
       </strong>
@@ -49,73 +48,64 @@
         Change
       </button>
     </div>
-  </label>
+  </template>
   <span v-show="!noFieldSelected" v-if="isEdited">
-    <pic-input v-model="label" :validation="v$.label" label="Label"/>
-    <pic-input v-model="name" :validation="v$.name" label="Name"/>
-    <pic-input
-        v-model="template"
-        :validation="v$.template"
-        label="template (or HTML tag)"
+    <v-text-field v-model="label" :validation="v$.label" label="Label *" aria-required="true" />
+    <v-text-field v-model="name" :validation="v$.name" label="Name *" aria-required="true" />
+    <v-text-field
+      v-model="template"
+      :validation="v$.template"
+      label="template (or HTML tag)"
     />
 
-    <label>
-      Attributes
-      <input
-          v-model.trim="attributes"
-      >
-    </label>
-    <label>
-      Required
-      <input
-          v-model="required"
-          type="checkbox"
-      >
-    </label>
-    <label>
-      hidden
-      <input
-          v-model="hidden"
-          type="checkbox"
-      >
-    </label>
-    <label v-if="hasRegEx.includes(props.type)">
-      Regex
-      <input
-          v-model="regex"
-      >
-    </label>
+    <v-text-field
+      v-model.trim="attributes"
+      label="Attributes"
+    />
 
-    <button
-        v-if="modelFormState === 'editingField'"
-        data-test="save-model-field-button"
-        :disabled="v$.$invalid"
-        @click="saveEdit"
+    <v-checkbox
+      v-model="required"
+      label="required"
+      type="checkbox"
+    />
+    <v-checkbox
+      v-model="hidden"
+      label="hidden"
+      type="checkbox"
+    />
+    <v-text-field
+      v-model="regex"
+      label="Regex"
+    />
+    <v-btn
+      v-if="modelFormState === 'editingField'"
+      data-test="save-model-field-button"
+      :disabled="v$.$invalid"
+      @click="saveEdit"
     >
       Save
-    </button>
-    <button
+    </v-btn>
+    <div class="pic-flex pic-between">
+      <v-btn
+        v-if="modelFormState === 'addingField'"
+        data-test="add-field-button"
+        :disabled="v$.$invalid"
+        color="primary"
+        @click="addField"
+      >
+        Add field to model
+      </v-btn>
+
+
+      <v-btn
         v-if="modelFormState === 'editingField'"
         data-test="delete-model-field-button"
         class="pic-button--text"
         @click="deleteField"
-    >
-      delete
-    </button>
-    <button
-        v-else-if="modelFormState === 'addingField'"
-        data-test="add-field-button"
-        :disabled="v$.$invalid"
-        @click="addField"
-    >
-      Add field to model
-    </button>
-    <button
-        class="pic-button--text"
-        @click="cancelEdit"
-    >
-      Cancel
-    </button>
+      >
+        delete
+      </v-btn>
+    </div>
   </span>
 </template>
 <script lang="ts">
@@ -124,7 +114,7 @@ import {computed, ref, PropType} from "vue";
 import {nanoid} from "nanoid";
 import {useVuelidate} from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
-import PicInput from "@components/elements/picInput.vue";
+import PicInput from "@components/customUiElements/picInput.vue";
 import {MESSAGE} from "@utils/const";
 import {useUtilsStore} from "@stores/utils";
 import {Model} from "@types/index.d";
@@ -172,7 +162,7 @@ export default {
     const required = ref(fieldData.required)
     const regex = ref(fieldData.regex)
     const extraParams = ref(fieldData.extraParams)
-    const noFieldSelected = ref(fieldData.type === "none")
+    const noFieldSelected = ref(type.value === 'none')
     const savedFieldType = ref('');
 
     const isEdited = computed(() => {

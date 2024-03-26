@@ -1,19 +1,19 @@
 <template lang="pug">
-div
+  div
     v-text-field(data-jest="text-field" v-model.trim="text" :rules="textRules" :label="fieldParams.label" :name="fieldParams.name")
 </template>
 <script>
 export default {
   name: "TextLineEdit",
   props: {
-    fieldParams: { type: Object, required: true },
-    fieldData: {
+    fieldParams: {type: Object, required: true},
+    modelContent: {
       type: Object,
       default() {
         return {};
       }
     },
-    isEdit: { type: Boolean, default: false }
+    isEdit: {type: Boolean, default: false}
   },
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      this.text = this.fieldData.content;
+      this.text = this.modelContent.content;
     }
   },
   methods: {

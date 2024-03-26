@@ -1,9 +1,20 @@
 <template>
   <div>
-    <v-select :items="modelCollection" label="Model" item-text="modelName" item-value="id"
-              @change="relationParams.modelId = $event"/>
-    <v-select :items="selectedModel" label="Model field" v-if="relationParams.modelId" item-text="label" item-value="id"
-              @change="sendParams($event)"/>
+    <v-select
+      :items="modelCollection"
+      label="Model"
+      item-text="modelName"
+      item-value="id"
+      @change="relationParams.modelId = $event"
+    />
+    <v-select
+      v-if="relationParams.modelId"
+      :items="selectedModel"
+      label="Model field"
+      item-text="label"
+      item-value="id"
+      @change="sendParams($event)"
+    />
   </div>
 </template>
 <script>
@@ -11,7 +22,7 @@
 export default {
   name: "RelationPanel",
   props: {
-    fieldData: {
+    modelContent: {
       type: Object,
       default() {
         return null;
@@ -29,15 +40,15 @@ export default {
       }
     }
   },
+  computed: {
+    selectedModel() {
+      return this.modelCollection.find(item => item.id === this.relationParams.modelId)?.model
+    }
+  },
   methods: {
     sendParams(event) {
       this.relationParams.field = event
       this.$emit('update-model', this.relationParams)
-    }
-  },
-  computed: {
-    selectedModel() {
-      return this.modelCollection.find(item => item.id === this.relationParams.modelId)?.model
     }
   }
 };
