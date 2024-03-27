@@ -1,0 +1,20 @@
+{
+  "defaultApp": "picaro",
+  "googleFontKey": "",
+  "devMode": true,
+  "activeApps": [],
+  "upload": {
+    "allowedType": [
+      "jpg",
+      "png",
+      "pdf"
+    ],
+    "maxSize": "5mo",
+    "availableWidth": [
+      1080,
+      768,
+      510,
+      288
+    ]
+  }
+}
