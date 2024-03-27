@@ -13,7 +13,9 @@ async function routes(fastify, options) {
         const allStyleSetsdB = fastify.db.getCollection('styleset')
         return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
     });
-    fastify.post(`/create/:name/:type`, async (request, reply) => {
+    fastify.post(`/create/:name/:type`, {
+        preHandler: [fastify.authenticate],
+    }, async (request, reply) => {
         const {id, name, type} = request.params;
         console.info('creating', id, type)
         if (!id || !type) {
@@ -75,7 +77,9 @@ async function routes(fastify, options) {
             throw new Error(err)
         }
     })
-    fastify.delete(`/delete/:name`, async (request, reply) => {
+    fastify.delete(`/delete/:name`, {
+        preHandler: [fastify.authenticate],
+    }, async (request, reply) => {
         const {name} = request.params;
         const app = fastify.db.getCollection(name)
         if (app === null) {
@@ -98,7 +102,9 @@ async function routes(fastify, options) {
             reply.send(`The app ${name} has been deleted`)
         }
     })
-    fastify.post(`/create/styleset`, async (request, reply) => {
+    fastify.post(`/create/styleset`, {
+        preHandler: [fastify.authenticate],
+    }, async (request, reply) => {
 
         try {
             const styleset = fastify.db.getCollection('styleset')
@@ -111,7 +117,9 @@ async function routes(fastify, options) {
             throw new Error(err)
         }
     })
-    fastify.put(`/update/styleset`, async (request, reply) => {
+    fastify.put(`/update/styleset`, {
+        preHandler: [fastify.authenticate],
+    }, async (request, reply) => {
         try {
             const styleset = fastify.db.getCollection('styleset')
             styleset.update(request.body.styleSet)

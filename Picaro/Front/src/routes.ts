@@ -7,10 +7,23 @@ import CommonLayoutEdit from "@components/layout/CommonLayoutEdit.vue";
 import StyleEdit from "@components/styleSet/StyleEdit.vue";
 import AppDisplay from "@components/display/AppDisplay.vue";
 import picaroSettings from "../picaroSettings.json"
+import {isUserLoggedIn} from "@components/utils/api";
 
 export const routes: RouteRecordRaw[] = [
+    {path: '/login', component: () => import("@components/Login.vue")},
     {
-        path: '/admin', children: [
+        path: '/admin',
+        beforeEnter: async (to, from, next) => {
+            const userStatus = isUserLoggedIn()
+            console.log('User status:', userStatus)
+            if (userStatus) {
+                console.log('User is logged in')
+                next()
+            } else {
+                next('/login')
+            }
+        },
+        children: [
             {name: 'picaroIndex', path: ':appId?', component: appConfig},
             {
                 name: 'data',

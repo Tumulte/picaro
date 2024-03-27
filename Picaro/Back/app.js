@@ -5,12 +5,28 @@ const AutoLoad = require('@fastify/autoload')
 const fs = require('fs');
 const addFontData = require('./utils').addFontData
 const fastifyStatic = require('@fastify/static')
+const fjwt = require('@fastify/jwt');
+const fCookie = require('@fastify/cookie')
+
 
 // Pass --options via CLI arguments in command to enable these options.
 module.exports.options = {}
 
 module.exports = async function (fastify, opts) {
     await fastify.decorate('conf', require('./picaro-back.json'))
+
+    fastify.register(fjwt, {secret: fastify.conf.secret})
+    fastify.addHook('preHandler', (req, res, next) => {
+        // here we are
+        req.jwt = fastify.jwt
+        return next()
+    })
+
+    fastify.register(fCookie, {
+        secret: fastify.conf.cookieSecret,
+        hook: 'preHandler',
+    })
+
     fastify.register(require('@fastify/cors'), {
         origin: true,
         allowedHeaders: ['Origin', 'X-Requested-With', 'Accept', 'Content-Type', 'Authorization'],
@@ -42,6 +58,50 @@ module.exports = async function (fastify, opts) {
         prefix: '/css/',
         decorateReply: false
     })
+
+    fastify.decorate(
+        'authenticate',
+        async (req, reply) => {
+            const token = req.cookies.access_token
+            if (!token) {
+                return reply.status(401).send({message: 'Authentication required'})
+            }
+            // here decoded will be a different type by default but we want it to be of user-payload type
+            const decoded = req.jwt.verify(token)
+            if (decoded?.user !== fastify.conf.user) {
+                return reply.status(401).send({message: 'Authentication required'})
+            }
+        },
+    )
+
+    fastify.get('/api/auth/isloggedin', async (request, reply) => {
+        return false
+    })
+
+    fastify.post('/api/auth/login', async (req, reply) => {
+        const {username, password} = req.body;
+
+        try {
+            // check if password is correct
+            if (fastify.conf.password !== password || fastify.conf.user !== username) {
+                return reply.send('Invalid credentials');
+            }
+
+            // sign a token
+            const token = req.jwt.sign({user: username})
+            reply.setCookie('access_token', token, {
+                path: '/',
+                httpOnly: true,
+                secure: true,
+            })
+            return {accessToken: token}
+
+        } catch (err) {
+            console.info(err);
+            reply.status(500).send('Server error');
+        }
+    })
+
 
     fastify.get('/', async (request, reply) => {
         const bufferIndexHtml = fs.readFileSync(path.join(__dirname, `../Front/dist/index.html`))

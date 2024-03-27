@@ -19,3 +19,7 @@ export function updateStyleSet(currentSettings: { styleSet: StyleSet, generatedC
         throw new Error(error);
     })
 }
+
+export function isUserLoggedIn() {
+    return !!localStorage.getItem('accessToken')
+}

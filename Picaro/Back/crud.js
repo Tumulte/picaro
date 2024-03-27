@@ -6,7 +6,9 @@ async function routes(fastify) {
         appDb.insert(request.body)
         reply.send({status: 'ok'})
     })
-        .put(`/:app/:model`, async (request, reply) => {
+        .put(`/:app/:model`, {
+            preHandler: [fastify.authenticate],
+        }, async (request, reply) => {
             const appDb = fastify.db.getCollection(request.params.app)
             appDb.update(request.body)
             reply.send({status: 'ok'})
