@@ -9,19 +9,13 @@ import {useRouter} from "vue-router";
 
 const route = useRoute()
 const router = useRouter()
-const settingsStore = useSettingsStore()
 
-const settingsLoaded = ref(false)
+const settingsStore = useSettingsStore()
 
 const selected = computed(() => {
   return (name: string) => {
     return route.name === name
   }
-})
-axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
-  settingsStore.allSettings = res.data.allSettings
-  settingsStore.allStyleSets = res.data.allStyleSets
-  settingsLoaded.value = true
 })
 
 function selectApp(event: string) {
@@ -53,7 +47,7 @@ watch(() => route.params.appId, () => {
 <template>
   <div class="picaro-app text--primary">
     <nav class="pic-tabs">
-      <img src="/logo2.svg" class="logo" alt="logo" width="50">
+      <img src="/image/logo2.svg" class="logo" alt="logo" width="50">
       <v-tabs :model-value="route.name">
         <v-tab
           value="app"
@@ -99,7 +93,7 @@ watch(() => route.params.appId, () => {
       </v-tabs>
     </nav>
     <div class="pic-main-container">
-      <router-view v-if="settingsLoaded" @reloadSettings="reloadSettings()" />
+      <router-view @reloadSettings="reloadSettings()" />
     </div>
     <Alert />
   </div>

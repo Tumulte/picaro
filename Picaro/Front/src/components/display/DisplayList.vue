@@ -30,7 +30,7 @@ const key = ref(true)
 const dataStore = useDataStore()
 
 axios
-    .get(`/api/${props.currentApp.id}/${props.moduleParams.model}`)
+    .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
     .then((result) => {
       dataStore.currentModelData = result.data
     })

@@ -8,12 +8,12 @@ const {generateCSSFile} = require("./cssFileGenerator");
 
 
 async function routes(fastify, options) {
-    fastify.get("/all", async function (request, reply) {
+    fastify.get(`/all`, async function (request, reply) {
         const allSettingsDb = fastify.db.getCollection('settings')
         const allStyleSetsdB = fastify.db.getCollection('styleset')
         return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
     });
-    fastify.post('/create/:name/:type', async (request, reply) => {
+    fastify.post(`/create/:name/:type`, async (request, reply) => {
         const {id, name, type} = request.params;
         console.info('creating', id, type)
         if (!id || !type) {
@@ -59,7 +59,7 @@ async function routes(fastify, options) {
         }
         reply.send({appCreatedId: id})
     })
-    fastify.put('/update/settings', async (request, reply) => {
+    fastify.put(`/update/settings`, async (request, reply) => {
         if (request.body.oldName && request.body.oldName !== request.body.settings.applicationName) {
             fs.renameSync(`../../app${request.body.oldName}`, `../../app${request.body.settings.applicationName}`)
         }
@@ -75,7 +75,7 @@ async function routes(fastify, options) {
             throw new Error(err)
         }
     })
-    fastify.delete('/delete/:name', async (request, reply) => {
+    fastify.delete(`/delete/:name`, async (request, reply) => {
         const {name} = request.params;
         const app = fastify.db.getCollection(name)
         if (app === null) {
@@ -98,7 +98,7 @@ async function routes(fastify, options) {
             reply.send(`The app ${name} has been deleted`)
         }
     })
-    fastify.post('/create/styleset', async (request, reply) => {
+    fastify.post(`/create/styleset`, async (request, reply) => {
 
         try {
             const styleset = fastify.db.getCollection('styleset')
@@ -111,7 +111,7 @@ async function routes(fastify, options) {
             throw new Error(err)
         }
     })
-    fastify.put('/update/styleset', async (request, reply) => {
+    fastify.put(`/update/styleset`, async (request, reply) => {
         try {
             const styleset = fastify.db.getCollection('styleset')
             styleset.update(request.body.styleSet)

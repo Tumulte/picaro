@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import PicSelect from "@components/elements/PicSelect.vue";
-import FilterSelector from "@components/filters/FilterSelector.vue";
-import {Model} from "@types";
 import {useSettingsStore} from "@stores/settings";
 
 const props = defineProps<{

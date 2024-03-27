@@ -4,6 +4,7 @@ const path = require('path')
 const AutoLoad = require('@fastify/autoload')
 const fs = require('fs');
 const addFontData = require('./utils').addFontData
+const fastifyStatic = require('@fastify/static')
 
 // Pass --options via CLI arguments in command to enable these options.
 module.exports.options = {}
@@ -18,8 +19,37 @@ module.exports = async function (fastify, opts) {
 
     await fastify.register(require(`./${fastify.conf.db}`))
 
-    fastify.register(require('./crudSettings'), {prefix: '/setup'})
-    fastify.register(require('./crud'), {prefix: '/'})
+
+    fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `../Front/dist/assets`),
+        prefix: '/assets/',
+    })
+
+    fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `../../static/fonts`),
+        prefix: '/fonts/',
+        decorateReply: false
+    })
+
+    fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `../../static/images`),
+        prefix: '/images/',
+        decorateReply: false
+    })
+
+    fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `../../static/css`),
+        prefix: '/css/',
+        decorateReply: false
+    })
+
+    fastify.get('/', async (request, reply) => {
+        const bufferIndexHtml = fs.readFileSync(path.join(__dirname, `../Front/dist/index.html`))
+        reply.type('text/html').send(bufferIndexHtml)
+    })
+
+    fastify.register(require('./crudSettings'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/setup`})
+    fastify.register(require('./crud'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/data`})
 
     fastify.get('/fonts', async (request, reply) => {
         const formatedFonts = []

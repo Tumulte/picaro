@@ -1,8 +1,8 @@
 import {createApp} from 'vue'
 import './style.pcss'
 import picHeader from './components/customUiElements/picHeader.vue'
-import App from './components/Picaro.vue'
-import {createRouter, createWebHistory} from "vue-router";
+import App from './components/App.vue'
+import {createRouter, createWebHashHistory} from "vue-router";
 import {createPinia} from 'pinia'
 import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
@@ -11,14 +11,14 @@ import {routes} from "./routes";
 
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
 
 router.beforeEach((to, from) => {
     const fromId = from.params.appId
     const toId = to.params.appId
-    
+
     if (fromId && !toId && to.name) {
         const toParams = {...to.params}
         toParams.appId = fromId

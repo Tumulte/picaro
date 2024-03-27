@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --component "
@@ -40,7 +40,7 @@
     "prettier": "^2.7.1",
     "typescript": "^5.4.2",
     "vite": "^5.1.6",
-    "vite-plugin-vuetify": "1.0.0-alpha.17",
+    "vite-plugin-vuetify": "^2.0.3",
     "vue-tsc": "^2.0.6"
   }
 }

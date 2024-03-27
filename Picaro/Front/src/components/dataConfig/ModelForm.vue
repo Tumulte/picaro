@@ -82,7 +82,7 @@ async function sendForm() {
 
   try {
     await axios[action](
-        `/api/${settingsStore.currentAppSettings.id}/${route.params.modelId}`,
+        `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId}`,
         currentModelContent.value // if an array is passed each entry creates a row in the DB
     )
     utilsStore.addAlert({
