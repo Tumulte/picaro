@@ -1,6 +1,0 @@
-packages:
-  - 'Picaro/Libs/scaleMaker'
-  - 'Picaro/Libs/colorGenerator'
-  - 'Picaro/Libs/colorHelper'
-  - 'Picaro/Back/'
-  - 'Picaro/Front/'

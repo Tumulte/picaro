@@ -1,10 +1,8 @@
 import {RouteRecordRaw} from "vue-router";
-import dataConfig from "./components/dataConfig/DataConfig.vue";
 import appConfig from "./components/picaroConfig.vue";
 import modelEdit from "./components/dataConfig/ModelEdit.vue";
 import contentEdit from "@components/dataConfig/ContentEdit.vue";
 import CommonLayoutEdit from "@components/layout/CommonLayoutEdit.vue";
-import StyleEdit from "@components/styleSet/StyleEdit.vue";
 import AppDisplay from "@components/display/AppDisplay.vue";
 import picaroSettings from "../picaroSettings.json"
 import {isUserLoggedIn} from "@components/utils/api";
@@ -28,7 +26,7 @@ export const routes: RouteRecordRaw[] = [
             {
                 name: 'data',
                 path: 'data/:appId?',
-                component: dataConfig,
+                component: () => import("@components/dataConfig/DataConfig.vue"),
                 children:
                     [
                         {
@@ -50,7 +48,7 @@ export const routes: RouteRecordRaw[] = [
             {
                 name: 'style',
                 path: 'style/:appId?/:styleId?',
-                component: StyleEdit
+                component: () => import("@components/styleSet/StyleEdit.vue")
             },
         ]
     },

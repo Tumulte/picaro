@@ -1,4 +1,8 @@
 {
-    db: "loki",
-    googleKey: ""
+    "db": "loki",
+    "googleKey": "",
+    "user": "admin",
+    "password": "admin",
+    "secret": "secret",
+    "cookieSecret": "secret"
 }
