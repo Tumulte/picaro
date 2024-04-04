@@ -18,7 +18,7 @@ async function routes(fastify, options) {
     }, async (request, reply) => {
         const {name} = request.params;
 
-        console.info('creating', id)
+        console.info('creating', name)
         if (!name) {
             return reply.code(400).send({error: 'Missing name'})
         }
@@ -29,19 +29,18 @@ async function routes(fastify, options) {
             return
         }
         const newSettings = {...defaultSettings}
-        const settingsId = nanoid(8)
+        const appId = nanoid(8)
         try {
             const settings = fastify.db.getCollection('settings')
-            newSettings.id = settingsId
+            newSettings.id = appId
             newSettings.applicationName = name
-            newSettings.title = id
             settings.insert(newSettings)
-            fastify.db.addCollection(id)
+            fastify.db.addCollection(appId)
             console.log(`The app ${name} has been created`)
         } catch (err) {
             throw new Error(err)
         }
-        reply.send({appCreatedId: id})
+        reply.send({appCreatedId: appId})
     })
     fastify.put(`/update/settings`, async (request, reply) => {
         try {
