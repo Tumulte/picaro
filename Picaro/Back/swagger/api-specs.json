@@ -28,7 +28,7 @@
         }
       }
     },
-    "/setup/create/{name}/{type}": {
+    "/setup/create/{name}": {
       "post": {
         "parameters": [
           {

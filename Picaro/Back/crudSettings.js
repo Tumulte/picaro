@@ -13,11 +13,11 @@ async function routes(fastify, options) {
         const allStyleSetsdB = fastify.db.getCollection('styleset')
         return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
     });
-    fastify.post(`/create/:name/:type`, {
+    fastify.post(`/create/:name/`, {
         preHandler: [fastify.authenticate],
     }, async (request, reply) => {
         const {id, name} = request.params;
-        console.info('creating', id, type)
+        console.info('creating', id)
         if (!id) {
             return reply.code(400).send({error: 'Missing name'})
         }

@@ -19,7 +19,6 @@ export default {
     const settingsStore = useSettingsStore()
     const appFormState = ref<'newApp' | 'selectedApp' | "noApp">('noApp')
     const newAppName = ref('')
-    const newAppType = ref<"picaro" | "vue-ts" | "vue-js" | "empty">('vue-ts')
     const router = useRouter()
     const route = useRoute()
 
@@ -51,7 +50,7 @@ export default {
     }, {immediate: true})
 
     function createApp() {
-      axios.post(`/api/setup/create/${newAppName.value}/${newAppType.value}`).then((res) => {
+      axios.post(`/api/setup/create/${newAppName.value}`).then((res) => {
         router.push({name: 'app', params: {appId: res.data?.appCreatedId}})
         emit('reloadSettings')
       })
@@ -88,7 +87,6 @@ export default {
       newAppForm,
       createApp,
       route,
-      newAppType,
       updateApp,
       deleteApp,
       v$: useVuelidate({
