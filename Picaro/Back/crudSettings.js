@@ -16,15 +16,16 @@ async function routes(fastify, options) {
     fastify.post(`/create/:name`, {
         preHandler: [fastify.authenticate],
     }, async (request, reply) => {
-        const {id, name} = request.params;
+        const {name} = request.params;
+
         console.info('creating', id)
-        if (!id) {
+        if (!name) {
             return reply.code(400).send({error: 'Missing name'})
         }
-        const newApp = fastify.db.getCollection(id)
+        const newApp = fastify.db.getCollection(name)
 
         if (newApp !== null) {
-            console.log(`The app ${id} already exist`)
+            console.log(`The app ${name} already exist`)
             return
         }
         const newSettings = {...defaultSettings}
