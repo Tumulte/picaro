@@ -40,35 +40,9 @@ async function routes(fastify, options) {
         } catch (err) {
             throw new Error(err)
         }
-        try {
-            fs.mkdirSync(`../../app${name}`)
-            const newDir = path.join(__dirname, `../../app${name}`)
-            const templates = path.join(__dirname, `appTemplates/${type}/*`)
-            execSync(`cp -r ${templates} ${newDir}`, (error, stdout, stderr) => {
-                if (error) {
-                    console.log(`error: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.log(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
-            })
-            console.log('Picaro created')
-        } catch (err) {
-            throw new Error(err)
-        }
         reply.send({appCreatedId: id})
     })
     fastify.put(`/update/settings`, async (request, reply) => {
-        if (request.body.oldName && request.body.oldName !== request.body.settings.applicationName) {
-            fs.renameSync(`../../app${request.body.oldName}`, `../../app${request.body.settings.applicationName}`)
-        }
-        if (request.body.settings.styleSet) {
-            fs.copyFileSync(`../../static/baseStyle-${request.body.settings.styleSet}.css`, `../../app${request.body.settings.applicationName}/public/baseStyle.css`)
-            fs.cpSync(`../../static/fonts`, `../../app${request.body.settings.applicationName}/public/fonts`, {recursive: true})
-        }
         try {
             const settings = fastify.db.getCollection('settings')
             settings.update(request.body.settings)
@@ -92,13 +66,6 @@ async function routes(fastify, options) {
             }
             dbDeleteItem(name, fastify.db.getCollection('settings'), 'applicationName')
             const appDir = path.join(__dirname, `../../app${name}`)
-            if (fs.existsSync(appDir)) {
-                try {
-                    fs.rmdirSync(appDir, {recursive: true});
-                } catch (err) {
-                    throw new Error(err)
-                }
-            }
             reply.send(`The app ${name} has been deleted`)
         }
     })

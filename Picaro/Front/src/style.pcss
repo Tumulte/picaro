@@ -158,91 +158,84 @@
     src: url("/fonts/Knile-Black-Italic.otf")
 }
 
-html {
+
+#picaro-app {
     font-family: knile, sans-serif !important;
     color: var(--greyDark);
     font-weight: 200;
     font-size: 20px;
     line-height: var(--lineHeight);
-}
 
-.pic-font-fix,
-.pic-font-fix .v-label {
-    font-size: 16px !important;
-    line-height: 24px !important;
-}
-
-.pic-font-fix .v-label.v-field-label--floating {
-    font-size: 12px !important;
-    line-height: 18px !important;
-}
-
-.pic-font-example {
-    h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-title) !important;
-        color: #000 !important;
-        text-decoration: none;
+    .pic-font-fix,
+    .pic-font-fix .v-label {
+        font-size: 16px !important;
+        line-height: 24px !important;
     }
 
-    .pic-font-main {
-        font-family: var(--font-main) !important;
+    .pic-font-fix .v-label.v-field-label--floating {
+        font-size: 12px !important;
+        line-height: 18px !important;
     }
 
-    .pic-font-alt {
-        font-family: var(--font-alt) !important;
-    }
-}
-
-*, *:before, *:after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-aside {
-    flex: calc(25% - 4rlh);
-
-    h2:first-of-type {
-        margin-top: 0 !important;
-        font-size: 4rem;
-
-    }
-
-    > div {
-        border-bottom: 1px solid var(--greyDark);
-
-        a:first-of-type {
-            margin-top: var(--xl);
+    .pic-font-example {
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-title) !important;
+            color: #000 !important;
+            text-decoration: none;
         }
 
-        a {
-            display: block !important;
-            margin: var(--xs);
-            text-decoration: none !important;
-            color: var(--secondaryDark) !important;
-            font-weight: 300 !important;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-left: 0;
-            padding-left: 0;
+        .pic-font-main {
+            font-family: var(--font-main) !important;
+        }
 
-            i
-            &:hover {
-                background: var(--greyLight);
+        .pic-font-alt {
+            font-family: var(--font-alt) !important;
+        }
+    }
+
+    aside {
+        flex: calc(25% - 4rlh);
+
+        h2:first-of-type {
+            margin-top: 0 !important;
+            font-size: 4rem;
+
+        }
+
+        > div {
+            border-bottom: 1px solid var(--greyDark);
+
+            a:first-of-type {
+                margin-top: var(--xl);
+            }
+
+            a {
+                display: block !important;
+                margin: var(--xs);
+                text-decoration: none !important;
+                color: var(--secondaryDark) !important;
+                font-weight: 300 !important;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-left: 0;
+                padding-left: 0;
+
+                i
+                &:hover {
+                    background: var(--greyLight);
+                }
             }
         }
+
+        div:last-of-type {
+            margin-bottom: var(--xxl);
+        }
     }
 
-    div:last-of-type {
-        margin-bottom: var(--xxl);
+    main {
+        flex: calc(75% - 4rlh);
     }
-}
 
-main {
-    flex: calc(75% - 4rlh);
-}
-
-body {
     background: url("/images/bedge-grunge-dark.png");
 
     h1, h2, h3, h4, h5, h6 {
@@ -691,4 +684,7 @@ body {
     .pic-add-new-field-button {
         margin-bottom: var(--xl);
     }
+
 }
+
+

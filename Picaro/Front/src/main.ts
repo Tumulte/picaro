@@ -1,5 +1,4 @@
 import {createApp} from 'vue'
-import './style.pcss'
 import picHeader from './components/customUiElements/picHeader.vue'
 import App from './components/App.vue'
 import {createRouter, createWebHashHistory} from "vue-router";
@@ -8,7 +7,6 @@ import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
 import {routes} from "./routes";
-
 
 const router = createRouter({
     history: createWebHashHistory(),

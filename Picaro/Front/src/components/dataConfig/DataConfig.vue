@@ -33,7 +33,7 @@ const modelNameIsUnique = computed(() => {
 
 function selectModel(model: Model) {
   if (settingsStore.currentAppSettings) {
-    router.push({path: `/data/${settingsStore.currentAppSettings.id}/${model.id}`})
+    router.push({path: `/admin/data/${settingsStore.currentAppSettings.id}/${model.id}`})
   } else {
     utilsStore.addAlert({
       text: "Please select an app first",
@@ -114,10 +114,10 @@ watch(() => route.params.modelId, (newVal) => {
     </aside>
     <main class="pic-main pic-container">
       <v-tabs v-if="modelFormState !== 'noModel' && modelFormState !== 'awaitingName'">
-        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/`">
+        <v-tab :to="`/admin/data/${$route.params.appId}/${$route.params.modelId}/`">
           Edit Model
         </v-tab>
-        <v-tab :to="`/data/${$route.params.appId}/${$route.params.modelId}/content`">
+        <v-tab :to="`/admin/data/${$route.params.appId}/${$route.params.modelId}/content`">
           Edit content
         </v-tab>
       </v-tabs>

@@ -11,7 +11,6 @@ import {updateSettings} from "./utils/api";
 import {MESSAGE} from "@utils/const";
 import {copy} from "copy-anything"
 
-
 export default {
   components: {PicInput},
   emits: ['reloadSettings'],
@@ -212,6 +211,6 @@ export default {
   </template>
 </template>
 
-<style scoped>
+<style lang="postcss">
 
 </style>

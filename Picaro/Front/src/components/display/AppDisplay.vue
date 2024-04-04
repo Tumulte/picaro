@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
-import axios from "axios";
+import {computed, onMounted, watch} from "vue";
 import type {Settings} from "@types";
 import FilterCategories from "@components/filters/FilterCategories.vue";
 import Layout from "@components/layout/Layout.vue";
@@ -19,6 +18,14 @@ const components = {
   List: "List",
   FilterCategories: FilterCategories,
 }
+
+onMounted(() => {
+  const link = document.createElement('link')
+  link.type = 'text/css'
+  link.rel = 'stylesheet'
+  link.href = `/css/baseStyle-${currentApp.value.styleSet}.css`
+  document.head.appendChild(link)
+})
 
 const appID = computed<string>(() => {
   return settingsStore.allSettings.find((app: Settings) => app.applicationName === route.params.app)?.id

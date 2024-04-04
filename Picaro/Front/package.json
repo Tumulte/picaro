@@ -10,6 +10,7 @@
     "cypress:run": "cypress run --component "
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "@tiptap/extension-bullet-list": "^2.1.12",
     "@tiptap/extension-image": "^2.1.12",
     "@tiptap/extension-link": "^2.1.12",
@@ -29,7 +30,6 @@
     "vuetify": "^3.5.11"
   },
   "devDependencies": {
-    "@mdi/font": "6.6.96",
     "@types/cypress": "^1.1.3",
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^5.0.4",

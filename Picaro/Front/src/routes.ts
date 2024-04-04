@@ -1,5 +1,4 @@
 import {RouteRecordRaw} from "vue-router";
-import appConfig from "./components/picaroConfig.vue";
 import modelEdit from "./components/dataConfig/ModelEdit.vue";
 import contentEdit from "@components/dataConfig/ContentEdit.vue";
 import CommonLayoutEdit from "@components/layout/CommonLayoutEdit.vue";
@@ -11,6 +10,7 @@ export const routes: RouteRecordRaw[] = [
     {path: '/login', component: () => import("@components/Login.vue")},
     {
         path: '/admin',
+        component: () => import("./components/Picaro.vue"),
         beforeEnter: async (to, from, next) => {
             const userStatus = isUserLoggedIn()
             console.log('User status:', userStatus)
@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
             }
         },
         children: [
-            {name: 'picaroIndex', path: ':appId?', component: appConfig},
+            {name: 'picaroIndex', path: ':appId?', component: () => import("./components/picaroConfig.vue")},
             {
                 name: 'data',
                 path: 'data/:appId?',
@@ -42,8 +42,8 @@ export const routes: RouteRecordRaw[] = [
 
                     ]
             },
-            {name: 'newApp', path: 'app/new', component: appConfig},
-            {name: 'app', path: 'app/:appId?', component: appConfig},
+            {name: 'newApp', path: 'app/new', component: () => import("./components/picaroConfig.vue")},
+            {name: 'app', path: 'app/:appId?', component: () => import("./components/picaroConfig.vue")},
             {name: 'layout', path: 'layout/:appId?', component: CommonLayoutEdit},
             {
                 name: 'style',

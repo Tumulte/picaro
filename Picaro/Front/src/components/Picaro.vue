@@ -7,6 +7,8 @@ import axios, {AxiosResponse} from "axios";
 import {useSettingsStore} from '@stores/settings'
 import {useRouter} from "vue-router";
 
+(() => import('../style.pcss'))()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -41,17 +43,17 @@ watch(() => route.params.appId, () => {
   if (route.params.appId) {
     settingsStore.currentAppSettings = settingsStore.allSettings.find((app: Settings) => app.id === route.params.appId)
   }
-})
+}, {immediate: true})
 </script>
 
 <template>
-  <div class="picaro-app text--primary">
+  <div id="picaro-app" class="picaro-app text--primary">
     <nav class="pic-tabs">
-      <img src="/image/logo2.svg" class="logo" alt="logo" width="50">
+      <img src="/images/logo2.svg" class="logo" alt="logo" width="50">
       <v-tabs :model-value="route.name">
         <v-tab
           value="app"
-          to="/app"
+          to="/admin/app"
         >
           App Config
         </v-tab>
@@ -59,7 +61,7 @@ watch(() => route.params.appId, () => {
           <v-tab
             v-if="settingsStore.currentAppSettings"
             :class="{selected: selected('model')}"
-            to="/data"
+            to="/admin/data"
             value="data"
           >
             Data
@@ -67,7 +69,7 @@ watch(() => route.params.appId, () => {
           <v-tab
             v-if="settingsStore.currentAppSettings"
             :class="{selected: selected('layout')}"
-            to="/layout"
+            to="/admin/layout"
             value="layout"
           >
             Layout
@@ -75,7 +77,7 @@ watch(() => route.params.appId, () => {
           <v-tab
             v-if="settingsStore.currentAppSettings"
             :class="{selected: selected('style')}"
-            to="/style"
+            to="/admin/style"
             value="style"
           >
             Style
@@ -99,5 +101,7 @@ watch(() => route.params.appId, () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
+@import url("../style.pcss");
+
 </style>

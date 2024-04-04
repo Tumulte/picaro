@@ -9,6 +9,7 @@ export default defineConfig({
         vue(),
         vuetify(),
     ],
+    publicDir: path.resolve(__dirname, '../../static'),
     resolve: {
         alias: {
             '@utils': path.resolve(__dirname, './utils'),

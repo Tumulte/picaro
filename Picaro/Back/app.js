@@ -74,11 +74,7 @@ module.exports = async function (fastify, opts) {
         },
     )
 
-    fastify.get('/api/auth/isloggedin', async (request, reply) => {
-        return false
-    })
-
-    fastify.post('/api/auth/login', async (req, reply) => {
+    fastify.post(`${process.env.NODE_ENV === 'development' ? '' : '/api'}/auth/login`, async (req, reply) => {
         const {username, password} = req.body;
 
         try {
@@ -88,7 +84,7 @@ module.exports = async function (fastify, opts) {
             }
 
             // sign a token
-            const token = req.jwt.sign({user: username})
+            const token = req.jwt.sign({user: username, token: fastify.conf.token})
             reply.setCookie('access_token', token, {
                 path: '/',
                 httpOnly: true,
