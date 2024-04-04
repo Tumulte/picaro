@@ -16,10 +16,10 @@ async function routes(fastify, options) {
     fastify.post(`/create/:name/:type`, {
         preHandler: [fastify.authenticate],
     }, async (request, reply) => {
-        const {id, name, type} = request.params;
+        const {id, name} = request.params;
         console.info('creating', id, type)
-        if (!id || !type) {
-            return reply.code(400).send({error: 'Missing name or type'})
+        if (!id) {
+            return reply.code(400).send({error: 'Missing name'})
         }
         const newApp = fastify.db.getCollection(id)
 
