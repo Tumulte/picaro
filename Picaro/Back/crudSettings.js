@@ -13,7 +13,7 @@ async function routes(fastify, options) {
         const allStyleSetsdB = fastify.db.getCollection('styleset')
         return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
     });
-    fastify.post(`/create/:name/`, {
+    fastify.post(`/create/:name`, {
         preHandler: [fastify.authenticate],
     }, async (request, reply) => {
         const {id, name} = request.params;
