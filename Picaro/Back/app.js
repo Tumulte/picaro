@@ -54,6 +54,12 @@ module.exports = async function (fastify, opts) {
     })
 
     fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `/images`),
+        prefix: '/adminimages/',
+        decorateReply: false
+    })
+
+    fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/images`),
         prefix: '/images/',
         decorateReply: false
