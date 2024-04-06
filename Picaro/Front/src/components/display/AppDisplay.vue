@@ -20,6 +20,7 @@ const components = {
 }
 
 onMounted(() => {
+  if (!currentApp.value?.styleSet) return;
   const link = document.createElement('link')
   link.type = 'text/css'
   link.rel = 'stylesheet'

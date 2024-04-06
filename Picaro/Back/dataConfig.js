@@ -1,6 +1,7 @@
 const {nanoid} = require('nanoid')
 
 const styleSetId = nanoid(8)
+
 const basicCss = {
     html: {
         'font-size': '16',
@@ -69,11 +70,11 @@ const defaultSettings = {
     navStructure: {},
     layoutCollection: [],
     layoutLinkCollection: {},
+    categories: [],
     defaultLayout: '',
     layoutCommonCollection: [],
     modelCollection: [],
     availableFilterCollection: {
-        categories: [],
         tags: [],
     },
 }
