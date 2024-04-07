@@ -99,7 +99,7 @@ const addFont = function (font, fontName: string) {
         for (const variant of font.font.variants) {
             fontSrc += `@font-face {
     font-family: ${font.font.family};
-    src: url("/fonts/${variant.src}");
+    src: url("/api/fonts/${variant.src}");
     font-weight: ${variant.weight};
     font-style: ${variant.style};
 }
