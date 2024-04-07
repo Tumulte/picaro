@@ -23,10 +23,10 @@ const defaultLayout = computed(() => {
   return settingsStore.currentAppSettings.defaultLayout
 });
 const components = {
-
-  Layout: "Layout",
-  FilterLayout: "FilterLayout",
-  FilterLink: "FilterLink",
+  /*  Layout: "Layout",
+    FilterLayout: "FilterLayout",
+    FilterLink: "FilterLink",
+    */
   List: "List",
   FilterCategories
 };
@@ -65,6 +65,7 @@ function changeModule(event, index, subIndex) {
 function saveLayout() {
   updateSettings(settingsStore.currentAppSettings)
 }
+
 </script>
 
 <template>
@@ -159,15 +160,19 @@ function saveLayout() {
     <div
       v-if="layoutCommonCollection.length <= 1"
       class="pic-layout--add-row"
+      :class="{'no-row': layoutCommonCollection.length === 1}"
       data-test="add-common-row"
       @click="addRow"
     >
       <v-icon>mdi-table-row-plus-after</v-icon>
     </div>
   </div>
-  <v-icon @click="saveLayout()">
-    mdi-content-save
-  </v-icon>
+  <v-btn color="primary" class="ml-4 mb-4">
+    Save Layout
+    <v-icon @click="saveLayout()">
+      mdi-content-save
+    </v-icon>
+  </v-btn>
 </template>
 
 <style scoped>
@@ -203,6 +208,11 @@ function saveLayout() {
   }
 
   &--add-row {
+    &.no-row {
+      top: 50%;
+      transform: translateY(50%);
+    }
+
     bottom: 0px;
     right: 50%;
     transform: translateX(-50%);

@@ -52,110 +52,110 @@
 
 @font-face {
     font-family: 'abbey';
-    src: url("/adminfonts/TallAbbeyRg.otf")
+    src: url("/api/adminfonts/TallAbbeyRg.otf")
 }
 
 @font-face {
     font-family: 'abbeySans';
-    src: url("/adminfonts/TallAbbeySansRg.otf")
+    src: url("/api/adminfonts/TallAbbeySansRg.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 100;
-    src: url("/adminfonts/Knile-Thin.otf")
+    src: url("/api/adminfonts/Knile-Thin.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 100;
-    src: url("/adminfonts/Knile-Thin-Italic.otf")
+    src: url("/api/adminfonts/Knile-Thin-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 200;
-    src: url("/adminfonts/Knile-Light.otf")
+    src: url("/api/adminfonts/Knile-Light.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 200;
-    src: url("/adminfonts/Knile-Light-Italic.otf")
+    src: url("/api/adminfonts/Knile-Light-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 300;
-    src: url("/adminfonts/Knile-Regular.otf")
+    src: url("/api/adminfonts/Knile-Regular.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 300;
-    src: url("/adminfonts/Knile-Regular-Italic.otf")
+    src: url("/api/adminfonts/Knile-Regular-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 400;
-    src: url("/adminfonts/Knile-Medium.otf")
+    src: url("/api/adminfonts/Knile-Medium.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 400;
-    src: url("/adminfonts/Knile-Medium-Italic.otf")
+    src: url("/api/adminfonts/Knile-Medium-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 500;
-    src: url("/adminfonts/Knile-SemiBold.otf")
+    src: url("/api/adminfonts/Knile-SemiBold.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 500;
-    src: url("/adminfonts/Knile-SemiBold-Italic.otf")
+    src: url("/api/adminfonts/Knile-SemiBold-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 600;
-    src: url("/adminfonts/Knile-Bold.otf")
+    src: url("/api/adminfonts/Knile-Bold.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 600;
-    src: url("/adminfonts/Knile-Bold-Italic.otf")
+    src: url("/api/adminfonts/Knile-Bold-Italic.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: normal;
     font-weight: 700;
-    src: url("/adminfonts/Knile-Black.otf")
+    src: url("/api/adminfonts/Knile-Black.otf")
 }
 
 @font-face {
     font-family: 'knile';
     font-style: italic;
     font-weight: 700;
-    src: url("/adminfonts/Knile-Black-Italic.otf")
+    src: url("/api/adminfonts/Knile-Black-Italic.otf")
 }
 
 
@@ -558,18 +558,15 @@
         }
     }
 
-    #pic-alert-container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background: var(--greyLight);
-        border-radius: var(--xxs);
-        padding: var(--xs) var(--m);
-        border: var(--4xs) solid var(--greyDark);
-        display: inline-block;
-    }
-
     .pic-alert {
+
+        &--no-confirmation {
+            left: var(--l);
+        }
+
+        &--confirmation {
+            right: var(--l);
+        }
 
 
         &__sub-container {
@@ -591,7 +588,6 @@
         font-weight: 400;
         position: fixed;
         bottom: 0;
-        right: var(--l);
         background: var(--highlight2light);
         padding: var(--s);
         margin: var(--l) 0;

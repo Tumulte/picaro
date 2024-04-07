@@ -4,7 +4,7 @@
       <li
         v-for="(alert, index) in alertCallbackCollection"
         :key="index"
-        class="pic-alert"
+        class="pic-alert pic-alert--confirmation"
         :class="alert.type"
       >
         <div class="pic-alert__sub-container">
@@ -19,8 +19,13 @@
       </li>
     </ul>
     <ul>
-      <li v-for="(alert, index) in alertCollection" :key="index">
-        <div>
+      <li
+        v-for="(alert, index) in alertCollection"
+        :key="index"
+        class="pic-alert pic-alert--no-confirmation"
+        :class="alert.type"
+      >
+        <div class="pic-alert__sub-container">
           {{ alert.text }}
           <button @click="discardMessage">
             Ok
@@ -52,7 +57,7 @@ function discardCallbackMessage(key, index) {
 }
 
 function discardMessage(index) {
-  utilsStore.removeAlert(index);
+  utilsStore.alertCollection.splice(index, 1);
 }
 </script>
 <style scoped>
@@ -64,11 +69,4 @@ button {
   margin: 10px;
 }
 
-#rf-alert-container {
-  width: 620px;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 999999;
-}
 </style>

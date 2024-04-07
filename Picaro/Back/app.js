@@ -35,39 +35,40 @@ module.exports = async function (fastify, opts) {
 
     await fastify.register(require(`./${fastify.conf.db}`))
 
+    const prefix = process.env.NODE_ENV === 'development' ? '' : '/api'
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../Front/dist/assets`),
-        prefix: '/assets/',
+        prefix: `/assets/`,
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/fonts`),
-        prefix: '/fonts/',
+        prefix: `${prefix}/fonts/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `/fonts`),
-        prefix: '/adminfonts/',
+        prefix: `${prefix}/adminfonts/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `/images`),
-        prefix: '/adminimages/',
+        prefix: `${prefix}/adminimages/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/images`),
-        prefix: '/images/',
+        prefix: `${prefix}/images/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/css`),
-        prefix: '/css/',
+        prefix: `${prefix}/css/`,
         decorateReply: false
     })
 
