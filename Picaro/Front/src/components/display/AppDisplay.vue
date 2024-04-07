@@ -5,6 +5,7 @@ import FilterCategories from "@components/filters/FilterCategories.vue";
 import Layout from "@components/layout/Layout.vue";
 import {useRoute} from "vue-router";
 import {useSettingsStore} from "@stores/settings";
+import List from "@components/display/DisplayList.vue";
 
 
 const route = useRoute()
@@ -15,7 +16,7 @@ const components = {
   Layout: Layout,
   FilterLayout: "FilterLayout",
   FilterLink: "FilterLink",
-  List: "List",
+  List,
   FilterCategories: FilterCategories,
 }
 
