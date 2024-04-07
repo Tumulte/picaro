@@ -12,7 +12,7 @@ const emit = defineEmits(['reloadSettings'])
 const localFonts = ref([])
 const googleFonts = ref([])
 
-axios.get('/api/fonts').then((response) => {
+axios.get('/api/localfonts').then((response) => {
   localFonts.value = response.data
 })
 

@@ -120,7 +120,7 @@ module.exports = async function (fastify, opts) {
     fastify.register(require('./crudSettings'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/setup`})
     fastify.register(require('./crud'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/data`})
 
-    fastify.get('/fonts', async (request, reply) => {
+    fastify.get(`${prefix}/localfonts`, async (request, reply) => {
         const formatedFonts = []
 
         const fonts = await fs.promises.readdir(path.join(__dirname, '../../static/fonts'))
