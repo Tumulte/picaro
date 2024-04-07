@@ -50,7 +50,7 @@ export const applyFilter = function (item, filterCollection, moduleParams) {
         }
     });
     // if all filters are empty use default panel params
-    if (emptyFilter === filterCollection.length && item.categories.length > 0 && moduleParams.categories.length > 0) {
+    if (emptyFilter === filterCollection.length && item.categories.length > 0 && moduleParams.categories?.length > 0) {
         const categoryIdCollection = moduleParams.categories.map(item => item.id);
         return item.categories.some(item => categoryIdCollection.includes(item));
     }

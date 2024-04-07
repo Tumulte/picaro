@@ -52,6 +52,6 @@ export const routes: RouteRecordRaw[] = [
             },
         ]
     },
-    {path: '/:app', component: AppDisplay},
+    {path: '/:app/:globalFilters?/:globalParams?/:modelFilters?/:modelFilterParams?', component: AppDisplay},
     {path: '/', redirect: picaroSettings.defaultApp},
 ]

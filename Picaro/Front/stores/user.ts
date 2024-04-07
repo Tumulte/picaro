@@ -62,7 +62,6 @@ export const useUserStore = defineStore('user', () => {
             modelParamsArray = ["0"];
         }
         router.push({
-            name: "filterRoute",
             params: {
                 globalFilters: encodeURI(globalFilters),
                 globalParams: encodeURI(globalParams),
