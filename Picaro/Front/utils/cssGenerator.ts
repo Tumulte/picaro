@@ -218,6 +218,10 @@ ${htmlProperties}
     line-height: ${styleSet.ratioCollection.html["line-height"]}px;
 }
 
+.pic-module-container {
+   padding: 1.5rlh;
+}
+
 ${headerSize(styleSet)}
 
 ${headerTags} {

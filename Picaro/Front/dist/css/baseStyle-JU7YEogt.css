@@ -293,6 +293,10 @@ html{
     line-height: 30px;
 }
 
+.pic-module-container {
+   padding: 1.5rlh;
+}
+
 .pic-content-container h1 {
     font-size: 4.2rem;
     line-height: 4.2rlh;
