@@ -11,6 +11,11 @@ import {nanoid} from "nanoid";
 
 const utilStore = useUtilsStore()
 const settingsStore = useSettingsStore();
+
+const modelCollection = computed(() => {
+  return settingsStore.currentAppSettings?.modelCollection ?? []
+});
+
 const layoutCommonCollection = computed<Settings["layoutCommonCollection"]>(() => {
   return settingsStore.currentAppSettings?.layoutCommonCollection || [];
 });
@@ -23,10 +28,12 @@ const defaultLayout = computed(() => {
   return settingsStore.currentAppSettings.defaultLayout
 });
 const components = {
-  /*  Layout: "Layout",
-    FilterLayout: "FilterLayout",
-    FilterLink: "FilterLink",
-    */
+  /*
+  Layout: "Layout",
+  FilterLayout: "FilterLayout",
+  FilterLink: "FilterLink",
+  */
+
   List: "List",
   FilterCategories
 };
@@ -55,6 +62,9 @@ function deleteColumn(line: number, column: number) {
     type: "warning"
   }).then(() => {
     layoutCommonCollection.value[line].splice(column, 1)
+    if (layoutCommonCollection.value[line].length === 0) {
+      layoutCommonCollection.value.splice(line, 1)
+    }
   })
 }
 
@@ -82,7 +92,7 @@ function saveLayout() {
         :cols="layoutCommonColumn.cols"
       >
         <span
-          class="rf-layout-settings"
+          class="pic-layout-settings"
         >
           <v-text-field
             type="number"
@@ -108,9 +118,30 @@ function saveLayout() {
             <v-icon>mdi-delete-outline</v-icon>
           </v-btn>
         </span>
-        <component :is="components[layoutCommonColumn.type]" v-if="layoutCommonColumn.type !== 'Layout'" />
+        <component
+          :is="components[layoutCommonColumn.type]"
+          v-if="typeof components[layoutCommonColumn.type] !== 'string'"
+        />
+
+        <div v-else-if="layoutCommonColumn.type !== 'Layout'">
+          <v-select
+            :items="modelCollection"
+            label="Model"
+            item-title="name"
+            item-value="id"
+            :model-value="modelCollection.find(item=> item.id === layoutCommonColumn.model)"
+            @update:model-value="layoutCommonColumn.model = $event"
+          />
+          <v-select
+            :multiple="true"
+            item-title="label"
+            item-value="id"
+            :items="settingsStore.currentAppSettings.categories"
+            @update:model-value="layoutCommonColumn.categories = $event"
+          />
+        </div>
         <span v-else>
-          <span class="rf-layout-settings">
+          <span class="pic-layout-settings">
             <v-select
               v-if="layoutCollection.length > 0"
               v-model="selectedLayout"
@@ -160,14 +191,14 @@ function saveLayout() {
     <div
       v-if="layoutCommonCollection.length <= 1"
       class="pic-layout--add-row"
-      :class="{'no-row': layoutCommonCollection.length === 1}"
+      :class="{'no-row': layoutCommonCollection.length === 0}"
       data-test="add-common-row"
       @click="addRow"
     >
       <v-icon>mdi-table-row-plus-after</v-icon>
     </div>
   </div>
-  <v-btn color="primary" class="ml-4 mb-4">
+  <v-btn v-if="layoutCommonCollection.length !== 0" color="primary" class="ml-4 mb-4">
     Save Layout
     <v-icon @click="saveLayout()">
       mdi-content-save
