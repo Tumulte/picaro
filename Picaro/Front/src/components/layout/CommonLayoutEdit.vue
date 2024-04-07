@@ -198,9 +198,9 @@ function saveLayout() {
       <v-icon>mdi-table-row-plus-after</v-icon>
     </div>
   </div>
-  <v-btn v-if="layoutCommonCollection.length !== 0" color="primary" class="ml-4 mb-4">
+  <v-btn v-if="layoutCommonCollection.length !== 0" color="primary" class="ml-4 mb-4" @click="saveLayout()">
     Save Layout
-    <v-icon @click="saveLayout()">
+    <v-icon>
       mdi-content-save
     </v-icon>
   </v-btn>
