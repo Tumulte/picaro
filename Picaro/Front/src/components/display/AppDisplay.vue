@@ -25,7 +25,7 @@ onMounted(() => {
   const link = document.createElement('link')
   link.type = 'text/css'
   link.rel = 'stylesheet'
-  link.href = `/css/baseStyle-${currentApp.value.styleSet}.css`
+  link.href = `/api/css/baseStyle-${currentApp.value.styleSet}.css`
   document.head.appendChild(link)
 })
 
