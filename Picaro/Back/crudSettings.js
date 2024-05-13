@@ -1,10 +1,11 @@
-const {defaultSettings, defaultStyleSet} = require("./dataConfig");
+const {defaultSettings} = require("./dataConfig");
 const {nanoid} = require("nanoid");
 const fs = require('fs')
-const {execSync} = require('child_process');
 const path = require('path')
+const sharp = require('sharp')
 const {dbDeleteItem} = require('./dataUtils')
 const {generateCSSFile} = require("./cssFileGenerator");
+
 
 
 async function routes(fastify, options) {
@@ -42,7 +43,7 @@ async function routes(fastify, options) {
         }
         reply.send({appCreatedId: appId})
     })
-    fastify.put(`/update/settings`, async (request, reply) => {
+    fastify.put(`/update/settings`, {preHandler: [fastify.authenticate] }, async (request, reply) => {
         try {
             const settings = fastify.db.getCollection('settings')
             settings.update(request.body.settings)
@@ -95,6 +96,31 @@ async function routes(fastify, options) {
         } catch (err) {
             throw new Error(err)
         }
+    })
+    fastify.post('/uploadimages',{
+        prenHandler: [fastify.authenticate],
+
+    }, async (request, reply) => {
+        const data = await request.file()
+        const buffer = await data.toBuffer()
+        const dir = `${__dirname}/uploads/`;
+        const [name, ext] = data.filename.split('.')
+
+        Object.entries(fastify.conf.imageSize).forEach(([key, value]) => {
+             sharp(buffer)
+                .resize(value)
+                .toFile(`${dir}/${name}-${key}.${ext}` );
+        })
+
+        fs.writeFileSync(`${dir}/${data.filename}`, buffer)
+        reply.send({uploaded: true})
+    })
+    fastify.get('/allimages', {
+        preHandler: [fastify.authenticate],
+    }, async (request, reply) => {
+        const dir = `${__dirname}/uploads/`;
+        const files = fs.readdirSync(dir)
+        return files.filter(file => !file.startsWith('.'))
     })
 }
 

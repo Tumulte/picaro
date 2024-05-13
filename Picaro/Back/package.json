@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "fastify start -l info -P app.js --port 8080",
-    "dev:back": "NODE_ENV=development fastify start -w -l info -d -P app.js"
+    "start": "fastify start -l info -P --body-limit 10500000 app.js --port 8080",
+    "dev:back": "NODE_ENV=development fastify start --body-limit 10500000 -w -l info -d -P app.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "@fastify/cookie": "^9.3.1",
     "@fastify/cors": "^9.0.1",
     "@fastify/jwt": "^8.0.0",
+    "@fastify/multipart": "^8.2.0",
     "@fastify/sensible": "^5.5.0",
     "@fastify/static": "^7.0.1",
     "@fastify/swagger": "^8.14.0",
@@ -29,6 +30,7 @@
     "lokijs": "^1.5.12",
     "nanoid": "^3.3.6",
     "npm": "^9.1.2",
+    "sharp": "^0.33.3",
     "vue": "^3.4.21",
     "vuetify": "^3.5.9"
   },

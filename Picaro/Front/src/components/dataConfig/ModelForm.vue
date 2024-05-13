@@ -62,7 +62,6 @@ function updateData(data: [string, FieldContent['fieldContent']]) {
     })
     return
   }
-  console.log(content)
   changedItem.fieldContent = content
 }
 

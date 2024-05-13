@@ -17,6 +17,7 @@ export default defineConfig({
             '@components': path.resolve(__dirname, './src/components'),
             '@types': path.resolve(__dirname, './../Types'),
             '@libs': path.resolve(__dirname, './../Libs'),
+            '/api/uploads': path.resolve(__dirname, './../Back/uploads'),
         },
     },
     server: {
@@ -24,7 +25,6 @@ export default defineConfig({
             '/api': {
                 target: 'http://localhost:3000',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ''),
             },
         },
     }

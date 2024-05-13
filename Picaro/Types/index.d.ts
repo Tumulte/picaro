@@ -73,6 +73,7 @@ export interface SettingsStore {
     allSettings: Settings[]
     allStyleSets: StyleSet[]
     currentStyleSet: StyleSet | undefined
+    rteImage: string
 }
 
 export type StyleSet = {

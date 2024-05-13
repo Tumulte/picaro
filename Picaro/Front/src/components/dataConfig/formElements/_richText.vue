@@ -2,12 +2,12 @@
 import {Editor, EditorContent} from "@tiptap/vue-3";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
-import type {EditorEvents} from "@tiptap/core";
-
+import TextAlign from "@tiptap/extension-text-align";
 
 import StarterKit from "@tiptap/starter-kit";
 import {ref, onMounted} from "vue";
 import {FieldContent, FieldParams} from "@types";
+import {useSettingsStore} from "@stores/settings";
 
 
 const props = defineProps<{
@@ -24,13 +24,15 @@ const emit = defineEmits<{
 const editor = ref<any | null>(null)
 const temporaryContent = ref<string | null>(null)
 const selectedImg = ref<string | null>(null)
-const availableImgWidth = ref<number[]>([]) // todo
-const awaitImg = ref(false)
-const awaitVideo = ref(false)
+
+const settingsStore = useSettingsStore()
 
 onMounted(() => {
+
       editor.value = new Editor({
-        extensions: [StarterKit, Image, Link],
+        extensions: [StarterKit, Image, Link, TextAlign.configure({
+          types: ['heading', 'paragraph', 'image'],
+        })],
         onUpdate: ({editor}) => {
           const content = Object.assign({}, editor.getJSON(), {
             fieldType: "rich-text",
@@ -91,6 +93,11 @@ function updateModelData(content: FieldContent) {
   emit("updateData", [props.fieldParams.id, content]);
 }
 
+function addImage() {
+  if(settingsStore.rteImage) {
+    editor.value.commands.setImage({ src: `/api/uploads/${settingsStore.rteImage}` })
+  }
+}
 
 </script>
 <template>
@@ -124,23 +131,43 @@ function updateModelData(content: FieldContent) {
         @click.stop="editor.chain().focus().toggleHeading({ level: 3 }).run()"
       >
         <v-icon>mdi-format-header-3</v-icon>
-      </span><span
+      </span>
+      <span
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
         <v-icon>mdi-format-list-bulleted</v-icon>
-      </span><span
+      </span>
+      <span
         :class="{ 'is-active': editor.isActive('codeBlock') }"
         @click.stop="editor.chain().focus().toggleCodeBlock().run()"
       >
         <v-icon>mdi-code-array</v-icon>
-      </span><span :class="{ 'is-active': editor.isActive('link') }" @click="setUrl">
+      </span>
+      <span :class="{ 'is-active': editor.isActive('link') }" @click="setUrl">
         <v-icon>mdi-link</v-icon>
-      </span><span
+      </span>
+      <span
         :class="{ 'is-active': editor.isActive('code') }"
         @click.stop="editor.chain().focus().toggleCode().run()"
       >
         <v-icon>mdi-code-not-equal-variant</v-icon>
+      </span>
+      <span
+        :class="{ 'is-active': settingsStore.rteImage }"
+        @click.stop="addImage()"
+      >
+        <v-icon>mdi-image</v-icon>
+      </span>
+      <span
+        @click.stop="editor.chain().focus().setTextAlign('left').run()"
+      >
+        <v-icon>mdi-format-align-left</v-icon>
+      </span>
+      <span
+        @click.stop="editor.chain().focus().setTextAlign('right').run()"
+      >
+        <v-icon>mdi-format-align-right</v-icon>
       </span>
     </div>
     <editor-content class="editor-textarea" :editor="editor" />

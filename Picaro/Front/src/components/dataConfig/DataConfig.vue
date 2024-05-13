@@ -5,8 +5,10 @@ import {Model, ModelState} from '@types'
 import {useRouter, useRoute} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
+import axios from "axios";
 
 defineEmits(['reloadSettings'])
+
 
 const settingsStore = useSettingsStore()
 const utilsStore = useUtilsStore()
@@ -16,6 +18,20 @@ const route = useRoute()
 const modelFormState = ref<ModelState>("noModel");
 const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
+const imageDrawer = ref(false);
+const image = ref<File[] | null>(null);
+const allImages = ref<string[]>([])
+
+const thumb = computed<string[]>(()=> {
+  return allImages.value.filter((image) => image.match(/-s./))
+})
+
+function fetchImages() {
+  axios.get('/api/setup/allimages').then((res) => {
+    allImages.value = res.data
+  })
+}
+fetchImages()
 
 const modelCollection = computed((): Model[] | [] => {
   return settingsStore.currentAppSettings?.modelCollection || []
@@ -31,6 +47,7 @@ const modelNameIsUnique = computed(() => {
   );
 })
 
+
 function selectModel(model: Model) {
   if (settingsStore.currentAppSettings) {
     router.push({path: `/admin/data/${settingsStore.currentAppSettings.id}/${model.id}`})
@@ -38,6 +55,23 @@ function selectModel(model: Model) {
     utilsStore.addAlert({
       text: "Please select an app first",
       type: "warning"
+    });
+  }
+}
+
+function uploadImage() {
+  if (image.value) {
+    const formData = new FormData();
+    formData.append('image', image.value[0]);
+    console.log(formData, image.value[0])
+    axios.post(`/api/setup/uploadimages`, formData, { headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then(() => {
+      fetchImages()
+      utilsStore.addAlert({
+        text: "Image uploaded",
+        type: "success"
+      });
     });
   }
 }
@@ -91,6 +125,10 @@ watch(() => route.params.modelId, (newVal) => {
   }
 }, {immediate: true})
 // endregion
+
+function selectImage(path: string) {
+  settingsStore.rteImage = path
+}
 </script>
 
 <template>
@@ -99,6 +137,9 @@ watch(() => route.params.modelId, (newVal) => {
       <h3>
         Model List
       </h3>
+      <v-btn variant="text" @click="imageDrawer = !imageDrawer">
+        Images upload
+      </v-btn>
       <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
         <a class="pic-aside-item" :class="{selected: model.id === route.params.modelId}" @click="selectModel(model)">
           {{ model.name }}
@@ -143,7 +184,31 @@ watch(() => route.params.modelId, (newVal) => {
         @cancelEditModel="cancelEditModel()"
       />
     </main>
+    <v-navigation-drawer
+      v-model="imageDrawer"
+      location="right"
+      width="500"
+    >
+      <div class="pic-container">
+        <v-form>
+          <v-file-input
+            v-model="image"
+            label="Image"
+            accept="image/*"
+          />
+          <v-btn @click="uploadImage">
+            Upload
+          </v-btn>
+        </v-form>
+        <div v-for="image in thumb" :key="image">
+          <img :src="`/api/uploads/${image}`" :class="{selected: image === settingsStore.rteImage}" @click="selectImage(image)">
+        </div>
+      </div>
+    </v-navigation-drawer>
   </div>
 </template>
-<style scoped lang="scss">
+<style scoped lang="postcss">
+.selected {
+  border: 4px solid var(--main);
+}
 </style>

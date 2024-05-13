@@ -7,13 +7,17 @@ const addFontData = require('./utils').addFontData
 const fastifyStatic = require('@fastify/static')
 const fjwt = require('@fastify/jwt');
 const fCookie = require('@fastify/cookie')
+const multipart = require('@fastify/multipart')
 
 
 // Pass --options via CLI arguments in command to enable these options.
 module.exports.options = {}
 
 module.exports = async function (fastify, opts) {
+
     await fastify.decorate('conf', require('./picaro-back.json'))
+
+    fastify.register(multipart)
 
     fastify.register(fjwt, {secret: fastify.conf.secret})
     fastify.addHook('preHandler', (req, res, next) => {
@@ -35,7 +39,6 @@ module.exports = async function (fastify, opts) {
 
     await fastify.register(require(`./${fastify.conf.db}`))
 
-    const prefix = process.env.NODE_ENV === 'development' ? '' : '/api'
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../Front/dist/assets`),
@@ -44,31 +47,37 @@ module.exports = async function (fastify, opts) {
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/fonts`),
-        prefix: `${prefix}/fonts/`,
+        prefix: `/api/fonts/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `/fonts`),
-        prefix: `${prefix}/adminfonts/`,
+        prefix: `/api/adminfonts/`,
+        decorateReply: false
+    })
+
+    fastify.register(fastifyStatic, {
+        root: path.join(__dirname, `/uploads`),
+        prefix: `/api/uploads/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `/images`),
-        prefix: `${prefix}/adminimages/`,
+        prefix: `/api/adminimages/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/images`),
-        prefix: `${prefix}/images/`,
+        prefix: `/api/images/`,
         decorateReply: false
     })
 
     fastify.register(fastifyStatic, {
         root: path.join(__dirname, `../../static/css`),
-        prefix: `${prefix}/css/`,
+        prefix: `/api/css/`,
         decorateReply: false
     })
 
@@ -87,7 +96,7 @@ module.exports = async function (fastify, opts) {
         },
     )
 
-    fastify.post(`${process.env.NODE_ENV === 'development' ? '' : '/api'}/auth/login`, async (req, reply) => {
+    fastify.post('/api/auth/login', async (req, reply) => {
         const {username, password} = req.body;
 
         try {
@@ -117,10 +126,10 @@ module.exports = async function (fastify, opts) {
         reply.type('text/html').send(bufferIndexHtml)
     })
 
-    fastify.register(require('./crudSettings'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/setup`})
-    fastify.register(require('./crud'), {prefix: `${process.env.NODE_ENV === 'development' ? '' : '/api'}/data`})
+    fastify.register(require('./crudSettings'), {prefix: '/api/setup'})
+    fastify.register(require('./crud'), {prefix: '/api/data'})
 
-    fastify.get(`${prefix}/localfonts`, async (request, reply) => {
+    fastify.get(`/api/localfonts`, async (request, reply) => {
         const formatedFonts = []
 
         const fonts = await fs.promises.readdir(path.join(__dirname, '../../static/fonts'))

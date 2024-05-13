@@ -5,4 +5,10 @@
     "password": "admin",
     "secret": "secret",
     "cookieSecret": "secret"
+    "imageSize": {
+        "s": 200,
+        "m": 500,
+        "l": 720,
+        "xl": 1080
+    }
 }

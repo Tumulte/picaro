@@ -6,6 +6,7 @@ export const useSettingsStore = defineStore('settings', {
         allStyleSets: [],
         allSettings: [],
         currentStyleSet: undefined,
-        currentAppSettings: undefined
+        currentAppSettings: undefined,
+        rteImage: ''
     }),
 })

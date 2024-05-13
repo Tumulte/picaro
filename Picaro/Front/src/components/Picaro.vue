@@ -47,7 +47,7 @@ watch(() => route.params.appId, () => {
 </script>
 
 <template>
-  <div id="picaro-app" class="picaro-app text--primary">
+  <v-app id="picaro-app" class="picaro-app text--primary">
     <nav class="pic-tabs">
       <img src="/images/logo2.svg" class="logo" alt="logo" width="50">
       <v-tabs :model-value="route.name">
@@ -98,7 +98,7 @@ watch(() => route.params.appId, () => {
       <router-view @reloadSettings="reloadSettings()" />
     </div>
     <Alert />
-  </div>
+  </v-app>
 </template>
 
 <style scoped lang="postcss">
