@@ -24,6 +24,9 @@
       "@types": [
         "./Picaro/Types"
       ],
+      "@utils": [
+        "./Picaro/utils"
+      ],
       "@libs/*": [
         "./Picaro/Libs"
       ]
@@ -31,5 +34,6 @@
     "exclude": [
       "node_modules"
     ]
-  }
+  },
+  "resolveJsonModule": true
 }

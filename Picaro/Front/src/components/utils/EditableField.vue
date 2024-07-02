@@ -22,15 +22,20 @@ function cancel() {
 
 <template>
   <div class="pic-editable-container">
-    <v-text-field v-if="isEditing" v-model="editedValue"/>
-    <slot v-else></slot>
+    <v-text-field v-if="isEditing" v-model="editedValue" />
+    <slot v-else />
     <div>
-      <v-icon v-if="!isEditing" @click="isEditing = !isEditing">mdi-pencil</v-icon>
-      <v-icon @click="emit('update', editedValue);isEditing = false" v-else>mdi-check</v-icon>
-      <v-icon @click="cancel">mdi-close</v-icon>
+      <v-icon v-if="!isEditing" @click="isEditing = !isEditing">
+        mdi-pencil
+      </v-icon>
+      <v-icon v-else @click="emit('update', editedValue);isEditing = false">
+        mdi-check
+      </v-icon>
+      <v-icon @click="cancel">
+        mdi-close
+      </v-icon>
     </div>
   </div>
-
 </template>
 
 <style scoped>

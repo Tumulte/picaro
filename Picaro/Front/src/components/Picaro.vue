@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
+import {computed, watch} from "vue";
 import {Settings, SettingsStore} from "@types";
 import {useRoute} from "vue-router";
 import Alert from "./utils/alertModal.vue";
@@ -20,7 +20,7 @@ const selected = computed(() => {
   }
 })
 
-function selectApp(event: string) {
+function selectApp(event: string | string[]) {
   if (event !== 'none') {
     router.push({name: route.name || 'index', params: {appId: event}})
   }

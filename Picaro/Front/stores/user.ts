@@ -8,7 +8,11 @@ export const useUserStore = defineStore('user', () => {
         modelFilters: {}
     }
 
-    function updateFilterCollection({filterParams, models, type}) {
+    function updateFilterCollection({filterParams, models, type}: {
+        filterParams: string | string[],
+        models?: string | string[],
+        type: string
+    }) {
         const temporaryFilterCollection = JSON.parse(
             JSON.stringify(this.filterCollection)
         ); //filterCollection will be later updated on route change

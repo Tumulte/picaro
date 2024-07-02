@@ -1,10 +1,12 @@
-import layout from "@/src/components/layout/Layout.vue";
-import {nanoid} from "nanoid";
+import {availableModules} from "@/utils/modules";
 
+export type AvailableModules = keyof typeof availableModules
 export type Categories = { id: string, label: string }
 export type Layout = { model: string, type: string, categories: Categories[] }
+export type CommonLayout = { type: AvailableModules, cols?: number, model: string }
 export type Filter = { id: string, label: string }
-export type Model = { id: string, name: string, fieldCollection: ModelField[] }
+export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
+export type FilterCollection = { all: { method: string, field: string, id: string }[], modelFilters: Filter[] }
 
 export type RichTextContent = {
     type: string
@@ -19,7 +21,8 @@ export type RichTextContent = {
 
 export type Settings = {
     id: string,
-    styleSetId: string,
+    title: string,
+    styleSet: string,
     language: string,
     devMode: boolean,
     categories: { label: string, id: string }[],
@@ -30,9 +33,9 @@ export type Settings = {
     layoutCollection: { id: string, name: string, layout: Layout[] }[],
     LayoutLinkCollection: [],
     defaultLayout: string
-    layoutCommonCollection: { [key: string]: Array<Layout[]> },
+    layoutCommonCollection: CommonLayout[][],
     modelCollection: Model[],
-    filterCollection: { all: Record<string, string>, modelFilter: Filter[] },
+    filterCollection: FilterCollection,
 }
 
 export type ColorParameters = {

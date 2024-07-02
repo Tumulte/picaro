@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {defineProps, ref, PropType} from "vue";
+import {defineProps, PropType, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {Model, FieldParams, FieldContent, ModelContent} from "@types";
-import RichText from "@components/dataConfig/formElements/_richText.vue";
-import TextLine from "@components/dataConfig/formElements/_textLine.vue";
+import {FieldContent, FieldParams, Model, ModelContent} from "@types";
+import RichText from "@components/dataConfig/fields/RichText.vue";
+import TextLine from "@components/dataConfig/fields/TextLine.vue";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
 import axios from "axios";
@@ -104,18 +104,18 @@ async function sendForm() {
       :is="componentMap[field.type]"
       v-for="(field, index) in currentEditModel.fieldCollection"
       :key="field.id"
-      :field-params="field"
       :field-content="currentModelContent?.content.find(item => item.fieldParamsId === field.id)?.fieldContent"
+      :field-params="field"
       :index="index"
       @updateData="updateData($event)"
     />
     <v-select
       v-model="currentModelContent.categories"
       :items="categories"
-      item-value="id"
-      item-title="label"
-      label="category"
       :multiple="true"
+      item-title="label"
+      item-value="id"
+      label="category"
     />
     <div class="pic-flex pic-between">
       <v-btn color="primary" @click="sendForm">

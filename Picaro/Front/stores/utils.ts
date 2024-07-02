@@ -1,5 +1,4 @@
 import {defineStore} from 'pinia'
-import {reactive} from "vue";
 import {nanoid} from "nanoid";
 import {Message, MessageStatus} from "./utils.d";
 import {MESSAGE, SELECTOR} from "@utils/const";

@@ -1,5 +1,4 @@
 import {createApp} from 'vue'
-import picHeader from './components/customUiElements/picHeader.vue'
 import App from './components/App.vue'
 import {createRouter, createWebHashHistory} from "vue-router";
 import {createPinia} from 'pinia'
@@ -55,7 +54,6 @@ const vuetify = createVuetify({
 
 const pinia = createPinia()
 const app = createApp(App)
-app.component('PicHeader', picHeader)
 app.use(pinia)
 app.use(router)
 app.use(vuetify)

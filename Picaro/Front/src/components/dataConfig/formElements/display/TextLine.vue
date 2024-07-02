@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {PropType} from "vue";
 import {FieldContent, FieldParams} from "@types";
 
-const props = defineProps({
+defineProps({
   fieldParams: {
     type: Object as PropType<FieldParams>,
     required: true
@@ -11,7 +11,7 @@ const props = defineProps({
   fieldContent: {
     type: Object as PropType<FieldContent>,
     required: false,
-    default: ""
+    default: null
   }
 })
 </script>

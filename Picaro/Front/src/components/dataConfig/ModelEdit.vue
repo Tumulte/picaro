@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {updateSettings} from "@components/utils/api";
 import {computed, PropType, ref} from "vue";
-import {Model, ModelState} from "@types";
+import {FieldParams, Model, ModelState} from "@types";
 import {MESSAGE} from "@utils/const";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
 import Draggable from "vuedraggable";
-import ModelField from "@components/partials/model/panelEdit/_modelField.vue";
+import ModelField from "@components/dataConfig/fields/ModelField.vue";
 import {copy} from "copy-anything"
 
 import EditableField from "@components/utils/EditableField.vue";
@@ -55,14 +55,14 @@ async function abandonEdition() {
   }
 }
 
-function addField(event) {
+function addField(field: FieldParams) {
   if (currentModelClone.value) {
-    currentModelClone.value.fieldCollection.push(event);
+    currentModelClone.value.fieldCollection.push(field);
     emit('updateModelFormState', "modelCreated");
   }
 }
 
-function deleteField(index) {
+function deleteField(index: number) {
   if (currentModelClone.value) {
     currentModelClone.value.fieldCollection.splice(index, 1);
     emit('updateModelFormState', "modelCreated");
@@ -122,9 +122,9 @@ function saveModel() {
   }
 }
 
-function saveEditedField(event, index) {
+function saveEditedField(field: FieldParams, index: number) {
   if (currentModelClone.value) {
-    currentModelClone.value.fieldCollection[index] = event;
+    currentModelClone.value.fieldCollection[index] = field;
     emit('updateModelFormState', "modelCreated");
   }
 }

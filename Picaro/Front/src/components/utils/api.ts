@@ -2,24 +2,40 @@ import axios from "axios";
 import {Settings, StyleSet} from "@types";
 
 
-export function updateSettings(currentSettings: Settings, oldName?: string) {
-    return axios.put('/api/setup/update/settings', {settings: currentSettings, oldName}).catch((error) => {
-        throw new Error(error);
-    })
+export async function updateSettings(currentSettings: Settings, oldName?: string) {
+    try {
+        return await axios.put('/api/setup/update/settings', {settings: currentSettings, oldName});
+    } catch (error) {
+        if(error instanceof Error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
-export function createStyleSet(styleSet: { styleSet: StyleSet, generatedCSS: string }) {
-    return axios.post('/api/setup/create/styleset', styleSet).catch((error) => {
-        throw new Error(error);
-    })
+export async function createStyleSet(styleSet: { styleSet: StyleSet, generatedCSS: string }) {
+    try {
+        return await axios.post('/api/setup/create/styleset', styleSet);
+    } catch (error) {
+        if(error instanceof Error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
-export function updateStyleSet(currentSettings: { styleSet: StyleSet, generatedCSS: string }) {
-    return axios.put('/api/setup/update/styleset', currentSettings).catch((error) => {
-        throw new Error(error);
-    })
+export async function updateStyleSet(currentSettings: { styleSet: StyleSet, generatedCSS: string }) {
+    try {
+        return await axios.put('/api/setup/update/styleset', currentSettings);
+    } catch (error) {
+        if(error instanceof Error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 export function isUserLoggedIn() {
-    return !!localStorage.getItem('accessToken')
+    if(localStorage.getItem('accessToken')) {
+        return axios.get('/api/auth/check').catch(() => {
+            return false
+        })
+    }
 }

@@ -7,9 +7,8 @@ const {dbDeleteItem} = require('./dataUtils')
 const {generateCSSFile} = require("./cssFileGenerator");
 
 
-
-async function routes(fastify, options) {
-    fastify.get(`/all`, async function (request, reply) {
+async function routes(fastify) {
+    fastify.get(`/all`, async function () {
         const allSettingsDb = fastify.db.getCollection('settings')
         const allStyleSetsdB = fastify.db.getCollection('styleset')
         return {allSettings: allSettingsDb.find(), allStyleSets: allStyleSetsdB.find()}
@@ -43,7 +42,7 @@ async function routes(fastify, options) {
         }
         reply.send({appCreatedId: appId})
     })
-    fastify.put(`/update/settings`, {preHandler: [fastify.authenticate] }, async (request, reply) => {
+    fastify.put(`/update/settings`, {preHandler: [fastify.authenticate]}, async (request) => {
         try {
             const settings = fastify.db.getCollection('settings')
             settings.update(request.body.settings)
@@ -66,13 +65,12 @@ async function routes(fastify, options) {
                 throw new Error(err)
             }
             dbDeleteItem(name, fastify.db.getCollection('settings'), 'applicationName')
-            const appDir = path.join(__dirname, `../../app${name}`)
             reply.send(`The app ${name} has been deleted`)
         }
     })
     fastify.post(`/create/styleset`, {
         preHandler: [fastify.authenticate],
-    }, async (request, reply) => {
+    }, async (request) => {
 
         try {
             const styleset = fastify.db.getCollection('styleset')
@@ -87,7 +85,7 @@ async function routes(fastify, options) {
     })
     fastify.put(`/update/styleset`, {
         preHandler: [fastify.authenticate],
-    }, async (request, reply) => {
+    }, async (request) => {
         try {
             const styleset = fastify.db.getCollection('styleset')
             styleset.update(request.body.styleSet)
@@ -97,7 +95,7 @@ async function routes(fastify, options) {
             throw new Error(err)
         }
     })
-    fastify.post('/uploadimages',{
+    fastify.post('/uploadimages', {
         prenHandler: [fastify.authenticate],
 
     }, async (request, reply) => {
@@ -107,9 +105,9 @@ async function routes(fastify, options) {
         const [name, ext] = data.filename.split('.')
 
         Object.entries(fastify.conf.imageSize).forEach(([key, value]) => {
-             sharp(buffer)
+            sharp(buffer)
                 .resize(value)
-                .toFile(`${dir}/${name}-${key}.${ext}` );
+                .toFile(`${dir}/${name}-${key}.${ext}`);
         })
 
         fs.writeFileSync(`${dir}/${data.filename}`, buffer)
@@ -117,7 +115,7 @@ async function routes(fastify, options) {
     })
     fastify.get('/allimages', {
         preHandler: [fastify.authenticate],
-    }, async (request, reply) => {
+    }, async () => {
         const dir = `${__dirname}/uploads/`;
         const files = fs.readdirSync(dir)
         return files.filter(file => !file.startsWith('.'))

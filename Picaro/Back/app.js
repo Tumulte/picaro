@@ -19,9 +19,9 @@ module.exports = async function (fastify, opts) {
 
     fastify.register(multipart)
 
+
     fastify.register(fjwt, {secret: fastify.conf.secret})
     fastify.addHook('preHandler', (req, res, next) => {
-        // here we are
         req.jwt = fastify.jwt
         return next()
     })
@@ -96,6 +96,12 @@ module.exports = async function (fastify, opts) {
         },
     )
 
+    fastify.get('/api/auth/check', {
+        preHandler: [fastify.authenticate],
+    }, async (req, reply) => {
+        reply.send('ok')
+    })
+
     fastify.post('/api/auth/login', async (req, reply) => {
         const {username, password} = req.body;
 
@@ -129,7 +135,7 @@ module.exports = async function (fastify, opts) {
     fastify.register(require('./crudSettings'), {prefix: '/api/setup'})
     fastify.register(require('./crud'), {prefix: '/api/data'})
 
-    fastify.get(`/api/localfonts`, async (request, reply) => {
+    fastify.get(`/api/localfonts`, async () => {
         const formatedFonts = []
 
         const fonts = await fs.promises.readdir(path.join(__dirname, '../../static/fonts'))

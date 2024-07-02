@@ -1,24 +1,14 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, onMounted, watch} from "vue";
-import type {Settings} from "@types";
-import FilterCategories from "@components/filters/FilterCategories.vue";
+import type {FilterCollection, Settings} from "@types";
 import Layout from "@components/layout/Layout.vue";
-import {useRoute} from "vue-router";
+import {RouteParams, useRoute} from "vue-router";
 import {useSettingsStore} from "@stores/settings";
-import List from "@components/display/DisplayList.vue";
-
+import {availableModules} from "@utils/modules";
 
 const route = useRoute()
 
 const settingsStore = useSettingsStore()
-
-const components = {
-  Layout: Layout,
-  FilterLayout: "FilterLayout",
-  FilterLink: "FilterLink",
-  List,
-  FilterCategories: FilterCategories,
-}
 
 onMounted(() => {
   if (!currentApp.value?.styleSet) return;
@@ -30,15 +20,12 @@ onMounted(() => {
 })
 
 const appID = computed<string>(() => {
-  return settingsStore.allSettings.find((app: Settings) => app.applicationName === route.params.app)?.id
+  return settingsStore.allSettings.find((app: Settings) => app.applicationName === route.params.app)?.id ?? ''
 })
 
 const currentApp = computed<Settings | undefined>(() => {
   return settingsStore.allSettings.find((app: Settings) => app.id === appID.value)
 })
-const layoutCommonCollection = computed<Settings["layoutCommonCollection"] | []>(() => {
-  return currentApp.value?.layoutCommonCollection || [];
-});
 
 watch(route, (to) => {
   if (to.params.globalFilters && currentApp.value) {
@@ -51,12 +38,16 @@ function filterRouteToStore({
                               modelFilters,
                               globalParams,
                               modelFilterParams
-                            }) {
+                            }: RouteParams): Settings["filterCollection"] | undefined {
   if (!globalFilters) return;
-  const filterParams = {all: {}, modelFilters: {}};
+
+  const filterParams: FilterCollection = {
+    all: [],
+    modelFilters: []
+  };
   if (globalFilters !== "~") {
-    globalFilters = decodeURI(globalFilters).split("::");
-    globalParams = decodeURI(globalParams).split("::");
+    globalFilters = decodeURI(globalFilters.toString()).split("::");
+    globalParams = decodeURI(globalParams.toString()).split("::");
     globalFilters.forEach((item, index) => {
           const params = globalParams[index].split("++").map(subItem => {
             // first two letters item
@@ -69,15 +60,16 @@ function filterRouteToStore({
     );
   }
   if (modelFilters !== "~") {
-    const params = decodeURI(modelFilterParams).split("~");
-    decodeURI(modelFilters).split("~").forEach((item, index) => {
-      let [models, filters] = item.split("::");
-      models = JSON.stringify(models.split("++"));
-      filters = filters.split("++");
+    const params = decodeURI(modelFilterParams.toString()).split("~");
+    decodeURI(modelFilters.toString()).split("~").forEach((item, index) => {
+      const [models, filters] = item.split("::");
+      const modelsKey = JSON.stringify(models.split("++"));
+      const filtersArray = filters.split("++");
       const paramsArray = params[index].split("::");
-      filterParams.modelFilters[models] = {};
-      filters.forEach((subItem, subIndex) => {
-        filterParams.modelFilters[models][subItem] = paramsArray[subIndex].split("++");
+      console.log(modelsKey, 'mh')
+      filterParams.modelFilters[modelsKey] = {};
+      filtersArray.forEach((subItem, subIndex) => {
+        filterParams.modelFilters[modelsKey][subItem] = paramsArray[subIndex].split("++");
       });
     });
 
@@ -89,16 +81,18 @@ function filterRouteToStore({
 <template>
   <div v-if="currentApp" class="pic-layout--main-container pic-content-container">
     <v-row
-      v-for="layoutCommonLine in layoutCommonCollection"
+      v-for="(layoutCommonLine, index) in currentApp.layoutCommonCollection"
+      :key="index"
       class="pic-layout-container pic-row-container"
     >
       <v-col
-        v-for="layoutCommonColumn in layoutCommonLine"
+        v-for="(layoutCommonColumn, subIndex) in layoutCommonLine"
+        :key="`${layoutCommonColumn.type}${subIndex}`"
+        :cols="layoutCommonColumn?.cols"
         class="pic-layout--container pic-layout--common-module pic-module-container pic-col"
-        :cols="layoutCommonColumn.cols"
       >
         <component
-          :is="components[layoutCommonColumn.type]"
+          :is="availableModules[layoutCommonColumn.type]"
           v-if="layoutCommonColumn.type !== 'Layout'"
           :current-app="currentApp"
           :module-params="layoutCommonColumn"

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, ref} from "vue";
 import {useSettingsStore} from "@stores/settings";
 
@@ -48,37 +48,37 @@ function initModule(module) {
     </div>
     <template v-for="(layoutLine, index) in selectedLayout">
       <v-row v-if="selectedLayout" :key="index" class="rf-layout--container pic-row-container">
-        <template v-for="(module, columnIndex) in layoutLine">
-          <v-col class="pic-layout--module" :class="makeClass(module)" :cols="module.cols">
+        <template v-for="(module) in layoutLine">
+          <v-col :class="makeClass(module)" :cols="module.cols" class="pic-layout--module">
             <div class="common-layout-settings">
               <v-text-field
-                dense="dense"
-                type="number"
-                label="Width"
-                min="0"
-                max="11"
                 :value="module.cols || 0"
+                dense="dense"
+                label="Width"
+                max="11"
+                min="0"
+                type="number"
                 @input="()=>{}"
               />
               <v-select
                 :items="availableLayout"
-                label="Type"
                 :value="module.type"
+                label="Type"
                 @update:model-value="module.type = $event"
               />
               <v-select
                 :items="modelCollection"
-                label="Model"
+                :model-value="modelCollection.find(item=> item.id === module.model)"
                 item-title="name"
                 item-value="id"
-                :model-value="modelCollection.find(item=> item.id === module.model)"
+                label="Model"
                 @update:model-value="module.model = $event"
               />
               <v-select
+                :items="settings.currentAppSettings.categories"
                 :multiple="true"
                 item-title="label"
                 item-value="id"
-                :items="settings.currentAppSettings.categories"
                 @update:model-value="module.categories = $event"
               />
             </div>

@@ -19,7 +19,7 @@ const modelFormState = ref<ModelState>("noModel");
 const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
 const imageDrawer = ref(false);
-const image = ref<File[] | null>(null);
+const image = ref<File[]>();
 const allImages = ref<string[]>([])
 
 const thumb = computed<string[]>(()=> {

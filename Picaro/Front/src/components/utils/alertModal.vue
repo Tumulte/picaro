@@ -7,7 +7,7 @@
         class="pic-alert pic-alert--confirmation"
         :class="alert.type"
       >
-        <div class="pic-alert__sub-container">
+        <div v-if="alert.key" class="pic-alert__sub-container">
           <span class="pic-alert__text">{{ alert.text }}</span>
           <button class="pic-alert__button" @click="confirmCallbackMessage(alert.key, index)">
             Confirm
@@ -27,7 +27,7 @@
       >
         <div class="pic-alert__sub-container">
           {{ alert.text }}
-          <button @click="discardMessage">
+          <button @click="discardMessage(index)">
             Ok
           </button>
         </div>
@@ -48,15 +48,15 @@ const alertCallbackCollection = computed((): Message[] => {
   return utilsStore.alertCallbackCollection
 })
 
-function confirmCallbackMessage(key, index) {
+function confirmCallbackMessage(key: string, index: number) {
   utilsStore.addAlertConfirmation({key, index});
 }
 
-function discardCallbackMessage(key, index) {
+function discardCallbackMessage(key: string, index: number) {
   utilsStore.addAlertDiscard({key, index});
 }
 
-function discardMessage(index) {
+function discardMessage(index: number) {
   utilsStore.alertCollection.splice(index, 1);
 }
 </script>
