@@ -1,3 +1,4 @@
+w%
 <script lang="ts" setup>
 import {computed, onMounted, watch} from "vue";
 import type {FilterCollection, Settings} from "@types";
@@ -7,6 +8,7 @@ import {useSettingsStore} from "@stores/settings";
 import {availableModules} from "@utils/modules";
 
 const route = useRoute()
+
 
 const settingsStore = useSettingsStore()
 
@@ -28,7 +30,7 @@ const currentApp = computed<Settings | undefined>(() => {
 })
 
 watch(route, (to) => {
-  if (to.params.globalFilters && currentApp.value) {
+  if (to?.params.globalFilters && currentApp.value) {
     currentApp.value.filterCollection = filterRouteToStore(to.params)
   }
 }, {immediate: true})
@@ -48,13 +50,16 @@ function filterRouteToStore({
   if (globalFilters !== "~") {
     globalFilters = decodeURI(globalFilters.toString()).split("::");
     globalParams = decodeURI(globalParams.toString()).split("::");
+
     globalFilters.forEach((item, index) => {
           const params = globalParams[index].split("++").map(subItem => {
             // first two letters item
             const method = subItem.slice(0, 2)
-            const [field, id] = subItem.slice(2).split("..")
-            return {method, field, id}
+            const [field, value] = subItem.slice(2).split("..")
+
+            return {method, field, value}
           })
+          console.log(params)
           filterParams.all = params;
         }
     );
