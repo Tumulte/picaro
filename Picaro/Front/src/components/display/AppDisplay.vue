@@ -1,7 +1,6 @@
-w%
 <script lang="ts" setup>
 import {computed, onMounted, watch} from "vue";
-import type {FilterCollection, Settings} from "@types";
+import {Filter, FilterCollection, ModelFilter, Settings} from "@types";
 import Layout from "@components/layout/Layout.vue";
 import {RouteParams, useRoute} from "vue-router";
 import {useSettingsStore} from "@stores/settings";
@@ -31,9 +30,25 @@ const currentApp = computed<Settings | undefined>(() => {
 
 watch(route, (to) => {
   if (to?.params.globalFilters && currentApp.value) {
-    currentApp.value.filterCollection = filterRouteToStore(to.params)
+    currentApp.value.filterCollection = filterRouteToStore(to.params) as FilterCollection
   }
 }, {immediate: true})
+
+function getParams(params: string, type: string, modelIdCollection?: string[]): ModelFilter[] | Filter[] {
+  return params.split("++").map(subItem => {
+    // first two letters item
+    const method = subItem.slice(0, 2)
+    const [field, value] = subItem.slice(2).split("..")
+
+    let paramObject
+    if (modelIdCollection) {
+      paramObject = {method, field, value, type, modelIdCollection} as ModelFilter
+    } else {
+      paramObject = {method, field, value, type} as Filter
+    }
+    return paramObject
+  })
+}
 
 function filterRouteToStore({
                               globalFilters,
@@ -48,36 +63,33 @@ function filterRouteToStore({
     modelFilters: []
   };
   if (globalFilters !== "~") {
-    globalFilters = decodeURI(globalFilters.toString()).split("::");
-    globalParams = decodeURI(globalParams.toString()).split("::");
+
+    //filter type
+    globalFilters = decodeURI(globalFilters.toString()).split("~");
+    //filter parameters
+    globalParams = decodeURI(globalParams.toString()).split("~");
+
 
     globalFilters.forEach((item, index) => {
-          const params = globalParams[index].split("++").map(subItem => {
-            // first two letters item
-            const method = subItem.slice(0, 2)
-            const [field, value] = subItem.slice(2).split("..")
-
-            return {method, field, value}
-          })
-          console.log(params)
-          filterParams.all = params;
+          const params = getParams(globalParams[index], item)
+          filterParams.all = filterParams.all.concat(params);
         }
     );
   }
   if (modelFilters !== "~") {
     const params = decodeURI(modelFilterParams.toString()).split("~");
     decodeURI(modelFilters.toString()).split("~").forEach((item, index) => {
+
       const [models, filters] = item.split("::");
-      const modelsKey = JSON.stringify(models.split("++"));
+      const modelsId = models.split("++");
       const filtersArray = filters.split("++");
       const paramsArray = params[index].split("::");
-      console.log(modelsKey, 'mh')
-      filterParams.modelFilters[modelsKey] = {};
       filtersArray.forEach((subItem, subIndex) => {
-        filterParams.modelFilters[modelsKey][subItem] = paramsArray[subIndex].split("++");
+
+        filterParams.modelFilters = filterParams.modelFilters.concat(getParams(paramsArray[subIndex], subItem, modelsId) as ModelFilter[]);
+
       });
     });
-
   }
   return filterParams;
 }

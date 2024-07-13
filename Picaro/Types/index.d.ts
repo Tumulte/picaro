@@ -1,12 +1,14 @@
-import {availableModules} from "@/utils/modules";
-
-export type AvailableModules = keyof typeof availableModules
+export type AvailableModules = string[]
 export type Categories = { id: string, label: string }
 export type Layout = { model: string, type: string, categories: Categories[] }
 export type CommonLayout = { type: AvailableModules, cols?: number, model: string }
-export type Filter = { id: string, label: string }
+export type Filter = { method: string, field: string, value: string, type: string }
+export type ModelFilter = Filter & { modelIdCollection: [string] }
 export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
-export type FilterCollection = { all: { method: string, field: string, value: string }[], modelFilters: Filter[] }
+export type FilterCollection = {
+    all: Filter[],
+    modelFilters: ModelFilter[]
+}
 
 export type RichTextContent = {
     type: string

@@ -1,5 +1,7 @@
 import {defineStore} from "pinia";
 import {useRouter} from "vue-router";
+import {Filter, FilterCollection, ModelFilter} from "@types";
+import groupBy from "object.groupby"
 
 export const useUserStore = defineStore('user', () => {
     const router = useRouter()
@@ -32,47 +34,62 @@ export const useUserStore = defineStore('user', () => {
         this.updateRoute(temporaryFilterCollection);
     }
 
-    function updateRoute(filterCollection) {
-        let globalFilters = "~";
-        let globalParams = "0";
-        const globalFiltersArray = [];
-        const globalParamsArray = [];
-        for (const [key, value] of Object.entries(filterCollection.all)) {
-            globalFiltersArray.push(key);
-            globalParamsArray.push(value.method + value.field + ".." + value.value);
-        }
-        if (globalParamsArray.length > 0) {
-            globalFilters = globalFiltersArray.join("::");
-            globalParams = globalParamsArray.join("::");
-        }
+    function getStringFromParams(filters: Filter[] | ModelFilter[], hasModel = false) {
+        const groupedFilters = groupBy(filters, ({type}) => type)
 
-        let modelFiltersArray = [];
-        let modelParamsArray = [];
-        if (Object.entries(filterCollection.modelFilters).length !== 0) {
-            for (const [key, filter] of Object.entries(filterCollection.modelFilters)) {
-                const itemFilters = [];
-                const itemParams = [];
-                for (const [subkey, {value, method, field}] of Object.entries(filter)) {
-                    itemFilters.push(subkey);
-                    itemParams.push(`${method}${field}..${value.join("++")}`);
-                }
-                modelFiltersArray.push(
-                    `${JSON.parse(key).join("++")}::${itemFilters.join("++")}`
-                );
-                modelParamsArray.push(itemParams.join("::"));
+        const values = Object.values(groupedFilters)
+
+        const filtersType = Object.keys(groupedFilters).map((item, index) => {
+            let models = ""
+            if (hasModel) {
+                const set = new Set()
+
+                const modelsDedup = (values as ModelFilter[][])[index]
+                    .reduce((acc, current) => {
+
+                        current.modelIdCollection.forEach(id => {
+                            set.add(id)
+                        });
+
+                        return set
+                    }, set)
+
+                models = `${Array.from(modelsDedup).join('++')}::`
+
             }
-        } else {
-            modelFiltersArray = ["~"];
-            modelParamsArray = ["0"];
-        }
-        router.push({
+            return `${models}${item}`
+        }).join('~')
+        const params = values.map(params => {
+            if (!params) return;
+
+
+            return params.map(item => {
+                return `${item.method}${item.field}..${item.value}`
+            }).join('++')
+        }).join('~')
+
+        return {filtersType, params}
+    }
+
+    function updateRoute(filterCollection: FilterCollection) {
+
+        const {filtersType: globalFilters, params: globalParams} = getStringFromParams(filterCollection.all)
+
+        const {
+            filtersType: modelFilters,
+            params: modelFilterParams
+        } = getStringFromParams(filterCollection.modelFilters, true)
+
+        const params = {
             params: {
                 globalFilters: encodeURI(globalFilters),
                 globalParams: encodeURI(globalParams),
-                modelFilters: encodeURI(modelFiltersArray.join("~")),
-                modelFilterParams: encodeURI(modelParamsArray.join("~"))
+                modelFilters: encodeURI(modelFilters),
+                modelFilterParams: encodeURI(modelFilterParams)
             }
-        });
+        }
+        router.push(params);
+        return params
     }
 
     return {filterCollection, updateFilterCollection, updateRoute}
