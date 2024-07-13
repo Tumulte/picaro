@@ -1,4 +1,6 @@
-export type AvailableModules = string[]
+import {availableModules} from "@/utils/modules";
+
+export type AvailableModules = keyof typeof availableModules
 export type Categories = { id: string, label: string }
 export type Layout = { model: string, type: string, categories: Categories[] }
 export type CommonLayout = { type: AvailableModules, cols?: number, model: string }
