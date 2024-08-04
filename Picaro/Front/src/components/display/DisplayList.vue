@@ -2,7 +2,7 @@
 import axios from 'axios'
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
-import {ref, computed} from "vue";
+import {computed} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
 import {Categories, Model, ModelContent, ModuleParam, Settings} from "@types";
@@ -25,7 +25,6 @@ const emit = defineEmits<{
   clickItem: [index: number]
 }>()
 
-const key = ref(true)
 
 const dataStore = useDataStore()
 
@@ -42,7 +41,7 @@ const filteredList = computed<ModelContent[]>(() => {
     return dataStore.currentModelData?.filter(item => {
       return applyFilter(
           item,
-          [props.currentApp.filterCollection?.all],
+          props.currentApp.filterCollection,
           props.moduleParams
       );
     });
@@ -59,7 +58,7 @@ const currentModel = computed(() => {
 
 </script>
 <template>
-  <div :key="key">
+  <div>
     <div
       v-for="(fieldList, index) in filteredList"
       :key="index"
@@ -84,8 +83,8 @@ const currentModel = computed(() => {
 
       <ModelForm
         v-else
-        :current-edit-model="currentModel"
         :categories="categories"
+        :current-edit-model="currentModel"
         :model-content="fieldList"
       />
     </div>

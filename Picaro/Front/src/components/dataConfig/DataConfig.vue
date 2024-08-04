@@ -1,8 +1,8 @@
-<script setup lang="ts">
-import {ref, computed, watch} from "vue";
+<script lang="ts" setup>
+import {computed, ref, watch} from "vue";
 import {useSettingsStore} from '@stores/settings'
 import {Model, ModelState} from '@types'
-import {useRouter, useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
 import axios from "axios";
@@ -22,7 +22,7 @@ const imageDrawer = ref(false);
 const image = ref<File[]>();
 const allImages = ref<string[]>([])
 
-const thumb = computed<string[]>(()=> {
+const thumb = computed<string[]>(() => {
   return allImages.value.filter((image) => image.match(/-s./))
 })
 
@@ -31,6 +31,7 @@ function fetchImages() {
     allImages.value = res.data
   })
 }
+
 fetchImages()
 
 const modelCollection = computed((): Model[] | [] => {
@@ -63,10 +64,11 @@ function uploadImage() {
   if (image.value) {
     const formData = new FormData();
     formData.append('image', image.value[0]);
-    console.log(formData, image.value[0])
-    axios.post(`/api/setup/uploadimages`, formData, { headers: {
+    axios.post(`/api/setup/uploadimages`, formData, {
+      headers: {
         'Content-Type': 'multipart/form-data'
-      }}).then(() => {
+      }
+    }).then(() => {
       fetchImages()
       utilsStore.addAlert({
         text: "Image uploaded",
@@ -124,6 +126,7 @@ watch(() => route.params.modelId, (newVal) => {
     modelFromRoute()
   }
 }, {immediate: true})
+
 // endregion
 
 function selectImage(path: string) {
@@ -141,7 +144,7 @@ function selectImage(path: string) {
         Images upload
       </v-btn>
       <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
-        <a class="pic-aside-item" :class="{selected: model.id === route.params.modelId}" @click="selectModel(model)">
+        <a :class="{selected: model.id === route.params.modelId}" class="pic-aside-item" @click="selectModel(model)">
           {{ model.name }}
         </a>
       </div>
@@ -166,9 +169,9 @@ function selectImage(path: string) {
         <v-text-field v-model="modelNameInput" data-test="create-model-name-input" label="New model name" />
         <v-btn
           v-if="!currentEditModelName"
-          data-test="create-model-button"
-          color="primary"
           :disabled="!modelNameInput || !modelNameIsUnique"
+          color="primary"
+          data-test="create-model-button"
           @click="createNewModel"
         >
           Create model
@@ -176,12 +179,12 @@ function selectImage(path: string) {
       </div>
       <router-view
         v-if="currentEditModel"
-        class="mt-4"
         :current-edit-model="currentEditModel"
-        :model-form-state="modelFormState"
         :model-collection="modelCollection"
-        @updateModelFormState="modelFormState = $event"
+        :model-form-state="modelFormState"
+        class="mt-4"
         @cancelEditModel="cancelEditModel()"
+        @updateModelFormState="modelFormState = $event"
       />
     </main>
     <v-navigation-drawer
@@ -193,21 +196,25 @@ function selectImage(path: string) {
         <v-form>
           <v-file-input
             v-model="image"
-            label="Image"
             accept="image/*"
+            label="Image"
           />
           <v-btn @click="uploadImage">
             Upload
           </v-btn>
         </v-form>
         <div v-for="image in thumb" :key="image">
-          <img :src="`/api/uploads/${image}`" :class="{selected: image === settingsStore.rteImage}" @click="selectImage(image)">
+          <img
+            :class="{selected: image === settingsStore.rteImage}"
+            :src="`/api/uploads/${image}`"
+            @click="selectImage(image)"
+          >
         </div>
       </div>
     </v-navigation-drawer>
   </div>
 </template>
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
 .selected {
   border: 4px solid var(--main);
 }

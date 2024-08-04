@@ -2,36 +2,47 @@ import {defineStore} from "pinia";
 import {useRouter} from "vue-router";
 import {Filter, FilterCollection, ModelFilter} from "@types";
 import groupBy from "object.groupby"
+import {useSettingsStore} from "@stores/settings";
 
 export const useUserStore = defineStore('user', () => {
     const router = useRouter()
-    const filterCollection = {
-        all: {},
-        modelFilters: {}
+    const filterCollection: FilterCollection = {
+        all: [],
+        modelFilters: []
     }
 
+    const settingsStore = useSettingsStore()
+
     function updateFilterCollection({filterParams, models, type}: {
-        filterParams: string | string[],
-        models?: string | string[],
+        filterParams: { value: [string] | undefined, field: string, method: string },
+        models: string[] | undefined,
         type: string
     }) {
-        const temporaryFilterCollection = JSON.parse(
-            JSON.stringify(this.filterCollection)
-        ); //filterCollection will be later updated on route change
-        if (!models) {
-            temporaryFilterCollection.all[type] = filterParams;
-            updateRoute(temporaryFilterCollection);
-            return;
+        const temporaryFilterCollection = structuredClone(filterCollection);
+
+        temporaryFilterCollection.all = temporaryFilterCollection.all.filter(item => item.type === type);
+
+        const params = {
+            method: filterParams.method,
+            field: filterParams.field,
+            value: filterParams.value,
+            type
         }
-        models = typeof models === "string" ? [models] : models;
-        models = JSON.stringify(models);
-        const params =
-            typeof filterParams === "string" ? [filterParams] : filterParams;
-        if (!temporaryFilterCollection.modelFilters[models]) {
-            temporaryFilterCollection.modelFilters[models] = {};
+
+        if (models) {
+            const paramsWithModel: ModelFilter = {...params, modelIdCollection: models}
+            temporaryFilterCollection.modelFilters.push(paramsWithModel)
         }
-        temporaryFilterCollection.modelFilters[models][type] = params;
-        this.updateRoute(temporaryFilterCollection);
+
+        if (filterParams.value) {
+            temporaryFilterCollection.all.push(params)
+        }
+
+        settingsStore.currentAppSettings.filterCollection = temporaryFilterCollection
+
+        updateRoute(temporaryFilterCollection);
+        return;
+
     }
 
     function getStringFromParams(filters: Filter[] | ModelFilter[], hasModel = false) {

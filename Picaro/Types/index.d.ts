@@ -1,12 +1,12 @@
-import {availableModules} from "@/utils/modules";
-
-export type AvailableModules = keyof typeof availableModules
+export type AvailableModules = "Layout" | "FilterLayout" | "List" | "FilterCategories" | "FilterLink"
 export type Categories = { id: string, label: string }
 export type Layout = { model: string, type: string, categories: Categories[] }
 export type CommonLayout = { type: AvailableModules, cols?: number, model: string }
-export type Filter = { method: string, field: string, value: string, type: string }
-export type ModelFilter = Filter & { modelIdCollection: [string] }
+export type Filter = { method: FilterMethod, field: string, value: string[], type: string }
+export type ModelFilter = Filter & { modelIdCollection: string[] }
 export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
+export type FilterMethod = "eq" | "in" | "fd"
+
 export type FilterCollection = {
     all: Filter[],
     modelFilters: ModelFilter[]

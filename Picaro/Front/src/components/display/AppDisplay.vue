@@ -24,8 +24,16 @@ const appID = computed<string>(() => {
   return settingsStore.allSettings.find((app: Settings) => app.applicationName === route.params.app)?.id ?? ''
 })
 
-const currentApp = computed<Settings | undefined>(() => {
-  return settingsStore.allSettings.find((app: Settings) => app.id === appID.value)
+watch(appID, () => {
+
+  if (appID.value) {
+
+    settingsStore.currentAppSettings = settingsStore.allSettings.find((app: Settings) => app.id === appID.value)
+  }
+}, {immediate: true})
+
+const currentApp = computed(() => {
+  return settingsStore.currentAppSettings
 })
 
 watch(route, (to) => {
@@ -40,11 +48,13 @@ function getParams(params: string, type: string, modelIdCollection?: string[]): 
     const method = subItem.slice(0, 2)
     const [field, value] = subItem.slice(2).split("..")
 
+    const valueArray = value.split('**')
+
     let paramObject
     if (modelIdCollection) {
-      paramObject = {method, field, value, type, modelIdCollection} as ModelFilter
+      paramObject = {method, field, value: valueArray, type, modelIdCollection} as ModelFilter
     } else {
-      paramObject = {method, field, value, type} as Filter
+      paramObject = {method, field, value: valueArray, type} as Filter
     }
     return paramObject
   })
@@ -76,7 +86,7 @@ function filterRouteToStore({
         }
     );
   }
-  if (modelFilters !== "~") {
+  if (modelFilters && modelFilters !== "~") {
     const params = decodeURI(modelFilterParams.toString()).split("~");
     decodeURI(modelFilters.toString()).split("~").forEach((item, index) => {
 
@@ -85,9 +95,7 @@ function filterRouteToStore({
       const filtersArray = filters.split("++");
       const paramsArray = params[index].split("::");
       filtersArray.forEach((subItem, subIndex) => {
-
         filterParams.modelFilters = filterParams.modelFilters.concat(getParams(paramsArray[subIndex], subItem, modelsId) as ModelFilter[]);
-
       });
     });
   }

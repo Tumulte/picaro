@@ -1,27 +1,31 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed} from "vue";
 import {useUserStore} from "@stores/user";
-import * as module from "module";
+import type {Layout, Settings} from "@types";
 
 const userStore = useUserStore();
 const props = defineProps<{
-  currentApp: any
-  module?: any
+  currentApp: Settings
+  module?: Layout
 }>()
 const availableCategories = computed(() => {
   return props.currentApp.categories;
 });
 
-function changeCategory(id: string) {
+function changeCategory(id?: string) {
   userStore.updateFilterCollection({
-    models: module?.model,
+    models: props.module?.model ? [props.module?.model] : undefined,
     type: "categories",
-    filterParams: {value: [id], field: "categories", method: "in"}
+    filterParams: {value: id ? [id] : undefined, field: "categories", method: "in"}
   });
 }
+
 </script>
 
 <template>
+  <div>
+    <a @click="changeCategory()">All</a>
+  </div>
   <div v-for="category in availableCategories" :key="category.id">
     <a @click="changeCategory(category.id)">{{ category.label }}</a>
   </div>

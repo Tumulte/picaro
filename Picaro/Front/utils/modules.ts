@@ -9,3 +9,4 @@ export const availableModules = {
     List,
     FilterCategories: FilterCategories,
 } as const
+

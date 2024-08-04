@@ -25,9 +25,10 @@ function sendForm(data) {
   <component
     :is="componentMap[fieldParams.type]"
     v-if="fieldContent"
+    :key="fieldParams.id"
     :field-content="fieldContent.fieldContent"
-    :module-params="moduleParams"
     :field-params="fieldParams"
+    :module-params="moduleParams"
     @saveEdit="sendForm($event)"
   />
 </template>
