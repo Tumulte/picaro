@@ -8,10 +8,13 @@ import {availableModules} from "@utils/modules"
 
 const route = useRoute()
 
-
 const settingsStore = useSettingsStore()
 
-const cssPrefix = process.env.NODE_ENV === 'development' ? '/api' : ''
+const currentApp = computed(() => {
+  return settingsStore.currentAppSettings
+})
+
+const cssPrefix = import.meta.env.VITE_BUILD_MODE !== 'static' ? '/api' : ''
 
 onMounted(() => {
   if (!currentApp.value?.styleSet) return;
@@ -34,9 +37,6 @@ watch(appID, () => {
   }
 }, {immediate: true})
 
-const currentApp = computed(() => {
-  return settingsStore.currentAppSettings
-})
 
 watch(route, (to) => {
   if (to?.params.globalFilters && currentApp.value) {
@@ -107,15 +107,15 @@ function filterRouteToStore({
 
 <template>
   <div v-if="currentApp" class="pic-layout--main-container pic-content-container">
-    <v-row
+    <div
       v-for="(layoutCommonLine, index) in currentApp.layoutCommonCollection"
       :key="index"
-      class="pic-layout-container pic-row-container"
+      class="pic-layout-container pic-row"
     >
-      <v-col
+      <div
         v-for="(layoutCommonColumn, subIndex) in layoutCommonLine"
         :key="`${layoutCommonColumn.type}${subIndex}`"
-        :cols="layoutCommonColumn?.cols"
+        :class="`pic-col-size-${layoutCommonColumn?.cols}`"
         class="pic-layout--container pic-layout--common-module pic-module-container pic-col"
       >
         <component
@@ -127,8 +127,8 @@ function filterRouteToStore({
         <span v-else>
           <Layout :current-app="currentApp" />
         </span>
-      </v-col>
-    </v-row>
+      </div>
+    </div>
   </div>
 </template>
 

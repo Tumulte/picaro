@@ -5,15 +5,12 @@ import {createPinia} from 'pinia'
 import {createVuetify} from 'vuetify'
 import {defaultRoutes} from "./routes";
 import {adminRoutes} from "./adminRoutes";
-
-let routes = defaultRoutes
-if (process.env.NODE_ENV === 'development') {
-    routes = defaultRoutes.concat(adminRoutes)
-}
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes
+    routes: [...defaultRoutes, ...adminRoutes]
 })
 
 router.beforeEach((to, from) => {
@@ -50,21 +47,18 @@ const app = createApp(App)
 app.use(pinia)
 app.use(router)
 
-if (process.env.NODE_ENV === 'development') {
-    import('vuetify/styles')
-    import('@mdi/font/css/materialdesignicons.css')
-    const vuetify = createVuetify({
-        icons: {
-            defaultSet: 'mdi',
+const vuetify = createVuetify({
+    icons: {
+        defaultSet: 'mdi',
+    },
+    theme: {
+        defaultTheme: 'myCustomLightTheme',
+        themes: {
+            myCustomLightTheme,
         },
-        theme: {
-            defaultTheme: 'myCustomLightTheme',
-            themes: {
-                myCustomLightTheme,
-            },
-        },
-    })
-    app.use(vuetify)
+    },
+})
+app.use(vuetify)
 
-}
+
 app.mount('#app')

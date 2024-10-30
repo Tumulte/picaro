@@ -26,7 +26,7 @@ function selectApp(event: string | string[]) {
 }
 
 function reloadSettings() {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.VITE_BUILD_MODE !== "static") {
     axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
       settingsStore.allSettings = res.data.allSettings
       settingsStore.allStyleSets = res.data.allStyleSets
@@ -103,6 +103,5 @@ watch(() => route.params.appId, () => {
 </template>
 
 <style lang="postcss" scoped>
-@import url("../style.pcss");
 
 </style>
