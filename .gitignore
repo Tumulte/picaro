@@ -7,6 +7,8 @@ npm-debug.log
 static/*
 ./app*/*
 Picaro/Tests/Cypress/videos/*
+/Picaro/**/dist/**/*
+dist/
 Picaro/Dist/*
 Picaro/Views/webpackBundles.pug
 Picaro/mochawesome.json
@@ -19,7 +21,6 @@ picaroSettings.json
 Picaro/Tests/Cypress/screenshots/*
 coverage
 Picaro/Data
-Picaro/Front/dist
 app*
 Picaro/Back/picaro-back.json
 Picaro/Back/uploads
