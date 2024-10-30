@@ -28,11 +28,16 @@ const emit = defineEmits<{
 
 const dataStore = useDataStore()
 
-axios
-    .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
-    .then((result) => {
-      dataStore.currentModelData = result.data
-    })
+if (process.env.NODE_ENV === 'development') {
+  axios
+      .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
+      .then((result) => {
+        dataStore.currentModelData = result.data
+      })
+} else {
+  getBuiltData()
+}
+
 
 const filteredList = computed<ModelContent[]>(() => {
   if (props.displayAll) {
@@ -54,6 +59,15 @@ const currentModel = computed(() => {
       (item: Model) => item.id === props.moduleParams.model
   )
 })
+
+async function getBuiltData() {
+  console.log(props.currentApp.id)
+  const data = await import(`./../../../../Data/build/${props.currentApp.id}.json`)
+
+  dataStore.currentModelData = data.default.filter(item =>
+      item.modelId === props.moduleParams.model
+  )
+}
 
 
 </script>

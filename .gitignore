@@ -7,7 +7,6 @@ npm-debug.log
 static/*
 ./app*/*
 Picaro/Tests/Cypress/videos/*
-/Picaro/**/dist/**/*
 dist/
 Picaro/Dist/*
 Picaro/Views/webpackBundles.pug

@@ -1,22 +1,24 @@
 <script lang="ts" setup>
-import {computed, onMounted, watch} from "vue";
-import {Filter, FilterCollection, ModelFilter, Settings} from "@types";
-import Layout from "@components/layout/Layout.vue";
-import {RouteParams, useRoute} from "vue-router";
-import {useSettingsStore} from "@stores/settings";
-import {availableModules} from "@utils/modules";
+import {computed, onMounted, watch} from "vue"
+import {Filter, FilterCollection, ModelFilter, Settings} from "@types"
+import Layout from "@components/layout/Layout.vue"
+import {RouteParams, useRoute} from "vue-router"
+import {useSettingsStore} from "@stores/settings"
+import {availableModules} from "@utils/modules"
 
 const route = useRoute()
 
 
 const settingsStore = useSettingsStore()
 
+const cssPrefix = process.env.NODE_ENV === 'development' ? '/api' : ''
+
 onMounted(() => {
   if (!currentApp.value?.styleSet) return;
   const link = document.createElement('link')
   link.type = 'text/css'
   link.rel = 'stylesheet'
-  link.href = `/api/css/baseStyle-${currentApp.value.styleSet}.css`
+  link.href = `${cssPrefix}/css/baseStyle-${currentApp.value.styleSet}.css`
   document.head.appendChild(link)
 })
 

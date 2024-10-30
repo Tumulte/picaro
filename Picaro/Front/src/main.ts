@@ -2,10 +2,14 @@ import {createApp} from 'vue'
 import App from './components/App.vue'
 import {createRouter, createWebHashHistory} from "vue-router";
 import {createPinia} from 'pinia'
-import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
-import '@mdi/font/css/materialdesignicons.css'
-import {routes} from "./routes";
+import {defaultRoutes} from "./routes";
+import {adminRoutes} from "./adminRoutes";
+
+let routes = defaultRoutes
+if (process.env.NODE_ENV === 'development') {
+    routes = defaultRoutes.concat(adminRoutes)
+}
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -40,22 +44,27 @@ const myCustomLightTheme = {
     },
 }
 
-const vuetify = createVuetify({
-    icons: {
-        defaultSet: 'mdi',
-    },
-    theme: {
-        defaultTheme: 'myCustomLightTheme',
-        themes: {
-            myCustomLightTheme,
-        },
-    },
-})
 
 const pinia = createPinia()
 const app = createApp(App)
 app.use(pinia)
 app.use(router)
-app.use(vuetify)
 
+if (process.env.NODE_ENV === 'development') {
+    import('vuetify/styles')
+    import('@mdi/font/css/materialdesignicons.css')
+    const vuetify = createVuetify({
+        icons: {
+            defaultSet: 'mdi',
+        },
+        theme: {
+            defaultTheme: 'myCustomLightTheme',
+            themes: {
+                myCustomLightTheme,
+            },
+        },
+    })
+    app.use(vuetify)
+
+}
 app.mount('#app')

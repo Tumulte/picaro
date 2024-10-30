@@ -29,6 +29,9 @@
       ],
       "@libs/*": [
         "./Picaro/Libs"
+      ],
+      "@data/*": [
+        "./Picaro/Data"
       ]
     },
     "exclude": [

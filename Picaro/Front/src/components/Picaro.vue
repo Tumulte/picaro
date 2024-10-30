@@ -1,11 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, watch} from "vue";
 import {Settings, SettingsStore} from "@types";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import Alert from "./utils/alertModal.vue";
 import axios, {AxiosResponse} from "axios";
 import {useSettingsStore} from '@stores/settings'
-import {useRouter} from "vue-router";
 
 (() => import('../style.pcss'))()
 
@@ -27,10 +26,12 @@ function selectApp(event: string | string[]) {
 }
 
 function reloadSettings() {
-  axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
-    settingsStore.allSettings = res.data.allSettings
-    settingsStore.allStyleSets = res.data.allStyleSets
-  })
+  if (process.env.NODE_ENV === 'development') {
+    axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
+      settingsStore.allSettings = res.data.allSettings
+      settingsStore.allStyleSets = res.data.allStyleSets
+    })
+  }
 }
 
 watch(() => settingsStore.allSettings, () => {
@@ -49,11 +50,11 @@ watch(() => route.params.appId, () => {
 <template>
   <v-app id="picaro-app" class="picaro-app text--primary">
     <nav class="pic-tabs">
-      <img src="/images/logo2.svg" class="logo" alt="logo" width="50">
+      <img alt="logo" class="logo" src="/images/logo2.svg" width="50">
       <v-tabs :model-value="route.name">
         <v-tab
-          value="app"
           to="/admin/app"
+          value="app"
         >
           App Config
         </v-tab>
@@ -83,12 +84,12 @@ watch(() => route.params.appId, () => {
             Style
           </v-tab>
           <v-select
-            label="select app"
-            :model-value="route.params.appId"
             :items="settingsStore.allSettings"
-            item-value="id"
-            variant="solo-filled"
+            :model-value="route.params.appId"
             item-title="applicationName"
+            item-value="id"
+            label="select app"
+            variant="solo-filled"
             @update:model-value="selectApp"
           />
         </template>
@@ -101,7 +102,7 @@ watch(() => route.params.appId, () => {
   </v-app>
 </template>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
 @import url("../style.pcss");
 
 </style>

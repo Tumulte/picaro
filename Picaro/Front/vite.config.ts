@@ -18,6 +18,7 @@ export default defineConfig({
             '@types': path.resolve(__dirname, './../Types'),
             '@libs': path.resolve(__dirname, './../Libs'),
             '/api/uploads': path.resolve(__dirname, './../Back/uploads'),
+            '@data': path.resolve(__dirname, './../Data'),
         },
     },
     server: {
@@ -27,5 +28,15 @@ export default defineConfig({
                 changeOrigin: true,
             },
         },
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vuetify: ['vuetify'],
+                    vuedraggable: ['vuedraggable']
+                }
+            }
+        }
     }
 })

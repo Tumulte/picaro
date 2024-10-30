@@ -1,32 +1,55 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import {useSettingsStore} from "@stores/settings";
+import {nanoid} from "nanoid";
 
-const props = defineProps<{
-  selectedEditLayout: string
-}>()
+const settingsStore = useSettingsStore();
 
-const settings = useSettingsStore()
-const availableLayout = ref(["filterLink", "list", "filterCategories"]);
-const componentKey = ref(0);
-const selectedLayoutName = computed(() => {
-  return props.selectedEditLayout ||
-      settings.currentAppSettings?.filterCollection?.all?.layout ||
-      settings.currentAppSettings?.defaultLayout
+const availableLayout = ref(["list", "filterLink", "filterCategories"]);
+const selectedEditLayout = ref("");
+const isNewLayout = ref(false)
+
+const layoutCollection = computed(() => {
+  return settingsStore.currentAppSettings?.layoutCollection
 });
+const createdLayoutId = ref("");
+const defaultLayout = computed(() => {
+  return settingsStore.currentAppSettings?.defaultLayout
+})
+
+const createdLayoutName = ref('')
+
+const selectedLayoutId = computed(() => {
+  return selectedEditLayout.value ||
+      settingsStore.currentAppSettings?.filterCollection?.all?.layout ||
+      settingsStore.currentAppSettings?.defaultLayout
+});
+
 const selectedLayout = computed(() => {
-  if (selectedLayoutName.value) {
-    return settings.currentAppSettings?.layoutCollection.find(item => item.id === selectedLayoutName.value).layout || [];
+  if (selectedLayoutId.value) {
+    return settingsStore.currentAppSettings?.layoutCollection.find(item => item.id === selectedLayoutId.value).layout || [];
   } else {
     return null;
   }
 });
 const modelCollection = computed(() => {
-  return settings.currentAppSettings?.modelCollection ?? []
+  return settingsStore.currentAppSettings?.modelCollection ?? []
 });
 
 function makeClass(module) {
   return module.type ? `rf-${module.type}-module` : "";
+}
+
+function createLayout() {
+  if (!createdLayoutId.value) {
+    return false
+  }
+  layoutCollection.value.push({
+    name: createdLayoutId.value,
+    id: nanoid(),
+    layout: []
+  });
+  createdLayoutId.value = "";
 }
 
 function initModule(module) {
@@ -41,58 +64,89 @@ function initModule(module) {
 
 <template>
   <div class="pic-layout--dynamic-module">
-    <div
-      class="pic-module-label"
-    >
-      DYNAMIC LAYOUT
+    <div class="pic-container">
+      <v-select
+        v-if="layoutCollection.length > 0"
+        :items="layoutCollection"
+        :model-value="selectedEditLayout"
+        item-title="name"
+        item-value="id"
+        label="Choose a Layout to edit"
+      />
+      <v-select
+        v-if="layoutCollection.length > 0"
+        :items="layoutCollection"
+        :model-value="defaultLayout"
+        item-title="name"
+        item-value="id"
+        label="Default Layout (index)"
+        @update:model-value="settingsStore.currentAppSettings.defaultLayout = $event"
+      />
+      <v-btn v-if="!isNewLayout" @click="isNewLayout = true ">
+        Create a layout
+      </v-btn>
+      <v-form v-else @submit.prevent="createLayout">
+        <v-text-field
+          v-model="createdLayoutName"
+          density="compact"
+          label="Layout Name"
+          variant="underlined"
+        />
+        <v-btn type="submit">
+          Save layout
+        </v-btn>
+        <v-btn @click="isNewLayout=false">
+          Cancel
+        </v-btn>
+      </v-form>
     </div>
-    <template v-for="(layoutLine, index) in selectedLayout">
-      <v-row v-if="selectedLayout" :key="index" class="rf-layout--container pic-row-container">
+    <div v-for="(layoutLine, index) in selectedLayout">
+      <v-row v-if="selectedLayout" :key="index">
         <template v-for="(module) in layoutLine">
-          <v-col :class="makeClass(module)" :cols="module.cols" class="pic-layout--module">
-            <div class="common-layout-settings">
-              <v-text-field
-                :value="module.cols || 0"
-                dense="dense"
-                label="Width"
-                max="11"
-                min="0"
-                type="number"
-                @input="()=>{}"
+          <v-col :class="makeClass(module)" :cols="module.cols" class="pic-layout--container">
+            <div class="pic-container">
+              <div class="common-layout-settings">
+                <div class="module-type">
+                  <v-text-field
+                    :model-value="module.cols || 0"
+                    class="module-type-size"
+                    dense="dense"
+                    label="Width"
+                    max="11"
+                    min="0"
+                    type="number"
+                    variant="underlined"
+                    @input="module.cols = $event.target.value"
+                  />
+                  <v-select
+                    :items="availableLayout"
+                    :model-value="module.type || availableLayout[0]"
+                    label="Type"
+                    @update:model-value="module.type = $event"
+                  />
+                </div>
+                <v-select
+                  :items="modelCollection"
+                  :model-value="modelCollection.find(item=> item.id === module.model)"
+                  item-title="name"
+                  item-value="id"
+                  label="Model"
+                  @update:model-value="module.model = $event"
+                />
+                TODO CATEGORIES
+              </div>
+              <component
+                :is="module.type ? module.type : 'div'"
+                :key="index"
+                :module-params="module"
               />
-              <v-select
-                :items="availableLayout"
-                :value="module.type"
-                label="Type"
-                @update:model-value="module.type = $event"
-              />
-              <v-select
-                :items="modelCollection"
-                :model-value="modelCollection.find(item=> item.id === module.model)"
-                item-title="name"
-                item-value="id"
-                label="Model"
-                @update:model-value="module.model = $event"
-              />
-              <v-select
-                :items="settings.currentAppSettings.categories"
-                :multiple="true"
-                item-title="label"
-                item-value="id"
-                @update:model-value="module.categories = $event"
-              />
-            </div>
-            <component
-              :is="module.type ? module.type : 'div'"
-              :key="index + componentKey"
-              :module-params="module"
-            />
-            <div
-              class="pic-layout--add-column"
-              data-jest="add-column"
-              @click="layoutLine.splice(index + 1,0 , initModule(module))"
-            >
-              <v-icon>mdi-table-column-plus-after</v-icon>
+              <div
+                class="pic-layout--add-column"
+                data-jest="add-column"
+                @click="layoutLine.splice(index + 1,0 , initModule(module))"
+              >
+                <v-icon>mdi-table-column-plus-after</v-icon>
+              </div>
             </div>
           </v-col>
         </template>
@@ -104,7 +158,7 @@ function initModule(module) {
           <v-icon>mdi-table-row-plus-after</v-icon>
         </div>
       </v-row>
-    </template>
+    </div>
     <div
       class="pic-layout--add-row"
       data-jest="add-row"
@@ -116,7 +170,17 @@ function initModule(module) {
 </template>
 
 <style scoped>
+.pic-container {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  position: relative;
+}
+
 .pic-layout {
+  &--container {
+    padding: 0 var(--l) 0 var(--s)
+  }
+
   &--dynamic-module {
     background: var(--white);
   }
@@ -162,5 +226,15 @@ function initModule(module) {
     right: -20px;
     top: 50%;
   }
+}
+
+.module-type {
+  &-size {
+    max-width: 40px;
+    margin-right: 1rem;
+  }
+
+  display: flex;
+  margin-top: -.5rem;
 }
 </style>
