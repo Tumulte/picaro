@@ -20,11 +20,4 @@ export default defineConfig({
         },
         dedupe: ['pinia', 'vue-router']
     },
-    build: {
-        rollupOptions: {
-            output: {
-                manualChunks: {}
-            }
-        }
-    }
 })

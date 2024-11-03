@@ -301,35 +301,12 @@
     }
 
     ul li {
-        list-style: none;
-        margin: var(--3xs)
-    }
+        margin: var(--3xs);
 
-    ul li::before {
-        content: "⧉";
-        display: inline-block;
-        width: 1em;
-        transform: rotate(45deg);
-        margin-left: -1em;
-        margin-right: 0.3em;
-    }
-
-    ul li li::before {
-        content: "□";
-    }
-
-    ul li li li::before {
-        content: "⸬";
-    }
-
-    ul li li li li::before {
-        transform: rotate(0);
-        content: "⁖"
-    }
-
-    ul li li li li li::before {
-        transform: rotate(45deg);
-        content: "⁚"
+        p {
+            margin: 0;
+            padding: 0;
+        }
     }
 
     p {

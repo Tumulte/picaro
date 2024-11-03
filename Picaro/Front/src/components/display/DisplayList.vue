@@ -3,9 +3,17 @@ import axios from 'axios'
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
 import {computed} from "vue";
-import {Model, ModelContent, ModuleParam, Settings} from "@types";
+import {useRoute} from "vue-router";
+import ModelForm from "@components/dataConfig/ModelForm.vue";
+import {Categories, Model, ModelContent, ModuleParam, Settings} from "@types";
 import {useDataStore} from "@stores/data";
+import {useSettingsStore} from "@stores/settings";
 
+const settings = useSettingsStore()
+
+const categories: Categories[] = settings.currentAppSettings?.categories || []
+
+const route = useRoute();
 
 const props = defineProps<{
   moduleParams: ModuleParam
@@ -20,7 +28,7 @@ const emit = defineEmits<{
 
 const dataStore = useDataStore()
 
-if (import.meta.env.VITE_BUILD_MODE !== "static") {
+if (process.env.NODE_ENV === 'development') {
   axios
       .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
       .then((result) => {
@@ -70,7 +78,10 @@ async function getBuiltData() {
       :key="index"
       @click="emit('clickItem', index)"
     >
-      <div class="pic-display-list-item">
+      <div
+        v-if="index !== parseInt(route.params.contentId as string)"
+        class="pic-display-list-item"
+      >
         <div
           v-for="(field, subIndex) in fieldList.content"
           :key="subIndex"
@@ -83,6 +94,13 @@ async function getBuiltData() {
           />
         </div>
       </div>
+
+      <ModelForm
+        v-else
+        :categories="categories"
+        :current-edit-model="currentModel"
+        :model-content="fieldList"
+      />
     </div>
   </div>
 </template>
