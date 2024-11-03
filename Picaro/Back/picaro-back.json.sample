@@ -4,7 +4,7 @@
     "user": "admin",
     "password": "admin",
     "secret": "secret",
-    "cookieSecret": "secret"
+    "cookieSecret": "secret",
     "imageSize": {
         "s": 200,
         "m": 500,
