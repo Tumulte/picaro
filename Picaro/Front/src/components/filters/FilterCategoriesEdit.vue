@@ -30,13 +30,20 @@ function changeCategory(id: string) {
   });
 }
 
-async function addItem(event) {
+async function addItem() {
   const {valid} = await form.value.validate()
   if (!valid) return
   if (!settingsStore.currentAppSettings?.categories) settingsStore.currentAppSettings.categories = []
   settingsStore.currentAppSettings.categories.push({label: currentAddedItem.value, id: nanoid()})
   currentAddedItem.value = ''
 }
+
+async function addSection() {
+  if (!settingsStore.currentAppSettings?.categories) settingsStore.currentAppSettings.categories = []
+  settingsStore.currentAppSettings.categories.push({label: currentAddedItem.value, id: "section"})
+  currentAddedItem.value = ''
+}
+
 
 function deleteCategory(index, category) {
   utilStore.awaitConfirmation({
@@ -51,13 +58,23 @@ function deleteCategory(index, category) {
 </script>
 <template>
   <div class="pic-filter-categories">
-    <div v-for="(category, index) in availableCategories" :key="index" class="rf-filter-categories--item">
+    <div v-for="(category, index) in availableCategories"
+         :key="index" class="pic-filter-categories--item">
       <v-text-field
-        v-if="index === categoryEditIndex"
-        v-model="category.label"
-        @keydown.enter="categoryEditIndex=null"
+          v-if="index === categoryEditIndex"
+          v-model="category.label"
+          @keydown.enter="categoryEditIndex=null"
       />
-      <a v-else class="rf-filter-categories--link" @click="changeCategory(category.id)">{{ category.label }}</a>
+      <component :is="category.id === 'section' ? 'span' : 'a'"
+                 v-else
+                 :class="{
+        'pic-section': category.id === 'section',
+        'pic-section-empty': !category.label
+      }"
+                 class="pic-filter-categories--link"
+                 @click="changeCategory(category.id)">
+        {{ category.label }}
+      </component>
       <v-icon @click="categoryEditIndex = index">
         mdi-pencil-outline
       </v-icon>
@@ -66,7 +83,15 @@ function deleteCategory(index, category) {
       </v-icon>
     </div>
     <v-form ref="form" validate-on="input" @submit.prevent="addItem">
-      <v-text-field v-if="isEdit" v-model="currentAddedItem" :rules="rules" />
+      <v-text-field v-if="isEdit" v-model="currentAddedItem" :rules="rules"/>
     </v-form>
+    <v-btn variant="text" @click="addSection">Add section</v-btn>
+
   </div>
 </template>
+<style lang="postcss" scoped>
+.pic-section-empty {
+  border: 3px solid;
+  display: block;
+}
+</style>

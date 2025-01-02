@@ -13,6 +13,9 @@ const availableCategories = computed(() => {
 });
 
 function changeCategory(id?: string) {
+  if (id === 'section') {
+    return
+  }
   userStore.updateFilterCollection({
     models: props.module?.model ? [props.module?.model] : undefined,
     type: "categories",
@@ -27,12 +30,27 @@ function changeCategory(id?: string) {
     <a @click="changeCategory()">All</a>
   </div>
   <div v-for="category in availableCategories" :key="category.id">
-    <a @click="changeCategory(category.id)">{{ category.label }}</a>
+    <component
+        :is="category.id === 'section' ? 'div' : 'a'"
+        :class="{
+        'pic-section': category.id === 'section',
+        'pic-section-empty': !category.label
+      }"
+        @click="changeCategory(category.id)">
+      {{ category.label }}
+    </component>
   </div>
 </template>
 
 <style scoped>
 a {
   cursor: pointer;
+}
+
+.pic-section {
+  font-family: var(--font-alt);
+  margin: 1rem 0;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 </style>

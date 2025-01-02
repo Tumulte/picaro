@@ -1,17 +1,16 @@
 const fs = require('fs');
+const path = require('path')
 
-fs.copyFileSync("../Data/picData.db", "../Data/picData.json")
+fs.copyFileSync(path.join(__dirname, "../Data/picData.db"), path.join(__dirname, "../Data/picData.json"))
 
-const data = require('../Data/picData.json')
+const data = require(path.join(__dirname, '../Data/picData.json'))
 data.collections.forEach((item, index) => {
-    let fileContent = fs.readFileSync(`../Data/picData.db.${index}`, 'utf-8')
-    console.info(fileContent)
-    console.log(fileContent.search(/\n/))
+    let fileContent = fs.readFileSync(path.join(__dirname, `../Data/picData.db.${index}`), 'utf-8')
     fileContent = fileContent.replace(/\n{/g, ',\n{')
 
     fileContent = `[
 ${fileContent}]`
 
 
-    fs.writeFileSync(`../Data/build/${item.name}.json`, fileContent)
+    fs.writeFileSync(path.join(__dirname, `../Data/build/${item.name}.json`), fileContent)
 })

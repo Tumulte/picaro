@@ -100,6 +100,7 @@ async function routes(fastify) {
 
     }, async (request, reply) => {
         const data = await request.file()
+        console.log(data)
         const buffer = await data.toBuffer()
         const dir = `${__dirname}/uploads/`;
         const [name, ext] = data.filename.split('.')

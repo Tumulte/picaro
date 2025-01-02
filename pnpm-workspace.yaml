@@ -1,0 +1,7 @@
+packages:
+  - "Picaro/Front/**"
+  - "Picaro/FrontStatic/**"
+  - "Picaro/Back/**"
+  - "Picaro/Libs/colorGenerator/**"
+  - "Picaro/Libs/colorHelper/**"
+  - "Picaro/Libs/scaleMaker/**"

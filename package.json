@@ -1,0 +1,16 @@
+{
+  "name": "Picaro",
+  "version": "0.8.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "pnpm --filter ./Picaro/Front run dev & pnpm --filter ./Picaro/Back run dev:back",
+    "dev:front": "pnpm --filter ./Picaro/Front run dev",
+    "dev:back": "pnpm --filter ./Picaro/Back run dev:back",
+    "build": "node Picaro/Cli/buildData.js && pnpm --filter ./Picaro/FrontStatic run build"
+  },
+  "keywords": [],
+  "author": "Étienne Rouge",
+  "license": "ISC"
+}

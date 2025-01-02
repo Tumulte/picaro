@@ -63,7 +63,7 @@ function selectModel(model: Model) {
 function uploadImage() {
   if (image.value) {
     const formData = new FormData();
-    formData.append('image', image.value[0]);
+    formData.append('image', image.value);
     axios.post(`/api/setup/uploadimages`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -149,9 +149,9 @@ function selectImage(path: string) {
         </a>
       </div>
       <v-btn
-        color="primary"
-        data-test="new-model-button"
-        @click="newModelForm"
+          color="primary"
+          data-test="new-model-button"
+          @click="newModelForm"
       >
         New Model
       </v-btn>
@@ -166,48 +166,48 @@ function selectImage(path: string) {
         </v-tab>
       </v-tabs>
       <div v-if="modelFormState === 'awaitingName'" class="pic-new-model">
-        <v-text-field v-model="modelNameInput" data-test="create-model-name-input" label="New model name" />
+        <v-text-field v-model="modelNameInput" data-test="create-model-name-input" label="New model name"/>
         <v-btn
-          v-if="!currentEditModelName"
-          :disabled="!modelNameInput || !modelNameIsUnique"
-          color="primary"
-          data-test="create-model-button"
-          @click="createNewModel"
+            v-if="!currentEditModelName"
+            :disabled="!modelNameInput || !modelNameIsUnique"
+            color="primary"
+            data-test="create-model-button"
+            @click="createNewModel"
         >
           Create model
         </v-btn>
       </div>
       <router-view
-        v-if="currentEditModel"
-        :current-edit-model="currentEditModel"
-        :model-collection="modelCollection"
-        :model-form-state="modelFormState"
-        class="mt-4"
-        @cancelEditModel="cancelEditModel()"
-        @updateModelFormState="modelFormState = $event"
+          v-if="currentEditModel"
+          :current-edit-model="currentEditModel"
+          :model-collection="modelCollection"
+          :model-form-state="modelFormState"
+          class="mt-4"
+          @cancelEditModel="cancelEditModel()"
+          @updateModelFormState="modelFormState = $event"
       />
     </main>
     <v-navigation-drawer
-      v-model="imageDrawer"
-      location="right"
-      width="500"
+        v-model="imageDrawer"
+        location="right"
+        width="500"
     >
       <div class="pic-container">
         <v-form>
           <v-file-input
-            v-model="image"
-            accept="image/*"
-            label="Image"
+              v-model="image"
+              accept="image/*"
+              label="Image"
           />
           <v-btn @click="uploadImage">
             Upload
           </v-btn>
         </v-form>
-        <div v-for="image in thumb" :key="image">
+        <div v-for="image in allImages" :key="image">
           <img
-            :class="{selected: image === settingsStore.rteImage}"
-            :src="`/api/uploads/${image}`"
-            @click="selectImage(image)"
+              :class="{selected: image === settingsStore.rteImage}"
+              :src="`/api/uploads/${image}`"
+              @click="selectImage(image)"
           >
         </div>
       </div>
