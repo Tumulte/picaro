@@ -17,5 +17,5 @@ jobs:
       - name: Install dependencies
         run: pnpm i
 
-        # - name: Run linters
-        # run: pnpm run lint
+      - name: Run linters
+        run: pnpm run lint

@@ -31,12 +31,13 @@ function changeCategory(id?: string) {
   </div>
   <div v-for="category in availableCategories" :key="category.id">
     <component
-        :is="category.id === 'section' ? 'div' : 'a'"
-        :class="{
+      :is="category.id === 'section' ? 'div' : 'a'"
+      :class="{
         'pic-section': category.id === 'section',
         'pic-section-empty': !category.label
       }"
-        @click="changeCategory(category.id)">
+      @click="changeCategory(category.id)"
+    >
       {{ category.label }}
     </component>
   </div>

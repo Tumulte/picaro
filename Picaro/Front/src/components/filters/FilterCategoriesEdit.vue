@@ -58,21 +58,26 @@ function deleteCategory(index, category) {
 </script>
 <template>
   <div class="pic-filter-categories">
-    <div v-for="(category, index) in availableCategories"
-         :key="index" class="pic-filter-categories--item">
+    <div
+      v-for="(category, index) in availableCategories"
+      :key="index"
+      class="pic-filter-categories--item"
+    >
       <v-text-field
-          v-if="index === categoryEditIndex"
-          v-model="category.label"
-          @keydown.enter="categoryEditIndex=null"
+        v-if="index === categoryEditIndex"
+        v-model="category.label"
+        @keydown.enter="categoryEditIndex=null"
       />
-      <component :is="category.id === 'section' ? 'span' : 'a'"
-                 v-else
-                 :class="{
-        'pic-section': category.id === 'section',
-        'pic-section-empty': !category.label
-      }"
-                 class="pic-filter-categories--link"
-                 @click="changeCategory(category.id)">
+      <component
+        :is="category.id === 'section' ? 'span' : 'a'"
+        v-else
+        :class="{
+          'pic-section': category.id === 'section',
+          'pic-section-empty': !category.label
+        }"
+        class="pic-filter-categories--link"
+        @click="changeCategory(category.id)"
+      >
         {{ category.label }}
       </component>
       <v-icon @click="categoryEditIndex = index">
@@ -83,10 +88,11 @@ function deleteCategory(index, category) {
       </v-icon>
     </div>
     <v-form ref="form" validate-on="input" @submit.prevent="addItem">
-      <v-text-field v-if="isEdit" v-model="currentAddedItem" :rules="rules"/>
+      <v-text-field v-if="isEdit" v-model="currentAddedItem" :rules="rules" />
     </v-form>
-    <v-btn variant="text" @click="addSection">Add section</v-btn>
-
+    <v-btn variant="text" @click="addSection">
+      Add section
+    </v-btn>
   </div>
 </template>
 <style lang="postcss" scoped>
