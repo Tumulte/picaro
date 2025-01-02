@@ -35,7 +35,6 @@
     "vuetify": "^3.5.9"
   },
   "devDependencies": {
-    "tap": "^16.1.0",
     "typescript": "^5.4.2",
     "vite": "^5.1.6"
   }
