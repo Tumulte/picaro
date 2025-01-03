@@ -100,9 +100,9 @@ function initModule(module) {
         </v-btn>
       </v-form>
     </div>
-    <div v-for="(layoutLine, index) in selectedLayout">
-      <v-row v-if="selectedLayout" :key="index">
-        <template v-for="(module) in layoutLine">
+    <div v-for="(layoutLine, index) in selectedLayout" :key="index">
+      <v-row v-if="selectedLayout">
+        <template v-for="(module) in layoutLine" :key="module.id">
           <v-col :class="makeClass(module)" :cols="module.cols" class="pic-layout--container">
             <div class="pic-container">
               <div class="common-layout-settings">

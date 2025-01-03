@@ -15,7 +15,7 @@ export default tseslint.config(
         files: ['**/*.{js,mjs,cjs,ts,vue}']
     },
     {
-        ignores: ['*.d.ts', '**/coverage', '**/dist', 'eslint.config.mjs']
+        ignores: ['**/*.d.ts', '**/coverage', '**/dist', 'eslint.config.mjs', '**/*.cy.ts', '**/*.test.js']
     },
     ...vueEslintConfigTypescript({extends: ['recommendedTypeChecked']}),
     ...eslintPluginVue.configs['flat/recommended'],
@@ -60,6 +60,7 @@ export default tseslint.config(
             "vue/v-on-event-hyphenation": "off",
             "@typescript-eslint/no-empty-function": "off",
             "vue/multi-word-component-names": "off",
+            "vue/no-v-html": "off",
             "vue/max-attributes-per-line": [
                 "error",
                 {

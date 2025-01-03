@@ -11,11 +11,13 @@ const password = ref('')
 
 function login() {
   if (username.value && password) {
-    axios.post('/api/auth/login', {username: username.value, password: password.value}).then((res) => {
+    axios.post('/api/auth/login', {username: username.value, password: password.value}).then(async (res) => {
       if (res.data) {
         localStorage.setItem('accessToken', res.data.accessToken)
-        router.push({path: '/admin'})
+        await router.push({path: '/admin'})
       }
+    }).catch((error) => {
+      console.error(error)
     })
   }
 }

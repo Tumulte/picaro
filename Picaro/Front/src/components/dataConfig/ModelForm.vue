@@ -81,7 +81,7 @@ async function sendForm() {
 
   try {
     await axios[action](
-        `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId}`,
+        `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
         currentModelContent.value // if an array is passed each entry creates a row in the DB
     )
     utilsStore.addAlert({
@@ -92,7 +92,7 @@ async function sendForm() {
   } catch (e) {
     utilsStore.addAlert({
       type: "error",
-      text: `Request failed.  Returned status of ${e}`
+      text: `Request failed.  Returned status of ${e as string}`
     });
   }
 }

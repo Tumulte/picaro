@@ -8,7 +8,7 @@ import {useRoute, useRouter} from "vue-router";
 import {updateSettings} from "./utils/api";
 import {MESSAGE} from "@utils/const";
 import {copy} from "copy-anything"
-import { useVuelidate } from '@vuelidate/core'
+import {useVuelidate} from '@vuelidate/core'
 
 const utilStore = useUtilsStore()
 const settingsStore = useSettingsStore()
@@ -49,9 +49,11 @@ watch(() => route.name, () => {
 }, {immediate: true})
 
 function createApp() {
-  axios.post(`/api/setup/create/${newAppName.value}`).then((res) => {
-    router.push({name: 'app', params: {appId: res.data?.appCreatedId}})
+  axios.post(`/api/setup/create/${newAppName.value}`).then(async (res) => {
+    await router.push({name: 'app', params: {appId: res.data?.appCreatedId}})
     emit('reloadSettings')
+  }).catch((error) => {
+    console.error(error)
   })
 }
 
@@ -61,10 +63,10 @@ function deleteApp() {
         "Are you sure you want to delete the app ?",
     type: "warning"
   }).then(() => {
-    axios.delete(`/api/setup/delete/${currentSettings.value?.applicationName}`).then(() => {
-      router.push({name: 'index'})
+    axios.delete(`/api/setup/delete/${currentSettings.value?.applicationName}`).then(async () => {
+      await router.push({name: 'index'})
       emit('reloadSettings')
-    })
+    }).catch((error) => console.error(error))
   }).catch((e) => {
     if (e !== MESSAGE.PROMISE_USER_CANCELLED) {
       throw new Error(e)
@@ -72,12 +74,13 @@ function deleteApp() {
   });
 }
 
-function updateApp() {
-  if(currentSettings.value && settingsStore.currentAppSettings){
-    updateSettings(currentSettings.value, settingsStore.currentAppSettings.applicationName)
+async function updateApp() {
+  if (currentSettings.value && settingsStore.currentAppSettings) {
+    await updateSettings(currentSettings.value, settingsStore.currentAppSettings.applicationName)
     emit('reloadSettings')
   }
 }
+
 const rules = computed(() => {
   const alpha = helpers.withMessage("Only lowercase letters without spaces are allowed", (v: string) => {
     return v === '' || /^[a-z]+$/.test(v)
@@ -98,15 +101,15 @@ const form = reactive({
   applicationName: currentSettings.value?.applicationName ?? '',
 })
 
-watch(form, ()=>{
-  if(currentSettings.value){
+watch(form, () => {
+  if (currentSettings.value) {
     currentSettings.value.title = form.title
     currentSettings.value.applicationName = form.applicationName
   }
 })
 
-watch(currentSettings, ()=>{
-  if(currentSettings.value){
+watch(currentSettings, () => {
+  if (currentSettings.value) {
     form.title = currentSettings.value.title
     form.applicationName = currentSettings.value.applicationName
   }
@@ -127,14 +130,14 @@ const v$ = useVuelidate(rules, form)
     <v-row>
       <v-col v-for="app in settings" :key="app.applicationName">
         <v-card
-          height="100"
           :title="app.applicationName"
-          color="primary"
           :to="{name: 'app', params: {appId: app.id}}"
+          color="primary"
+          height="100"
         />
       </v-col>
       <v-col>
-        <v-card height="100" color="grey" :to="{name: 'newApp'}">
+        <v-card :to="{name: 'newApp'}" color="grey" height="100">
           <v-card-title>
             New App
           </v-card-title>
@@ -150,7 +153,7 @@ const v$ = useVuelidate(rules, form)
         </h2>
 
         <div v-for="app in settings" :key="app.id">
-          <router-link class="pic-button--text" :to="{name: 'app', params: {appId: app.id}}">
+          <router-link :to="{name: 'app', params: {appId: app.id}}" class="pic-button--text">
             {{ app.applicationName }}
           </router-link>
         </div>
@@ -178,25 +181,25 @@ const v$ = useVuelidate(rules, form)
           <v-select
             v-model="settingsStore.currentStyleSet"
             :items="settingsStore.allStyleSets"
-            label="Style Set"
             item-title="setName"
             item-value="id"
+            label="Style Set"
           />
 
           <v-checkbox
             v-model="currentSettings.devMode"
-            type="checkbox"
             label="Dev mode"
+            type="checkbox"
           />
           <div class="pic-flex pic-between">
             <v-btn
-              color="primary"
               :disabled="v$.$invalid"
+              color="primary"
               @click="updateApp()"
             >
               Update
             </v-btn>
-            <v-btn variant="text" class="pic-button--text" @click="deleteApp">
+            <v-btn class="pic-button--text" variant="text" @click="deleteApp">
               Delete
             </v-btn>
           </div>

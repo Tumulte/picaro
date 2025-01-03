@@ -33,9 +33,9 @@ if (process.env.NODE_ENV === 'development') {
       .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
       .then((result) => {
         dataStore.currentModelData = result.data
-      })
+      }).catch((error) => console.log(error))
 } else {
-  getBuiltData()
+  getBuiltData().catch((error) => console.log(error))
 }
 
 

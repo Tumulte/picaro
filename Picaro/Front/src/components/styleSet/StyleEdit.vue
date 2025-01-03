@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import ColorEdit from "@components/styleSet/ColorEdit.vue";
 import {nanoid} from "nanoid";
 import {useRoute, useRouter} from "vue-router";
 import {useSettingsStore} from "@stores/settings";
-import {computed, ref, watch} from "vue";
+import {watch} from "vue";
 import {StyleSet} from "@types";
 import FontEdit from "@components/styleSet/FontEdit.vue";
 import {generateCSS} from "@utils/cssGenerator";
@@ -23,7 +23,7 @@ watch(() => route.params.styleId, (styleId) => {
   }
 }, {immediate: true})
 
-function createNewStyle() {
+async function createNewStyle() {
   const newStyleId = nanoid(8);
   const newStyle = {
     dominant: "#04729b",
@@ -111,16 +111,16 @@ function createNewStyle() {
   } as StyleSet
   settingsStore.allStyleSets.push(newStyle);
   settingsStore.currentStyleSet = newStyle
-  router.replace({params: {styleId: ""}});
+  await router.replace({params: {styleId: ""}});
 
   refreshLiveStyle()
 }
 
-function setStyle(styleId: string) {
+async function setStyle(styleId: string) {
   const style = settingsStore.allStyleSets.find((styleSet) => styleSet.id === styleId);
   if (!style) return
   settingsStore.currentStyleSet = style
-  router.push({params: {appId: route.params.appId, styleId: style.id}});
+  await router.push({params: {appId: route.params.appId, styleId: style.id}});
 }
 
 function refreshLiveStyle() {
@@ -135,9 +135,9 @@ async function save() {
   const styleSet = settingsStore.currentStyleSet as StyleSet
   const generatedCSS = refreshLiveStyle()
   if (route.params.styleId) {
-    updateStyleSet({styleSet, generatedCSS})
+    await updateStyleSet({styleSet, generatedCSS})
   } else {
-    router.push({params: {appId: route.params.appId, styleId: styleSet.id}});
+    await router.push({params: {appId: route.params.appId, styleId: styleSet.id}});
     const {data} = await createStyleSet({styleSet, generatedCSS})
     settingsStore.currentStyleSet = data
   }
@@ -152,9 +152,9 @@ async function save() {
         <v-select
           v-if="settingsStore.allStyleSets.length > 0"
           :items="settingsStore.allStyleSets"
-          label="Select style"
           item-title="setName"
           item-value="id"
+          label="Select style"
           @update:modelValue="setStyle"
         />
         <v-btn v-if="!settingsStore.currentStyleSet" color="primary" @click="createNewStyle">

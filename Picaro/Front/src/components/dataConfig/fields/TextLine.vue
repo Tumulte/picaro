@@ -5,7 +5,7 @@
   </label>
 </template>
 <script lang="ts" setup>
-import {defineProps, ref, computed, watch, defineEmits} from "vue";
+import {computed, defineEmits, defineProps, ref, watch} from "vue";
 import {useVuelidate} from "@vuelidate/core";
 import {helpers} from "@vuelidate/validators";
 
@@ -65,15 +65,6 @@ watch(() => state.value.text, async () => {
 
 if (props.isEdit) {
   state.value.text = props.modelContent.content;
-}
-
-function saveEdit() {
-  emit("saveEdit", formattedData.value);
-  emit("endEdit");
-}
-
-function cancelEdit() {
-  emit("endEdit");
 }
 
 

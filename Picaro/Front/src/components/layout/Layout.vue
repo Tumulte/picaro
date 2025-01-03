@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Settings} from "@types";
 import {computed} from "vue";
 import List from "@components/display/DisplayList.vue";
@@ -18,15 +18,16 @@ const selectedLayout = computed(() => {
 <template>
   <v-row v-for="(layoutLine, index) in selectedLayout" :key="index" class="rf-layout--container pic-row-container">
     <v-col
-      v-for="(module, columnIndex) in layoutLine"
-      class="pic-layout--module"
+      v-for="module in layoutLine"
+      :key="module.id"
       :cols="module.cols"
+      class="pic-layout--module"
     >
       <component
         :is="module.type ? componentMap[module.type] : 'div'"
         :key="index"
-        :module-params="module"
         :current-app="currentApp"
+        :module-params="module"
       />
     </v-col>
   </v-row>

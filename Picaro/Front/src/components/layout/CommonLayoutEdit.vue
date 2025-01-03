@@ -44,15 +44,15 @@ function deleteColumn(line: number, column: number) {
     if (layoutCommonCollection.value[line].length === 0) {
       layoutCommonCollection.value.splice(line, 1)
     }
-  })
+  }).catch((error) => console.error(error))
 }
 
 function changeModule(event, index, subIndex) {
   layoutCommonCollection.value[index][subIndex] = {type: event};
 }
 
-function saveLayout() {
-  updateSettings(settingsStore.currentAppSettings)
+async function saveLayout() {
+  await updateSettings(settingsStore.currentAppSettings)
 }
 
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import ModelForm from "./ModelForm.vue"
-import {defineProps, defineEmits, PropType, ref} from "vue";
+import {defineEmits, defineProps, PropType, ref} from "vue";
 import {Model, ModelState, Settings} from "@types";
 import DisplayList from "@components/display/DisplayList.vue";
 import FilterCategories from "@components/filters/FilterCategories.vue";
@@ -31,8 +31,8 @@ const props = defineProps({
   modelCollection: {type: Array as PropType<Model[]>, required: true},
 })
 
-function editItem(item: string) {
-  router.push({params: {contentId: item}})
+async function editItem(item: string) {
+  await router.push({params: {contentId: item}})
   newCategory.value = ''
 }
 
@@ -51,11 +51,11 @@ function deleteCategory(index: number) {
     type: "warning"
   }).then(() => {
     settingsStore.currentAppSettings?.categories.splice(index, 1)
-  })
+  }).catch((error) => console.error(error))
 }
 
-function saveCategory() {
-  updateSettings(settingsStore.currentAppSettings as Settings)
+async function saveCategory() {
+  await updateSettings(settingsStore.currentAppSettings as Settings)
   editCategories.value = false
 }
 
@@ -63,13 +63,13 @@ function saveCategory() {
 <template>
   <v-row>
     <v-col :cols="3">
-      <v-btn v-if="!editCategories" variant="text" color="secondary" @click="editCategories = !editCategories">
+      <v-btn v-if="!editCategories" color="secondary" variant="text" @click="editCategories = !editCategories">
         Edit categories
       </v-btn>
       <v-btn
         v-else
-        variant="text"
         color="secondary"
+        variant="text"
         @click="cancelEdit()"
       >
         Cancel
@@ -123,18 +123,18 @@ function saveCategory() {
           New content :
         </div>
         <ModelForm
-          :current-edit-model="currentEditModel"
           :categories="categories"
+          :current-edit-model="currentEditModel"
         />
         <div class="v-label mt-4">
           Edit existing content :
         </div>
         <display-list
-          class="pic-display-edit"
-          :display-all="true"
           :categories="categories"
-          :module-params="{model: currentEditModel.id}"
           :current-app="settingsStore.currentAppSettings"
+          :display-all="true"
+          :module-params="{model: currentEditModel.id}"
+          class="pic-display-edit"
           @clickItem="editItem($event)"
         />
       </template>

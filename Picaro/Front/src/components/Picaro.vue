@@ -6,7 +6,7 @@ import Alert from "./utils/alertModal.vue";
 import axios, {AxiosResponse} from "axios";
 import {useSettingsStore} from '@stores/settings'
 
-(() => import('../style.pcss'))()
+import('../style.pcss').catch((error) => console.error(error))
 
 const route = useRoute()
 const router = useRouter()
@@ -19,9 +19,9 @@ const selected = computed(() => {
   }
 })
 
-function selectApp(event: string | string[]) {
+async function selectApp(event: string | string[]) {
   if (event !== 'none') {
-    router.push({name: route.name || 'index', params: {appId: event}})
+    await router.push({name: route.name || 'index', params: {appId: event}})
   }
 }
 
@@ -30,6 +30,8 @@ function reloadSettings() {
     axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
       settingsStore.allSettings = res.data.allSettings
       settingsStore.allStyleSets = res.data.allStyleSets
+    }).catch((error) => {
+      console.error(error)
     })
   }
 }

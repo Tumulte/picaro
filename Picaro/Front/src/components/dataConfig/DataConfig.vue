@@ -19,17 +19,13 @@ const modelFormState = ref<ModelState>("noModel");
 const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
 const imageDrawer = ref(false);
-const image = ref<File[]>();
+const imageFile = ref<File[]>();
 const allImages = ref<string[]>([])
-
-const thumb = computed<string[]>(() => {
-  return allImages.value.filter((image) => image.match(/-s./))
-})
 
 function fetchImages() {
   axios.get('/api/setup/allimages').then((res) => {
     allImages.value = res.data
-  })
+  }).catch((error) => console.error(error))
 }
 
 fetchImages()
@@ -49,9 +45,9 @@ const modelNameIsUnique = computed(() => {
 })
 
 
-function selectModel(model: Model) {
+async function selectModel(model: Model) {
   if (settingsStore.currentAppSettings) {
-    router.push({path: `/admin/data/${settingsStore.currentAppSettings.id}/${model.id}`})
+    await router.push({path: `/admin/data/${settingsStore.currentAppSettings.id}/${model.id}`})
   } else {
     utilsStore.addAlert({
       text: "Please select an app first",
@@ -74,7 +70,7 @@ function uploadImage() {
         text: "Image uploaded",
         type: "success"
       });
-    });
+    }).catch((error) => console.error(error));
   }
 }
 
@@ -94,12 +90,12 @@ function createNewModel() {
 
 }
 
-function cancelEditModel() {
+async function cancelEditModel() {
   modelFormState.value = 'noModel';
   currentEditModel.value = undefined;
   modelNameInput.value = '';
   if (settingsStore.currentAppSettings) {
-    router.push({path: `/data/${settingsStore.currentAppSettings.id}`})
+    await router.push({path: `/data/${settingsStore.currentAppSettings.id}`})
   } else {
     utilsStore.addAlert({
       text: "Please select an app first",
@@ -116,8 +112,8 @@ function modelFromRoute() {
   }
 }
 
-function newModelForm() {
-  router.replace({name: 'model', params: {appId: route.params.appId, modelId: 'newModel'}});
+async function newModelForm() {
+  await router.replace({name: 'model', params: {appId: route.params.appId, modelId: 'newModel'}});
   modelFormState.value = 'awaitingName';
 }
 
@@ -158,10 +154,10 @@ function selectImage(path: string) {
     </aside>
     <main class="pic-main pic-container">
       <v-tabs v-if="modelFormState !== 'noModel' && modelFormState !== 'awaitingName'">
-        <v-tab :to="`/admin/data/${$route.params.appId}/${$route.params.modelId}/`">
+        <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/`">
           Edit Model
         </v-tab>
-        <v-tab :to="`/admin/data/${$route.params.appId}/${$route.params.modelId}/content`">
+        <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/content`">
           Edit content
         </v-tab>
       </v-tabs>
@@ -195,7 +191,7 @@ function selectImage(path: string) {
       <div class="pic-container">
         <v-form>
           <v-file-input
-            v-model="image"
+            v-model="imageFile"
             accept="image/*"
             label="Image"
           />

@@ -38,7 +38,7 @@ async function addItem() {
   currentAddedItem.value = ''
 }
 
-async function addSection() {
+function addSection() {
   if (!settingsStore.currentAppSettings?.categories) settingsStore.currentAppSettings.categories = []
   settingsStore.currentAppSettings.categories.push({label: currentAddedItem.value, id: "section"})
   currentAddedItem.value = ''
@@ -52,7 +52,7 @@ function deleteCategory(index, category) {
     type: "warning"
   }).then(() => {
     availableCategories.value.splice(index, 1)
-  })
+  }).catch((error) => console.error(error))
 }
 
 </script>

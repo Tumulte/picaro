@@ -1,11 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, ref} from "vue";
-import {useSettingsStore} from "@stores/settings";
 import {googleKey} from "@utils/const";
 import axios from "axios";
 import FontSelectForm from "@components/styleSet/FontSelectForm.vue";
-
-const settingsStore = useSettingsStore()
 
 const emit = defineEmits(['reloadSettings'])
 
@@ -14,11 +11,11 @@ const googleFonts = ref([])
 
 axios.get('/api/localfonts').then((response) => {
   localFonts.value = response.data
-})
+}).catch((error) => console.error(error))
 
 axios.get(`https://www.googleapis.com/webfonts/v1/webfonts?key=${googleKey}`).then((response) => {
   googleFonts.value = response.data.items
-})
+}).catch((error) => console.error(error))
 
 const getGoogleFontType = computed(() => {
   return googleFonts.value.reduce((acc: string[], font: { category: string }) => {
@@ -44,10 +41,10 @@ const fontType = ['Title', 'Main', 'Alt']
     <v-col cols="8">
       <FontSelectForm
         v-if="localFonts.length > 0 && googleFonts.length > 0"
-        :type="type"
         :get-google-font-type="getGoogleFontType"
-        :local-fonts="localFonts"
         :google-fonts="googleFonts"
+        :local-fonts="localFonts"
+        :type="type"
         @reload-settings="emit('reloadSettings')"
       />
     </v-col>

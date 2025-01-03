@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {updateSettings} from "@components/utils/api";
 import {computed, PropType, ref} from "vue";
 import {FieldParams, Model, ModelState} from "@types";
@@ -39,7 +39,7 @@ const currentModelIsSaved = computed(() => {
   return props.modelFormState !== 'noModel' && props.modelCollection?.some(item => item.id === props.currentEditModel?.id)
 })
 
-async function abandonEdition() {
+function abandonEdition() {
   if (currentEditModelName.value) {
     utilsStore.awaitConfirmation({
       text:
@@ -93,7 +93,7 @@ function deleteModel() {
           type: "success"
         });
         emit('cancelEditModel')
-      });
+      }).catch((error) => console.error(error));
     }
   }).catch((e) => {
     if (e !== MESSAGE.PROMISE_USER_CANCELLED) {
@@ -103,7 +103,7 @@ function deleteModel() {
 
 }
 
-function saveModel() {
+async function saveModel() {
   if (!settingsStore.currentAppSettings) {
     utilsStore.addAlert({
       text: "No app selected",
@@ -117,7 +117,7 @@ function saveModel() {
       settingsStore.currentAppSettings.modelCollection.push(currentModelClone.value)
     }
 
-    updateSettings(settingsStore.currentAppSettings)
+    await updateSettings(settingsStore.currentAppSettings)
     emit('updateModelFormState', 'modelCreated')
   }
 }
@@ -153,14 +153,14 @@ function saveEditedField(field: FieldParams, index: number) {
       <template #item="{element,index}">
         <div class="pic-model--field">
           <ModelField
+            :current-edit-field="currentEditField"
+            :existing-field-data="element"
             :model="currentEditModel"
             :model-form-state="props.modelFormState"
-            :existing-field-data="element"
-            :current-edit-field="currentEditField"
-            @cancel-field="emit('updateModelFormState', 'modelCreated')"
-            @updateEditField="emit('updateModelFormState', 'editingField'); currentEditField = $event"
             @deleteField="deleteField(index)"
+            @updateEditField="emit('updateModelFormState', 'editingField'); currentEditField = $event"
             @updateEditedFieldData="saveEditedField($event,index)"
+            @cancel-field="emit('updateModelFormState', 'modelCreated')"
           />
         </div>
       </template>
@@ -170,13 +170,13 @@ function saveEditedField(field: FieldParams, index: number) {
       :is-new="true"
       :model="currentEditModel"
       :model-form-state="props.modelFormState"
-      @cancel-field="emit('updateModelFormState', 'modelCreated')"
       @addFieldData="addField"
+      @cancel-field="emit('updateModelFormState', 'modelCreated')"
     />
     <v-btn
       v-if="props.modelFormState === 'modelCreated'"
-      data-test="add-new-field-button"
       class="pic-add-new-field-button"
+      data-test="add-new-field-button"
       @click="emit('updateModelFormState', 'addingField')"
     >
       Add Field

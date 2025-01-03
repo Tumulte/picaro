@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Editor, EditorContent} from "@tiptap/vue-3";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 
 import StarterKit from "@tiptap/starter-kit";
-import {ref, onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {FieldContent, FieldParams} from "@types";
 import {useSettingsStore} from "@stores/settings";
 
@@ -21,8 +21,7 @@ const emit = defineEmits<{
   (emit: 'endEdit'): void
 }>()
 
-const editor = ref<any | null>(null)
-const temporaryContent = ref<string | null>(null)
+const editor = ref<typeof Editor | null>(null)
 const selectedImg = ref<string | null>(null)
 
 const settingsStore = useSettingsStore()
@@ -42,7 +41,7 @@ onMounted(() => {
           updateModelData(content);
         }
       });
-      editor.value.on("selectionUpdate", ({editor}: any) => {
+      editor.value.on("selectionUpdate", ({editor}) => {
         const src = editor.state.selection.node?.attrs?.src;
         if (src) {
           selectedImg.value = src.split("/").at(-1);
@@ -54,12 +53,6 @@ onMounted(() => {
 
     }
 )
-
-
-async function save() {
-  emit("saveEdit", temporaryContent.value);
-  emit("endEdit");
-}
 
 function setUrl() {
   const previousUrl = editor.value.getAttributes("link").href;
@@ -85,17 +78,13 @@ function setUrl() {
       .run();
 }
 
-async function cancel() {
-  emit("endEdit");
-}
-
 function updateModelData(content: FieldContent) {
   emit("updateData", [props.fieldParams.id, content]);
 }
 
 function addImage() {
-  if(settingsStore.rteImage) {
-    editor.value.commands.setImage({ src: `/api/uploads/${settingsStore.rteImage}` })
+  if (settingsStore.rteImage) {
+    editor.value.commands.setImage({src: `/api/uploads/${settingsStore.rteImage}`})
   }
 }
 
@@ -170,7 +159,7 @@ function addImage() {
         <v-icon>mdi-format-align-right</v-icon>
       </span>
     </div>
-    <editor-content class="editor-textarea" :editor="editor" />
+    <editor-content :editor="editor" class="editor-textarea" />
   </div>
 </template>
 <style scoped>

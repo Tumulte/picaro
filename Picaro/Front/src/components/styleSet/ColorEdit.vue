@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ColorParameters, StyleSet} from "@types";
 import {ColorHelper} from "@libs/colorHelper";
 import {GenerateColorSet} from "@libs/colorGenerator";
@@ -137,7 +137,7 @@ function removeColor(index: number | string) {
   colorCollection.value = colorSet.colorCollection
 }
 
-async function regenerateColorSet() {
+function regenerateColorSet() {
   colorSet.generate(
       styleSet.colorParameterCollection,
       styleSet.colorGeneratorParams
@@ -181,71 +181,71 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           <div class="pic-color-control--container">
             <v-slider
               v-model="styleSet.colorGeneratorParams.light.variation"
-              label="Light variation"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="0"
-              max="10"
               density="compact"
               hint="Changes the light difference of the first and last sub color"
+              label="Light variation"
+              max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.light.curve"
-              label="Light curve"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
               hint="Math curve fallowed by the light increase (first one is linear)"
-              min="0"
+              label="Light curve"
               max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.light.move"
+              hint="Shift all color's light : left is darker, right is lighter"
               label="Light move"
+              max="8"
+              min="-8"
               show-ticks="always"
               step="1"
               tick-size="3"
-              min="-8"
-              max="8"
-              hint="Shift all color's light : left is darker, right is lighter"
               @end="generateColors()"
             />
           </div>
           <div class="pic-color-control--container">
             <v-slider
               v-model="styleSet.colorGeneratorParams.saturation.variation"
-              label="Saturation variation"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="0"
               hint="Changes the saturation difference of the first and last"
+              label="Saturation variation"
               max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.saturation.curve"
-              label="Saturation curve"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="0"
-              max="10"
               hint="Math curve fallowed by the saturation increase (first one is linear)"
+              label="Saturation curve"
+              max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.saturation.move"
-              label="Saturation move"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="-8"
               hint="Shift all color's saturation : left is more saturated, right is less saturated"
+              label="Saturation move"
               max="8"
+              min="-8"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
           </div>
@@ -254,38 +254,38 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           <div class="pic-color-control--container">
             <v-slider
               v-model="styleSet.colorGeneratorParams.hue.variation"
-              label="Hue variation"
-              show-ticks="always"
-              tick-size="3"
               density="compact"
-              step="1"
-              min="0"
               hint="Add hue variation based on color theory : darker gets warmer"
+              label="Hue variation"
               max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.hue.curve"
-              label="hue curve"
-              step="1"
               density="compact"
-              show-ticks="always"
               hint="Math curve fallowed by the hue shift (first one is linear)"
-              tick-size="3"
-              min="0"
+              label="hue curve"
               max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.hue.move"
-              label="hue move"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="-8"
-              max="8"
-              hint="Move the hue in the color wheel"
               density="compact"
+              hint="Move the hue in the color wheel"
+              label="hue move"
+              max="8"
+              min="-8"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
           </div>
@@ -293,31 +293,31 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
             <v-slider
               v-model="styleSet.colorGeneratorParams.text.variation"
               label="Text variation"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="0"
               max="10"
+              min="0"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.text.curve"
               label="Text curve"
+              max="10"
+              min="0"
               show-ticks="always"
               step="1"
               tick-size="3"
-              min="0"
-              max="10"
               @end="generateColors()"
             />
             <v-slider
               v-model="styleSet.colorGeneratorParams.text.move"
               label="Text move"
-              show-ticks="always"
-              tick-size="3"
-              step="1"
-              min="-8"
               max="8"
+              min="-8"
+              show-ticks="always"
+              step="1"
+              tick-size="3"
               @end="generateColors()"
             />
           </div>
@@ -327,13 +327,13 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
         <v-col cols="9">
           <v-slider
             v-model="styleSet.colorGeneratorParams.count"
-            label="Number of sub colors"
-            show-ticks="always"
-            tick-size="3"
-            min="3"
-            max="10"
-            step="1"
             density="compact"
+            label="Number of sub colors"
+            max="10"
+            min="3"
+            show-ticks="always"
+            step="1"
+            tick-size="3"
             @end="generateColors()"
           />
         </v-col>
@@ -349,38 +349,38 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
     <v-col cols="6">
       <!-- Dominant color -->
       <v-row>
-        <v-col cols="2" :style="bgColor(dominantColorParams)" />
+        <v-col :style="bgColor(dominantColorParams)" cols="2" />
         <v-col cols="10">
           <div data-jest="dominant-preview">
             <div class="mb-0">
               <v-slider
                 ref="dominantHue"
                 v-model="dominantColorParams.hue"
-                min="0"
-                max="360"
-                step="1"
-                label="Hue"
-                thumb-label="always"
                 :thumb-color="getStringColor(dominantColorParams)"
+                label="Hue"
+                max="360"
+                min="0"
+                step="1"
+                thumb-label="always"
                 @update:modelValue="updateColor()"
               />
               <v-slider
                 ref="dominantLight"
                 v-model="dominantColorParams.light"
-                min="0"
-                step="1"
                 label="light"
                 max="100"
+                min="0"
+                step="1"
                 thumb-label="always"
                 @update:modelValue="updateColor()"
               />
               <v-slider
                 ref="dominantSat"
                 v-model="dominantColorParams.saturation"
-                min="0"
-                step="1"
-
                 max="100"
+                min="0"
+
+                step="1"
                 thumb-label="always"
                 @update:modelValue="updateColor()"
               />
@@ -390,9 +390,9 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
               <v-card
                 v-for="(subColor, index) in colorSet.colorCollection.dominantSubCollection"
                 :key="index"
-                class="pa-3"
                 :class="{'__main':isMainColor(bgColor(subColor), bgColor(dominantColorParams)), '__is-hidden': colorIsHidden('dominant', index)}"
                 :style="bgColor(subColor, index, 'dominant')"
+                class="pa-3"
                 @click="toggleColor('dominant',index)"
               >
                 text
@@ -408,12 +408,12 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
         :key="color.hex"
         class="sub-color-parameters"
       >
-        <v-col cols="2" :style="bgColor(color)">
+        <v-col :style="bgColor(color)" cols="2">
           <v-btn
-            class="center"
-            text="text"
-            density="compact"
             :data-jest="`remove-color-${index}`"
+            class="center"
+            density="compact"
+            text="text"
             @click="removeColor(index)"
           >
             Remove
@@ -425,21 +425,21 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
             <v-slider
               ref="subHue"
               :model-value="color.hue"
-              min="0"
-              max="360"
-              step="1"
-              label="Hue"
-              thumb-label="always"
               :thumb-color="getStringColor(color)"
+              label="Hue"
+              max="360"
+              min="0"
+              step="1"
+              thumb-label="always"
               @end="updateCombinationColor('hue', index, $event)"
             />
             <v-slider
               :model-value="color.light"
               label="Light"
-              thumb-label="always"
-              step="1"
-              min="0"
               max="100"
+              min="0"
+              step="1"
+              thumb-label="always"
               @update:modelValue="updateCombinationColor('light', index, $event)"
             />
             <v-btn v-if="color.light !== dominantColorParams.light" @click.stop="resetSetting('light', index)">
@@ -448,9 +448,9 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
             <v-slider
               :model-value="color.saturation"
               label="Sat."
-              thumb-label="always"
-              min="0"
               max="100"
+              min="0"
+              thumb-label="always"
               @update:modelValue="updateCombinationColor('saturation', index, $event)"
             />
           </div>
@@ -458,10 +458,10 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
             <v-card
               v-for="(subColor, subIndex) in color.subCombination"
               :key="subColor.hex"
-              class="pa-3"
-              :style="bgColor(subColor, index, 'sub', subIndex)"
-              data-jest="sub-combination-square"
               :class="{'__is-hidden': colorIsHidden('sub',subIndex,index)}"
+              :style="bgColor(subColor, index, 'sub', subIndex)"
+              class="pa-3"
+              data-jest="sub-combination-square"
               @click="toggleColor('sub', subIndex, index)"
             >
               text
@@ -471,7 +471,7 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
       </v-row>
       <div class="color-panel--sample">
         <div v-for="(subColor, index) in colorCollection.graySubCollection" :key="index">
-          <v-card class="pa-3" :style="bgColor(subColor)" />
+          <v-card :style="bgColor(subColor)" class="pa-3" />
         </div>
       </div>
       <div class="color-panel--sample">
@@ -480,7 +480,7 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           :key="index"
           class="sub-combination"
         >
-          <v-card class="pa-3" :style="bgColor(subColor)" />
+          <v-card :style="bgColor(subColor)" class="pa-3" />
         </div>
       </div>
       <div class="color-panel--sample">
@@ -489,7 +489,7 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           :key="index"
           class="sub-combination"
         >
-          <v-card class="pa-3" :style="bgColor(subColor)" />
+          <v-card :style="bgColor(subColor)" class="pa-3" />
         </div>
       </div>
       <div class="color-panel--sample">
@@ -498,7 +498,7 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           :key="index"
           class="sub-combination"
         >
-          <v-card class="pa-3" :style="bgColor(subColor)" />
+          <v-card :style="bgColor(subColor)" class="pa-3" />
         </div>
       </div>
       <div class="color-panel--sample">
@@ -507,17 +507,17 @@ function toggleColor(location: 'dominant' | 'sub', index: number, locationIndex?
           :key="index"
           class="sub-combination"
         >
-          <v-card class="pa-3" :style="bgColor(subColor)" />
+          <v-card :style="bgColor(subColor)" class="pa-3" />
         </div>
       </div>
 
-      <v-btn class="_color-button" text="text" data-jest="addColor" @click="addColor">
+      <v-btn class="_color-button" data-jest="addColor" text="text" @click="addColor">
         Add Color
       </v-btn>
     </v-col>
   </v-row>
 </template>
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
 .color-panel--sample :deep(.v-card),
 .color-panel--sample > div {
   display: inline-block;

@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useSettingsStore} from "@stores/settings";
 import {StyleSet} from "@types";
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
 
 const settingsStore = useSettingsStore()
 
@@ -35,8 +35,9 @@ const ratio = computed(() => {
         <template v-for="(data, tag) in styleSet.ratioCollection">
           <div
             v-if="tag !== 'html'"
-            class="pic-ratio--text-example"
+            :key="tag"
             :class="{'--selected-tag': tag === selectedTag}"
+            class="pic-ratio--text-example"
             @click="selectTag(tag)"
           >
             <component :is="tag" class="--inner-text-example">
@@ -53,34 +54,34 @@ const ratio = computed(() => {
       <v-col v-if="selectedTag" class="pa-0" cols="4">
         <v-text-field
           v-model="styleSet.ratioCollection[selectedTag]['font-size']"
-          type="number"
-          step="0.1"
           data-jest="ratio-fs"
           label="Font size"
+          step="0.1"
+          type="number"
           @update:modelValue="emit('reloadSettings')"
         />
         <v-text-field
           v-model="styleSet.ratioCollection[selectedTag]['line-height']"
-          type="number"
-          step="0.1"
           data-jest="ratio-lh"
           label="Line height"
+          step="0.1"
+          type="number"
           @update:modelValue="emit('reloadSettings')"
         />
         <v-text-field
           v-model="styleSet.ratioCollection[selectedTag]['margin-bottom']"
-          type="number"
-          step="0.1"
           data-jest="ratio-mb"
           label="Margin bottom"
+          step="0.1"
+          type="number"
           @update:modelValue="emit('reloadSettings')"
         />
         <v-text-field
           v-model="styleSet.ratioCollection[selectedTag]['margin-top']"
-          type="number"
-          step="0.1"
           data-jest="ratio-mt"
           label="Margin top"
+          step="0.1"
+          type="number"
           @update:modelValue="emit('reloadSettings')"
         />
         Ratio header height / base height : {{ ratio }}
@@ -89,17 +90,17 @@ const ratio = computed(() => {
     <v-row>
       <v-text-field
         v-model="styleSet.ratioCollection.html['font-size']"
-        type="number"
-        label="font-size"
         data-jest="main-font-size"
+        label="font-size"
+        type="number"
         @update:modelValue="emit('reloadSettings')"
       />
       <v-text-field
         v-model="styleSet.ratioCollection.html['line-height']"
-        type="number"
+        data-jest="main-line-height"
         label="line height"
         step="1"
-        data-jest="main-line-height"
+        type="number"
         @update:modelValue="emit('reloadSettings')"
       />
     </v-row>
