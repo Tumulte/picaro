@@ -20,6 +20,5 @@ picaroSettings.json
 Picaro/Tests/Cypress/screenshots/*
 coverage
 Picaro/Data
-app*
 Picaro/Back/picaro-back.json
 Picaro/Back/uploads
