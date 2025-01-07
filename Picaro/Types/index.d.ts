@@ -127,17 +127,19 @@ export type FieldContent = {
     fieldContent: null | string | RichTextContent[]
     fieldParamsId: string
     contentId: string
+    id: string
 }
 
 export type ModelContent = {
     categories: string[]
     content: FieldContent[]
     modelId: string
+    id: string
 }
 
 export type ModuleParam = {
     model: string
-    categories: string[]
+    categories: Ca[]
     type: string
 }
 

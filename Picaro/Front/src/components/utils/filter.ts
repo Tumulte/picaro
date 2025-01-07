@@ -1,18 +1,15 @@
-import {Filter, FilterCollection, FilterMethod, ModelContent, ModuleParam} from "@types";
+import {FieldContent, Filter, FilterCollection, FilterMethod, ModelContent, ModuleParam} from "@types";
 
-const applyFilterMethod = function (method: FilterMethod, item: string[] | ModelContent[], checkedValue) {
+const applyFilterMethod = function (method: FilterMethod, searchedItem: string | string[] | ModelContent[] | FieldContent[], checkedValue: Filter) {
     if (method === "eq") {
-        return item === checkedValue.value[0];
+        return searchedItem === checkedValue.value[0];
     }
     if (method === "in") {
-        return item.includes(checkedValue.value[0]);
+        return (searchedItem as string[]).includes(checkedValue.value[0]);
     }
-    if (method === "fd" && typeof item !== 'string') { // field
-        return !!item.find(item => item.id === checkedValue.field && item.content.includes(checkedValue.value[0]))
-    }
-
 };
-const checkFilterCollection = function (item: ModelContent, filter: Filter) {
+
+function checkFilterCollection(item: ModelContent, filter: Filter) {
     if (!filter || Object.entries(filter).length === 0) return null;
 
     const itemToCheck = item.content
@@ -22,19 +19,18 @@ const checkFilterCollection = function (item: ModelContent, filter: Filter) {
         return applyFilterMethod(
             filter.method,
             categoriesToCheck,
-            {value: filter.value}
+            {value: filter.value} as Filter
         );
     } else {
-        if (!itemToCheck.find(subItem => subItem.id === filterParameters.field)) {
+        if (!itemToCheck.find(subItem => subItem.id === filter.field)) {
             return false;
         }
     }
     return applyFilterMethod(
-        filterParameters.method,
-        itemToCheck.filter(subItem => subItem.id === filterParameters.field),
-        filterParameters
+        filter.method,
+        itemToCheck.filter(subItem => subItem.id === filter.field),
+        filter
     );
-
 };
 
 export const applyFilter = function (item: ModelContent, filterCollection: FilterCollection, moduleParams: ModuleParam) {
