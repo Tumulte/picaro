@@ -20,24 +20,24 @@ describe("AppDisplay", () => {
     it("should render", () => {
         expect(wrapper.vm.filterRouteToStore(params)).toEqual({
             all: [
-                { method: 'eq', field: 'Field1', value: 'id', type: 'filter' },
-                { method: 'gt', field: 'Field2', value: 'id2', type: 'filter' },
-                { method: 'lt', field: 'Field3', value: 'id3', type: 'categories' }
+                { method: 'eq', field: 'Field1', value: ['id'], type: 'filter' },
+                { method: 'gt', field: 'Field2', value: ['id2'], type: 'filter' },
+                { method: 'lt', field: 'Field3', value: ['id3'], type: 'categories' }
             ],
             modelFilters: [
-                { modelIdCollection: ["model"], method: 'eq', field: 'Field1', value: 'id', type: 'filter' },
+                { modelIdCollection: ["model"], method: 'eq', field: 'Field1', value: ['id'], type: 'filter' },
                 {
                     modelIdCollection: ["model"],
                     method: 'gt',
                     field: 'Field2',
-                    value: 'id2',
+                    value: ['id2'],
                     type: 'filter'
                 },
                 {
                     modelIdCollection: ["model2", "model3"],
                     method: 'lt',
                     field: 'Field3',
-                    value: 'id3',
+                    value: ['id3'],
                     type: 'categories'
                 }
             ]

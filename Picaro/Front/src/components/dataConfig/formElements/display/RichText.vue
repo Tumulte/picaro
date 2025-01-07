@@ -2,7 +2,6 @@
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
-import Video from "../../../../rte/tiptap-video";
 import {FieldContent} from "@types";
 import {ref, watch} from "vue";
 import {generateHTML} from '@tiptap/core'
@@ -21,8 +20,7 @@ watch(() => props.fieldContent, () => {
       [
         StarterKit,
         Image,
-        Link,
-        Video
+        Link
       ],
   )
 }, {immediate: true})
