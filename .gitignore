@@ -6,7 +6,6 @@ npm-debug.log
 .history
 static/*
 ./app*/*
-Picaro/Tests/Cypress/videos/*
 dist/
 Picaro/Dist/*
 Picaro/Views/webpackBundles.pug
@@ -17,7 +16,6 @@ Picaro/Tests/index.html
 Picaro/Tests/jest-results.json
 picaroSettings.json
 
-Picaro/Tests/Cypress/screenshots/*
 coverage
 Picaro/Data
 Picaro/Back/picaro-back.json

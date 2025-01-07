@@ -65,7 +65,6 @@
     "App/Libs/**/*.js",
     "*.d.ts",
     "*.cy.ts",
-    "App/Typings/**/*.ts",
-    "App/**/cypress"
+    "App/Typings/**/*.ts"
   ]
 }

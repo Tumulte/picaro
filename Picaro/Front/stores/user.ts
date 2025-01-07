@@ -75,7 +75,10 @@ export const useUserStore = defineStore('user', () => {
 
 
             return params.map(item => {
-                return `${item.method}${item.field}..${item.value}`
+                if (typeof item.value === 'string') {
+                    item.value = [item.value]
+                }
+                return `${item.method}${item.field}..${item.value.join('**')}`
             }).join('++')
         }).join('~')
 

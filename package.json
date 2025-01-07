@@ -10,7 +10,8 @@
     "dev:front": "pnpm --filter ./Picaro/Front run dev",
     "dev:back": "pnpm --filter ./Picaro/Back run dev:back",
     "build": "node Picaro/Cli/buildData.js && pnpm --filter ./Picaro/FrontStatic run build",
-    "lint": "pnpm --filter ./Picaro/Front run lint"
+    "lint": "pnpm --filter ./Picaro/Front run lint",
+    "typecheck": "pnpm --filter ./Picaro/Front run typecheck"
   },
   "keywords": [],
   "author": "Étienne Rouge",
