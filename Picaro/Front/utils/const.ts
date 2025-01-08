@@ -1,5 +1,3 @@
-import backConfig from '../../Back/picaro-back.json'
-
 export const SELECTOR = {
     ALERT_CONTAINER_ID: "pic-alert-container",
     ALERT_BUTTON_CLASS_NAME: "pic-alert__button"
@@ -19,4 +17,4 @@ export const webSafeFonts = ["Arial",
     "Courier New",
     "Brush Script MT"];
 
-export const googleKey = backConfig.googleKey;
+export const googleKey = ''
