@@ -1,7 +1,11 @@
 export type AvailableModules = "Layout" | "FilterLayout" | "List" | "FilterCategories" | "FilterLink"
 export type Categories = { id: string, label: string }
-export type Layout = { model: string, type: string, categories: Categories[] }
-export type CommonLayout = { type: AvailableModules, cols?: number, model: string }
+export type Layout = {
+    model: string,
+    type: string,
+    categories: Categories[]
+}
+export type CommonLayout = { type: AvailableModules, cols?: string, model?: string }
 export type Filter = { method: FilterMethod, field: string, value: string[], type: string }
 export type ModelFilter = Filter & { modelIdCollection: string[] }
 export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
@@ -32,10 +36,13 @@ export type Settings = {
     categories: { label: string, id: string }[],
     messageTimeOut: number,
     applicationName: string,
-    applicationType: "Picaro" | "Vue" | "Solid" | "React",
     navStructure: [],
-    layoutCollection: { id: string, name: string, layout: Layout[] }[],
-    LayoutLinkCollection: [],
+    layoutCollection: {
+        id: string,
+        name: string,
+        layout: Layout[][]
+    }[],
+    layoutLinkCollection: [],
     defaultLayout: string
     layoutCommonCollection: CommonLayout[][],
     modelCollection: Model[],
@@ -73,13 +80,25 @@ type RatioParams = {
 
 export type FontOrigin = "google" | "local" | "webSafe"
 
-export type FontParams = { font: string, origin: FontOrigin }
+export type FontVariantParams = {
+    src: string
+    style: string
+    weight: number
+}
+
+export type FontStyleParams = {
+    family: string
+    variants?: FontVariantParams[]
+
+}
+
+export type FontParams = { font: FontStyleParams, origin: FontOrigin }
 
 export interface SettingsStore {
-    currentAppSettings: Settings | undefined
+    currentAppSettings?: Settings
     allSettings: Settings[]
     allStyleSets: StyleSet[]
-    currentStyleSet: StyleSet | undefined
+    currentStyleSet?: StyleSet
     rteImage: string
 }
 
@@ -116,10 +135,10 @@ export type FieldParams = {
     name: string,
     regex: string,
     required: boolean,
-    hidden: boolean,
+    hidden?: boolean,
     template: string,
     attributes: string,
-    extraParams: string,
+    extraParams: Record<string, string>,
     type: string
 }
 

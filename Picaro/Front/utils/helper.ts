@@ -11,3 +11,11 @@ export function makeRatio(sizes: RatioParams) {
     const ratio = parseFloat(sizes["line-height"]) + parseFloat(sizes["margin-top"]) + parseFloat(sizes["margin-bottom"]);
     return `${Math.round(ratio * 100) / 100}rem`;
 }
+
+export function setCSSLink(path: string) {
+    const link = document.createElement('link')
+    link.type = 'text/css'
+    link.rel = 'stylesheet'
+    link.href = path
+    document.head.appendChild(link)
+}

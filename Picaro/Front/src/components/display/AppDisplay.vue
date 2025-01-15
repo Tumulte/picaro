@@ -5,6 +5,7 @@ import Layout from "@components/layout/Layout.vue"
 import {RouteParams, useRoute} from "vue-router"
 import {useSettingsStore} from "@stores/settings"
 import {availableModules} from "@utils/modules"
+import {setCSSLink} from "@utils/helper";
 
 const route = useRoute()
 
@@ -18,11 +19,7 @@ const cssPrefix = import.meta.env.VITE_BUILD_MODE !== 'static' ? '/api' : ''
 
 onMounted(() => {
   if (!currentApp.value?.styleSet) return;
-  const link = document.createElement('link')
-  link.type = 'text/css'
-  link.rel = 'stylesheet'
-  link.href = `${cssPrefix}/css/baseStyle-${currentApp.value.styleSet}.css`
-  document.head.appendChild(link)
+  setCSSLink(`${cssPrefix}/css/baseStyle-${currentApp.value.styleSet}.css`)
 })
 
 const appID = computed<string>(() => {
@@ -30,9 +27,7 @@ const appID = computed<string>(() => {
 })
 
 watch(appID, () => {
-
   if (appID.value) {
-
     settingsStore.currentAppSettings = settingsStore.allSettings.find((app: Settings) => app.id === appID.value)
   }
 }, {immediate: true})

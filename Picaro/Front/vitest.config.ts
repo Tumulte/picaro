@@ -17,7 +17,8 @@ export default defineConfig({
         alias: [
             {find: "@components", replacement: resolve(__dirname, "./src/components")},
             {find: "@stores", replacement: resolve(__dirname, "./stores")},
-            {find: "@utils", replacement: resolve(__dirname, "./utils")}
+            {find: "@utils", replacement: resolve(__dirname, "./utils")},
+            {find: "/images", replacement: resolve(__dirname, "../../static/images")}
         ]
     },
     plugins: [vue(), tsconfigPaths()]

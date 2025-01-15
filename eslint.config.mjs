@@ -61,6 +61,11 @@ export default tseslint.config(
             "@typescript-eslint/no-empty-function": "off",
             "vue/multi-word-component-names": "off",
             "vue/no-v-html": "off",
+            "object-curly-newline": [
+                "error",
+                "always"
+            ],
+            "quote-props": "as-needed",
             "vue/max-attributes-per-line": [
                 "error",
                 {

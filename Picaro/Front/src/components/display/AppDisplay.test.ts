@@ -3,14 +3,20 @@ import AppDisplay from "./AppDisplay.vue";
 import {mount, VueWrapper} from "@vue/test-utils";
 import {createTestingPinia} from "@pinia/testing";
 import {FilterCollection} from "@types";
+import {settingsStoreFixture} from "../../../fixtures/store";
 
 vi.mock('vue-router', () => ({
-    useRoute: () => ({params: ""})
+    useRoute: () => (
+        {params: ""}
+    ),
+    useRouter: vi.fn()
 }));
 
 const wrapper = mount(AppDisplay, {
     global: {
-        plugins: [createTestingPinia()],
+        plugins: [createTestingPinia({
+            initialState: {settings: settingsStoreFixture}
+        })],
     },
 // eslint-disable-next-line
 }) as VueWrapper<any>
@@ -47,7 +53,13 @@ const params = {
 }
 
 describe("AppDisplay", () => {
-    it("should render", () => {
+    it("should get the proper filters from the store", () => {
         expect(wrapper.vm.filterRouteToStore(params)).toEqual(expectedResult)
     })
+
+    it("should display css file", () => {
+        const style = document.querySelector('link')
+        expect(style?.href).toBe("http://localhost:3000/api/css/baseStyle-styleId.css")
+    })
 })
+

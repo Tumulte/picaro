@@ -13,11 +13,7 @@ const router = useRouter()
 
 const settingsStore = useSettingsStore()
 
-const selected = computed(() => {
-  return (name: string) => {
-    return route.name === name
-  }
-})
+const selected = computed(() => route.name);
 
 async function selectApp(event: string | string[]) {
   if (event !== 'none') {
@@ -60,41 +56,40 @@ watch(() => route.params.appId, () => {
         >
           App Config
         </v-tab>
-        <template v-if="settingsStore.allSettings.length > 0 && settingsStore.currentAppSettings">
+        <template v-if="settingsStore.currentAppSettings">
           <v-tab
-            v-if="settingsStore.currentAppSettings"
-            :class="{selected: selected('model')}"
+            :class="{selected: selected === 'model'}"
+            data-test="model-tab"
             to="/admin/data"
             value="data"
           >
             Data
           </v-tab>
           <v-tab
-            v-if="settingsStore.currentAppSettings"
-            :class="{selected: selected('layout')}"
+            :class="{selected: selected === 'layout'}"
             to="/admin/layout"
             value="layout"
           >
             Layout
           </v-tab>
           <v-tab
-            v-if="settingsStore.currentAppSettings"
-            :class="{selected: selected('style')}"
+            :class="{selected: selected === 'style'}"
             to="/admin/style"
             value="style"
           >
             Style
           </v-tab>
-          <v-select
-            :items="settingsStore.allSettings"
-            :model-value="route.params.appId"
-            item-title="applicationName"
-            item-value="id"
-            label="select app"
-            variant="solo-filled"
-            @update:model-value="selectApp"
-          />
         </template>
+        <v-select
+          v-if="settingsStore.allSettings.length > 0"
+          :items="settingsStore.allSettings"
+          :model-value="route.params.appId"
+          item-title="applicationName"
+          item-value="id"
+          label="select app"
+          variant="solo-filled"
+          @update:model-value="selectApp"
+        />
       </v-tabs>
     </nav>
     <div class="pic-main-container">
