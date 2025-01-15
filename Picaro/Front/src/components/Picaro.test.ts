@@ -12,18 +12,10 @@ vi.mock('vue-router', () => ({
         }
     })
 }));
-const wrapper = mount(Picaro, {
-    global: {
-        plugins: [createTestingPinia({
-            initialState: {settings: settingsStoreFixtureNoCurrent}
-        })],
-    },
-// eslint-disable-next-line
-}) as VueWrapper<any>
 
 
 describe("Picaro", () => {
-    it('does not display menu if there is no app', async () => {
+    it('does not display menu if there is no app', () => {
         const wrapper = mount(Picaro, {
             global: {
                 plugins: [createTestingPinia({
@@ -38,7 +30,7 @@ describe("Picaro", () => {
 
     })
 
-    it('does display menu if there is no app', async () => {
+    it('does display menu if there is no app', () => {
         const wrapper = mount(Picaro, {
             global: {
                 plugins: [createTestingPinia({
