@@ -65,7 +65,6 @@ export default tseslint.config(
                 "error",
                 "always"
             ],
-            "quote-props": "as-needed",
             "vue/max-attributes-per-line": [
                 "error",
                 {

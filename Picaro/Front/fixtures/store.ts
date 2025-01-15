@@ -1,4 +1,6 @@
-import {Settings, SettingsStore} from "@types";
+import {
+Settings, SettingsStore
+} from "@types";
 
 export const currentAppSettings: Settings = {
     "id": "hWvJzKOX",
@@ -38,7 +40,8 @@ export const currentAppSettings: Settings = {
             "attributes": "",
             "required": false,
             "regex": "",
-            "extraParams": {}
+            "extraParams": {
+}
         }, {
             "id": "31xDO1",
             "type": "text",
@@ -48,7 +51,8 @@ export const currentAppSettings: Settings = {
             "attributes": "",
             "required": false,
             "regex": "",
-            "extraParams": {}
+            "extraParams": {
+}
         }]
     }],
     "categories": [{
@@ -90,7 +94,8 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                 full: false
             },
             selectorCollection: {
-                html: {}
+                html: {
+}
             },
             "font-size": "16px",
             id: "JU7YEogt",
@@ -221,7 +226,9 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
             messageTimeOut: 10000,
             applicationName: "picaro",
             navStructure: [],
-            filterCollection: {all: [], modelFilters: []},
+            filterCollection: {
+                all: [], modelFilters: []
+            },
             layoutCollection: [{
                 name: "blog",
                 id: "h2fFurQB-2LFRbVHnF-Pk",
@@ -259,7 +266,8 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                     attributes: "",
                     required: false,
                     regex: "",
-                    extraParams: {}
+                    extraParams: {
+}
                 }, {
                     id: "31xDO1",
                     type: "text",
@@ -269,7 +277,8 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                     attributes: "",
                     required: false,
                     regex: "",
-                    extraParams: {}
+                    extraParams: {
+}
                 }]
             }],
             categories: [{

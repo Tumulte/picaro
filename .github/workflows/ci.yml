@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs:
-  install:
+  Picaro:
     runs-on: ubuntu-latest
 
     steps:
