@@ -5,15 +5,17 @@ import LayoutContainer from "@components/layout/LayoutContainer.vue";
 import {RouteRecordRaw} from "vue-router";
 
 export const adminRoutes: RouteRecordRaw[] = [
-    {path: '/login', component: () => import("@components/Login.vue")},
+    {path: '/login', name: 'login', component: () => import("@components/Login.vue")},
     {
         path: '/admin',
+        name: 'adminIndex',
         component: () => import("./components/Picaro.vue"),
         beforeEnter: async (to, from, next) => {
+            if (import.meta.env.IS_TEST) {
+                next()
+            }
             const userStatus = await isUserLoggedIn()
-            console.log('User status:', userStatus)
             if (userStatus) {
-                console.log('User is logged in')
                 next()
             } else {
                 next('/login')

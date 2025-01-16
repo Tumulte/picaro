@@ -28,8 +28,8 @@ const currentSettings = computed(() => {
   return copy(settingsStore.currentAppSettings)
 })
 
-function newAppForm() {
-  appFormState.value = 'newApp'
+async function newAppForm() {
+  await router.push({name: 'newApp'})
   settingsStore.currentAppSettings = undefined
 }
 
@@ -37,11 +37,13 @@ watch(() => settingsStore.currentAppSettings, () => {
   if (settingsStore.currentAppSettings) {
     appFormState.value = 'selectedApp'
   }
-})
+}, {immediate: true})
 
 watch(() => route.name, () => {
   if (route.name === 'newApp') {
     appFormState.value = 'newApp'
+  } else if (route.name === 'app') {
+
   }
 }, {immediate: true})
 
@@ -161,7 +163,7 @@ const v$ = useVuelidate(rules, form)
         </v-btn>
       </aside>
       <main class="pic-container">
-        <template v-if="appFormState === 'selectedApp' && currentSettings ">
+        <template v-if="appFormState === 'selectedApp'">
           <h2 data-test="app-title-selected">
             {{ currentSettings.applicationName }}
           </h2>

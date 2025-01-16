@@ -17,7 +17,9 @@ router.beforeEach((to, from) => {
     const fromId = from.params.appId
     const toId = to.params.appId
 
-    if (fromId && !toId && to.name) {
+    const routeException = ['newApp', 'adminIndex']
+
+    if (fromId && !toId && to.name && !routeException.includes(to.name as string)) {
         const toParams = {...to.params}
         toParams.appId = fromId
         return {name: to.name, params: toParams}

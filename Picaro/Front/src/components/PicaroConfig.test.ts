@@ -2,20 +2,21 @@ import {describe, expect, it, vi} from "vitest"
 import PicaroConfig from "./PicaroConfig.vue";
 import {mount, VueWrapper} from "@vue/test-utils";
 import {createTestingPinia} from "@pinia/testing";
-import {settingsStoreFixture} from "../../fixtures/store";
+import {currentAppSettings, settingsStoreFixtureNoCurrent} from "../../fixtures/store";
+import {createRouter, createWebHistory} from "vue-router";
+import {adminRoutes} from "../adminRoutes";
 
-vi.mock('vue-router', () => ({
-    useRouter: vi.fn(),
-    useRoute: () => ({
-        params: {}
-    })
-}));
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: adminRoutes
+})
 
 const wrapper = mount(PicaroConfig, {
     global: {
         plugins: [createTestingPinia({
-            initialState: {settings: settingsStoreFixture}
-        })],
+            initialState: {settings: settingsStoreFixtureNoCurrent}
+        }), router],
     },
 // eslint-disable-next-line
 }) as VueWrapper<any>
@@ -27,7 +28,7 @@ describe("PicaroConfig", () => {
         const buttons = wrapper.findAll('[data-test="app-button"]')
         const selectedAppTitle = wrapper.find('[data-test="app-title-selected"]')
         const newAppInput = wrapper.find('[data-test="new-app-input"]')
-        
+
         expect(buttons.length).toBe(2)
         expect(selectedAppTitle.exists()).toBe(false)
         expect(newAppInput.exists()).toBe(false)
@@ -35,9 +36,15 @@ describe("PicaroConfig", () => {
     })
 
     it('displays the new app input when new app is selected', async () => {
-        wrapper.vm.appFormState = 'newApp'
 
-        await wrapper.vm.$nextTick()
+        await router.push({name: 'newApp'})
+
+        await router.isReady()
+
+
+        expect(wrapper.vm.route.name).toBe('newApp')
+
+        await vi.waitUntil(() => wrapper.vm.appFormState === 'newApp')
 
         const buttons = wrapper.findAll('[data-test="app-button"]')
         const selectedAppTitle = wrapper.find('[data-test="app-title-selected"]')
@@ -47,10 +54,11 @@ describe("PicaroConfig", () => {
         expect(buttons.length).toBe(0)
         expect(selectedAppTitle.exists()).toBe(false)
         expect(newAppInput.exists()).toBe(true)
+
     })
 
     it('displays the app form when an app is selected', async () => {
-        wrapper.vm.appFormState = 'selectedApp'
+        wrapper.vm.settingsStore.currentAppSettings = currentAppSettings
 
         await wrapper.vm.$nextTick()
 
