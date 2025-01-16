@@ -38,9 +38,6 @@ watch(() => settingsStore.currentAppSettings, () => {
     appFormState.value = 'selectedApp'
   }
 })
-if (settingsStore.currentAppSettings) {
-  appFormState.value = 'selectedApp'
-}
 
 watch(() => route.name, () => {
   if (route.name === 'newApp') {
@@ -121,7 +118,7 @@ const v$ = useVuelidate(rules, form)
 </script>
 
 <template>
-  <div v-if="!route.params.appId && route.name !== 'newApp'" class="pic-container">
+  <div v-if="appFormState === 'noApp'" class="pic-container">
     <v-row>
       <h2>
         Select or create an application
@@ -133,6 +130,7 @@ const v$ = useVuelidate(rules, form)
           :title="app.applicationName"
           :to="{name: 'app', params: {appId: app.id}}"
           color="primary"
+          data-test="app-button"
           height="100"
         />
       </v-col>
@@ -146,7 +144,7 @@ const v$ = useVuelidate(rules, form)
     </v-row>
   </div>
   <template v-else>
-    <div class="pic-flex">
+    <div class="pic-flex" data-test="app-title">
       <aside class="pic-container pic-aside">
         <h2>
           App List
@@ -164,7 +162,7 @@ const v$ = useVuelidate(rules, form)
       </aside>
       <main class="pic-container">
         <template v-if="appFormState === 'selectedApp' && currentSettings ">
-          <h2>
+          <h2 data-test="app-title-selected">
             {{ currentSettings.applicationName }}
           </h2>
           <v-text-field v-model="form.title" :validation="v$.title" label="Title" />
@@ -205,7 +203,12 @@ const v$ = useVuelidate(rules, form)
           </div>
         </template>
         <template v-if="appFormState === 'newApp'">
-          <v-text-field v-model="newAppName" :validation="v$.newAppName" label="App Name" />
+          <v-text-field
+            v-model="newAppName"
+            :validation="v$.newAppName"
+            data-test="new-app-input"
+            label="App Name"
+          />
           <v-btn
             color="primary"
             @click="createApp"

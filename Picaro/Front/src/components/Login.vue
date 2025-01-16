@@ -30,7 +30,7 @@ function login() {
     <v-form @submit="login">
       <v-text-field v-model="username" label="Username" />
       <v-text-field v-model="password" label="Password" type="password" />
-      <v-btn>
+      <v-btn type="submit">
         Login
       </v-btn>
     </v-form>
