@@ -164,4 +164,4 @@ export type ModuleParam = {
 
 export type Hue = { hue: number, saturation: number, light: number }
 
-export type ModelState = "noModel" | "awaitingName" | "modelCreated" | "addingField" | "editingField"
+export type ModelState = "noModel" | "awaitingName" | "modelSelected" | "addingField" | "editingField"

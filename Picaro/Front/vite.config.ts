@@ -19,6 +19,7 @@ export default defineConfig({
             '@libs': path.resolve(__dirname, './../Libs'),
             '/api/uploads': path.resolve(__dirname, './../Back/uploads'),
             '@data': path.resolve(__dirname, './../Data'),
+            '@fixtures': path.resolve(__dirname, './fixtures'),
         },
     },
     server: {

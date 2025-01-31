@@ -132,7 +132,7 @@ function saveEditedField(field: FieldParams, index: number) {
 </script>
 
 <template>
-  <div v-if="currentEditModel">
+  <div v-if="currentEditModel" data-test="edit-model">
     <EditableField :value="currentModelClone.name" @update="currentModelClone.name = $event">
       <h2 data-test="created-model-name">
         <span>
@@ -174,7 +174,7 @@ function saveEditedField(field: FieldParams, index: number) {
       @cancel-field="emit('updateModelFormState', 'modelCreated')"
     />
     <v-btn
-      v-if="props.modelFormState === 'modelCreated'"
+      v-if="props.modelFormState === 'modelSelected'"
       class="pic-add-new-field-button"
       data-test="add-new-field-button"
       @click="emit('updateModelFormState', 'addingField')"
@@ -182,7 +182,7 @@ function saveEditedField(field: FieldParams, index: number) {
       Add Field
     </v-btn>
   </div>
-  <div v-if="props.modelFormState === 'modelCreated'" class="pic-flex pic-between">
+  <div v-if="props.modelFormState === 'modelSelected'" class="pic-flex pic-between">
     <v-btn color="primary" @click="saveModel">
       Save
     </v-btn>

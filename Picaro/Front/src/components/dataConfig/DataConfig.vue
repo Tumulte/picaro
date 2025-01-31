@@ -22,17 +22,23 @@ const imageDrawer = ref(false);
 const imageFile = ref<File[]>();
 const allImages = ref<string[]>([])
 
+watch(imageDrawer, () => {
+  if (imageDrawer.value === true) {
+    fetchImages()
+  }
+})
+
 function fetchImages() {
   axios.get('/api/setup/allimages').then((res) => {
     allImages.value = res.data
   }).catch((error) => console.error(error))
 }
 
-fetchImages()
 
 const modelCollection = computed((): Model[] | [] => {
   return settingsStore.currentAppSettings?.modelCollection || []
 })
+
 const currentEditModelName = computed((): string => {
   return currentEditModel.value?.name || ""
 })
@@ -57,9 +63,9 @@ async function selectModel(model: Model) {
 }
 
 function uploadImage() {
-  if (image.value) {
+  if (imageFile.value) {
     const formData = new FormData();
-    formData.append('image', image.value);
+    formData.append('image', imageFile.value);
     axios.post(`/api/setup/uploadimages`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -79,7 +85,7 @@ const currentAppModelCollection = computed((): Model[] | [] => {
 })
 
 function createNewModel() {
-  modelFormState.value = "modelCreated";
+  modelFormState.value = "modelSelected";
   modelNameInput.value = modelNameInput.value.toLowerCase()
 
   currentEditModel.value = {
@@ -106,9 +112,18 @@ async function cancelEditModel() {
 
 // region Model hydration
 function modelFromRoute() {
-  if (route?.params.modelId && settingsStore.currentAppSettings && route?.params.modelId !== 'newModel') {
-    currentEditModel.value = settingsStore.currentAppSettings.modelCollection.find(model => model.id === route.params.modelId)
-    modelFormState.value = "modelCreated";
+  if (route.params.modelId === 'newModel') {
+    modelFormState.value = "awaitingName"
+    return
+  }
+  currentEditModel.value = settingsStore.currentAppSettings?.modelCollection.find(model => {
+    return route.params.modelId && model.id === route.params.modelId
+  })
+
+  if (currentEditModel.value) {
+    modelFormState.value = "modelSelected";
+  } else {
+    modelFormState.value = "noModel"
   }
 }
 
@@ -135,10 +150,11 @@ function selectImage(path: string) {
     <aside class="pic-aside pic-container">
       <h3>
         Model List
+        <v-btn variant="text" @click="imageDrawer = !imageDrawer">
+          <v-icon>mdi-image</v-icon>
+        </v-btn>
       </h3>
-      <v-btn variant="text" @click="imageDrawer = !imageDrawer">
-        Images upload
-      </v-btn>
+
       <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
         <a :class="{selected: model.id === route.params.modelId}" class="pic-aside-item" @click="selectModel(model)">
           {{ model.name }}
@@ -152,8 +168,8 @@ function selectImage(path: string) {
         New Model
       </v-btn>
     </aside>
-    <main class="pic-main pic-container">
-      <v-tabs v-if="modelFormState !== 'noModel' && modelFormState !== 'awaitingName'">
+    <main :class="{'pic-main-empty': modelFormState === 'noModel'}" class="pic-main pic-container">
+      <v-tabs v-if="modelFormState !== 'awaitingName' && modelFormState !== 'noModel'">
         <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/`">
           Edit Model
         </v-tab>

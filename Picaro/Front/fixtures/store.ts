@@ -1,67 +1,65 @@
-import {
-Settings, SettingsStore
-} from "@types";
+import {Settings, SettingsStore} from "@types";
 
 export const currentAppSettings: Settings = {
-    "id": "hWvJzKOX",
-    "styleSet": "styleId",
-    "language": "",
-    "title": "doc",
-    "devMode": true,
-    "messageTimeOut": 10000,
-    "applicationName": "picaro",
-    "navStructure": [],
-    "filterCollection": {
+    id: "hWvJzKOX",
+    styleSet: "styleId",
+    language: "",
+    title: "doc",
+    devMode: true,
+    messageTimeOut: 10000,
+    applicationName: "picaro",
+    navStructure: [],
+    filterCollection: {
         all: [], modelFilters: [],
     },
-    "layoutCollection": [{
-        "name": "blog",
-        "id": "h2fFurQB-2LFRbVHnF-Pk",
-        "layout": [[{
-            "model": "1QKpueEa", "type": "list", "categories": []
+    layoutCollection: [{
+        name: "blog",
+        id: "h2fFurQB-2LFRbVHnF-Pk",
+        layout: [[{
+            model: "1QKpueEa", type: "list", categories: []
         }]]
     }],
-    "layoutLinkCollection": [],
-    "defaultLayout": "h2fFurQB-2LFRbVHnF-Pk",
-    "layoutCommonCollection": [[{
-        "type": "FilterCategories", "cols": "2"
+    layoutLinkCollection: [],
+    defaultLayout: "h2fFurQB-2LFRbVHnF-Pk",
+    layoutCommonCollection: [[{
+        type: "FilterCategories", cols: "2"
     }, {
-        "type": "List", "model": "1QKpueEa"
+        type: "List", model: "1QKpueEa"
     }]],
-    "modelCollection": [{
-        "id": "1QKpueEa",
-        "name": "article",
-        "fieldCollection": [{
-            "id": "bjP_lt",
-            "type": "richText",
-            "name": "article",
-            "label": "article",
-            "template": "",
-            "attributes": "",
-            "required": false,
-            "regex": "",
-            "extraParams": {
-}
+    modelCollection: [{
+        id: "modelId1",
+        name: "article",
+        fieldCollection: [{
+            id: "bjP_lt",
+            type: "richText",
+            name: "article",
+            label: "article",
+            template: "",
+            attributes: "",
+            required: false,
+            regex: "",
+            extraParams: {}
         }, {
-            "id": "31xDO1",
-            "type": "text",
-            "name": "title",
-            "label": "title",
-            "template": "",
-            "attributes": "",
-            "required": false,
-            "regex": "",
-            "extraParams": {
-}
+            id: "modelId2",
+            type: "text",
+            name: "title",
+            label: "title",
+            template: "",
+            attributes: "",
+            required: false,
+            regex: "",
+            extraParams: {}
         }]
     }],
-    "categories": [{
-        "label": "What is Picaro ?", "id": "vDgCRQNB"
+    categories: [{
+        label: "What is Picaro ?",
+        id: "vDgCRQNB"
     }, {
-        "label": "get started",
-        "id": "k1Og1-0FXcKC8eDnlRMn3"
+        label: "get started",
+        id: "k1Og1-0FXcKC8eDnlRMn3"
     }, {
-        "label": "Create your App", "id": "section"
+        label: "Create your App",
+        id: "section"
     }]
 }
 export const settingsStoreFixtureNoCurrent: SettingsStore = {
@@ -94,8 +92,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                 full: false
             },
             selectorCollection: {
-                html: {
-}
+                html: {}
             },
             "font-size": "16px",
             id: "JU7YEogt",
@@ -255,7 +252,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                 ]
             ],
             modelCollection: [{
-                id: "1QKpueEa",
+                id: "modelId1",
                 name: "article",
                 fieldCollection: [{
                     id: "bjP_lt",
@@ -266,10 +263,9 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                     attributes: "",
                     required: false,
                     regex: "",
-                    extraParams: {
-}
+                    extraParams: {}
                 }, {
-                    id: "31xDO1",
+                    id: "modelId2",
                     type: "text",
                     name: "title",
                     label: "title",
@@ -277,8 +273,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                     attributes: "",
                     required: false,
                     regex: "",
-                    extraParams: {
-}
+                    extraParams: {}
                 }]
             }],
             categories: [{

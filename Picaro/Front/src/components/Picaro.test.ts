@@ -2,7 +2,7 @@ import {describe, expect, it, vi} from "vitest"
 import Picaro from "./Picaro.vue";
 import {mount, VueWrapper} from "@vue/test-utils";
 import {createTestingPinia} from "@pinia/testing";
-import {settingsStoreFixture, settingsStoreFixtureNoCurrent} from "../../fixtures/store";
+import {settingsStoreFixture, settingsStoreFixtureNoCurrent} from "@fixtures/store";
 
 vi.mock('vue-router', () => ({
     useRouter: vi.fn(),
