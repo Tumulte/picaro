@@ -8,6 +8,7 @@ import StarterKit from "@tiptap/starter-kit";
 import {onMounted, ref} from "vue";
 import {FieldContent, FieldParams} from "@types";
 import {useSettingsStore} from "@stores/settings";
+import {generateHTML} from "@tiptap/core";
 
 
 const props = defineProps<{
@@ -17,7 +18,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (emit: 'updateData', value: [string, FieldParams]): void
-  (emit: 'saveEdit', value: string): void
   (emit: 'endEdit'): void
 }>()
 
@@ -79,7 +79,17 @@ function setUrl() {
 }
 
 function updateModelData(content: FieldContent) {
-  emit("updateData", [props.fieldParams.id, content]);
+  emit("updateData", [props.fieldParams.id, {
+    json: content,
+    html: generateHTML(
+        props.fieldContent,
+        [
+          StarterKit,
+          Image,
+          Link
+        ],
+    )
+  }]);
 }
 
 function addImage() {

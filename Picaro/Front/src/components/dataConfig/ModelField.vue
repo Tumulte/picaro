@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import RichText from "./formElements/display/RichText.vue";
 import Text from "./formElements/display/TextLine.vue";
 import {FieldContent, FieldParams, ModuleParam} from "@types";
-import {PropType} from "vue";
+import {PropType, ref} from "vue";
 
 defineProps({
   fieldParams: {type: Object as PropType<FieldParams>, required: true},
@@ -10,11 +9,21 @@ defineProps({
   moduleParams: {type: Object as PropType<ModuleParam>, required: true}
 })
 
-const componentMap = {
-  richText: RichText,
-  text: Text
-}
 
+const componentMap = ref();
+
+const richTextComponent = () => import.meta.env.VITE_BUILD_MODE !== "static" ?
+    import("./formElements/display/RichText.vue") :
+    import("./formElements/display/RichTextStatic.vue")
+
+richTextComponent()
+    .then(component => {
+          componentMap.value = {
+            richText: component.default,
+            text: Text
+          }
+        }
+    ).catch(e => console.error(e))
 
 function sendForm(data) {
   return data
@@ -24,7 +33,7 @@ function sendForm(data) {
 <template>
   <component
     :is="componentMap[fieldParams.type]"
-    v-if="fieldContent"
+    v-if="fieldContent && componentMap"
     :key="fieldParams.id"
     :field-content="fieldContent.fieldContent"
     :field-params="fieldParams"

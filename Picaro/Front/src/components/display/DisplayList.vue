@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import axios from 'axios'
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
 import {computed} from "vue";
@@ -28,14 +27,14 @@ const emit = defineEmits<{
 
 const dataStore = useDataStore()
 
-if (process.env.NODE_ENV === 'development') {
-  axios
-      .get(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
-      .then((result) => {
-        dataStore.currentModelData = result.data
-      }).catch((error) => console.log(error))
-} else {
+if (import.meta.env.VITE_BUILD_MODE === "static") {
   getBuiltData().catch((error) => console.log(error))
+} else {
+  fetch(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
+      .then(res => res.json())
+      .then((data) => {
+        dataStore.currentModelData = data
+      }).catch((error) => console.log(error))
 }
 
 

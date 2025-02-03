@@ -20,4 +20,12 @@ export default defineConfig({
         },
         dedupe: ['pinia', 'vue-router']
     },
+    build: {
+        rollupOptions: {
+            external: [
+                /prosemirror*/,
+                /@tiptap*/,
+            ]
+        }
+    }
 })

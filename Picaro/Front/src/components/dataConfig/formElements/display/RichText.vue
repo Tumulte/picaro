@@ -16,7 +16,7 @@ const html = ref("")
 
 watch(() => props.fieldContent, () => {
   html.value = generateHTML(
-      props.fieldContent,
+      props.fieldContent.json,
       [
         StarterKit,
         Image,

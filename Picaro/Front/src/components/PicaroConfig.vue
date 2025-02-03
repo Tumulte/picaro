@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {computed, reactive, ref, watch} from "vue";
-import axios from "axios";
 import {useSettingsStore} from '@stores/settings'
 import {useUtilsStore} from "@stores/utils";
 import {helpers, required} from "@vuelidate/validators";
@@ -48,8 +47,8 @@ watch(() => route.name, () => {
 }, {immediate: true})
 
 function createApp() {
-  axios.post(`/api/setup/create/${newAppName.value}`).then(async (res) => {
-    await router.push({name: 'app', params: {appId: res.data?.appCreatedId}})
+  fetch(`/api/setup/create/${newAppName.value}`, {method: 'POST'}).then(async (res) => res.json()).then(async data => {
+    await router.push({name: 'app', params: {appId: data?.appCreatedId}})
     emit('reloadSettings')
   }).catch((error) => {
     console.error(error)
@@ -62,7 +61,7 @@ function deleteApp() {
         "Are you sure you want to delete the app ?",
     type: "warning"
   }).then(() => {
-    axios.delete(`/api/setup/delete/${currentSettings.value?.applicationName}`).then(async () => {
+    fetch(`/api/setup/delete/${currentSettings.value?.applicationName}`, {method: 'DELETE'}).then(async () => {
       await router.push({name: 'index'})
       emit('reloadSettings')
     }).catch((error) => console.error(error))

@@ -215,7 +215,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
         }],
     allSettings: [
         {
-            id: "hWvJzKOX",
+            id: "app",
             styleSet: "JU7YEogt",
             language: "",
             title: "doc",
@@ -286,7 +286,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
             }]
         },
         {
-            id: "pwHawvNl",
+            id: "app2",
             styleSet: "lMORzfZH",
             language: "",
             title: "testthree",

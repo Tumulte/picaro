@@ -2,11 +2,9 @@
 import {defineProps, PropType, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {FieldContent, FieldParams, Model, ModelContent} from "@types";
-import RichText from "@components/dataConfig/fields/RichText.vue";
 import TextLine from "@components/dataConfig/fields/TextLine.vue";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
-import axios from "axios";
 import {nanoid} from "nanoid";
 import {copy} from "copy-anything";
 
@@ -18,15 +16,25 @@ const emit = defineEmits<{
   reloadData: [],
 }>()
 
-const componentMap = {
-  text: TextLine,
-  richText: RichText,
-  select: 'Select',
-  radio: 'Radio',
-  checkbox: 'CheckBox',
-  booleanSwitch: 'BooleanSwitch',
-  categoryFilter: 'CategoryFilter',
-}
+const componentMap = ref();
+
+const richTextComponent = () => import.meta.env.VITE_BUILD_MODE !== "static" ?
+    import("./formElements/display/RichText.vue") :
+    import("./formElements/display/RichTextStatic.vue")
+
+richTextComponent()
+    .then(component => {
+          componentMap.value = {
+            text: TextLine,
+            richText: component.default,
+            select: 'Select',
+            radio: 'Radio',
+            checkbox: 'CheckBox',
+            booleanSwitch: 'BooleanSwitch',
+            categoryFilter: 'CategoryFilter',
+          }
+        }
+    ).catch(e => console.error(e))
 
 
 const props = defineProps({
@@ -80,9 +88,15 @@ async function sendForm() {
   }
 
   try {
-    await axios[action](
+    await fetch(
         `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
-        currentModelContent.value // if an array is passed each entry creates a row in the DB
+        {
+          method: action,
+          headers: [
+            ["Content-Type", "application/json"],
+          ],
+          body: JSON.stringify(currentModelContent.value) // if an array is passed each entry creates a row in the DB
+        }
     )
     utilsStore.addAlert({
       type: "success",
@@ -99,7 +113,7 @@ async function sendForm() {
 
 </script>
 <template>
-  <div class="pic-container">
+  <div v-if="componentMap" class="pic-container">
     <component
       :is="componentMap[field.type]"
       v-for="(field, index) in currentEditModel.fieldCollection"

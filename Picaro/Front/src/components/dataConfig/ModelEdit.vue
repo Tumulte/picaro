@@ -26,7 +26,11 @@ const currentModelClone = ref<Model>(copy(props.currentEditModel))
 // endregion
 
 // region Emits
-const emit = defineEmits(["updateModelFormState", "updateCurrentEditModel", "cancelEditModel"])
+const emit = defineEmits<{
+  updateModelFormState: [ModelState]
+  updateCurrentEditModel: []
+  cancelEditModel: []
+}>()
 // endregion
 
 const currentEditField = ref("");
@@ -40,7 +44,10 @@ const currentModelIsSaved = computed(() => {
 })
 
 function abandonEdition() {
-  if (currentEditModelName.value) {
+  if (currentModelClone.value.fieldCollection.length === 0) {
+    emit('cancelEditModel')
+
+  } else if (currentEditModelName.value) {
     utilsStore.awaitConfirmation({
       text:
           "Are you sure you want to abandon the creation of this new model ?",
@@ -58,14 +65,14 @@ function abandonEdition() {
 function addField(field: FieldParams) {
   if (currentModelClone.value) {
     currentModelClone.value.fieldCollection.push(field);
-    emit('updateModelFormState', "modelCreated");
+    emit('updateModelFormState', "modelSelected");
   }
 }
 
 function deleteField(index: number) {
   if (currentModelClone.value) {
     currentModelClone.value.fieldCollection.splice(index, 1);
-    emit('updateModelFormState', "modelCreated");
+    emit('updateModelFormState', "modelSelected");
   }
 }
 
@@ -118,14 +125,14 @@ async function saveModel() {
     }
 
     await updateSettings(settingsStore.currentAppSettings)
-    emit('updateModelFormState', 'modelCreated')
+    emit('updateModelFormState', 'modelSelected')
   }
 }
 
 function saveEditedField(field: FieldParams, index: number) {
   if (currentModelClone.value) {
     currentModelClone.value.fieldCollection[index] = field;
-    emit('updateModelFormState', "modelCreated");
+    emit('updateModelFormState', "modelSelected");
   }
 }
 

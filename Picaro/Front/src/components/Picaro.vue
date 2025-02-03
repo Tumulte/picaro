@@ -3,7 +3,6 @@ import {computed, watch} from "vue";
 import {Settings, SettingsStore} from "@types";
 import {useRoute, useRouter} from "vue-router";
 import Alert from "./utils/alertModal.vue";
-import axios, {AxiosResponse} from "axios";
 import {useSettingsStore} from '@stores/settings'
 
 import('../style.pcss').catch((error) => console.error(error))
@@ -23,9 +22,9 @@ async function selectApp(event: string | string[]) {
 
 function reloadSettings() {
   if (import.meta.env.VITE_BUILD_MODE !== "static") {
-    axios.get('/api/setup/all').then((res: AxiosResponse<SettingsStore>) => {
-      settingsStore.allSettings = res.data.allSettings
-      settingsStore.allStyleSets = res.data.allStyleSets
+    fetch('/api/setup/all').then(res => res.json()).then((data: SettingsStore) => {
+      settingsStore.allSettings = data.allSettings
+      settingsStore.allStyleSets = data.allStyleSets
     }).catch((error) => {
       console.error(error)
     })

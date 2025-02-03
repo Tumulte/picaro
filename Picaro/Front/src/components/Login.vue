@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
-import axios from "axios";
 import {useRouter} from 'vue-router'
 
 const router = useRouter()
@@ -11,12 +10,17 @@ const password = ref('')
 
 function login() {
   if (username.value && password) {
-    axios.post('/api/auth/login', {username: username.value, password: password.value}).then(async (res) => {
-      if (res.data) {
-        localStorage.setItem('accessToken', res.data.accessToken)
-        await router.push({path: '/admin'})
-      }
-    }).catch((error) => {
+    fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({username: username.value, password: password.value})
+    })
+        .then(res => res.json())
+        .then(async data => {
+          if (data) {
+            localStorage.setItem('accessToken', data.accessToken)
+            await router.push({path: '/admin'})
+          }
+        }).catch((error) => {
       console.error(error)
     })
   }

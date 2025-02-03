@@ -5,7 +5,6 @@ import {Model, ModelState} from '@types'
 import {useRoute, useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
-import axios from "axios";
 
 defineEmits(['reloadSettings'])
 
@@ -19,7 +18,7 @@ const modelFormState = ref<ModelState>("noModel");
 const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
 const imageDrawer = ref(false);
-const imageFile = ref<File[]>();
+const imageFile = ref<File>();
 const allImages = ref<string[]>([])
 
 watch(imageDrawer, () => {
@@ -29,8 +28,8 @@ watch(imageDrawer, () => {
 })
 
 function fetchImages() {
-  axios.get('/api/setup/allimages').then((res) => {
-    allImages.value = res.data
+  fetch('/api/setup/allimages').then((res) => res.json()).then((data: string[]) => {
+    allImages.value = data
   }).catch((error) => console.error(error))
 }
 
@@ -66,7 +65,9 @@ function uploadImage() {
   if (imageFile.value) {
     const formData = new FormData();
     formData.append('image', imageFile.value);
-    axios.post(`/api/setup/uploadimages`, formData, {
+    fetch(`/api/setup/uploadimages`, {
+      method: 'POST',
+      body: formData,
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -101,7 +102,7 @@ async function cancelEditModel() {
   currentEditModel.value = undefined;
   modelNameInput.value = '';
   if (settingsStore.currentAppSettings) {
-    await router.push({path: `/data/${settingsStore.currentAppSettings.id}`})
+    await router.push({name: 'data'})
   } else {
     utilsStore.addAlert({
       text: "Please select an app first",
@@ -120,6 +121,9 @@ function modelFromRoute() {
     return route.params.modelId && model.id === route.params.modelId
   })
 
+  console.log(currentEditModel.value)
+
+
   if (currentEditModel.value) {
     modelFormState.value = "modelSelected";
   } else {
@@ -128,7 +132,9 @@ function modelFromRoute() {
 }
 
 async function newModelForm() {
+  await cancelEditModel()
   await router.replace({name: 'model', params: {appId: route.params.appId, modelId: 'newModel'}});
+  currentEditModel.value = undefined;
   modelFormState.value = 'awaitingName';
 }
 
@@ -186,18 +192,19 @@ function selectImage(path: string) {
           data-test="create-model-button"
           @click="createNewModel"
         >
-          Create model
+          Next
         </v-btn>
       </div>
-      <router-view
-        v-if="currentEditModel"
-        :current-edit-model="currentEditModel"
-        :model-collection="modelCollection"
-        :model-form-state="modelFormState"
-        class="mt-4"
-        @cancelEditModel="cancelEditModel()"
-        @updateModelFormState="modelFormState = $event"
-      />
+      <div v-if="currentEditModel" class="mt-4" data-test="model-is-edited">
+        <router-view
+          :key="currentEditModel.id"
+          :current-edit-model="currentEditModel"
+          :model-collection="modelCollection"
+          :model-form-state="modelFormState"
+          @cancelEditModel="cancelEditModel()"
+          @updateModelFormState="modelFormState = $event"
+        />
+      </div>
     </main>
     <v-navigation-drawer
       v-model="imageDrawer"
