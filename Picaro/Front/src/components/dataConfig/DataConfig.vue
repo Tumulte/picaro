@@ -6,6 +6,9 @@ import {useRoute, useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
 
+const allImages = ref([])
+
+
 defineEmits(['reloadSettings'])
 
 
@@ -19,18 +22,16 @@ const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
 const imageDrawer = ref(false);
 const imageFile = ref<File>();
-const allImages = ref<string[]>([])
 
-watch(imageDrawer, () => {
-  if (imageDrawer.value === true) {
-    fetchImages()
-  }
-})
+fetchImages()
 
 function fetchImages() {
-  fetch('/api/setup/allimages').then((res) => res.json()).then((data: string[]) => {
-    allImages.value = data
-  }).catch((error) => console.error(error))
+
+  allImages.value = import.meta.glob('@uploads/picaro explained.jpg', {
+    query: {format: 'webp', w: '330', picture: ''},
+    import: 'default',
+    eager: true
+  })
 }
 
 
@@ -120,9 +121,6 @@ function modelFromRoute() {
   currentEditModel.value = settingsStore.currentAppSettings?.modelCollection.find(model => {
     return route.params.modelId && model.id === route.params.modelId
   })
-
-  console.log(currentEditModel.value)
-
 
   if (currentEditModel.value) {
     modelFormState.value = "modelSelected";
@@ -225,7 +223,7 @@ function selectImage(path: string) {
         <div v-for="image in allImages" :key="image">
           <img
             :class="{selected: image === settingsStore.rteImage}"
-            :src="`/api/uploads/${image}`"
+            :src="image"
             @click="selectImage(image)"
           >
         </div>

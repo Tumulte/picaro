@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ModelForm from "./ModelForm.vue"
-import {defineEmits, defineProps, PropType, ref} from "vue";
-import {Model, ModelState, Settings} from "@types";
+import {defineEmits, defineProps, ref} from "vue";
+import {Categories, Model, Settings} from "@types";
 import DisplayList from "@components/display/DisplayList.vue";
 import FilterCategories from "@components/filters/FilterCategories.vue";
 import {useSettingsStore} from "@stores/settings";
@@ -17,21 +17,18 @@ const utilsStore = useUtilsStore();
 
 const router = useRouter()
 
-const categories = settingsStore.currentAppSettings?.categories || []
+const categories: Categories[] = settingsStore.currentAppSettings?.categories || []
 
 const newCategory = ref('')
 const editCategories = ref(false)
 
 defineEmits(["updateModelFormState", "cancelEditModel"])
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
-  currentEditModel: {type: Object as PropType<Model>, required: true},
-  modelFormState: {type: String as PropType<ModelState>, required: true},
-  modelCollection: {type: Array as PropType<Model[]>, required: true},
-})
+defineProps<{
+  currentEditModel: Model
+}>()
 
-async function editItem(item: string) {
+async function editItem(item: number) {
   await router.push({params: {contentId: item}})
   newCategory.value = ''
 }
@@ -81,7 +78,7 @@ async function saveCategory() {
         v-if="settingsStore.currentAppSettings && !editCategories"
         :current-app="settingsStore.currentAppSettings"
       />
-      <div v-else>
+      <div v-else-if="settingsStore.currentAppSettings">
         <draggable
           v-model="settingsStore.currentAppSettings.categories"
           ghost-class="pic-sortable-ghost"
@@ -114,27 +111,30 @@ async function saveCategory() {
       </div>
     </v-col>
     <v-col>
-      <div v-if="categories.length === 0">
+      <div v-if="categories.length === 0" data-test="category-warning">
         <p>You must add a category first</p>
       </div>
 
       <template v-else>
-        <div class="v-label">
+        <div class="v-label" data-test="new-content">
           New content :
         </div>
         <ModelForm
           :categories="categories"
           :current-edit-model="currentEditModel"
+          data-test="new-content-form"
         />
         <div class="v-label mt-4">
           Edit existing content :
         </div>
         <display-list
+          v-if="settingsStore.currentAppSettings"
           :categories="categories"
           :current-app="settingsStore.currentAppSettings"
           :display-all="true"
-          :module-params="{model: currentEditModel.id}"
+          :module-params="{model: currentEditModel.id, categories: [], type: ''}"
           class="pic-display-edit"
+          data-test="content-list"
           @clickItem="editItem($event)"
         />
       </template>

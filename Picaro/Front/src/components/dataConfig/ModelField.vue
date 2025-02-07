@@ -1,16 +1,18 @@
 <script lang="ts" setup>
 import Text from "./formElements/display/TextLine.vue";
-import {FieldContent, FieldParams, ModuleParam} from "@types";
-import {PropType, ref} from "vue";
+import {FieldContent, Model, ModuleParam} from "@types";
+import {computed, shallowRef} from "vue";
 
-defineProps({
-  fieldParams: {type: Object as PropType<FieldParams>, required: true},
-  fieldContent: {type: Object as PropType<FieldContent>, required: false, default: null},
-  moduleParams: {type: Object as PropType<ModuleParam>, required: true}
-})
+const props = defineProps<{
+  fieldContent: FieldContent
+  moduleParams: ModuleParam
+  currentModel: Model
+}>()
+
+const fieldParams = computed(() => props.currentModel.fieldCollection.find(item => item.id === props.fieldContent.fieldParamsId))
 
 
-const componentMap = ref();
+const componentMap = shallowRef();
 
 const richTextComponent = () => import.meta.env.VITE_BUILD_MODE !== "static" ?
     import("./formElements/display/RichText.vue") :

@@ -12,6 +12,9 @@ function login() {
   if (username.value && password) {
     fetch('/api/auth/login', {
       method: 'POST',
+      headers: [
+        ["Content-Type", "application/json"],
+      ],
       body: JSON.stringify({username: username.value, password: password.value})
     })
         .then(res => res.json())

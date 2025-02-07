@@ -13,7 +13,7 @@ import {generateHTML} from "@tiptap/core";
 
 const props = defineProps<{
   fieldParams: FieldParams;
-  fieldContent?: FieldContent;
+  fieldContent?: FieldContent | null;
 }>()
 
 const emit = defineEmits<{
@@ -49,7 +49,7 @@ onMounted(() => {
           selectedImg.value = null;
         }
       });
-      editor.value.commands.setContent(props.fieldContent || "");
+      editor.value.commands.setContent(props.fieldContent?.json || "");
 
     }
 )

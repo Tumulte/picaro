@@ -8,21 +8,24 @@ import {generateHTML} from '@tiptap/core'
 
 
 const props = defineProps<{
-  fieldContent: FieldContent
+  fieldContent: FieldContent | null
 }>()
 
 
 const html = ref("")
 
 watch(() => props.fieldContent, () => {
-  html.value = generateHTML(
-      props.fieldContent.json,
-      [
-        StarterKit,
-        Image,
-        Link
-      ],
-  )
+  if (props.fieldContent?.json) {
+    html.value = generateHTML(
+        props.fieldContent.json,
+        [
+          StarterKit,
+          Image,
+          Link
+        ],
+    )
+  }
+
 }, {immediate: true})
 
 </script>

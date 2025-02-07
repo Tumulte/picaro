@@ -1,6 +1,6 @@
 import {Settings, SettingsStore} from "@types";
 
-export const currentAppSettings: Settings = {
+export const currentAppSettings = {
     id: "hWvJzKOX",
     styleSet: "styleId",
     language: "",
@@ -51,17 +51,9 @@ export const currentAppSettings: Settings = {
             extraParams: {}
         }]
     }],
-    categories: [{
-        label: "What is Picaro ?",
-        id: "vDgCRQNB"
-    }, {
-        label: "get started",
-        id: "k1Og1-0FXcKC8eDnlRMn3"
-    }, {
-        label: "Create your App",
-        id: "section"
-    }]
-}
+    categories: []
+} satisfies Settings
+
 export const settingsStoreFixtureNoCurrent: SettingsStore = {
     allStyleSets: [
         {
@@ -311,10 +303,10 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
     rteImage: ""
 }
 
-export const settingsStoreFixture: SettingsStore = {
+export const settingsStoreFixture = {
     ...settingsStoreFixtureNoCurrent,
     currentAppSettings: currentAppSettings
 
-}
+} satisfies SettingsStore
 
 

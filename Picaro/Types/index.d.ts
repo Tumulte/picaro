@@ -33,7 +33,7 @@ export type Settings = {
     styleSet: string,
     language: string,
     devMode: boolean,
-    categories: { label: string, id: string }[],
+    categories: Categories[],
     messageTimeOut: number,
     applicationName: string,
     navStructure: [],
@@ -146,7 +146,6 @@ export type FieldContent = {
     fieldContent: null | string | RichTextContent[]
     fieldParamsId: string
     contentId: string
-    id: string
 }
 
 export type ModelContent = {
@@ -158,7 +157,7 @@ export type ModelContent = {
 
 export type ModuleParam = {
     model: string
-    categories: Ca[]
+    categories: Categories[]
     type: string
 }
 

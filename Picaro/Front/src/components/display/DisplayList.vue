@@ -28,13 +28,13 @@ const emit = defineEmits<{
 const dataStore = useDataStore()
 
 if (import.meta.env.VITE_BUILD_MODE === "static") {
-  getBuiltData().catch((error) => console.log(error))
+  getBuiltData().catch((error) => console.error(error))
 } else {
   fetch(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
       .then(res => res.json())
       .then((data) => {
         dataStore.currentModelData = data
-      }).catch((error) => console.log(error))
+      }).catch((error) => console.error(error))
 }
 
 
@@ -63,7 +63,7 @@ async function getBuiltData() {
   const data = await import(`./../../../../Data/build/${props.currentApp.id}.json`)
 
 
-  dataStore.currentModelData = data.default.filter(item =>
+  dataStore.currentModelData = data.default.filter((item: ModelContent) =>
       item.modelId === props.moduleParams.model
   )
 }
@@ -78,27 +78,29 @@ async function getBuiltData() {
       @click="emit('clickItem', index)"
     >
       <div
-        v-if="index !== parseInt(route.params.contentId as string)"
+        v-if="index !== parseInt(route.params.contentId as string) && currentModel"
         class="pic-display-list-item"
+        data-test="list-display"
       >
         <div
           v-for="(field, subIndex) in fieldList.content"
           :key="subIndex"
         >
           <model-field
-            v-if="currentModel"
+            :current-model="currentModel"
             :field-content="field"
-            :field-params="currentModel.fieldCollection.find(item=> item.id === field.fieldParamsId)"
             :module-params="moduleParams"
+            data-test="content-display"
           />
         </div>
       </div>
 
       <ModelForm
-        v-else
+        v-else-if="currentModel"
         :categories="categories"
         :current-edit-model="currentModel"
         :model-content="fieldList"
+        data-test="content-edit"
       />
     </div>
   </div>

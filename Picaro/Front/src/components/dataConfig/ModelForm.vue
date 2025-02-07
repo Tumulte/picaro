@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {defineProps, PropType, ref} from "vue";
+import {defineProps, ref, shallowRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {FieldContent, FieldParams, Model, ModelContent} from "@types";
+import {Categories, FieldContent, FieldParams, Model, ModelContent} from "@types";
 import TextLine from "@components/dataConfig/fields/TextLine.vue";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
@@ -16,32 +16,27 @@ const emit = defineEmits<{
   reloadData: [],
 }>()
 
-const componentMap = ref();
+const componentMap = shallowRef();
 
-const richTextComponent = () => import.meta.env.VITE_BUILD_MODE !== "static" ?
-    import("./formElements/display/RichText.vue") :
-    import("./formElements/display/RichTextStatic.vue")
-
-richTextComponent()
-    .then(component => {
-          componentMap.value = {
-            text: TextLine,
-            richText: component.default,
-            select: 'Select',
-            radio: 'Radio',
-            checkbox: 'CheckBox',
-            booleanSwitch: 'BooleanSwitch',
-            categoryFilter: 'CategoryFilter',
-          }
-        }
-    ).catch(e => console.error(e))
+import("@components/dataConfig/fields/RichText.vue").then(component => {
+      componentMap.value = {
+        text: TextLine,
+        richText: component.default,
+        select: 'Select',
+        radio: 'Radio',
+        checkbox: 'CheckBox',
+        booleanSwitch: 'BooleanSwitch',
+        categoryFilter: 'CategoryFilter',
+      }
+    }
+).catch(e => console.error(e))
 
 
-const props = defineProps({
-  currentEditModel: {type: Object as PropType<Model>, required: true},
-  categories: {type: Array as PropType<string[]>, required: true},
-  modelContent: {type: Object as PropType<ModelContent>, required: false, default: null},
-})
+const props = defineProps<{
+  currentEditModel: Model
+  categories: Categories[]
+  modelContent?: ModelContent
+}>()
 
 function defaultEmptyContent(): ModelContent {
   return {
@@ -49,14 +44,15 @@ function defaultEmptyContent(): ModelContent {
     content: props.currentEditModel.fieldCollection.map((field: FieldParams) => ({
       fieldContent: null,
       fieldParamsId: field.id,
-      contentId: nanoid(8)
+      contentId: nanoid(8),
     })),
+    id: nanoid(8),
     modelId: route.params.modelId as string
   }
 
 }
 
-const currentModelContent = ref<ModelContent>(copy(props.modelContent) || defaultEmptyContent())
+const currentModelContent = ref(copy(props.modelContent) || defaultEmptyContent())
 
 function updateData(data: [string, FieldContent['fieldContent']]) {
   const [id, content] = data
@@ -113,35 +109,37 @@ async function sendForm() {
 
 </script>
 <template>
-  <div v-if="componentMap" class="pic-container">
-    <component
-      :is="componentMap[field.type]"
-      v-for="(field, index) in currentEditModel.fieldCollection"
-      :key="field.id"
-      :field-content="currentModelContent?.content.find(item => item.fieldParamsId === field.id)?.fieldContent"
-      :field-params="field"
-      :index="index"
-      @updateData="updateData($event)"
-    />
-    <v-select
-      v-model="currentModelContent.categories"
-      :items="categories"
-      :multiple="true"
-      item-title="label"
-      item-value="id"
-      label="category"
-    />
-    <div class="pic-flex pic-between">
-      <v-btn color="primary" @click="sendForm">
-        Save
-      </v-btn>
-      <v-btn
-        v-if="modelContent"
-        color="secondary"
-        @click.stop="router.push({params: {contentId: ''}})"
-      >
-        Cancel
-      </v-btn>
+  <div>
+    <div v-if="componentMap" class="pic-container">
+      <component
+        :is="componentMap[field.type]"
+        v-for="(field, index) in currentEditModel.fieldCollection"
+        :key="field.id"
+        :field-content="currentModelContent.content?.find(item => item.fieldParamsId === field.id)?.fieldContent"
+        :field-params="field"
+        :index="index"
+        @updateData="updateData($event)"
+      />
+      <v-select
+        v-model="currentModelContent.categories"
+        :items="categories"
+        :multiple="true"
+        item-title="label"
+        item-value="id"
+        label="category"
+      />
+      <div class="pic-flex pic-between">
+        <v-btn color="primary" @click="sendForm">
+          Save
+        </v-btn>
+        <v-btn
+          v-if="modelContent"
+          color="secondary"
+          @click.stop="router.push({params: {contentId: ''}})"
+        >
+          Cancel
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>

@@ -2,12 +2,14 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import vuetify from 'vite-plugin-vuetify'
+import {imagetools} from "vite-imagetools";
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         vue(),
         vuetify(),
+        imagetools()
     ],
     publicDir: path.resolve(__dirname, '../../static'),
     resolve: {
@@ -17,6 +19,7 @@ export default defineConfig({
             '@components': path.resolve(__dirname, './src/components'),
             '@types': path.resolve(__dirname, './../Types'),
             '@libs': path.resolve(__dirname, './../Libs'),
+            '@uploads': path.resolve(__dirname, './../Back/uploads'),
             '/api/uploads': path.resolve(__dirname, './../Back/uploads'),
             '@data': path.resolve(__dirname, './../Data'),
             '@fixtures': path.resolve(__dirname, './fixtures'),
