@@ -1,24 +1,17 @@
 {
   "name": "@picaro/colorhelper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "converts common css color format into any other as object or string",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "build": "vite build"
+    "build": "tsc"
   },
   "files": [
     "dist"
   ],
-  "module": "./dist/colorHelper.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/colorHelper.es.js",
-      "require": "./dist/colorHelper.umd.js"
-    }
-  },
   "keywords": [
     "color",
     "conversion"
@@ -30,10 +23,7 @@
   "author": "Tumulte",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-typescript": "^7.18.6",
-    "tslib": "^2.6.2",
+    "typescript": "^5.7.3",
     "vite": "^5.1.3",
     "vitest": "^0.10.0"
   },

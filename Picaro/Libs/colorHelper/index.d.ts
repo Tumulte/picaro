@@ -20,12 +20,11 @@ export interface ColorHelperType {
     getValueCollection: (color?: Color) => ColorObject,
     hexToRgb: Function,
     rgbToHex: Function,
-    hslToRgb: (color: Color) => ColorHelperTypes,
-    rgbToHsl: (color: Color) => ColorHelperTypes,
+    hslToRgb: (color: Color) => ColorHelperType,
+    rgbToHsl: (color: Color) => ColorHelperType,
     getString: (color: Color) => string,
-    hexToHsl: (color: Color) => ColorHelperTypes,
-    hslToHex: (color: Color) => ColorHelperTypes,
+    hexToHsl: (color: Color) => ColorHelperType,
+    hslToHex: (color: Color) => ColorHelperType,
     color: Color | undefined,
 }
 
-declare module '@picaro/colorhelper/index.d.ts';
