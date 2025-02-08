@@ -33,7 +33,7 @@
       ],
       "@data/*": [
         "./Picaro/Data"
-      ]
+      ],
     },
     "exclude": [
       "node_modules"

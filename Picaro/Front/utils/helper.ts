@@ -1,6 +1,6 @@
-import {RatioParams} from "@types";
+import {FontStyleParams, RatioParams} from "@types";
 
-export function makeFontFamilyName(name) {
+export function makeFontFamilyName(name: FontStyleParams) {
     if (name.family) {
         return name.family
     }

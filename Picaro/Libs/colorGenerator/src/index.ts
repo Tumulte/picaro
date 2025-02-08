@@ -1,5 +1,5 @@
 import {ColorHelper} from "@picaro/colorhelper";
-import {ColorHSL} from "@picaro/colorhelper/index.d";
+import {ColorHSL} from "@picaro/colorhelper/index.d.ts";
 import "core-js/features/array/for-each"
 import "core-js/features/object/entries"
 import {ColorGeneratorParams} from "@types";
@@ -127,6 +127,107 @@ export class GenerateColorSet {
         };
     }
 
+    updateColor(newColor: ColorHSL | string) {
+        if (typeof newColor === "string") {
+            this.colorCollection.dominant = newColor;
+            this.hsl = this.colorUtils.hexToHsl(newColor).getValueCollection() as ColorHSL;
+        } else if ("hue" in newColor) {
+            this.hsl = newColor;
+            this.dominant = this.colorUtils.hslToHex(newColor).getString();
+            this.colorCollection.dominant = this.colorUtils.hslToHex(newColor).getString();
+        } else {
+            throw new Error("Invalid color format");
+        }
+        return this;
+    }
+
+    generate(
+        colors: VariationParams[] = [],
+        {
+            count: count = "10",
+            text: {light: textLight = "50", saturation: textSaturation = "0", hue: textHue = "0"} = {},
+            hue: {variation: hueVariation = "0", curve: hueCurve = "0", move: hueMove = "0"} = {},
+            light: {variation: lightVariation = "5", move: lightMove = "0", curve: lightCurve = "0"} = {},
+            saturation: {variation: satVariation = "0", move: satMove = "0", curve: satCurve = "0"} = {},
+            full: full = true
+        }: ColorGeneratorParams | object = {}
+    ) {
+        this.count = parseInt(count, 10);
+        this.hueVariation = parseInt(hueVariation, 10);
+        this.hueCurve = parseInt(hueCurve, 10);
+        this.hueMove = parseInt(hueMove, 10);
+        this.satVariation = parseInt(satVariation, 10);
+        this.satMove = parseInt(satMove, 10);
+        this.satCurve = parseInt(satCurve, 10);
+        this.lightVariation = parseInt(lightVariation, 10);
+        this.lightMove = parseInt(lightMove, 10);
+        this.lightCurve = parseInt(lightCurve, 10);
+        this.full = full;
+        this.textLight = parseInt(textLight, 10)
+        this.textSaturation = parseInt(textSaturation, 10)
+        this.textHue = parseInt(textHue, 10)
+        this.colorCollection.dominantSubCollection = this.#createSubCombinationArray(
+            this.hsl
+        );
+        this.colorCollection.dominantTextSubCollection = this.#createTextSubCombination(this.colorCollection.dominantSubCollection)
+        this.colorCollection.combinationCollection = [];
+        colors.forEach(item => {
+            const saturation =
+                item.saturation !== undefined ? item.saturation : this.hsl.saturation;
+            const light = item.light !== undefined ? item.light : this.hsl.light;
+            const combination = {
+                hue: this.hsl.hue + item.hueVariation,
+                saturation: saturation,
+                light: light
+            };
+
+            this.#addCombination(combination);
+        });
+
+        this.colorCollection.graySubCollection = this.#createSubCombinationArray(
+            {
+                hue: this.hsl.hue,
+                saturation: 0,
+                light: this.hsl.light
+            },
+            true
+        );
+        this.colorCollection.grayTextSubCollection = this.#createTextSubCombination(this.colorCollection.graySubCollection)
+        const vari = (() => {
+            const mult = Math.round(this.hsl.hue / 60);
+            const peak = 60 * mult;
+            return Math.round((this.hsl.hue - peak) / 2);
+        })();
+        this.colorCollection.alertSubCollection = this.#createSubCombinationArray({
+            hue: 0 + vari,
+            saturation: this.hsl.saturation,
+            light: this.hsl.light
+        });
+        this.colorCollection.alertTextSubCollection = this.#createTextSubCombination(this.colorCollection.alertSubCollection)
+
+        this.colorCollection.warningSubCollection = this.#createSubCombinationArray({
+            hue: 60 + vari,
+            saturation: this.hsl.saturation,
+            light: this.hsl.light
+        });
+        this.colorCollection.warningTextSubCollection = this.#createTextSubCombination(this.colorCollection.warningSubCollection)
+
+        this.colorCollection.successSubCollection = this.#createSubCombinationArray({
+            hue: 120 + vari * 2,
+            saturation: this.hsl.saturation,
+            light: this.hsl.light
+        });
+        this.colorCollection.successTextSubCollection = this.#createTextSubCombination(this.colorCollection.successSubCollection)
+
+        this.colorCollection.infoSubCollection = this.#createSubCombinationArray({
+            hue: 240 + vari,
+            saturation: this.hsl.saturation,
+            light: this.hsl.light
+        });
+        this.colorCollection.infoTextSubCollection = this.#createTextSubCombination(this.colorCollection.infoSubCollection)
+
+        return this.colorCollection;
+    }
 
     #limiter(value: number, min = 0, max = 100) {
         if (value < min) {
@@ -306,107 +407,5 @@ export class GenerateColorSet {
 
         const lastEntry = combinationCollection[combinationCollection.length - 1];
         lastEntry.subCombination = this.#createSubCombinationArray(lastEntry);
-    }
-
-    updateColor(newColor: ColorHSL | string) {
-        if (typeof newColor === "string") {
-            this.colorCollection.dominant = newColor;
-            this.hsl = this.colorUtils.hexToHsl(newColor).getValueCollection() as ColorHSL;
-        } else if ("hue" in newColor) {
-            this.hsl = newColor;
-            this.dominant = this.colorUtils.hslToHex(newColor).getString();
-            this.colorCollection.dominant = this.colorUtils.hslToHex(newColor).getString();
-        } else {
-            throw new Error("Invalid color format");
-        }
-        return this;
-    }
-
-    generate(
-        colors: VariationParams[] = [],
-        {
-            count: count = "10",
-            text: {light: textLight = "50", saturation: textSaturation = "0", hue: textHue = "0"} = {},
-            hue: {variation: hueVariation = "0", curve: hueCurve = "0", move: hueMove = "0"} = {},
-            light: {variation: lightVariation = "5", move: lightMove = "0", curve: lightCurve = "0"} = {},
-            saturation: {variation: satVariation = "0", move: satMove = "0", curve: satCurve = "0"} = {},
-            full: full = true
-        }: ColorGeneratorParams | object = {}
-    ) {
-        this.count = parseInt(count, 10);
-        this.hueVariation = parseInt(hueVariation, 10);
-        this.hueCurve = parseInt(hueCurve, 10);
-        this.hueMove = parseInt(hueMove, 10);
-        this.satVariation = parseInt(satVariation, 10);
-        this.satMove = parseInt(satMove, 10);
-        this.satCurve = parseInt(satCurve, 10);
-        this.lightVariation = parseInt(lightVariation, 10);
-        this.lightMove = parseInt(lightMove, 10);
-        this.lightCurve = parseInt(lightCurve, 10);
-        this.full = full;
-        this.textLight = parseInt(textLight, 10)
-        this.textSaturation = parseInt(textSaturation, 10)
-        this.textHue = parseInt(textHue, 10)
-        this.colorCollection.dominantSubCollection = this.#createSubCombinationArray(
-            this.hsl
-        );
-        this.colorCollection.dominantTextSubCollection = this.#createTextSubCombination(this.colorCollection.dominantSubCollection)
-        this.colorCollection.combinationCollection = [];
-        colors.forEach(item => {
-            const saturation =
-                item.saturation !== undefined ? item.saturation : this.hsl.saturation;
-            const light = item.light !== undefined ? item.light : this.hsl.light;
-            const combination = {
-                hue: this.hsl.hue + item.hueVariation,
-                saturation: saturation,
-                light: light
-            };
-
-            this.#addCombination(combination);
-        });
-
-        this.colorCollection.graySubCollection = this.#createSubCombinationArray(
-            {
-                hue: this.hsl.hue,
-                saturation: 0,
-                light: this.hsl.light
-            },
-            true
-        );
-        this.colorCollection.grayTextSubCollection = this.#createTextSubCombination(this.colorCollection.graySubCollection)
-        const vari = (() => {
-            const mult = Math.round(this.hsl.hue / 60);
-            const peak = 60 * mult;
-            return Math.round((this.hsl.hue - peak) / 2);
-        })();
-        this.colorCollection.alertSubCollection = this.#createSubCombinationArray({
-            hue: 0 + vari,
-            saturation: this.hsl.saturation,
-            light: this.hsl.light
-        });
-        this.colorCollection.alertTextSubCollection = this.#createTextSubCombination(this.colorCollection.alertSubCollection)
-
-        this.colorCollection.warningSubCollection = this.#createSubCombinationArray({
-            hue: 60 + vari,
-            saturation: this.hsl.saturation,
-            light: this.hsl.light
-        });
-        this.colorCollection.warningTextSubCollection = this.#createTextSubCombination(this.colorCollection.warningSubCollection)
-
-        this.colorCollection.successSubCollection = this.#createSubCombinationArray({
-            hue: 120 + vari * 2,
-            saturation: this.hsl.saturation,
-            light: this.hsl.light
-        });
-        this.colorCollection.successTextSubCollection = this.#createTextSubCombination(this.colorCollection.successSubCollection)
-
-        this.colorCollection.infoSubCollection = this.#createSubCombinationArray({
-            hue: 240 + vari,
-            saturation: this.hsl.saturation,
-            light: this.hsl.light
-        });
-        this.colorCollection.infoTextSubCollection = this.#createTextSubCombination(this.colorCollection.infoSubCollection)
-
-        return this.colorCollection;
     }
 }

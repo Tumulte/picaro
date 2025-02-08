@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import {PropType} from "vue";
-import {FieldContent, FieldParams} from "@types";
+import {FieldContentParams, FieldParams} from "@types";
 
 defineProps({
   fieldParams: {
@@ -9,7 +9,7 @@ defineProps({
     required: true
   },
   fieldContent: {
-    type: Object as PropType<FieldContent>,
+    type: Object as PropType<FieldContentParams>,
     required: false,
     default: null
   }

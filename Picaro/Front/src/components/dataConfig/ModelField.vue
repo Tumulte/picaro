@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import Text from "./formElements/display/TextLine.vue";
-import {FieldContent, Model, ModuleParam} from "@types";
+import {FieldContentParams, Model, ModuleParam} from "@types";
 import {computed, shallowRef} from "vue";
 
 const props = defineProps<{
-  fieldContent: FieldContent
+  fieldContent: FieldContentParams
   moduleParams: ModuleParam
   currentModel: Model
 }>()

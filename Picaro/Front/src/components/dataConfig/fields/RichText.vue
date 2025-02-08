@@ -6,22 +6,22 @@ import TextAlign from "@tiptap/extension-text-align";
 
 import StarterKit from "@tiptap/starter-kit";
 import {onMounted, ref} from "vue";
-import {FieldContent, FieldParams} from "@types";
+import {FieldParams, RichTextContent, RichTextEditorJson} from "@types";
 import {useSettingsStore} from "@stores/settings";
 import {generateHTML} from "@tiptap/core";
 
 
 const props = defineProps<{
   fieldParams: FieldParams;
-  fieldContent?: FieldContent | null;
+  fieldContent?: RichTextContent | null;
 }>()
 
 const emit = defineEmits<{
-  (emit: 'updateData', value: [string, FieldParams]): void
-  (emit: 'endEdit'): void
+  updateData: [[string, RichTextEditorJson]]
+  endEdit: []
 }>()
 
-const editor = ref<typeof Editor | null>(null)
+const editor = ref<Editor>()
 const selectedImg = ref<string | null>(null)
 
 const settingsStore = useSettingsStore()
@@ -33,16 +33,12 @@ onMounted(() => {
           types: ['heading', 'paragraph', 'image'],
         })],
         onUpdate: ({editor}) => {
-          const content = Object.assign({}, editor.getJSON(), {
-            fieldType: "rich-text",
-            required: props.fieldParams.required
-          });
-
-          updateModelData(content);
+          updateModelData(editor.getJSON());
         }
       });
+
       editor.value.on("selectionUpdate", ({editor}) => {
-        const src = editor.state.selection.node?.attrs?.src;
+        const src = editor.state.selection.$anchor.node()?.attrs?.src;
         if (src) {
           selectedImg.value = src.split("/").at(-1);
         } else {
@@ -55,6 +51,9 @@ onMounted(() => {
 )
 
 function setUrl() {
+  if (!editor.value) {
+    return;
+  }
   const previousUrl = editor.value.getAttributes("link").href;
   const url = window.prompt("URL", previousUrl);
   if (url === null) {
@@ -78,11 +77,11 @@ function setUrl() {
       .run();
 }
 
-function updateModelData(content: FieldContent) {
+function updateModelData(content: RichTextEditorJson) {
   emit("updateData", [props.fieldParams.id, {
     json: content,
     html: generateHTML(
-        props.fieldContent,
+        content,
         [
           StarterKit,
           Image,
@@ -94,7 +93,7 @@ function updateModelData(content: FieldContent) {
 
 function addImage() {
   if (settingsStore.rteImage) {
-    editor.value.commands.setImage({src: `/api/uploads/${settingsStore.rteImage}`})
+    editor.value?.commands.setImage({src: `/api/uploads/${settingsStore.rteImage}`})
   }
 }
 

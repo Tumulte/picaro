@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {defineProps, ref, shallowRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {Categories, FieldContent, FieldParams, Model, ModelContent} from "@types";
+import {Categories, FieldContentParams, FieldParams, Model, ModelContent} from "@types";
 import TextLine from "@components/dataConfig/fields/TextLine.vue";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
@@ -54,7 +54,7 @@ function defaultEmptyContent(): ModelContent {
 
 const currentModelContent = ref(copy(props.modelContent) || defaultEmptyContent())
 
-function updateData(data: [string, FieldContent['fieldContent']]) {
+function updateData(data: [string, FieldContentParams['fieldContent']]) {
   const [id, content] = data
 
   const changedItem = currentModelContent.value.content.find(item => item.fieldParamsId === id)

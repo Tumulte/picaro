@@ -1,13 +1,22 @@
 export type AvailableModules = "Layout" | "FilterLayout" | "List" | "FilterCategories" | "FilterLink"
+export type AvailableContentType = "richText" | 'text'
 export type Categories = { id: string, label: string }
 export type Layout = {
     model: string,
     type: string,
     categories: Categories[]
 }
+
+export type AvailableModulesComponentList = Record<AvailableModules, string>
+
 export type CommonLayout = { type: AvailableModules, cols?: string, model?: string }
-export type Filter = { method: FilterMethod, field: string, value: string[], type: string }
-export type ModelFilter = Filter & { modelIdCollection: string[] }
+export type Filter = {
+    method: FilterMethod,
+    field: string,
+    value: string[],
+    type: string
+}
+export type ModelFilter = Filter & { modelIdCollection?: string[] }
 export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
 export type FilterMethod = "eq" | "in" | "fd"
 
@@ -17,15 +26,22 @@ export type FilterCollection = {
 }
 
 export type RichTextContent = {
-    type: string
-    attrs?: {
-        level?: number
-    }
-    content: {
-        type: string
-        text: string
-    }
+    html: string
+    json: JSONContent[]
 }
+
+export type RichTextEditorJson = {
+    type?: string;
+    attrs?: Record<string, any>;
+    content?: JSONContent[];
+    marks?: {
+        type: string;
+        attrs?: Record<string, any>;
+        [key: string]: any;
+    }[];
+    text?: string;
+    [key: string]: any;
+};
 
 export type Settings = {
     id: string,
@@ -139,18 +155,18 @@ export type FieldParams = {
     template: string,
     attributes: string,
     extraParams: Record<string, string>,
-    type: string
+    type: AvailableContentType
 }
 
-export type FieldContent = {
-    fieldContent: null | string | RichTextContent[]
+export type FieldContentParams = {
+    fieldContent: null | string | RichTextContent
     fieldParamsId: string
     contentId: string
 }
 
 export type ModelContent = {
     categories: string[]
-    content: FieldContent[]
+    content: FieldContentParams[]
     modelId: string
     id: string
 }

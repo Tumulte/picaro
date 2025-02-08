@@ -27,3 +27,5 @@ export interface ColorHelperType {
     hslToHex: (color: Color) => ColorHelperTypes,
     color: Color | undefined,
 }
+
+declare module '@picaro/colorhelper/index.d.ts';

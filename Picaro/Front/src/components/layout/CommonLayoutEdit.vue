@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 
 import {computed} from "vue";
-import FilterCategories from "@components/filters/FilterCategoriesEdit.vue";
-import type {Settings} from "@types";
+import type {AvailableModules, AvailableModulesComponentList, Settings} from "@types";
 import {useSettingsStore} from "@stores/settings";
 import {useUtilsStore} from "@stores/utils";
 import {updateSettings} from "@components/utils/api";
@@ -19,19 +18,19 @@ const layoutCommonCollection = computed<Settings["layoutCommonCollection"]>(() =
 });
 
 
-const components = {
+const components: Partial<AvailableModulesComponentList> = {
   /*
   FilterLayout: "FilterLayout",
   FilterLink: "FilterLink",
   */
   Layout: "Layout",
   List: "List",
-  FilterCategories
+  FilterCategories: "FilterCategories"
 };
 
 
 function addRow() {
-  layoutCommonCollection.value.push([{}]);
+  layoutCommonCollection.value.push([{type: 'Layout'}]);
 }
 
 function deleteColumn(line: number, column: number) {
@@ -47,12 +46,15 @@ function deleteColumn(line: number, column: number) {
   }).catch((error) => console.error(error))
 }
 
-function changeModule(event, index, subIndex) {
+function changeModule(event: AvailableModules, index: number, subIndex: number) {
   layoutCommonCollection.value[index][subIndex] = {type: event};
 }
 
 async function saveLayout() {
-  await updateSettings(settingsStore.currentAppSettings)
+  if (settingsStore.currentAppSettings) {
+    await updateSettings(settingsStore.currentAppSettings)
+
+  }
 }
 
 </script>

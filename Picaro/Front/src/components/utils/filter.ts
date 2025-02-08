@@ -1,6 +1,6 @@
-import {FieldContent, Filter, FilterCollection, FilterMethod, ModelContent, ModuleParam} from "@types";
+import {FieldContentParams, Filter, FilterCollection, FilterMethod, ModelContent, ModuleParam} from "@types";
 
-const applyFilterMethod = function (method: FilterMethod, searchedItem: string | string[] | ModelContent[] | FieldContent[], checkedValue: Filter) {
+const applyFilterMethod = function (method: FilterMethod, searchedItem: string | string[] | ModelContent[] | FieldContentParams[], checkedValue: Filter) {
     if (method === "eq") {
         return searchedItem === checkedValue.value[0];
     }
