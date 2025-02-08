@@ -18,8 +18,8 @@ export type Color = ColorObject | string
 
 export interface ColorHelperType {
     getValueCollection: (color?: Color) => ColorObject,
-    hexToRgb: Function,
-    rgbToHex: Function,
+    hexToRgb: (color?: Color) => ColorHelperType,
+    rgbToHex: (color?: Color) => ColorHelperType,
     hslToRgb: (color: Color) => ColorHelperType,
     rgbToHsl: (color: Color) => ColorHelperType,
     getString: (color: Color) => string,
