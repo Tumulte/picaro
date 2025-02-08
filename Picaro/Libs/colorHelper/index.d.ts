@@ -28,3 +28,4 @@ export interface ColorHelperType {
     color: Color | undefined,
 }
 
+declare module '@picaro/colorhelper/index.d.ts';

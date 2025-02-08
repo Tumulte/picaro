@@ -1,32 +1,18 @@
-import {ColorHelperType, Color, ColorHSL, ColorObject} from './index.d'
+import * as types from './index.d'
 
-export class ColorHelper implements ColorHelperType {
+export type Color = types.Color;
+export type ColorHSL = types.ColorHSL;
+// @ts-ignore
+export type ColorHex = types.ColorHex;
+// @ts-ignore
+export type ColorRGB = types.ColorRGB
+export type ColorObject = types.ColorObject;
+
+export class ColorHelper implements types.ColorHelperType {
     color;
 
     constructor(color?: Color) {
         this.color = color;
-    }
-
-    #parseHex(hex: string) {
-        return parseInt(hex, 16);
-    }
-
-    #toHex(number: number) {
-        let hex = number.toString(16);
-        if (hex.length === 1) {
-            hex = `0${hex}`;
-        }
-        return hex.toUpperCase();
-    }
-
-    #checkColor(color: Color | undefined): Color {
-        if (!color && !this.color) {
-            throw new Error('No color provided');
-        } else if (color) {
-            return color as Color;
-        } else {
-            return this.color as Color;
-        }
     }
 
     isHexColor(color: string) {
@@ -270,6 +256,28 @@ export class ColorHelper implements ColorHelperType {
             };
         } else {
             throw new Error("The color you provided is not a valid color");
+        }
+    }
+
+    #parseHex(hex: string) {
+        return parseInt(hex, 16);
+    }
+
+    #toHex(number: number) {
+        let hex = number.toString(16);
+        if (hex.length === 1) {
+            hex = `0${hex}`;
+        }
+        return hex.toUpperCase();
+    }
+
+    #checkColor(color: Color | undefined): Color {
+        if (!color && !this.color) {
+            throw new Error('No color provided');
+        } else if (color) {
+            return color;
+        } else {
+            return this.color as Color;
         }
     }
 }
