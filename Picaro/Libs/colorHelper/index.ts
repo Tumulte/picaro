@@ -1,10 +1,8 @@
-import * as types from './index.d'
+import * as types from './types'
 
 export type Color = types.Color;
 export type ColorHSL = types.ColorHSL;
-// @ts-ignore
-export type ColorHex = types.ColorHex;
-// @ts-ignore
+export type HelperHex = types.ColorHex;
 export type ColorRGB = types.ColorRGB
 export type ColorObject = types.ColorObject;
 

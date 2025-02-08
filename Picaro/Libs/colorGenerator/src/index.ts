@@ -1,4 +1,4 @@
-import {ColorHelper} from "@picaro/colorhelper"
+import {ColorHelper, type ColorHSL} from "@picaro/colorhelper"
 import "core-js/features/array/for-each"
 import "core-js/features/object/entries"
 import {ColorGeneratorParams} from "@types";

@@ -295,8 +295,8 @@ importers:
   Picaro/Libs/colorGenerator:
     dependencies:
       '@picaro/colorhelper':
-        specifier: 1.0.4
-        version: 1.0.4
+        specifier: 1.0.5
+        version: 1.0.5
       core-js:
         specifier: ^3.20.2
         version: 3.39.0
@@ -1409,8 +1409,8 @@ packages:
     resolution: {integrity: sha512-i0GV1yJnm2n3Yq1qw6QrUrd/LI9bE8WEBOTtOkpCXHHdyN3TAGgqAK/DAT05z4fq2x04cARXt2pDmjWjL92iTQ==}
     engines: {node: '>= 10.0.0'}
 
-  '@picaro/colorhelper@1.0.4':
-    resolution: {integrity: sha512-JTMdgt3M6bvIvey3Uxt89dMN+4DJ/9pzjNRybfLKIoBt4VSbGaCJ46mrNjX5gEppHsTYyH2XwFU14MSuQOjm7g==}
+  '@picaro/colorhelper@1.0.5':
+    resolution: {integrity: sha512-pJ9HJf4Nsb4qpKMZ5EV0PExpR9G+7fzFZ8SpeHTO21PV7ufu4HxuLLkbx9h4gTy5R6S5BOKkH++IqYRyQVGJ8Q==}
 
   '@pinia/testing@0.1.7':
     resolution: {integrity: sha512-xcDq6Ry/kNhZ5bsUMl7DeoFXwdume1NYzDggCiDUDKoPQ6Mo0eH9VU7bJvBtlurqe6byAntWoX5IhVFqWzRz/Q==}
@@ -7195,7 +7195,7 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.0
     optional: true
 
-  '@picaro/colorhelper@1.0.4': {}
+  '@picaro/colorhelper@1.0.5': {}
 
   '@pinia/testing@0.1.7(pinia@2.2.6(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))':
     dependencies:
