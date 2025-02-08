@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "useUnknownInCatchVariables": true,
+    "declaration": true,
     "baseUrl": ".",
     "lib": [
       "esnext",
@@ -33,7 +34,7 @@
       ],
       "@data/*": [
         "./Picaro/Data"
-      ],
+      ]
     },
     "exclude": [
       "node_modules"
