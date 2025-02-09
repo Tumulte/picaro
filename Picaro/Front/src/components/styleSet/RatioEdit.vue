@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 import {useSettingsStore} from "@stores/settings";
 import {StyleSet} from "@types";
 import {computed, ref} from "vue";

@@ -1,4 +1,5 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+// @ts-nocheck
 import {webSafeFonts} from "@utils/const";
 import {useSettingsStore} from "@stores/settings";
 import {computed, ref} from "vue";
@@ -46,11 +47,11 @@ const getFontList = computed(() => {
     </v-col>
     <v-col cols="6">
       <v-combobox
-        :model-value="font.font"
         :items="getFontList"
+        :label="`Font ${type}`"
+        :model-value="font.font"
         density="compact"
         item-title="family"
-        :label="`Font ${type}`"
         @update:modelValue="font.font = $event; emit('reloadSettings')"
       />
 

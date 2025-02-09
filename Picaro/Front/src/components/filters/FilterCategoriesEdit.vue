@@ -10,7 +10,7 @@ const userStore = useUserStore()
 const isEdit = ref(true)
 const form = ref()
 const currentAddedItem = ref('')
-const categoryEditIndex = ref(null)
+const categoryEditIndex = ref<number | null>(null)
 const rules = [
   (value: string) => !availableCategories.value.find(item => item.label === value) || 'This category already exists',
   (value: string) => !!value
@@ -23,14 +23,16 @@ const availableCategories = computed(() => {
   return settingsStore.currentAppSettings?.categories ?? []
 })
 
-function changeCategory(id: string) {
-  userStore.updateFilterCollection({
+async function changeCategory(id: string) {
+  await userStore.updateFilterCollection({
     type: "categories",
-    params: {value: id, field: "categories", method: "in"}
+    filterParams: {value: [id], field: "categories", method: "in"},
+    models: []
   });
 }
 
 async function addItem() {
+  if (!settingsStore.currentAppSettings) return
   const {valid} = await form.value.validate()
   if (!valid) return
   if (!settingsStore.currentAppSettings?.categories) settingsStore.currentAppSettings.categories = []
@@ -39,13 +41,14 @@ async function addItem() {
 }
 
 function addSection() {
+  if (!settingsStore.currentAppSettings) return
   if (!settingsStore.currentAppSettings?.categories) settingsStore.currentAppSettings.categories = []
   settingsStore.currentAppSettings.categories.push({label: currentAddedItem.value, id: "section"})
   currentAddedItem.value = ''
 }
 
 
-function deleteCategory(index, category) {
+function deleteCategory(index: number, category: string) {
   utilStore.awaitConfirmation({
     text:
         `Are you sure you want to delete the category ${category} ?`,

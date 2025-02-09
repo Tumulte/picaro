@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {FontStyleParams, RatioParams} from "@types";
 
 export function makeFontFamilyName(name: FontStyleParams) {

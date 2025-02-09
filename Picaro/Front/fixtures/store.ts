@@ -16,7 +16,7 @@ export const currentAppSettings = {
         name: "blog",
         id: "h2fFurQB-2LFRbVHnF-Pk",
         layout: [[{
-            model: "1QKpueEa", type: "list", categories: []
+            model: "1QKpueEa", type: "List", categories: []
         }]]
     }],
     layoutLinkCollection: [],
@@ -225,7 +225,7 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
                     [
                         {
                             model: "1QKpueEa",
-                            type: "list",
+                            type: "List",
                             categories: []
                         }
                     ]

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {FieldContentParams} from "@types";
+import {RichTextContent} from "@types";
 
 
 defineProps<{
-  fieldContent: FieldContentParams
+  fieldContent: RichTextContent
 }>()
 
 

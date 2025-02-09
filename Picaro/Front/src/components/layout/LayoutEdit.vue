@@ -2,6 +2,7 @@
 import {computed, ref} from "vue";
 import {useSettingsStore} from "@stores/settings";
 import {nanoid} from "nanoid";
+import {Layout, Model} from "@types";
 
 const settingsStore = useSettingsStore();
 
@@ -19,24 +20,16 @@ const defaultLayout = computed(() => {
 
 const createdLayoutName = ref('')
 
-const selectedLayoutId = computed(() => {
-  return selectedEditLayout.value ||
-      settingsStore.currentAppSettings?.filterCollection?.all?.layout ||
-      settingsStore.currentAppSettings?.defaultLayout
+const selectedLayout = computed<Layout[][]>(() => {
+  return settingsStore.currentAppSettings?.layoutCollection.find(item =>
+      item.id === settingsStore.currentAppSettings?.defaultLayout
+  )?.layout || [];
 });
-
-const selectedLayout = computed(() => {
-  if (selectedLayoutId.value) {
-    return settingsStore.currentAppSettings?.layoutCollection.find(item => item.id === selectedLayoutId.value).layout || [];
-  } else {
-    return null;
-  }
-});
-const modelCollection = computed(() => {
+const modelCollection = computed<Model[]>(() => {
   return settingsStore.currentAppSettings?.modelCollection ?? []
 });
 
-function makeClass(module) {
+function makeClass(module: Layout) {
   return module.type ? `rf-${module.type}-module` : "";
 }
 
@@ -44,7 +37,7 @@ function createLayout() {
   if (!createdLayoutId.value) {
     return false
   }
-  layoutCollection.value.push({
+  layoutCollection.value?.push({
     name: createdLayoutId.value,
     id: nanoid(),
     layout: []
@@ -52,7 +45,7 @@ function createLayout() {
   createdLayoutId.value = "";
 }
 
-function initModule(module) {
+function initModule(module: Layout) {
   return {
     type: module.type,
     model: module.model,
@@ -64,9 +57,9 @@ function initModule(module) {
 
 <template>
   <div class="pic-layout--dynamic-module">
-    <div class="pic-container">
+    <div v-if="layoutCollection && settingsStore.currentAppSettings" class="pic-container">
       <v-select
-        v-if="layoutCollection.length > 0"
+        v-if="layoutCollection?.length > 0"
         :items="layoutCollection"
         :model-value="selectedEditLayout"
         item-title="name"
@@ -131,7 +124,7 @@ function initModule(module) {
                   item-title="name"
                   item-value="id"
                   label="Model"
-                  @update:model-value="module.model = $event"
+                  @update:model-value="module.model = $event.id"
                 />
                 TODO CATEGORIES
               </div>
@@ -162,7 +155,7 @@ function initModule(module) {
     <div
       class="pic-layout--add-row"
       data-jest="add-row"
-      @click="selectedLayout.push([{model:null, type:null, categories: null}])"
+      @click="selectedLayout.push([{model: null, type:'List', categories: []}])"
     >
       <v-icon>mdi-table-row-plus-after</v-icon>
     </div>

@@ -6,7 +6,7 @@ import {useRoute, useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
 
-const allImages = ref([])
+const allImages = ref()
 
 
 defineEmits(['reloadSettings'])

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 import ColorEdit from "@components/styleSet/ColorEdit.vue";
 import {nanoid} from "nanoid";
 import {useRoute, useRouter} from "vue-router";

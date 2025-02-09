@@ -17,7 +17,7 @@ export default defineConfig({
             '@utils': path.resolve(__dirname, './utils'),
             '@stores': path.resolve(__dirname, './stores'),
             '@components': path.resolve(__dirname, './src/components'),
-            '@types': path.resolve(__dirname, './../Types'),
+            '@types': path.resolve(__dirname, './types'),
             '@libs': path.resolve(__dirname, './../Libs'),
             '@uploads': path.resolve(__dirname, './../Back/uploads'),
             '/api/uploads': path.resolve(__dirname, './../Back/uploads'),

@@ -1,4 +1,4 @@
-import {FieldContentParams, Filter, FilterCollection, FilterMethod, ModelContent, ModuleParam} from "@types";
+import {FieldContentParams, Filter, FilterCollection, FilterMethod, Layout, ModelContent} from "@types";
 
 const applyFilterMethod = function (method: FilterMethod, searchedItem: string | string[] | ModelContent[] | FieldContentParams[], checkedValue: Filter) {
     if (method === "eq") {
@@ -22,18 +22,18 @@ function checkFilterCollection(item: ModelContent, filter: Filter) {
             {value: filter.value} as Filter
         );
     } else {
-        if (!itemToCheck.find(subItem => subItem.id === filter.field)) {
+        if (!itemToCheck.find(subItem => subItem.contentId === filter.field)) {
             return false;
         }
     }
     return applyFilterMethod(
         filter.method,
-        itemToCheck.filter(subItem => subItem.id === filter.field),
+        itemToCheck.filter(subItem => subItem.contentId === filter.field),
         filter
     );
-};
+}
 
-export const applyFilter = function (item: ModelContent, filterCollection: FilterCollection, moduleParams: ModuleParam) {
+export const applyFilter = function (item: ModelContent, filterCollection: FilterCollection, moduleParams: Layout) {
 
 
     let displayItem = 0;

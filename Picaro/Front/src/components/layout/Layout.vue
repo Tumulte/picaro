@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import {Settings} from "@types";
+import {AvailableModulesComponentList, Layout, Settings} from "@types";
 import {computed} from "vue";
-import List from "@components/display/DisplayList.vue";
 
 const props = defineProps<{
   currentApp: Settings
 }>()
 
-const componentMap = {
-  list: List,
+const componentMap: Partial<AvailableModulesComponentList> = {
+  List: "List",
 }
 
-const selectedLayout = computed(() => {
+const selectedLayout = computed<Layout[][]>(() => {
   return props.currentApp.layoutCollection.find(item => item.id === props.currentApp.defaultLayout)?.layout || []
 })
 </script>
@@ -19,7 +18,7 @@ const selectedLayout = computed(() => {
   <v-row v-for="(layoutLine, index) in selectedLayout" :key="index" class="rf-layout--container pic-row-container">
     <v-col
       v-for="module in layoutLine"
-      :key="module.id"
+      :key="module.type"
       :cols="module.cols"
       class="pic-layout--module"
     >

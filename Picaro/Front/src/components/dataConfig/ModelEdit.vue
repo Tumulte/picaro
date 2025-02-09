@@ -167,7 +167,7 @@ function saveEditedField(field: FieldParams, index: number) {
             @deleteField="deleteField(index)"
             @updateEditField="emit('updateModelFormState', 'editingField'); currentEditField = $event"
             @updateEditedFieldData="saveEditedField($event,index)"
-            @cancel-field="emit('updateModelFormState', 'modelCreated')"
+            @cancel-field="emit('updateModelFormState', 'modelSelected')"
           />
         </div>
       </template>
@@ -178,7 +178,7 @@ function saveEditedField(field: FieldParams, index: number) {
       :model="currentEditModel"
       :model-form-state="props.modelFormState"
       @addFieldData="addField"
-      @cancel-field="emit('updateModelFormState', 'modelCreated')"
+      @cancel-field="emit('updateModelFormState', 'modelSelected')"
     />
     <v-btn
       v-if="props.modelFormState === 'modelSelected'"

@@ -1,6 +1,6 @@
 {
   "name": "@picaro/colorhelper",
-  "version": "1.0.8",
+  "version": "1.0.7",
   "description": "converts common css color format into any other as object or string",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",

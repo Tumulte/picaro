@@ -12,14 +12,14 @@ const availableCategories = computed(() => {
   return props.currentApp.categories;
 });
 
-function changeCategory(id?: string) {
+async function changeCategory(id?: string) {
   if (id === 'section') {
     return
   }
-  userStore.updateFilterCollection({
+  await userStore.updateFilterCollection({
     models: props.module?.model ? [props.module?.model] : undefined,
     type: "categories",
-    filterParams: {value: id ? [id] : undefined, field: "categories", method: "in"}
+    filterParams: {value: [id ?? ''], field: "categories", method: "in"}
   });
 }
 
@@ -49,7 +49,7 @@ a {
 }
 
 .pic-section {
-  font-family: var(--font-alt);
+  font-family: var("--font-alt");
   margin: 1rem 0;
   font-weight: bold;
   font-size: 1.5rem;

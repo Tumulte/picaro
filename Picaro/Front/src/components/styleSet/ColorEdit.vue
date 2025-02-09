@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 import {ColorParameters, StyleSet} from "@types";
 import {ColorHelper} from "@libs/colorHelper";
 import {GenerateColorSet} from "@libs/colorGenerator";

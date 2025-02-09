@@ -30,7 +30,7 @@
         "./../Libs/*"
       ],
       "@types": [
-        "./../Types"
+        "./src/types"
       ],
       "@data": [
         "./../Data"

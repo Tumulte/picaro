@@ -115,7 +115,7 @@ function filterRouteToStore({
       >
         <component
           :is="availableModules[layoutCommonColumn.type]"
-          v-if="layoutCommonColumn.type !== 'Layout'"
+          v-if="layoutCommonColumn.type !== 'Layout' && layoutCommonColumn.type"
           :current-app="currentApp"
           :module-params="layoutCommonColumn"
         />

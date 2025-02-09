@@ -162,7 +162,7 @@ const v$ = useVuelidate(rules, form)
         </v-btn>
       </aside>
       <main class="pic-container">
-        <template v-if="appFormState === 'selectedApp'">
+        <template v-if="currentSettings && appFormState === 'selectedApp'">
           <h2 data-test="app-title-selected">
             {{ currentSettings.applicationName }}
           </h2>

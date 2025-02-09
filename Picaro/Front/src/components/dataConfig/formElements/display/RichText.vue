@@ -2,13 +2,13 @@
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
-import {FieldContentParams} from "@types";
+import {RichTextContent} from "@types";
 import {ref, watch} from "vue";
 import {generateHTML} from '@tiptap/core'
 
 
 const props = defineProps<{
-  fieldContent: FieldContentParams | null
+  fieldContent: RichTextContent | null
 }>()
 
 

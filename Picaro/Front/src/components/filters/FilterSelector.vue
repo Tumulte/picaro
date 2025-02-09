@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 
 const filterList = ref([]);
@@ -18,12 +18,12 @@ function saveFilterList() {
   <div>
     <v-combobox
       v-model="currentFilterList"
-      label="Categories"
-      multiple="multiple"
-      small-chips="small-chips"
       :items="filterList"
+      :multiple="true"
       item-text="label"
       item-value="id"
+      label="Categories"
+      small-chips="small-chips"
       @change="checkForNewElement"
     />
     <v-btn v-if="displaySave" @click="saveFilterList">

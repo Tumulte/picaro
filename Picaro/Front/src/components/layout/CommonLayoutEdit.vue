@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import {computed} from "vue";
-import type {AvailableModules, AvailableModulesComponentList, Settings} from "@types";
+import type {AvailableModules, AvailableModulesComponentList, Model, Settings} from "@types";
 import {useSettingsStore} from "@stores/settings";
 import {useUtilsStore} from "@stores/utils";
 import {updateSettings} from "@components/utils/api";
@@ -9,7 +9,7 @@ import {updateSettings} from "@components/utils/api";
 const utilStore = useUtilsStore()
 const settingsStore = useSettingsStore();
 
-const modelCollection = computed(() => {
+const modelCollection = computed<Model[]>(() => {
   return settingsStore.currentAppSettings?.modelCollection ?? []
 });
 
@@ -94,13 +94,13 @@ async function saveLayout() {
                 density="compact"
                 label="Module"
                 variant="underlined"
-                @update:modelValue="changeModule($event, index, subIndex)"
+                @update:modelValue="changeModule($event as AvailableModules, index, subIndex)"
               />
             </div>
           </span>
           <component
             :is="components[layoutCommonColumn.type]"
-            v-if="typeof components[layoutCommonColumn.type] !== 'string'"
+            v-if="layoutCommonColumn.type && typeof components[layoutCommonColumn.type] !== 'string'"
           />
 
           <div v-else>
@@ -110,15 +110,15 @@ async function saveLayout() {
               item-title="name"
               item-value="id"
               label="Model"
-              @update:model-value="layoutCommonColumn.model = $event"
+              @update:model-value="layoutCommonColumn.model = $event as unknown as Model['id']"
             />
             <v-select
-              :items="settingsStore.currentAppSettings.categories"
+              :items="settingsStore.currentAppSettings?.categories"
               :multiple="true"
               item-title="label"
               item-value="id"
               label="Categories"
-              @update:model-value="layoutCommonColumn.categories = $event"
+              @update:model-value="layoutCommonColumn.categories = $event as string[]"
             />
           </div>
 
@@ -135,7 +135,7 @@ async function saveLayout() {
           <div
             class="pic-layout--add-column"
             data-jest="add-common-column"
-            @click="layoutCommonLine.splice(index + 1,0 , {})"
+            @click="layoutCommonLine.splice(index + 1,0 , {type: null})"
           >
             <v-icon>mdi-table-column-plus-after</v-icon>
           </div>
@@ -145,7 +145,7 @@ async function saveLayout() {
         v-if="layoutCommonCollection.length > 1"
         class="pic-layout--add-row"
         data-jest="add-common-row-inner"
-        @click="layoutCommonCollection.splice(index + 1, 0, [''] )"
+        @click="layoutCommonCollection.splice(index + 1, 0, [] )"
       >
         <v-icon>mdi-table-row-plus-after</v-icon>
       </div>

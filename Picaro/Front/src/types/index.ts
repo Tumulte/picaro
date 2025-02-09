@@ -1,23 +1,35 @@
+import {JSONContent} from "@tiptap/core"
+
 export type AvailableModules = "Layout" | "FilterLayout" | "List" | "FilterCategories" | "FilterLink"
 export type AvailableContentType = "richText" | 'text'
 export type Categories = { id: string, label: string }
 export type Layout = {
-    model: string,
-    type: string,
+    model: string | null,
+    type: AvailableModules,
     categories: Categories[]
+    cols?: string
 }
 
 export type AvailableModulesComponentList = Record<AvailableModules, string>
 
-export type CommonLayout = { type: AvailableModules, cols?: string, model?: string }
+export type CommonLayout = {
+    type: AvailableModules | null
+    cols?: string
+    model?: string
+    categories?: string[]
+}
+
 export type Filter = {
     method: FilterMethod,
     field: string,
     value: string[],
     type: string
 }
+
 export type ModelFilter = Filter & { modelIdCollection?: string[] }
+
 export type Model = { id: string, name: string, fieldCollection: FieldParams[] }
+
 export type FilterMethod = "eq" | "in" | "fd"
 
 export type FilterCollection = {
@@ -155,7 +167,7 @@ export type FieldParams = {
     template: string,
     attributes: string,
     extraParams: Record<string, string>,
-    type: AvailableContentType
+    type: AvailableContentType | 'none'
 }
 
 export type FieldContentParams = {
@@ -171,11 +183,6 @@ export type ModelContent = {
     id: string
 }
 
-export type ModuleParam = {
-    model: string
-    categories: Categories[]
-    type: string
-}
 
 export type Hue = { hue: number, saturation: number, light: number }
 

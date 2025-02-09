@@ -24,7 +24,7 @@
         "./Picaro/Front/*"
       ],
       "@types": [
-        "./Picaro/Types"
+        "./Picaro/Front/src/types"
       ],
       "@utils": [
         "./Picaro/utils"

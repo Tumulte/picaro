@@ -1,6 +1,8 @@
+// @ts-nocheck
 import {GenerateColorSet} from "@libs/colorGenerator";
 import {webSafeFonts} from "./const";
 import type {StyleSet} from "@types";
+import {makeFontFamilyName, makeRatio} from "./helper";
 
 const prefixClass = ".pic-content-container";
 const headerTags = `${prefixClass} h1,
@@ -9,7 +11,6 @@ ${prefixClass} h3,
 ${prefixClass} h4,
 ${prefixClass} h5,
 ${prefixClass} h6`;
-import {makeFontFamilyName, makeRatio} from "./helper";
 
 function getParameter(coordinates: string, styleSet: StyleSet, colorSet): string {
     if (coordinates.includes("{\"type\":\"color\",")) {

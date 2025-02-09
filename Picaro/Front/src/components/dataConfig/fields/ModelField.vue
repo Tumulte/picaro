@@ -20,15 +20,15 @@ const props = withDefaults(defineProps<{
   currentEditField: "",
   existingFieldData: () => ({
     id: "",
-    name: "",
     label: "",
-    type: "",
+    name: "",
     regex: "",
+    required: false,
     hidden: false,
     template: "",
     attributes: "",
-    required: false,
-    extraParams: "",
+    extraParams: {},
+    type: "none",
   }),
   isNew: false
 })
@@ -44,41 +44,18 @@ const emit = defineEmits<{
 
 
 const utilsStore = useUtilsStore()
-let fieldData = {
-  name: "",
-  type: "none",
-  label: "",
-  regex: "",
-  hidden: false,
-  template: "",
-  attributes: "",
-  required: false,
-  extraParams: ""
-}
 
 const hidden = ref(false)
 
-/*
-const hasRegEx = ref(["Text"])
-const extraField = ref({
-  Relation: RelationPanel
-})
-const existingFieldNames = computed(() => {
-  return props.model.fieldCollection.map(field => field.name)
-})
- */
 
-if (Object.keys(props.existingFieldData).length > 0) {
-  fieldData = {...props.existingFieldData}
-}
-const name = ref(fieldData.name)
-const type = ref(fieldData.type)
-const label = ref(fieldData.label)
-const template = ref(fieldData.template)
-const attributes = ref(fieldData.attributes)
-const required = ref(fieldData.required)
-const regex = ref(fieldData.regex)
-const extraParams = ref(fieldData.extraParams)
+const name = ref(props.existingFieldData.name)
+const type = ref(props.existingFieldData.type)
+const label = ref(props.existingFieldData.label)
+const template = ref(props.existingFieldData.template)
+const attributes = ref(props.existingFieldData.attributes)
+const required = ref(props.existingFieldData.required)
+const regex = ref(props.existingFieldData.regex)
+const extraParams = ref(props.existingFieldData.extraParams)
 const noFieldSelected = ref(type.value === 'none')
 const savedFieldType = ref('');
 

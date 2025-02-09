@@ -4,7 +4,7 @@ import ModelField from "@components/dataConfig/ModelField.vue"
 import {computed} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
-import {Categories, Model, ModelContent, ModuleParam, Settings} from "@types";
+import {Categories, Layout, Model, ModelContent, Settings} from "@types";
 import {useDataStore} from "@stores/data";
 import {useSettingsStore} from "@stores/settings";
 
@@ -15,7 +15,7 @@ const categories: Categories[] = settings.currentAppSettings?.categories || []
 const route = useRoute();
 
 const props = defineProps<{
-  moduleParams: ModuleParam
+  moduleParams: Layout
   displayAll?: boolean
   currentApp: Settings
 }>()

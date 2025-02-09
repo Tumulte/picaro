@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
 import {useRouter} from "vue-router";
-import {Filter, FilterCollection, ModelFilter} from "@types";
+import {Filter, FilterCollection, FilterMethod, ModelFilter} from "@types";
 import groupBy from "object.groupby"
-import {useSettingsStore} from "@stores/settings";
+import {useSettingsStore} from "./settings";
 
 export const useUserStore = defineStore('user', () => {
     const router = useRouter()
@@ -13,8 +13,8 @@ export const useUserStore = defineStore('user', () => {
 
     const settingsStore = useSettingsStore()
 
-    function updateFilterCollection({filterParams, models, type}: {
-        filterParams: { value: [string] | undefined, field: string, method: string },
+    async function updateFilterCollection({filterParams, models, type}: {
+        filterParams: { value: [string], field: string, method: FilterMethod },
         models: string[] | undefined,
         type: string
     }) {
@@ -38,9 +38,12 @@ export const useUserStore = defineStore('user', () => {
             temporaryFilterCollection.all.push(params)
         }
 
-        settingsStore.currentAppSettings.filterCollection = temporaryFilterCollection
+        if (settingsStore.currentAppSettings) {
+            settingsStore.currentAppSettings.filterCollection = temporaryFilterCollection
 
-        updateRoute(temporaryFilterCollection);
+        }
+
+        await updateRoute(temporaryFilterCollection);
         return;
 
     }
@@ -58,7 +61,7 @@ export const useUserStore = defineStore('user', () => {
                 const modelsDedup = (values as ModelFilter[][])[index]
                     .reduce((acc, current) => {
 
-                        current.modelIdCollection.forEach(id => {
+                        current.modelIdCollection?.forEach(id => {
                             set.add(id)
                         });
 
@@ -85,7 +88,7 @@ export const useUserStore = defineStore('user', () => {
         return {filtersType, params}
     }
 
-    function updateRoute(filterCollection: FilterCollection) {
+    async function updateRoute(filterCollection: FilterCollection) {
 
         const {filtersType: globalFilters, params: globalParams} = getStringFromParams(filterCollection.all)
 
@@ -102,7 +105,7 @@ export const useUserStore = defineStore('user', () => {
                 modelFilterParams: encodeURI(modelFilterParams)
             }
         }
-        router.push(params);
+        await router.push(params);
         return params
     }
 

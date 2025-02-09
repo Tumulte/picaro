@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import Text from "./formElements/display/TextLine.vue";
-import {FieldContentParams, Model, ModuleParam} from "@types";
+import {FieldContentParams, Layout, Model} from "@types";
 import {computed, shallowRef} from "vue";
 
 const props = defineProps<{
   fieldContent: FieldContentParams
-  moduleParams: ModuleParam
+  moduleParams: Layout
   currentModel: Model
 }>()
 
@@ -27,19 +27,15 @@ richTextComponent()
         }
     ).catch(e => console.error(e))
 
-function sendForm(data) {
-  return data
-}
 
 </script>
 <template>
   <component
     :is="componentMap[fieldParams.type]"
-    v-if="fieldContent && componentMap"
+    v-if="fieldParams && fieldContent && componentMap"
     :key="fieldParams.id"
     :field-content="fieldContent.fieldContent"
     :field-params="fieldParams"
     :module-params="moduleParams"
-    @saveEdit="sendForm($event)"
   />
 </template>

@@ -132,7 +132,7 @@ async function saveCategory() {
           :categories="categories"
           :current-app="settingsStore.currentAppSettings"
           :display-all="true"
-          :module-params="{model: currentEditModel.id, categories: [], type: ''}"
+          :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
           class="pic-display-edit"
           data-test="content-list"
           @clickItem="editItem($event)"

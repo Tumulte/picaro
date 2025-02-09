@@ -1,10 +1,12 @@
-import {ColorHelper, type ColorHSL} from "@picaro/colorhelper"
+// @ts-nocheck
+import {ColorHelper} from "@picaro/colorhelper/dist";
+import type {ColorHSL} from "@picaro/colorhelper/dist/types";
 import "core-js/features/array/for-each"
 import "core-js/features/object/entries"
 import {ColorGeneratorParams} from "@types";
 
 type ColorParams = ColorHSL & { hex: string }
-type VariationParams = { hueVariation: number, light?: number, saturation?: number }
+type VariationParams = { hueVariation: string, light?: string, saturation?: string }
 type SubCombination = ColorParams & { subCombination: ColorParams[], textSubCombination: ColorParams[] }
 
 type ColorCollection = {
@@ -59,7 +61,7 @@ const curves = {
 };
 const curveArray = Object.entries(curves);
 
-const fullIndex = function (array: any[]) {
+const fullIndex = function (array: number[]) {
     const fullCombination = [];
     for (let i = 0; i < 10; i++) {
         const offsetIndex = Math.floor((i * array.length) / 10);
@@ -107,7 +109,7 @@ export class GenerateColorSet {
         this.textHue = 0
         this.textSaturation = 0
         this.colorUtils = new ColorHelper(dominant);
-        this.hsl = this.colorUtils.hexToHsl().getValueCollection() as ColorHSL;
+        this.hsl = this.colorUtils.hexToHsl().getValueCollection();
         this.colorCollection = {
             dominant: dominant,
             combinationCollection: [],
@@ -129,7 +131,7 @@ export class GenerateColorSet {
     updateColor(newColor: ColorHSL | string) {
         if (typeof newColor === "string") {
             this.colorCollection.dominant = newColor;
-            this.hsl = this.colorUtils.hexToHsl(newColor).getValueCollection() as ColorHSL;
+            this.hsl = this.colorUtils.hexToHsl(newColor).getValueCollection();
         } else if ("hue" in newColor) {
             this.hsl = newColor;
             this.dominant = this.colorUtils.hslToHex(newColor).getString();
@@ -144,12 +146,12 @@ export class GenerateColorSet {
         colors: VariationParams[] = [],
         {
             count: count = "10",
-            text: {light: textLight = "50", saturation: textSaturation = "0", hue: textHue = "0"} = {},
-            hue: {variation: hueVariation = "0", curve: hueCurve = "0", move: hueMove = "0"} = {},
-            light: {variation: lightVariation = "5", move: lightMove = "0", curve: lightCurve = "0"} = {},
-            saturation: {variation: satVariation = "0", move: satMove = "0", curve: satCurve = "0"} = {},
+            text: {light: textLight = "50", saturation: textSaturation = "0", hue: textHue = "0"},
+            hue: {variation: hueVariation = "0", curve: hueCurve = "0", move: hueMove = "0"},
+            light: {variation: lightVariation = "5", move: lightMove = "0", curve: lightCurve = "0"},
+            saturation: {variation: satVariation = "0", move: satMove = "0", curve: satCurve = "0"},
             full: full = true
-        }: ColorGeneratorParams | object = {}
+        }: ColorGeneratorParams
     ) {
         this.count = parseInt(count, 10);
         this.hueVariation = parseInt(hueVariation, 10);

@@ -17,7 +17,7 @@ defineProps({
 </script>
 <template>
   <component :is="fieldParams.template || 'span'" v-if="fieldContent">
-    {{ fieldContent.content }}
+    {{ fieldContent.fieldContent }}
   </component>
 </template>
 
