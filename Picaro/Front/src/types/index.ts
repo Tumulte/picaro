@@ -42,17 +42,18 @@ export type RichTextContent = {
     json: JSONContent[]
 }
 
+
 export type RichTextEditorJson = {
     type?: string;
-    attrs?: Record<string, any>;
+    attrs?: Record<string, unknown>;
     content?: JSONContent[];
     marks?: {
         type: string;
-        attrs?: Record<string, any>;
-        [key: string]: any;
+        attrs?: Record<string, unknown>;
+        [key: string]: unknown;
     }[];
     text?: string;
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
 export type Settings = {
@@ -83,8 +84,8 @@ export type ColorParameters = {
     light?: number
 }
 export type CssParameters = {
-    "font-size": string,
-    "line-height": string,
+    "font-size"?: string,
+    "line-height"?: string,
     "margin-bottom"?: string,
     "margin-top"?: string
 }
@@ -134,7 +135,7 @@ export type StyleSet = {
     dominant: string,
     colorParameterCollection: ColorParameters[],
     colorGeneratorParams: ColorGeneratorParams,
-    selectorCollection: { html: CssParameters | {} },
+    selectorCollection: { html: CssParameters },
     'font-size': string,
     id: string,
     setName: string,
@@ -154,7 +155,7 @@ export type StyleSet = {
         h6: RatioParams,
         p: RatioParams,
     },
-    hiddenCombination: { dominant: Array<any>, sub: Array<any> },
+    hiddenCombination: { dominant: Array<unknown>, sub: Array<unknown> },
 }
 
 export type FieldParams = {

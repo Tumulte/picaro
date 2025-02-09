@@ -51,9 +51,9 @@ describe("AppDisplay", () => {
         // without having to pass it to it: `useStore(pinia)`
         setActivePinia(createPinia())
     })
-    it("should render", () => {
+    it("should render", async () => {
         const userStore = useUserStore()
 
-        expect(userStore.updateRoute(params)).toEqual(routeParams)
+        expect(await userStore.updateRoute(params)).toEqual(routeParams)
     })
 })
