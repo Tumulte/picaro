@@ -128,7 +128,6 @@ export interface SettingsStore {
     allSettings: Settings[]
     allStyleSets: StyleSet[]
     currentStyleSet?: StyleSet
-    rteImage: string
 }
 
 export type StyleSet = {

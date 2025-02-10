@@ -300,7 +300,6 @@ export const settingsStoreFixtureNoCurrent: SettingsStore = {
         },
 
     ],
-    rteImage: ""
 }
 
 export const settingsStoreFixture = {

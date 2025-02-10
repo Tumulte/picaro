@@ -49,9 +49,8 @@ a {
 }
 
 .pic-section {
-  font-family: var("--font-alt");
+  font-family: var(--font-alt);
   margin: 1rem 0;
-  font-weight: bold;
-  font-size: 1.5rem;
+  border-bottom: 1px solid;
 }
 </style>

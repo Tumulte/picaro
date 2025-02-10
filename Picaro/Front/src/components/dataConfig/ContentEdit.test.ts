@@ -5,7 +5,7 @@ import {createTestingPinia} from "@pinia/testing";
 import {settingsStoreFixture} from "@fixtures/store";
 import {createRouter, createWebHistory} from "vue-router";
 import {adminRoutes} from "../../adminRoutes";
-import {checkExists} from "../../../test/utils";
+import {checkVisible} from "../../../test/utils";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -29,7 +29,7 @@ const wrapper = mount(ContentEdit, {
 
 describe('ContentEdit', () => {
     it('should display the new content form when there is at least a category', async () => {
-        expect(checkExists([
+        expect(checkVisible([
             //visible
             'category-warning',
             //not-visible
@@ -41,7 +41,7 @@ describe('ContentEdit', () => {
 
         await wrapper.vm.$nextTick()
 
-        expect(checkExists([
+        expect(checkVisible([
             // visible
             'new-content',
             'new-content-form',
@@ -63,6 +63,7 @@ describe('ContentEdit', () => {
 
 
         const contentList = wrapper.findAll('[data-test="content-list"]')
+        
         expect(contentList.length).toBe(1)
     })
     it('should display the edited version of items', async () => {
@@ -75,6 +76,6 @@ describe('ContentEdit', () => {
         await wrapper.vm.$nextTick()
 
         await vi.waitUntil(() => wrapper.find('[data-test="content-edit"]'))
-        expect(checkExists(['content-display'], wrapper)).toEqual([false])
+        expect(checkVisible(['content-display'], wrapper)).toEqual([false])
     })
 })

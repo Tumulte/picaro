@@ -6,11 +6,8 @@ import {useRoute, useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {useUtilsStore} from "@stores/utils";
 
-const allImages = ref()
-
 
 defineEmits(['reloadSettings'])
-
 
 const settingsStore = useSettingsStore()
 const utilsStore = useUtilsStore()
@@ -20,19 +17,6 @@ const route = useRoute()
 const modelFormState = ref<ModelState>("noModel");
 const currentEditModel = ref<Model>();
 const modelNameInput = ref('');
-const imageDrawer = ref(false);
-const imageFile = ref<File>();
-
-fetchImages()
-
-function fetchImages() {
-
-  allImages.value = import.meta.glob('@uploads/picaro explained.jpg', {
-    query: {format: 'webp', w: '330', picture: ''},
-    import: 'default',
-    eager: true
-  })
-}
 
 
 const modelCollection = computed((): Model[] | [] => {
@@ -59,26 +43,6 @@ async function selectModel(model: Model) {
       text: "Please select an app first",
       type: "warning"
     });
-  }
-}
-
-function uploadImage() {
-  if (imageFile.value) {
-    const formData = new FormData();
-    formData.append('image', imageFile.value);
-    fetch(`/api/setup/uploadimages`, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(() => {
-      fetchImages()
-      utilsStore.addAlert({
-        text: "Image uploaded",
-        type: "success"
-      });
-    }).catch((error) => console.error(error));
   }
 }
 
@@ -112,7 +76,6 @@ async function cancelEditModel() {
   }
 }
 
-// region Model hydration
 function modelFromRoute() {
   if (route.params.modelId === 'newModel') {
     modelFormState.value = "awaitingName"
@@ -142,11 +105,7 @@ watch(() => route.params.modelId, (newVal) => {
   }
 }, {immediate: true})
 
-// endregion
 
-function selectImage(path: string) {
-  settingsStore.rteImage = path
-}
 </script>
 
 <template>
@@ -154,9 +113,6 @@ function selectImage(path: string) {
     <aside class="pic-aside pic-container">
       <h3>
         Model List
-        <v-btn variant="text" @click="imageDrawer = !imageDrawer">
-          <v-icon>mdi-image</v-icon>
-        </v-btn>
       </h3>
 
       <div v-for="model in currentAppModelCollection" :key="model.id" class="current-model-elements">
@@ -204,35 +160,11 @@ function selectImage(path: string) {
         />
       </div>
     </main>
-    <v-navigation-drawer
-      v-model="imageDrawer"
-      location="right"
-      width="500"
-    >
-      <div class="pic-container">
-        <v-form>
-          <v-file-input
-            v-model="imageFile"
-            accept="image/*"
-            label="Image"
-          />
-          <v-btn @click="uploadImage">
-            Upload
-          </v-btn>
-        </v-form>
-        <div v-for="image in allImages" :key="image">
-          <img
-            :class="{selected: image === settingsStore.rteImage}"
-            :src="image"
-            @click="selectImage(image)"
-          >
-        </div>
-      </div>
-    </v-navigation-drawer>
   </div>
 </template>
 <style lang="postcss" scoped>
 .selected {
   border: 4px solid var(--main);
 }
+
 </style>

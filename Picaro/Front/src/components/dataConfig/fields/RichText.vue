@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {Editor, EditorContent} from "@tiptap/vue-3";
+import {EditorContent, useEditor} from "@tiptap/vue-3";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
@@ -7,8 +7,27 @@ import TextAlign from "@tiptap/extension-text-align";
 import StarterKit from "@tiptap/starter-kit";
 import {onMounted, ref} from "vue";
 import {FieldParams, RichTextContent, RichTextEditorJson} from "@types";
-import {useSettingsStore} from "@stores/settings";
 import {generateHTML} from "@tiptap/core";
+import {useUtilsStore} from "@stores/utils";
+
+const utilsStore = useUtilsStore()
+
+const sizeList = [330, 100, 200, 500, 1000, 1500]
+
+const imageFile = ref<File>();
+const allImages = ref()
+
+const rteImage = ref('')
+
+fetchImages()
+
+function fetchImages() {
+  allImages.value = import.meta.glob('@uploads/picaro explained.jpg', {
+    query: {format: 'webp', w: "330;100;200;500;1000;1500", picture: ''},
+    import: 'default',
+    eager: true
+  })
+}
 
 
 const props = defineProps<{
@@ -16,28 +35,38 @@ const props = defineProps<{
   fieldContent?: RichTextContent | null;
 }>()
 
+
 const emit = defineEmits<{
   updateData: [[string, RichTextEditorJson]]
   endEdit: []
 }>()
 
-const editor = ref<Editor>()
-const selectedImg = ref<string | null>(null)
+const editor = useEditor({
+  extensions:
+      [StarterKit,
+        Image.configure({
+          inline: true,
+          HTMLAttributes: {
+            class: 'pic-rte-image',
+          },
+        }),
+        Link,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        })
+      ],
+  onUpdate: ({editor}) => {
+    updateModelData(editor.getJSON());
+  }
+})
 
-const settingsStore = useSettingsStore()
+const imageDrawer = ref(false);
+
+const selectedImg = ref<string | null>(null)
 
 onMounted(() => {
 
-      editor.value = new Editor({
-        extensions: [StarterKit, Image, Link, TextAlign.configure({
-          types: ['heading', 'paragraph', 'image'],
-        })],
-        onUpdate: ({editor}) => {
-          updateModelData(editor.getJSON());
-        }
-      });
-
-      editor.value.on("selectionUpdate", ({editor}) => {
+      editor.value?.on("selectionUpdate", ({editor}) => {
         const src = editor.state.selection.$anchor.node()?.attrs?.src;
         if (src) {
           selectedImg.value = src.split("/").at(-1);
@@ -45,7 +74,7 @@ onMounted(() => {
           selectedImg.value = null;
         }
       });
-      editor.value.commands.setContent(props.fieldContent?.json || "");
+      editor.value?.commands.setContent(props.fieldContent?.json || "");
 
     }
 )
@@ -91,9 +120,27 @@ function updateModelData(content: RichTextEditorJson) {
   }]);
 }
 
-function addImage() {
-  if (settingsStore.rteImage) {
-    editor.value?.commands.setImage({src: `/api/uploads/${settingsStore.rteImage}`})
+function selectImage(path: string) {
+  editor.value?.commands.setImage({src: path})
+}
+
+function uploadImage() {
+  if (imageFile.value) {
+    const formData = new FormData();
+    formData.append('image', imageFile.value);
+    fetch(`/api/setup/uploadimages`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(() => {
+      fetchImages()
+      utilsStore.addAlert({
+        text: "Image uploaded",
+        type: "success"
+      });
+    }).catch((error) => console.error(error));
   }
 }
 
@@ -152,8 +199,8 @@ function addImage() {
         <v-icon>mdi-code-not-equal-variant</v-icon>
       </span>
       <span
-        :class="{ 'is-active': settingsStore.rteImage }"
-        @click.stop="addImage()"
+        :class="{ 'is-active': imageDrawer }"
+        @click.stop="imageDrawer = !imageDrawer"
       >
         <v-icon>mdi-image</v-icon>
       </span>
@@ -163,6 +210,11 @@ function addImage() {
         <v-icon>mdi-format-align-left</v-icon>
       </span>
       <span
+        @click.stop="editor.chain().focus().setTextAlign('center').run()"
+      >
+        <v-icon>mdi-format-align-center</v-icon>
+      </span>
+      <span
         @click.stop="editor.chain().focus().setTextAlign('right').run()"
       >
         <v-icon>mdi-format-align-right</v-icon>
@@ -170,6 +222,43 @@ function addImage() {
     </div>
     <editor-content :editor="editor" class="editor-textarea" />
   </div>
+  <v-navigation-drawer
+    v-model="imageDrawer"
+    location="bottom"
+    width="500"
+  >
+    <div class="pic-container pic-container-s">
+      <v-form>
+        <v-file-input
+          v-model="imageFile"
+          accept="image/*"
+          density="compact"
+          label="Image"
+        />
+        <v-btn class="ml-4" @click="uploadImage">
+          Upload
+        </v-btn>
+      </v-form>
+      <div v-for="image in allImages" :key="image">
+        <img
+          :class="{selected: image === rteImage}"
+          :src="image[0]"
+          class="uploaded-image"
+        >
+        <div class="size-btn-container">
+          <v-btn
+            v-for="(imageSize, index) in (image)"
+            :key="imageSize"
+            density="compact"
+            variant="text"
+            @click="selectImage(imageSize)"
+          >
+            {{ sizeList[index] }}px
+          </v-btn>
+        </div>
+      </div>
+    </div>
+  </v-navigation-drawer>
 </template>
 <style scoped>
 .editor-textarea {
@@ -197,5 +286,19 @@ function addImage() {
 
 .is-active :deep(.v-icon) {
   color: var(--main);
+}
+
+.uploaded-image {
+  max-height: 100px;
+  display: inline-block;
+}
+
+.v-form {
+  display: flex;
+  align-items: start;
+}
+
+.size-btn-container {
+  width: 250px;
 }
 </style>

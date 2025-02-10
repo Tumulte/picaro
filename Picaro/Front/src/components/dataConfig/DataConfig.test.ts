@@ -5,7 +5,7 @@ import {createTestingPinia} from "@pinia/testing";
 import {settingsStoreFixture} from "@fixtures/store";
 import {createRouter, createWebHistory} from "vue-router";
 import {adminRoutes} from "../../adminRoutes";
-import {checkExists} from "../../../test/utils";
+import {checkVisible} from "../../../test/utils";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -47,7 +47,7 @@ describe("DataConfig", () => {
 
         await wrapper.vm.$nextTick()
 
-        expect(checkExists([
+        expect(checkVisible([
             '.pic-main-empty',
             'create-model-name-input'
         ], wrapper)).toEqual(
@@ -74,7 +74,7 @@ describe("DataConfig", () => {
         await router.isReady()
         await vi.waitUntil(() => wrapper.vm.modelFormState === 'modelSelected')
 
-        expect(checkExists([
+        expect(checkVisible([
             'model-is-edited',
             'create-model-name-input',
             '.pic-main-empty',

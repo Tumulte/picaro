@@ -4,12 +4,13 @@ import {nanoid} from "nanoid";
 import {useVuelidate} from '@vuelidate/core'
 import {MESSAGE} from "@utils/const";
 import {useUtilsStore} from "@stores/utils";
-import {FieldParams, Model} from "@types";
+import {FieldParams, Model, ModelState} from "@types";
 import {helpers, required as vuelidateRequired} from "@vuelidate/validators";
+import {copy} from "copy-anything";
 
 
 const props = withDefaults(defineProps<{
-  modelFormState?: string
+  modelFormState?: ModelState
   existingFieldData?: FieldParams
   currentEditField?: string
   isNew?: boolean
@@ -48,15 +49,8 @@ const utilsStore = useUtilsStore()
 const hidden = ref(false)
 
 
-const name = ref(props.existingFieldData.name)
-const type = ref(props.existingFieldData.type)
-const label = ref(props.existingFieldData.label)
-const template = ref(props.existingFieldData.template)
-const attributes = ref(props.existingFieldData.attributes)
-const required = ref(props.existingFieldData.required)
-const regex = ref(props.existingFieldData.regex)
-const extraParams = ref(props.existingFieldData.extraParams)
-const noFieldSelected = ref(type.value === 'none')
+const fieldData = ref<FieldParams>(copy(props.existingFieldData))
+const isFieldSelected = ref(fieldData.value.type !== 'none')
 const savedFieldType = ref('');
 
 const isEdited = computed(() => {
@@ -78,16 +72,8 @@ const fieldType = [
 
 function addField() {
   const fieldParams: FieldParams = {
+    ...fieldData.value,
     id: nanoid(6),
-    type: type.value,
-    name: name.value,
-    label: label.value,
-    template: template.value,
-    attributes: attributes.value,
-    required: required.value,
-    regex: regex.value,
-    extraParams: extraParams.value,
-    hidden: hidden.value
   }
   emit("addFieldData",
       fieldParams)
@@ -101,7 +87,7 @@ function editField() {
 function deleteField() {
   utilsStore.awaitConfirmation({
     text:
-        `Are you sure you want delete the field ${name.value}?`,
+        `Are you sure you want delete the field ${fieldData.value.name}?`,
     type: "warning"
   }).then(() => {
     emit("deleteField")
@@ -113,31 +99,12 @@ function deleteField() {
 }
 
 function cancelEdit() {
-  type.value = props.existingFieldData.type
-  name.value = props.existingFieldData.name
-  label.value = props.existingFieldData.label
-  template.value = props.existingFieldData.template
-  attributes.value = props.existingFieldData.attributes
-  required.value = props.existingFieldData.required
-  regex.value = props.existingFieldData.regex
-  extraParams.value = props.existingFieldData.extraParams
+  fieldData.value = copy(props.existingFieldData)
   emit("cancelField")
 }
 
 function saveEdit() {
-  emit("updateEditedFieldData", {
-        id: props.existingFieldData.id,
-        type: type.value,
-        name: name.value,
-        label: label.value,
-        template: template.value,
-        attributes: attributes.value,
-        required: required.value,
-        regex: regex.value,
-        extraParams: extraParams.value,
-        hidden: hidden.value
-      }
-  );
+  emit("updateEditedFieldData", fieldData.value);
 }
 
 
@@ -181,7 +148,7 @@ const v$ = useVuelidate(rules, form)
     >
       Edit
     </button>
-    <strong>{{ type }}</strong>
+    <strong>{{ fieldData.type }}</strong>
 
     {{ existingFieldData.name }}
 
@@ -190,7 +157,7 @@ const v$ = useVuelidate(rules, form)
     </span>
   </div>
   <template v-if="isEdited">
-    <h3>
+    <h3 data-test="add-title">
       Add field:
     </h3>
 
@@ -202,81 +169,81 @@ const v$ = useVuelidate(rules, form)
       Cancel edit
     </v-btn>
     <v-select
-      v-show="noFieldSelected"
-      v-model="type"
+      v-show="!isFieldSelected"
+      v-model="fieldData.type"
       :items="fieldType"
       data-test="select-model-field"
       item-title="name"
       item-value="type"
-      @update:modelValue="noFieldSelected = type === 'none'"
+      @update:modelValue="isFieldSelected = fieldData.type !== 'none'"
     />
-    <div v-if="!noFieldSelected">
+    <div v-if="isFieldSelected">
       <strong>
-        <span>{{ type }}</span>
+        <span>{{ fieldData.type }}</span>
       </strong>
-      <button class="pic-button--text" @click="savedFieldType = type; noFieldSelected = true">
+      <button class="pic-button--text" @click="savedFieldType = fieldData.type; isFieldSelected = false">
         Change
       </button>
     </div>
-  </template>
-  <span v-if="isEdited" v-show="!noFieldSelected">
-    <v-text-field v-model="form.label" :validation="v$.label" aria-required="true" label="Label *" />
-    <v-text-field v-model="form.name" :validation="v$.name" aria-required="true" label="Name *" />
-    <v-text-field
-      v-model="form.template"
-      :validation="v$.template"
-      label="template (or HTML tag)"
-    />
+    <span v-if="isFieldSelected" data-test="edit-field-selected">
+      <v-text-field v-model="form.label" :validation="v$.label" aria-required="true" label="Label *" />
+      <v-text-field v-model="form.name" :validation="v$.name" aria-required="true" label="Name *" />
+      <v-text-field
+        v-model="form.template"
+        :validation="v$.template"
+        label="template (or HTML tag)"
+      />
 
-    <v-text-field
-      v-model.trim="attributes"
-      label="Attributes"
-    />
+      <v-text-field
+        v-model.trim="fieldData.attributes"
+        label="Attributes"
+      />
 
-    <v-checkbox
-      v-model="required"
-      label="required"
-      type="checkbox"
-    />
-    <v-checkbox
-      v-model="hidden"
-      label="hidden"
-      type="checkbox"
-    />
-    <v-text-field
-      v-model="regex"
-      label="Regex"
-    />
-    <v-btn
-      v-if="modelFormState === 'editingField'"
-      :disabled="v$.$invalid"
-      data-test="save-model-field-button"
-      @click="saveEdit"
-    >
-      Save
-    </v-btn>
-    <div class="pic-flex pic-between">
-      <v-btn
-        v-if="modelFormState === 'addingField'"
-        :disabled="v$.$invalid"
-        color="primary"
-        data-test="add-field-button"
-        @click="addField"
-      >
-        Add field to model
-      </v-btn>
-
-
+      <v-checkbox
+        v-model="fieldData.required"
+        label="required"
+        type="checkbox"
+      />
+      <v-checkbox
+        v-model="hidden"
+        label="hidden"
+        type="checkbox"
+      />
+      <v-text-field
+        v-model="fieldData.regex"
+        label="Regex"
+      />
       <v-btn
         v-if="modelFormState === 'editingField'"
-        class="pic-button--text"
-        data-test="delete-model-field-button"
-        @click="deleteField"
+        :disabled="v$.$invalid"
+        data-test="save-model-field-button"
+        @click="saveEdit"
       >
-        delete
+        Save
       </v-btn>
-    </div>
-  </span>
+      <div class="pic-flex pic-between">
+        <v-btn
+          v-if="modelFormState === 'addingField'"
+          :disabled="v$.$invalid"
+          color="primary"
+          data-test="add-field-button"
+          @click="addField"
+        >
+          Add field to model
+        </v-btn>
+
+
+        <v-btn
+          v-if="modelFormState === 'editingField'"
+          class="pic-button--text"
+          data-test="delete-model-field-button"
+          @click="deleteField"
+        >
+          delete
+        </v-btn>
+      </div>
+    </span>
+  </template>
 </template>
 <style scoped>
 

@@ -1,6 +1,6 @@
 import {VueWrapper} from "@vue/test-utils";
 
-export function checkExists(elements: string[], wrapper: VueWrapper<any>): boolean[] {
+export function checkVisible(elements: string[], wrapper: VueWrapper<any>): boolean[] {
 
     return elements.map((item) => {
         let query = ""
@@ -10,6 +10,6 @@ export function checkExists(elements: string[], wrapper: VueWrapper<any>): boole
             query = `[data-test="${item}"]`
         }
         const element = wrapper.find(query)
-        return element.exists()
+        return element.exists() && element.isVisible()
     })
 }
