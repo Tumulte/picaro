@@ -1,0 +1,35 @@
+name: Picaro CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  Picaro:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Run linters
+        run: pnpm run lint
+
+      - name: Run unit typecheck
+        run: pnpm run typecheck
+
+      - name: Run unit tests
+        run: pnpm run test
+
+      - name: copy settings
+        uses: canastro/copy-file-action@master
+        with:
+          source: "Picaro/Back/picaro-back.json.sample"
+          target: "Picaro/Back/picaro-back.json"
+      - name: Run playwright
+        run: pnpm run e2e
