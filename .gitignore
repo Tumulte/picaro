@@ -18,6 +18,7 @@ picaroSettings.json
 
 coverage
 Picaro/Data
+Picaro/DataCi
 Picaro/Back/picaro-back.json
 Picaro/Back/uploads
 

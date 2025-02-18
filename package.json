@@ -13,7 +13,7 @@
     "build:static": "node Picaro/Cli/buildData.js && pnpm --filter ./Picaro/FrontStatic run build",
     "lint": "pnpm --filter ./Picaro/Front run lint",
     "typecheck": "pnpm --filter ./Picaro/Front run typecheck",
-    "e2e": "rimraf ./Picaro/DataCI/* --glob && pnpm exec playwright test"
+    "e2e": "rimraf Picaro/DataCI/* --glob && pnpm exec playwright test"
   },
   "keywords": [],
   "author": "Étienne Rouge",
