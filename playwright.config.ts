@@ -72,6 +72,7 @@ export default defineConfig({
 
     webServer: [
         {
+            timeout: 2 * 60 * 1000,
             command: 'pnpm run dev:back',
             url: 'http://localhost:3000',
             reuseExistingServer: !process.env.CI,
@@ -81,6 +82,7 @@ export default defineConfig({
             stdout: "pipe"
         },
         {
+            timeout: 2 * 60 * 1000,
             command: 'pnpm run dev:front',
             url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
