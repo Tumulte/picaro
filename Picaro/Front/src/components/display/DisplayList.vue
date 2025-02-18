@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
-import {computed} from "vue";
+import {computed, watch} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
 import {Category, Layout, Model, ModelContent, Settings} from "@types";
@@ -18,6 +18,7 @@ const props = defineProps<{
   moduleParams: Layout
   displayAll?: boolean
   currentApp: Settings
+  dataReloaded: boolean
 }>()
 
 const emit = defineEmits<{
@@ -30,12 +31,12 @@ const dataStore = useDataStore()
 if (import.meta.env.VITE_BUILD_MODE === "static") {
   getBuiltData().catch((error) => console.error(error))
 } else {
-  fetch(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
-      .then(res => res.json())
-      .then((data) => {
-        dataStore.currentModelData = data
-      }).catch((error) => console.error(error))
+  fetchData()
 }
+
+watch(() => props.dataReloaded, () => {
+  fetchData()
+})
 
 
 const filteredList = computed<ModelContent[]>(() => {
@@ -58,6 +59,14 @@ const currentModel = computed(() => {
       (item: Model) => item.id === props.moduleParams.model
   )
 })
+
+function fetchData() {
+  fetch(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
+      .then(res => res.json())
+      .then((data) => {
+        dataStore.currentModelData = data
+      }).catch((error) => console.error(error))
+}
 
 async function getBuiltData() {
   const data = await import(`./../../../../Data/build/${props.currentApp.id}.json`)

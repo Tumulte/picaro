@@ -23,6 +23,8 @@ const utilsStore = useUtilsStore();
 
 const router = useRouter()
 
+const dataReloaded = ref(false)
+
 const categories: Category[] = settingsStore.currentAppSettings?.categories || []
 
 const newCategory = ref('')
@@ -145,6 +147,7 @@ async function saveCategory() {
           :categories="categories"
           :current-edit-model="currentEditModel"
           data-testid="new-content-form"
+          @reloadData="dataReloaded = !dataReloaded"
         />
         <div class="v-label mt-4">
           Edit existing content :
@@ -153,6 +156,7 @@ async function saveCategory() {
           v-if="settingsStore.currentAppSettings"
           :categories="categories"
           :current-app="settingsStore.currentAppSettings"
+          :data-reloaded="dataReloaded"
           :display-all="true"
           :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
           class="pic-display-edit"
