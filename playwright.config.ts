@@ -78,11 +78,13 @@ export default defineConfig({
             env: {
                 E2E: "true",
             },
+            stdout: "pipe"
         },
         {
             command: 'pnpm run dev:front',
             url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
+            stdout: "pipe"
         },
     ]
 });
