@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ModelForm from "./ModelForm.vue"
 import {defineEmits, defineProps, ref} from "vue";
-import {Categories, Model, Settings} from "@types";
+import {Category, Model, Settings} from "@types";
 import DisplayList from "@components/display/DisplayList.vue";
 import FilterCategories from "@components/filters/FilterCategories.vue";
 import {useSettingsStore} from "@stores/settings";
@@ -11,22 +11,22 @@ import {useUtilsStore} from "@stores/utils";
 import {updateSettings} from "@components/utils/api";
 import draggable from "vuedraggable";
 
+defineEmits(["updateModelFormState", "cancelEditModel"])
+
+defineProps<{
+  currentEditModel: Model
+}>()
+
 
 const settingsStore = useSettingsStore();
 const utilsStore = useUtilsStore();
 
 const router = useRouter()
 
-const categories: Categories[] = settingsStore.currentAppSettings?.categories || []
+const categories: Category[] = settingsStore.currentAppSettings?.categories || []
 
 const newCategory = ref('')
 const editCategories = ref(false)
-
-defineEmits(["updateModelFormState", "cancelEditModel"])
-
-defineProps<{
-  currentEditModel: Model
-}>()
 
 async function editItem(item: number) {
   await router.push({params: {contentId: item}})
@@ -60,7 +60,13 @@ async function saveCategory() {
 <template>
   <v-row>
     <v-col :cols="3">
-      <v-btn v-if="!editCategories" color="secondary" variant="text" @click="editCategories = !editCategories">
+      <v-btn
+        v-if="!editCategories"
+        color="secondary"
+        data-testid="edit-categories"
+        variant="text"
+        @click="editCategories = !editCategories"
+      >
         Edit categories
       </v-btn>
       <v-btn
@@ -86,43 +92,59 @@ async function saveCategory() {
           item-key="id"
         >
           <template #item="{element,index}">
-            <div class="pic-flex">
-              <span class="pic-sortable-handle pic-sortable-handle__category">
-                <v-icon>mdi-drag</v-icon>
-              </span>
-              <v-text-field
-                :key="element.id"
-                v-model="element.label"
-                append-icon="mdi-delete"
-                @click:append="deleteCategory(index)"
+            <div>
+              <v-checkbox
+                v-model="element.section"
+                data-testid="separator-check"
+                density="compact"
+                hide-details
+                label="Separator (non-clickable)"
               />
+
+              <div class="pic-flex">
+                <span class="pic-sortable-handle pic-sortable-handle__category">
+                  <v-icon>mdi-drag</v-icon>
+                </span>
+                <v-text-field
+                  :key="element.id"
+                  v-model="element.label"
+                  append-icon="mdi-delete"
+                  @click:append="deleteCategory(index)"
+                />
+              </div>
             </div>
           </template>
         </draggable>
 
-        <v-text-field v-model="newCategory" label="New category" />
-        <v-btn @click="addCategory">
+        <v-text-field v-model="newCategory" data-testid="new-category-input" label="New category" />
+        <v-btn data-testid="new-category-add" @click="addCategory">
           Add category
         </v-btn>
         <br>
-        <v-btn class="mt-4" color="primary" @click="saveCategory()">
+        <v-btn class="mt-4" color="primary" data-testid="new-category-save" @click="saveCategory()">
           Save
         </v-btn>
       </div>
     </v-col>
     <v-col>
-      <div v-if="categories.length === 0" data-test="category-warning">
+      <div
+        v-if="categories.length === 0"
+        data-testid="category-warning"
+      >
         <p>You must add a category first</p>
       </div>
 
       <template v-else>
-        <div class="v-label" data-test="new-content">
+        <div
+          class="v-label"
+          data-testid="new-content"
+        >
           New content :
         </div>
         <ModelForm
           :categories="categories"
           :current-edit-model="currentEditModel"
-          data-test="new-content-form"
+          data-testid="new-content-form"
         />
         <div class="v-label mt-4">
           Edit existing content :
@@ -134,7 +156,7 @@ async function saveCategory() {
           :display-all="true"
           :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
           class="pic-display-edit"
-          data-test="content-list"
+          data-testid="content-list"
           @clickItem="editItem($event)"
         />
       </template>

@@ -63,7 +63,7 @@ describe("DataConfig", () => {
         wrapper.vm.createNewModel()
         await wrapper.vm.$nextTick()
 
-        const editedElement = wrapper.find('[data-test="model-is-edited"]')
+        const editedElement = wrapper.find('[data-testid="model-is-edited"]')
 
         await vi.waitUntil(() => editedElement.exists())
 

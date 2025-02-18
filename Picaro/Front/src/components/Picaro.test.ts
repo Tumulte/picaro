@@ -25,7 +25,7 @@ describe("Picaro", () => {
 // eslint-disable-next-line
         }) as VueWrapper<any>
 
-        const tab = wrapper.find('[data-test="model-tab"]')
+        const tab = wrapper.find('[data-testid="model-tab"]')
         expect(tab.exists()).toBe(false)
 
     })
@@ -40,7 +40,7 @@ describe("Picaro", () => {
 // eslint-disable-next-line
         }) as VueWrapper<any>
 
-        const tab = wrapper.find('[data-test="model-tab"]')
+        const tab = wrapper.find('[data-testid="model-tab"]')
         expect(tab.exists()).toBe(true)
 
     })

@@ -11,7 +11,8 @@
     "dev:back": "pnpm --filter ./Picaro/Back run dev:back",
     "build": "node Picaro/Cli/buildData.js && pnpm --filter ./Picaro/FrontStatic run build",
     "lint": "pnpm --filter ./Picaro/Front run lint",
-    "typecheck": "pnpm --filter ./Picaro/Front run typecheck"
+    "typecheck": "pnpm --filter ./Picaro/Front run typecheck",
+    "e2e": "rimraf ./Picaro/DataCI/* --glob && pnpm exec playwright test"
   },
   "keywords": [],
   "author": "Étienne Rouge",
@@ -19,8 +20,11 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.50.1",
+    "@types/node": "^22.13.1",
     "@vue/typescript": "^1.8.20",
     "globals": "^15.14.0",
-    "recommended": "link:@vue/typescript/recommended"
+    "recommended": "link:@vue/typescript/recommended",
+    "rimraf": "^6.0.1"
   }
 }

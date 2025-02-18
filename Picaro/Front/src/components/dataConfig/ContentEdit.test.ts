@@ -62,12 +62,12 @@ describe('ContentEdit', () => {
     it('should display existing content', () => {
 
 
-        const contentList = wrapper.findAll('[data-test="content-list"]')
-        
+        const contentList = wrapper.findAll('[data-testid="content-list"]')
+
         expect(contentList.length).toBe(1)
     })
     it('should display the edited version of items', async () => {
-        await vi.waitUntil(() => wrapper.find('[data-test="content-display"]'))
+        await vi.waitUntil(() => wrapper.find('[data-testid="content-display"]'))
 
         await router.push({name: 'content', params: {modelId: 'modelId1'}})
         await router.isReady()
@@ -75,7 +75,7 @@ describe('ContentEdit', () => {
         await vi.waitUntil(() => wrapper.vm.$route.path === "/admin/data/modelId1/content/0")
         await wrapper.vm.$nextTick()
 
-        await vi.waitUntil(() => wrapper.find('[data-test="content-edit"]'))
+        await vi.waitUntil(() => wrapper.find('[data-testid="content-edit"]'))
         expect(checkVisible(['content-display'], wrapper)).toEqual([false])
     })
 })

@@ -220,7 +220,7 @@ function uploadImage() {
         <v-icon>mdi-format-align-right</v-icon>
       </span>
     </div>
-    <editor-content :editor="editor" class="editor-textarea" />
+    <editor-content :editor="editor" class="editor-textarea" data-testid="rte-editor" />
   </div>
   <v-navigation-drawer
     v-model="imageDrawer"

@@ -4,13 +4,13 @@ import ModelField from "@components/dataConfig/ModelField.vue"
 import {computed} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
-import {Categories, Layout, Model, ModelContent, Settings} from "@types";
+import {Category, Layout, Model, ModelContent, Settings} from "@types";
 import {useDataStore} from "@stores/data";
 import {useSettingsStore} from "@stores/settings";
 
 const settings = useSettingsStore()
 
-const categories: Categories[] = settings.currentAppSettings?.categories || []
+const categories: Category[] = settings.currentAppSettings?.categories || []
 
 const route = useRoute();
 
@@ -71,7 +71,7 @@ async function getBuiltData() {
 
 </script>
 <template>
-  <div>
+  <div data-testid="content-list">
     <div
       v-for="(fieldList, index) in filteredList"
       :key="index"
@@ -80,7 +80,7 @@ async function getBuiltData() {
       <div
         v-if="index !== parseInt(route.params.contentId as string) && currentModel"
         class="pic-display-list-item"
-        data-test="list-display"
+        data-testid="list-display"
       >
         <div
           v-for="(field, subIndex) in fieldList.content"
@@ -90,7 +90,7 @@ async function getBuiltData() {
             :current-model="currentModel"
             :field-content="field"
             :module-params="moduleParams"
-            data-test="content-display"
+            data-testid="content-display"
           />
         </div>
       </div>
@@ -100,7 +100,7 @@ async function getBuiltData() {
         :categories="categories"
         :current-edit-model="currentModel"
         :model-content="fieldList"
-        data-test="content-edit"
+        data-testid="content-edit"
       />
     </div>
   </div>

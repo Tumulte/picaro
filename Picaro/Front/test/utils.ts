@@ -7,7 +7,7 @@ export function checkVisible(elements: string[], wrapper: VueWrapper<any>): bool
         if (item.match(/^[.#]/)) {
             query = item
         } else {
-            query = `[data-test="${item}"]`
+            query = `[data-testid="${item}"]`
         }
         const element = wrapper.find(query)
         return element.exists() && element.isVisible()

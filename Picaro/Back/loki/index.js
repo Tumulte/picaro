@@ -7,6 +7,14 @@ const fs = require('fs')
 const EventEmitter = require('events');
 const adapter = new lfsa()
 const eventEmitter = new EventEmitter();
+const dotenv = require('dotenv')
+
+let env
+if (process.env.E2E) {
+    env = dotenv.config({path: ".env.ci"}).parsed
+} else {
+    env = dotenv.config({path: ".env"}).parsed
+}
 let db
 
 eventEmitter.addListener('autoloaded', () => {
@@ -16,15 +24,14 @@ eventEmitter.addListener('dbCreated', () => {
     console.info('listening to db creation')
 })
 
-
 eventEmitter.on('dbCreated', () => {
     console.log('Db exists')
     if (process.env.NODE_ENV === 'test') {
-        const getLoki = new loki('../../Data/Test/PicData.db', {
+        const getLoki = new loki(`../../${env.DATA_FOLDER}/Test/PicData.db`, {
             adapter: adapter,
         })
     } else {
-        db = new loki(path.join(__dirname, '../../Data/picData.db'), {
+        db = new loki(path.join(__dirname, `../../${env.DATA_FOLDER}/picData.db`), {
             adapter: adapter,
             autoload: true,
             autoloadCallback: function () {
@@ -46,15 +53,15 @@ module.exports = fp(function (fastify, opts, done) {
     })
 }, {fastify: '^4.x'})
 
-if (!fs.existsSync(path.join(__dirname, '../../Data/picData.db'))) {
-    fs.writeFile(path.join(__dirname, '../../Data/picData.db'), "", {flag: 'wx'}, function (err) {
+if (!fs.existsSync(path.join(__dirname, `../../${env.DATA_FOLDER}/picData.db`))) {
+    fs.writeFile(path.join(__dirname, `../../${env.DATA_FOLDER}/picData.db`), "", {flag: 'wx'}, function (err) {
         if (err) throw err;
         console.log("db created");
     });
 }
-if (!fs.existsSync(path.join(__dirname, '../../Data/picData.db.0'))) {
+if (!fs.existsSync(path.join(__dirname, `../../${env.DATA_FOLDER}/picData.db.0`))) {
     //first init
-    const dbInit = new loki(path.join(__dirname, '../../Data/picData.db'), {
+    const dbInit = new loki(path.join(__dirname, `../../${env.DATA_FOLDER}/picData.db`), {
         adapter: adapter,
     })
     dbInit.addCollection('settings', {unique: ['id']})

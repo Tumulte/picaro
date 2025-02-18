@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import {defineProps, ref, shallowRef} from "vue";
+import {computed, defineProps, reactive, ref, shallowRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {Categories, FieldContentParams, FieldParams, Model, ModelContent} from "@types";
+import {Category, FieldContentParams, FieldParams, Model, ModelContent} from "@types";
 import TextLine from "@components/dataConfig/fields/TextLine.vue";
 import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
 import {nanoid} from "nanoid";
 import {copy} from "copy-anything";
+import {MESSAGE} from "@utils/const";
+import {helpers} from "@vuelidate/validators";
+import {useVuelidate} from "@vuelidate/core";
 
 const route = useRoute()
 const router = useRouter()
@@ -34,9 +37,28 @@ import("@components/dataConfig/fields/RichText.vue").then(component => {
 
 const props = defineProps<{
   currentEditModel: Model
-  categories: Categories[]
+  categories: Category[]
   modelContent?: ModelContent
 }>()
+
+const currentModelContent = ref(copy(props.modelContent) || defaultEmptyContent())
+
+const rules = computed(() => {
+  const notEmpty = helpers.withMessage("You need to select at least one category", (v: Category[]) => {
+    return v.length > 0
+  })
+  return {
+    categories: {
+      notEmpty
+    },
+  }
+})
+
+const form = reactive({
+  categories: currentModelContent.value.categories ?? [],
+})
+
+const v$ = useVuelidate(rules, form)
 
 function defaultEmptyContent(): ModelContent {
   return {
@@ -51,8 +73,6 @@ function defaultEmptyContent(): ModelContent {
   }
 
 }
-
-const currentModelContent = ref(copy(props.modelContent) || defaultEmptyContent())
 
 function updateData(data: [string, FieldContentParams['fieldContent']]) {
   const [id, content] = data
@@ -91,7 +111,7 @@ async function sendForm() {
           headers: [
             ["Content-Type", "application/json"],
           ],
-          body: JSON.stringify(currentModelContent.value) // if an array is passed each entry creates a row in the DB
+          body: JSON.stringify({...currentModelContent.value, categories: form.categories}) // if an array is passed each entry creates a row in the DB
         }
     )
     utilsStore.addAlert({
@@ -107,10 +127,43 @@ async function sendForm() {
   }
 }
 
+function deleteContent() {
+  if (!settingsStore.currentAppSettings) {
+    utilsStore.addAlert({
+      type: "error",
+      text: "No app selected"
+    });
+    return
+  }
+
+  utilsStore.awaitConfirmation({
+    text:
+        "Are you sure you want to delete this content ?",
+    type: "warning"
+  }).then(() => {
+    fetch(`/api/data/${settingsStore.currentAppSettings?.id}/${route.params.modelId as string}`,
+        {
+          method: 'DELETE',
+          headers: [
+            ["Content-Type", "application/json"],
+          ],
+          body: JSON.stringify({id: props.modelContent?.id})
+        }
+    )
+        .then(() => emit("reloadData"))
+        .catch((error) => console.error(error))
+  })
+      .catch((e) => {
+        if (e !== MESSAGE.PROMISE_USER_CANCELLED) {
+          throw new Error(e)
+        }
+      });
+}
+
 </script>
 <template>
   <div>
-    <div v-if="componentMap" class="pic-container">
+    <div v-if="componentMap" class="pic-container" data-testid="content-form">
       <component
         :is="componentMap[field.type]"
         v-for="(field, index) in currentEditModel.fieldCollection"
@@ -121,15 +174,16 @@ async function sendForm() {
         @updateData="updateData($event)"
       />
       <v-select
-        v-model="currentModelContent.categories"
+        v-model="form.categories"
         :items="categories"
         :multiple="true"
+        data-testid="select-categories"
         item-title="label"
         item-value="id"
         label="category"
       />
       <div class="pic-flex pic-between">
-        <v-btn color="primary" @click="sendForm">
+        <v-btn :disabled="v$.$invalid" color="primary" data-testid="content-save" @click="sendForm">
           Save
         </v-btn>
         <v-btn
@@ -138,6 +192,14 @@ async function sendForm() {
           @click.stop="router.push({params: {contentId: ''}})"
         >
           Cancel
+        </v-btn>
+        <v-btn
+          v-if="modelContent"
+          color="secondary"
+          variant="text"
+          @click.stop="deleteContent"
+        >
+          delete
         </v-btn>
       </div>
     </div>

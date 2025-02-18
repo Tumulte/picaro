@@ -20,3 +20,9 @@ coverage
 Picaro/Data
 Picaro/Back/picaro-back.json
 Picaro/Back/uploads
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

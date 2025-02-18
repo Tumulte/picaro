@@ -14,6 +14,7 @@ export const adminRoutes: RouteRecordRaw[] = [
             if (import.meta.env.IS_TEST) {
                 next()
             }
+
             const userStatus = await isUserLoggedIn()
             if (userStatus) {
                 next()

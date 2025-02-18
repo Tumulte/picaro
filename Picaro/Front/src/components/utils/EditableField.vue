@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 
 const emit = defineEmits<{
@@ -22,18 +22,20 @@ function cancel() {
 
 <template>
   <div class="pic-editable-container">
-    <v-text-field v-if="isEditing" v-model="editedValue" />
+    <v-text-field v-if="isEditing" v-model="editedValue" data-testid="edit-name-input" />
     <slot v-else />
     <div>
-      <v-icon v-if="!isEditing" @click="isEditing = !isEditing">
+      <v-icon v-if="!isEditing" data-testid="edit-name" @click="isEditing = !isEditing">
         mdi-pencil
       </v-icon>
-      <v-icon v-else @click="emit('update', editedValue);isEditing = false">
-        mdi-check
-      </v-icon>
-      <v-icon @click="cancel">
-        mdi-close
-      </v-icon>
+      <span v-else>
+        <v-icon data-testid="edit-name-save" @click="emit('update', editedValue);isEditing = false">
+          mdi-check
+        </v-icon>
+        <v-icon @click="cancel">
+          mdi-close
+        </v-icon>
+      </span>
     </div>
   </div>
 </template>

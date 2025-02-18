@@ -64,7 +64,7 @@ async function routes(fastify) {
             } catch (err) {
                 throw new Error(err)
             }
-            dbDeleteItem(name, fastify.db.getCollection('settings'), 'applicationName')
+            dbDeleteItem(name, fastify.db.getCollection('settings'), 'id')
             reply.send(`The app ${name} has been deleted`)
         }
     })

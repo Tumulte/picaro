@@ -47,7 +47,11 @@ watch(() => route.name, () => {
 }, {immediate: true})
 
 function createApp() {
-  fetch(`/api/setup/create/${newAppName.value}`, {method: 'POST'}).then(async (res) => res.json()).then(async data => {
+  fetch(`/api/setup/create/${newAppName.value}`,
+      {
+        method: 'POST',
+      }
+  ).then(async (res) => res.json()).then(async data => {
     await router.push({name: 'app', params: {appId: data?.appCreatedId}})
     emit('reloadSettings')
   }).catch((error) => {
@@ -61,8 +65,12 @@ function deleteApp() {
         "Are you sure you want to delete the app ?",
     type: "warning"
   }).then(() => {
-    fetch(`/api/setup/delete/${currentSettings.value?.applicationName}`, {method: 'DELETE'}).then(async () => {
-      await router.push({name: 'index'})
+    fetch(`/api/setup/delete/${currentSettings.value?.id}`,
+        {
+          method: 'DELETE',
+        }
+    ).then(async () => {
+      await router.push({name: 'app'})
       emit('reloadSettings')
     }).catch((error) => console.error(error))
   }).catch((e) => {
@@ -131,7 +139,7 @@ const v$ = useVuelidate(rules, form)
           :title="app.applicationName"
           :to="{name: 'app', params: {appId: app.id}}"
           color="primary"
-          data-test="app-button"
+          data-testid="app-button"
           height="100"
         />
       </v-col>
@@ -145,8 +153,11 @@ const v$ = useVuelidate(rules, form)
     </v-row>
   </div>
   <template v-else>
-    <div class="pic-flex" data-test="app-title">
-      <aside class="pic-container pic-aside">
+    <div
+      class="pic-flex"
+      data-testid="app-title"
+    >
+      <aside class="pic-container pic-aside" data-testid="app list">
         <h2>
           App List
         </h2>
@@ -163,13 +174,14 @@ const v$ = useVuelidate(rules, form)
       </aside>
       <main class="pic-container">
         <template v-if="currentSettings && appFormState === 'selectedApp'">
-          <h2 data-test="app-title-selected">
+          <h2 data-testid="app-title-selected">
             {{ currentSettings.applicationName }}
           </h2>
-          <v-text-field v-model="form.title" :validation="v$.title" label="Title" />
+          <v-text-field v-model="form.title" :validation="v$.title" data-testid="title" label="Title" />
           <v-text-field
             v-model="form.applicationName"
             :validation="v$.applicationName"
+            data-testid="app name"
             label="Application name"
           />
           <v-text-field
@@ -207,11 +219,12 @@ const v$ = useVuelidate(rules, form)
           <v-text-field
             v-model="newAppName"
             :validation="v$.newAppName"
-            data-test="new-app-input"
+            data-testid="new-app-input"
             label="App Name"
           />
           <v-btn
             color="primary"
+            data-testid="create app"
             @click="createApp"
           >
             Create App

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {computed} from "vue";
 import {useUserStore} from "@stores/user";
-import type {Layout, Settings} from "@types";
+import type {Category, Layout, Settings} from "@types";
 
 const userStore = useUserStore();
 const props = defineProps<{
@@ -12,10 +12,12 @@ const availableCategories = computed(() => {
   return props.currentApp.categories;
 });
 
-async function changeCategory(id?: string) {
-  if (id === 'section') {
+async function changeCategory(category: Category | 'all') {
+  if (category !== 'all' && category.section) {
     return
   }
+  const id = typeof category === "string" ? category : category.id
+
   await userStore.updateFilterCollection({
     models: props.module?.model ? [props.module?.model] : undefined,
     type: "categories",
@@ -27,16 +29,16 @@ async function changeCategory(id?: string) {
 
 <template>
   <div>
-    <a @click="changeCategory()">All</a>
+    <a @click="changeCategory('all')">All</a>
   </div>
   <div v-for="category in availableCategories" :key="category.id">
     <component
-      :is="category.id === 'section' ? 'div' : 'a'"
+      :is="category.section ? 'div' : 'a'"
       :class="{
-        'pic-section': category.id === 'section',
+        'pic-section': category.section,
         'pic-section-empty': !category.label
       }"
-      @click="changeCategory(category.id)"
+      @click="changeCategory(category)"
     >
       {{ category.label }}
     </component>

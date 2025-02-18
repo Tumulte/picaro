@@ -58,7 +58,7 @@ watch(() => route.params.appId, () => {
         <template v-if="settingsStore.currentAppSettings">
           <v-tab
             :class="{selected: selected === 'model'}"
-            data-test="model-tab"
+            data-testid="model-tab"
             to="/admin/data"
             value="data"
           >

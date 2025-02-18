@@ -2,11 +2,11 @@ import {JSONContent} from "@tiptap/core"
 
 export type AvailableModules = "Layout" | "FilterLayout" | "List" | "FilterCategories" | "FilterLink"
 export type AvailableContentType = "richText" | 'text'
-export type Categories = { id: string, label: string }
+export type Category = { id: string, label: string, section?: boolean }
 export type Layout = {
     model: string | null,
     type: AvailableModules,
-    categories: Categories[]
+    categories: Category[]
     cols?: string
 }
 
@@ -62,7 +62,7 @@ export type Settings = {
     styleSet: string,
     language: string,
     devMode: boolean,
-    categories: Categories[],
+    categories: Category[],
     messageTimeOut: number,
     applicationName: string,
     navStructure: [],

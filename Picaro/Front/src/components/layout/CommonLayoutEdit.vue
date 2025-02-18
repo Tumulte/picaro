@@ -154,7 +154,7 @@ async function saveLayout() {
       v-if="layoutCommonCollection.length <= 1"
       :class="{'no-row': layoutCommonCollection.length === 0}"
       class="pic-layout--add-row"
-      data-test="add-common-row"
+      data-testid="add-common-row"
       @click="addRow"
     >
       <v-icon>mdi-table-row-plus-after</v-icon>

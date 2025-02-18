@@ -139,18 +139,18 @@ function saveEditedField(field: FieldParams, index: number) {
 </script>
 
 <template>
-  <div v-if="currentEditModel" data-test="edit-model">
-    <EditableField :value="currentModelClone.name" @update="currentModelClone.name = $event">
-      <h2 data-test="created-model-name">
+  <div
+    v-if="currentEditModel"
+    data-testid="edit-model"
+  >
+    <EditableField :value="currentModelClone.name" @update="currentModelClone.name = $event; saveModel()">
+      <h2 data-testid="created-model-name">
         <span>
           <span>{{ currentModelClone.name }}</span>
         </span>
       </h2>
     </EditableField>
 
-    <v-btn v-if="props.modelFormState !== 'noModel' " color="secondary" @click="abandonEdition()">
-      Cancel Edition
-    </v-btn>
     <Draggable
       v-model="currentModelClone.fieldCollection"
       ghost-class="pic-sortable-ghost"
@@ -183,15 +183,18 @@ function saveEditedField(field: FieldParams, index: number) {
     <v-btn
       v-if="props.modelFormState === 'modelSelected'"
       class="pic-add-new-field-button"
-      data-test="add-new-field-button"
+      data-testid="add-new-field-button"
       @click="emit('updateModelFormState', 'addingField')"
     >
       Add Field
     </v-btn>
   </div>
-  <div v-if="props.modelFormState === 'modelSelected'" class="pic-flex pic-between">
-    <v-btn color="primary" @click="saveModel">
+  <div v-if="modelFormState === 'modelSelected'" class="pic-flex pic-between">
+    <v-btn color="primary" data-testid="save-model" @click="saveModel">
       Save
+    </v-btn>
+    <v-btn color="secondary" @click="abandonEdition()">
+      Cancel Edition
     </v-btn>
     <v-btn v-if="currentModelIsSaved" class="pic-button--text" variant="text" @click="deleteModel">
       delete

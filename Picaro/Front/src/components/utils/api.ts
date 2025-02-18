@@ -19,7 +19,15 @@ export async function updateSettings(currentSettings: Settings, oldName?: string
 
 export async function createStyleSet(styleSet: { styleSet: StyleSet, generatedCSS: string }) {
     try {
-        return await fetch('/api/setup/create/styleset', {method: 'POST', body: JSON.stringify(styleSet)});
+        return await fetch('/api/setup/create/styleset',
+            {
+                headers: [
+                    ["Content-Type", "application/json"],
+                ],
+                method: 'POST',
+                body: JSON.stringify(styleSet)
+            }
+        );
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(error.message);
@@ -29,7 +37,15 @@ export async function createStyleSet(styleSet: { styleSet: StyleSet, generatedCS
 
 export async function updateStyleSet(currentSettings: { styleSet: StyleSet, generatedCSS: string }) {
     try {
-        return await fetch('/api/setup/update/styleset', {method: 'PUT', body: JSON.stringify(currentSettings)});
+        return await fetch('/api/setup/update/styleset',
+            {
+                headers: [
+                    ["Content-Type", "application/json"],
+                ],
+                method: 'PUT',
+                body: JSON.stringify(currentSettings)
+            }
+        );
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(error.message);

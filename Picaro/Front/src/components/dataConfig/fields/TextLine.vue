@@ -1,7 +1,7 @@
 <template>
   <label>
     {{ fieldParams.label }}
-    <input v-model="state.text" :name="fieldParams.name" data-test="text-field">
+    <input v-model="state.text" :name="fieldParams.name" data-testid="text-field">
   </label>
 </template>
 <script lang="ts" setup>

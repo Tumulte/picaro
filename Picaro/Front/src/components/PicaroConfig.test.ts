@@ -25,9 +25,9 @@ const wrapper = mount(PicaroConfig, {
 describe("PicaroConfig", () => {
     it('displays the apps buttons when nothing is selected', () => {
 
-        const buttons = wrapper.findAll('[data-test="app-button"]')
-        const selectedAppTitle = wrapper.find('[data-test="app-title-selected"]')
-        const newAppInput = wrapper.find('[data-test="new-app-input"]')
+        const buttons = wrapper.findAll('[data-testid="app-button"]')
+        const selectedAppTitle = wrapper.find('[data-testid="app-title-selected"]')
+        const newAppInput = wrapper.find('[data-testid="new-app-input"]')
 
         expect(buttons.length).toBe(2)
         expect(selectedAppTitle.exists()).toBe(false)
@@ -46,9 +46,9 @@ describe("PicaroConfig", () => {
 
         await vi.waitUntil(() => wrapper.vm.appFormState === 'newApp')
 
-        const buttons = wrapper.findAll('[data-test="app-button"]')
-        const selectedAppTitle = wrapper.find('[data-test="app-title-selected"]')
-        const newAppInput = wrapper.find('[data-test="new-app-input"]')
+        const buttons = wrapper.findAll('[data-testid="app-button"]')
+        const selectedAppTitle = wrapper.find('[data-testid="app-title-selected"]')
+        const newAppInput = wrapper.find('[data-testid="new-app-input"]')
 
 
         expect(buttons.length).toBe(0)
@@ -62,9 +62,9 @@ describe("PicaroConfig", () => {
 
         await wrapper.vm.$nextTick()
 
-        const buttons = wrapper.findAll('[data-test="app-button"]')
-        const selectedAppTitle = wrapper.find('[data-test="app-title-selected"]')
-        const newAppInput = wrapper.find('[data-test="new-app-input"]')
+        const buttons = wrapper.findAll('[data-testid="app-button"]')
+        const selectedAppTitle = wrapper.find('[data-testid="app-title-selected"]')
+        const newAppInput = wrapper.find('[data-testid="new-app-input"]')
 
         expect(buttons.length).toBe(0)
         expect(selectedAppTitle.exists()).toBe(true)

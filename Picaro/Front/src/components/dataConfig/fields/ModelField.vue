@@ -139,11 +139,11 @@ const v$ = useVuelidate(rules, form)
   <div
     v-if="!isEdited && !isNew"
     class="pic-model-field-summary"
-    data-test="created-model-field"
+    data-testid="created-model-field"
   >
     <button
       class="pic-button--text"
-      data-test="edit-model-field-button"
+      data-testid="edit-model-field-button"
       @click="editField"
     >
       Edit
@@ -157,7 +157,7 @@ const v$ = useVuelidate(rules, form)
     </span>
   </div>
   <template v-if="isEdited">
-    <h3 data-test="add-title">
+    <h3 data-testid="add-title">
       Add field:
     </h3>
 
@@ -172,7 +172,7 @@ const v$ = useVuelidate(rules, form)
       v-show="!isFieldSelected"
       v-model="fieldData.type"
       :items="fieldType"
-      data-test="select-model-field"
+      data-testid="select-model-field"
       item-title="name"
       item-value="type"
       @update:modelValue="isFieldSelected = fieldData.type !== 'none'"
@@ -185,9 +185,21 @@ const v$ = useVuelidate(rules, form)
         Change
       </button>
     </div>
-    <span v-if="isFieldSelected" data-test="edit-field-selected">
-      <v-text-field v-model="form.label" :validation="v$.label" aria-required="true" label="Label *" />
-      <v-text-field v-model="form.name" :validation="v$.name" aria-required="true" label="Name *" />
+    <span v-if="isFieldSelected" data-testid="edit-field-selected">
+      <v-text-field
+        v-model="form.label"
+        :validation="v$.label"
+        aria-required="true"
+        data-testid="field-label"
+        label="Label *"
+      />
+      <v-text-field
+        v-model="form.name"
+        :validation="v$.name"
+        aria-required="true"
+        data-testid="field-name"
+        label="Name *"
+      />
       <v-text-field
         v-model="form.template"
         :validation="v$.template"
@@ -216,7 +228,7 @@ const v$ = useVuelidate(rules, form)
       <v-btn
         v-if="modelFormState === 'editingField'"
         :disabled="v$.$invalid"
-        data-test="save-model-field-button"
+        data-testid="save-model-field-button"
         @click="saveEdit"
       >
         Save
@@ -226,7 +238,7 @@ const v$ = useVuelidate(rules, form)
           v-if="modelFormState === 'addingField'"
           :disabled="v$.$invalid"
           color="primary"
-          data-test="add-field-button"
+          data-testid="add-field-button"
           @click="addField"
         >
           Add field to model
@@ -236,7 +248,7 @@ const v$ = useVuelidate(rules, form)
         <v-btn
           v-if="modelFormState === 'editingField'"
           class="pic-button--text"
-          data-test="delete-model-field-button"
+          data-testid="delete-model-field-button"
           @click="deleteField"
         >
           delete

@@ -110,7 +110,7 @@ watch(() => route.params.modelId, (newVal) => {
 
 <template>
   <div class="pic-flex">
-    <aside class="pic-aside pic-container">
+    <aside class="pic-aside pic-container" data-testid="model list">
       <h3>
         Model List
       </h3>
@@ -122,7 +122,7 @@ watch(() => route.params.modelId, (newVal) => {
       </div>
       <v-btn
         color="primary"
-        data-test="new-model-button"
+        data-testid="new-model-button"
         @click="newModelForm"
       >
         New Model
@@ -133,23 +133,31 @@ watch(() => route.params.modelId, (newVal) => {
         <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/`">
           Edit Model
         </v-tab>
-        <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/content`">
+        <v-tab :to="`/admin/data/${route.params.appId}/${route.params.modelId}/content`" data-testid="edit-content-tab">
           Edit content
         </v-tab>
       </v-tabs>
       <div v-if="modelFormState === 'awaitingName'" class="pic-new-model">
-        <v-text-field v-model="modelNameInput" data-test="create-model-name-input" label="New model name" />
+        <v-text-field
+          v-model="modelNameInput"
+          data-testid="create-model-name-input"
+          label="New model name"
+        />
         <v-btn
           v-if="!currentEditModelName"
           :disabled="!modelNameInput || !modelNameIsUnique"
           color="primary"
-          data-test="create-model-button"
+          data-testid="start-model-edit-button"
           @click="createNewModel"
         >
           Next
         </v-btn>
       </div>
-      <div v-if="currentEditModel" class="mt-4" data-test="model-is-edited">
+      <div
+        v-if="currentEditModel"
+        class="mt-4"
+        data-testid="model-is-edited"
+      >
         <router-view
           :key="currentEditModel.id"
           :current-edit-model="currentEditModel"
