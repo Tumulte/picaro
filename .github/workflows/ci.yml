@@ -25,3 +25,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm run test
+
+      - name: Run playwright
+        run: pnpm run e2e
