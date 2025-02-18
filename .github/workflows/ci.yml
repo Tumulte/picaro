@@ -26,5 +26,10 @@ jobs:
       - name: Run unit tests
         run: pnpm run test
 
+      - name: copy settings
+        uses: canastro/copy-file-action@master
+        with:
+          source: "Picaro/Back/picaro-back.json.sample"
+          target: "Picaro/Back/picaro-back.json"
       - name: Run playwright
         run: pnpm run e2e
