@@ -10,26 +10,6 @@ import {FieldParams, RichTextContent, RichTextEditorJson} from "@types";
 import {generateHTML} from "@tiptap/core";
 import {useUtilsStore} from "@stores/utils";
 
-const utilsStore = useUtilsStore()
-
-const sizeList = [330, 100, 200, 500, 1000, 1500]
-
-const imageFile = ref<File>();
-const allImages = ref()
-
-const rteImage = ref('')
-
-fetchImages()
-
-function fetchImages() {
-  allImages.value = import.meta.glob('@uploads/picaro explained.jpg', {
-    query: {format: 'webp', w: "330;100;200;500;1000;1500", picture: ''},
-    import: 'default',
-    eager: true
-  })
-}
-
-
 const props = defineProps<{
   fieldParams: FieldParams;
   fieldContent?: RichTextContent | null;
@@ -40,6 +20,30 @@ const emit = defineEmits<{
   updateData: [[string, RichTextEditorJson]]
   endEdit: []
 }>()
+
+const utilsStore = useUtilsStore()
+
+const sizeList = [330, 100, 200, 500, 1000, 1500]
+
+const imageFile = ref<File>();
+const allImages = ref()
+
+const rteImage = ref('')
+
+const imageDrawer = ref(false);
+
+const selectedImg = ref<string | null>(null)
+
+
+fetchImages()
+
+function fetchImages() {
+  allImages.value = import.meta.glob('@uploads/picaro explained.jpg', {
+    query: {format: 'webp', w: "330;100;200;500;1000;1500", picture: ''},
+    import: 'default',
+    eager: true
+  })
+}
 
 const editor = useEditor({
   extensions:
@@ -60,11 +64,8 @@ const editor = useEditor({
   }
 })
 
-const imageDrawer = ref(false);
-
-const selectedImg = ref<string | null>(null)
-
 onMounted(() => {
+
 
       editor.value?.on("selectionUpdate", ({editor}) => {
         const src = editor.state.selection.$anchor.node()?.attrs?.src;
@@ -146,11 +147,11 @@ function uploadImage() {
 
 </script>
 <template>
-  <div>
+  <div class="editor-container">
     <h3 class="pic-field-title">
       {{ fieldParams.label }}
     </h3>
-    <div v-if="editor">
+    <div v-if="editor" class="editor-toolbar">
       <span
         :class="{ 'is-active': editor.isActive('bold') }"
         @click.stop="editor.chain().focus().toggleBold().run()"
@@ -300,5 +301,12 @@ function uploadImage() {
 
 .size-btn-container {
   width: 250px;
+}
+
+.editor-toolbar {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
 }
 </style>

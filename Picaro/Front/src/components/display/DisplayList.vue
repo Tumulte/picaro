@@ -19,6 +19,7 @@ const props = defineProps<{
   displayAll?: boolean
   currentApp: Settings
   dataReloaded: boolean
+  displayStatus?: ModelContent['status']
 }>()
 
 const emit = defineEmits<{
@@ -41,15 +42,19 @@ watch(() => props.dataReloaded, () => {
 
 const filteredList = computed<ModelContent[]>(() => {
   if (props.displayAll) {
-    return dataStore.currentModelData
+    return dataStore.currentModelData.filter(item =>
+        (!props.displayStatus && (item.status === 'published')) ||
+        (props.displayStatus && item.status === props.displayStatus)
+    )
   } else {
     return dataStore.currentModelData?.filter(item => {
-      return applyFilter(
-          item,
-          props.currentApp.filterCollection,
-          props.moduleParams
-      );
-    });
+      return item.status === "published"
+          && applyFilter(
+              item,
+              props.currentApp.filterCollection,
+              props.moduleParams
+          );
+    })
   }
 
 })

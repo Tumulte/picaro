@@ -7,7 +7,6 @@ import {useUtilsStore} from "@stores/utils";
 import {useSettingsStore} from "@stores/settings";
 import {nanoid} from "nanoid";
 import {copy} from "copy-anything";
-import {MESSAGE} from "@utils/const";
 import {helpers} from "@vuelidate/validators";
 import {useVuelidate} from "@vuelidate/core";
 
@@ -18,6 +17,8 @@ const settingsStore = useSettingsStore()
 const emit = defineEmits<{
   reloadData: [],
 }>()
+
+const possibleStatus: ModelContent['status'][] = ['published', "draft"] as const
 
 const componentMap = shallowRef();
 
@@ -68,6 +69,7 @@ function defaultEmptyContent(): ModelContent {
       fieldParamsId: field.id,
       contentId: nanoid(8),
     })),
+    status: "published",
     id: nanoid(8),
     modelId: route.params.modelId as string
   }
@@ -90,7 +92,10 @@ function updateData(data: [string, FieldContentParams['fieldContent']]) {
 }
 
 
-async function sendForm() {
+async function sendForm(newStatus ?: ModelContent['status']) {
+  if (newStatus) {
+    currentModelContent.value.status = newStatus;
+  }
   let action: "post" | "put" = "post";
 
   if (props.modelContent) action = "put";
@@ -104,6 +109,7 @@ async function sendForm() {
   }
 
   try {
+    console.log(currentModelContent.value.status)
     await fetch(
         `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
         {
@@ -111,7 +117,10 @@ async function sendForm() {
           headers: [
             ["Content-Type", "application/json"],
           ],
-          body: JSON.stringify({...currentModelContent.value, categories: form.categories}) // if an array is passed each entry creates a row in the DB
+          body: JSON.stringify({
+            ...currentModelContent.value,
+            categories: form.categories,
+          }) // if an array is passed each entry creates a row in the DB
         }
     )
     utilsStore.addAlert({
@@ -127,43 +136,11 @@ async function sendForm() {
   }
 }
 
-function deleteContent() {
-  if (!settingsStore.currentAppSettings) {
-    utilsStore.addAlert({
-      type: "error",
-      text: "No app selected"
-    });
-    return
-  }
-
-  utilsStore.awaitConfirmation({
-    text:
-        "Are you sure you want to delete this content ?",
-    type: "warning"
-  }).then(() => {
-    fetch(`/api/data/${settingsStore.currentAppSettings?.id}/${route.params.modelId as string}`,
-        {
-          method: 'DELETE',
-          headers: [
-            ["Content-Type", "application/json"],
-          ],
-          body: JSON.stringify({id: props.modelContent?.id})
-        }
-    )
-        .then(() => emit("reloadData"))
-        .catch((error) => console.error(error))
-  })
-      .catch((e) => {
-        if (e !== MESSAGE.PROMISE_USER_CANCELLED) {
-          throw new Error(e)
-        }
-      });
-}
-
 </script>
 <template>
   <div>
-    <div v-if="componentMap" class="pic-container" data-testid="content-form">
+    {{ currentModelContent.status }}
+    <div v-if="componentMap" class="pic-container model-form-container" data-testid="content-form">
       <component
         :is="componentMap[field.type]"
         v-for="(field, index) in currentEditModel.fieldCollection"
@@ -182,8 +159,9 @@ function deleteContent() {
         item-value="id"
         label="category"
       />
+      <v-select v-model="currentModelContent.status" :items="possibleStatus" />
       <div class="pic-flex pic-between">
-        <v-btn :disabled="v$.$invalid" color="primary" data-testid="content-save" @click="sendForm">
+        <v-btn :disabled="v$.$invalid" color="primary" data-testid="content-save" @click="sendForm()">
           Save
         </v-btn>
         <v-btn
@@ -197,7 +175,7 @@ function deleteContent() {
           v-if="modelContent"
           color="secondary"
           variant="text"
-          @click.stop="deleteContent"
+          @click.stop="sendForm('deleted')"
         >
           delete
         </v-btn>
@@ -205,4 +183,10 @@ function deleteContent() {
     </div>
   </div>
 </template>
+<style lang="postcss" scoped>
+.model-form-container {
+  max-height: calc(100vh - 130px);
+  overflow: auto;
+}
+</style>
 

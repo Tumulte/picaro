@@ -39,7 +39,7 @@ export const applyFilter = function (item: ModelContent, filterCollection: Filte
     let displayItem = 0;
     let emptyFilter = 0;
 
-    if (Object.keys(filterCollection).length === 0) {
+    if (!filterCollection || Object.keys(filterCollection).length === 0) {
         return true
     }
 

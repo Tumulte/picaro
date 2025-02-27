@@ -181,6 +181,7 @@ export type ModelContent = {
     content: FieldContentParams[]
     modelId: string
     id: string
+    status?: 'deleted' | 'archived' | 'draft' | 'published'
 }
 
 

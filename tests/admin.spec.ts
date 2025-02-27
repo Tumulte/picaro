@@ -14,18 +14,18 @@ test('Log in and create app', async ({page}) => {
 
     await page.getByText('New App').click()
 
-    await page.getByTestId('new-app-input').getByRole('textbox').fill('App test')
+    await page.getByTestId('new-app-input').getByRole('textbox').fill('apptest')
 
     await page.getByText('create App').click()
 
-    await expect(page.getByTestId('app name').getByRole('textbox')).toHaveValue('App test');
+    await expect(page.getByTestId('app name').getByRole('textbox')).toHaveValue('apptest');
 
-    await expect(page.getByTestId('app list')).toContainText('App test');
+    await expect(page.getByTestId('app list')).toContainText('apptest');
 
 });
 
 test('Creates and edit models', async ({page}) => {
-    await page.getByText('App test').first().click()
+    await page.getByText('apptest').first().click()
 
     await page.getByTestId('model-tab').click()
 
@@ -59,7 +59,7 @@ test('Creates and edit models', async ({page}) => {
 })
 
 test('Creates and edit categories', async ({page}) => {
-    await page.getByText('App test').first().click()
+    await page.getByText('apptest').first().click()
 
     await page.getByTestId('model-tab').click()
 
@@ -82,7 +82,7 @@ test('Creates and edit categories', async ({page}) => {
 })
 
 test('Creates and edit content', async ({page}) => {
-    await page.getByText('App test').first().click()
+    await page.getByText('apptest').first().click()
 
     await page.getByTestId('model-tab').click()
 
@@ -101,4 +101,43 @@ test('Creates and edit content', async ({page}) => {
     await page.getByTestId('content-save').click()
 
     await expect(page.getByTestId('content-list')).toHaveText('test rte content')
+})
+
+test('Creates a common layout', async ({page}) => {
+    await page.getByText('apptest').first().click()
+
+    await page.getByTestId('layout-tab').click()
+
+    await page.getByTestId('add-common-row').click()
+
+    await page.getByTestId('module-width').getByRole('spinbutton').fill('2')
+
+    await page.getByTestId('module-type').click()
+
+    await page.getByText('FilterCategories').last().click()
+
+    await page.locator("body").click({position: {x: 0, y: 0}});
+
+    await page.getByTestId('add-common-column').click()
+
+    await page.getByTestId('module-type').last().click()
+
+    await page.getByText('List').last().click()
+    await page.locator("body").click({position: {x: 0, y: 0}});
+
+    await page.getByTestId('module-model').last().click()
+
+    await page.getByText('model test').last().click()
+
+    await page.getByTestId('save-common-layout').click()
+
+})
+
+test('Check front end content', async ({page}) => {
+    await page.goto('/#/apptest');
+    await expect(page.getByText('cat 2')).toBeVisible()
+
+    await expect(page.getByText('cat 1')).toBeVisible()
+    await expect(page.getByText('test rte content')).toBeVisible()
+
 })

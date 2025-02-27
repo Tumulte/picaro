@@ -3,7 +3,7 @@ import {ref} from "vue";
 import CommonLayoutEdit from "@components/layout/CommonLayoutEdit.vue";
 import LayoutEdit from "@components/layout/LayoutEdit.vue";
 
-const tabs = ref<'common' | 'dynamic'>('dynamic')
+const tabs = ref<'common' | 'dynamic'>('common')
 
 </script>
 <template>

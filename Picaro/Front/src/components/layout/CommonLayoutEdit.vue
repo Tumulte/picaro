@@ -47,7 +47,7 @@ function deleteColumn(line: number, column: number) {
 }
 
 function changeModule(event: AvailableModules, index: number, subIndex: number) {
-  layoutCommonCollection.value[index][subIndex] = {type: event};
+  layoutCommonCollection.value[index][subIndex].type = event;
 }
 
 async function saveLayout() {
@@ -80,6 +80,7 @@ async function saveLayout() {
               <v-text-field
                 :model-value="layoutCommonColumn.cols || 0"
                 class="module-type-size"
+                data-testid="module-width"
                 density="compact"
                 label="Width"
                 max="12"
@@ -91,6 +92,7 @@ async function saveLayout() {
               <v-select
                 :items="Object.keys(components)"
                 :model-value="layoutCommonColumn.type || 'none'"
+                data-testid="module-type"
                 density="compact"
                 label="Module"
                 variant="underlined"
@@ -107,6 +109,7 @@ async function saveLayout() {
             <v-select
               :items="modelCollection"
               :model-value="modelCollection.find(item=> item.id === layoutCommonColumn.model)"
+              data-testid="module-model"
               item-title="name"
               item-value="id"
               label="Model"
@@ -135,6 +138,7 @@ async function saveLayout() {
           <div
             class="pic-layout--add-column"
             data-jest="add-common-column"
+            data-testid="add-common-column"
             @click="layoutCommonLine.splice(index + 1,0 , {type: null})"
           >
             <v-icon>mdi-table-column-plus-after</v-icon>
@@ -160,7 +164,13 @@ async function saveLayout() {
       <v-icon>mdi-table-row-plus-after</v-icon>
     </div>
   </div>
-  <v-btn v-if="layoutCommonCollection.length !== 0" class="ml-4 mb-4" color="primary" @click="saveLayout()">
+  <v-btn
+    v-if="layoutCommonCollection.length !== 0"
+    class="ml-4 mb-4"
+    color="primary"
+    data-testid="save-common-layout"
+    @click="saveLayout()"
+  >
     Save Layout
     <v-icon>
       mdi-content-save
@@ -205,10 +215,14 @@ async function saveLayout() {
 
   &--add-row {
     &.no-row {
-      top: 50%;
-      transform: translateY(50%);
+      top: 0;
+      right: auto;
+      left: 50%;
+      transform: translate(-50%, 0);
+      position: relative;
     }
 
+    min-height: 40px;
     bottom: 0px;
     right: 50%;
     transform: translateX(-50%);

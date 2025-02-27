@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ModelForm from "./ModelForm.vue"
 import {defineEmits, defineProps, ref} from "vue";
-import {Category, Model, Settings} from "@types";
+import {Category, Model, ModelContent, Settings} from "@types";
 import DisplayList from "@components/display/DisplayList.vue";
 import FilterCategories from "@components/filters/FilterCategories.vue";
 import {useSettingsStore} from "@stores/settings";
@@ -17,6 +17,9 @@ defineProps<{
   currentEditModel: Model
 }>()
 
+const selectedStatus = ref<ModelContent['status']>('published')
+
+const possibleStatus: ModelContent['status'][] = ['published', "draft", "archived", 'deleted'] as const
 
 const settingsStore = useSettingsStore();
 const utilsStore = useUtilsStore();
@@ -152,12 +155,24 @@ async function saveCategory() {
         <div class="v-label mt-4">
           Edit existing content :
         </div>
+        <div>
+          <v-btn
+            v-for="status in possibleStatus"
+            :key="status"
+            :color="status === selectedStatus ? 'primary' : ''"
+            variant="text"
+            @click="selectedStatus = status"
+          >
+            {{ status }}
+          </v-btn>
+        </div>
         <display-list
           v-if="settingsStore.currentAppSettings"
           :categories="categories"
           :current-app="settingsStore.currentAppSettings"
           :data-reloaded="dataReloaded"
           :display-all="true"
+          :display-status="selectedStatus"
           :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
           class="pic-display-edit"
           data-testid="content-list"
