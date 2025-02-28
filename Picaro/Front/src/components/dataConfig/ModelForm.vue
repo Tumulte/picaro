@@ -93,7 +93,7 @@ function updateData(data: [string, FieldContentParams['fieldContent']]) {
 }
 
 
-async function sendForm(newStatus ?: ModelContent['status']) {
+function sendForm(newStatus ?: ModelContent['status']) {
   if (newStatus) {
     currentModelContent.value.status = newStatus;
   }
@@ -109,35 +109,14 @@ async function sendForm(newStatus ?: ModelContent['status']) {
     return
   }
 
-  try {
-    await fetch(
-        `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
-        {
-          method: action,
-          headers: [
-            ["Content-Type", "application/json"],
-          ],
-          body: JSON.stringify() // if an array is passed each entry creates a row in the DB
-        }
-    )
-    utilsStore.addAlert({
-      type: "success",
-      text: "Saved successfully"
-    });
-    emit("reloadData");
-  } catch (e) {
-    utilsStore.addAlert({
-      type: "error",
-      text: `Request failed.  Returned status of ${e as string}`
-    });
-  }
   picFetch(
       `${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
       action,
-      {
+      JSON.stringify({
         ...currentModelContent.value,
         categories: form.categories,
-      }
+      }),
+      () => emit('reloadData')
   )
 }
 

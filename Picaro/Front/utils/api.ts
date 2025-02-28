@@ -29,6 +29,7 @@ async function fetchData<FetchT>(route: string, params: RequestInit): Promise<Fe
             throw new Error('Something went wrong')
         })
         .then((responseData: FetchT) => {
+            console.log(responseData, 'aaa')
             return responseData ?? null
         })
 }
@@ -51,6 +52,7 @@ export function picFetch<ReturnT>(
     }
     fetchData<ReturnT>(route, params)
         .then((res: ReturnT | null | undefined) => {
+            console.log(res)
             data.value = res
             if (callback) {
                 callback()

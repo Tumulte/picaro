@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
-import {computed, toValue, watch} from "vue";
+import {computed, ref, toValue, watch} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
 import {Category, Layout, Model, ModelContent, Settings} from "@types";
@@ -30,7 +30,16 @@ const emit = defineEmits<{
 
 const dataStore = useDataStore()
 
-const content = (async () => await getData())()
+const content = import.meta.env.VITE_BUILD_MODE === "static" ? {
+  data: ref(),
+  refresh: () => {
+    return;
+  }
+} : getData()
+
+if (import.meta.env.VITE_BUILD_MODE === "static") {
+  getStaticData()
+}
 
 watch(() => props.dataReloaded, () => {
   if (content) {
@@ -39,17 +48,18 @@ watch(() => props.dataReloaded, () => {
 })
 
 watch(() => content?.data, () => {
-  dataStore.currentModelData = content?.data
+  dataStore.currentModelData = content?.data.value
 })
 
 const filteredList = computed<ModelContent[]>(() => {
-  if (props.displayAll && content?.data) {
-    return toValue(content.data).filter((item: ModelContent) =>
+  const fetchData = toValue(content?.data) ?? []
+  if (props.displayAll) {
+    return fetchData.filter((item: ModelContent) =>
         (!props.displayStatus && (item.status === 'published')) ||
         (props.displayStatus && item.status === props.displayStatus)
     )
   } else {
-    return toValue(content?.data)?.filter((item: ModelContent) => {
+    return fetchData.filter((item: ModelContent) => {
       return item.status === "published"
           && applyFilter(
               item,
@@ -67,20 +77,19 @@ const currentModel = computed(() => {
   )
 })
 
-async function getData() {
-  if (import.meta.env.VITE_BUILD_MODE === "static") {
-    const staticData = await import(`./../../../../Data/build/${props.currentApp.id}.json`)
-    return {
-      data: staticData.default.filter((item: ModelContent) =>
-          item.modelId === props.moduleParams.model
-      ),
-      refresh: () => {
-        return;
-      }
-    }
-  } else {
-    return await picFetch<ModelContent[]>(`${props.currentApp.id}/${props.moduleParams.model}`)
-  }
+function getStaticData() {
+  if (!content) return
+  import(`./../../../../Data/build/${props.currentApp.id}.json`)
+      .then(data => {
+        content.data.value = data.default.filter((item: ModelContent) =>
+            item.modelId === props.moduleParams.model
+        )
+      })
+      .catch(e => console.error(e))
+}
+
+function getData() {
+  return picFetch<ModelContent[]>(`${props.currentApp.id}/${props.moduleParams.model}`)
 }
 
 
@@ -116,6 +125,7 @@ async function getData() {
         :current-edit-model="currentModel"
         :model-content="fieldList"
         data-testid="content-edit"
+        @reloadData="content?.refresh()"
       />
     </div>
   </div>
