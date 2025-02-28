@@ -5,3 +5,4 @@ function clearAndUpper(text: string): string {
 export function toPascalCase(text: string): string {
     return text.replace(/(^\w|-\w)/g, clearAndUpper);
 }
+

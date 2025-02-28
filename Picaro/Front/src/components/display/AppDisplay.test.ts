@@ -9,8 +9,12 @@ vi.mock('vue-router', () => ({
     useRoute: () => (
         {params: ""}
     ),
-    useRouter: vi.fn()
+    useRouter: () => ({
+        push: vi.fn(() => {
+        })
+    }),
 }));
+
 
 const wrapper = mount(AppDisplay, {
     global: {

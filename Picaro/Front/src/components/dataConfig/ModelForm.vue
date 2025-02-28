@@ -9,6 +9,7 @@ import {nanoid} from "nanoid";
 import {copy} from "copy-anything";
 import {helpers} from "@vuelidate/validators";
 import {useVuelidate} from "@vuelidate/core";
+import {picFetch} from "@utils/api";
 
 const route = useRoute()
 const router = useRouter()
@@ -96,9 +97,9 @@ async function sendForm(newStatus ?: ModelContent['status']) {
   if (newStatus) {
     currentModelContent.value.status = newStatus;
   }
-  let action: "post" | "put" = "post";
+  let action: "POST" | "PUT" = "POST";
 
-  if (props.modelContent) action = "put";
+  if (props.modelContent) action = "PUT";
 
   if (!settingsStore.currentAppSettings) {
     utilsStore.addAlert({
@@ -109,7 +110,6 @@ async function sendForm(newStatus ?: ModelContent['status']) {
   }
 
   try {
-    console.log(currentModelContent.value.status)
     await fetch(
         `/api/data/${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
         {
@@ -117,10 +117,7 @@ async function sendForm(newStatus ?: ModelContent['status']) {
           headers: [
             ["Content-Type", "application/json"],
           ],
-          body: JSON.stringify({
-            ...currentModelContent.value,
-            categories: form.categories,
-          }) // if an array is passed each entry creates a row in the DB
+          body: JSON.stringify() // if an array is passed each entry creates a row in the DB
         }
     )
     utilsStore.addAlert({
@@ -134,6 +131,14 @@ async function sendForm(newStatus ?: ModelContent['status']) {
       text: `Request failed.  Returned status of ${e as string}`
     });
   }
+  picFetch(
+      `${settingsStore.currentAppSettings.id}/${route.params.modelId as string}`,
+      action,
+      {
+        ...currentModelContent.value,
+        categories: form.categories,
+      }
+  )
 }
 
 </script>

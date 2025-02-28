@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import {applyFilter} from '@components/utils/filter'
 import ModelField from "@components/dataConfig/ModelField.vue"
-import {computed, watch} from "vue";
+import {computed, toValue, watch} from "vue";
 import {useRoute} from "vue-router";
 import ModelForm from "@components/dataConfig/ModelForm.vue";
 import {Category, Layout, Model, ModelContent, Settings} from "@types";
 import {useDataStore} from "@stores/data";
 import {useSettingsStore} from "@stores/settings";
+import {picFetch} from "@utils/api";
 
 const settings = useSettingsStore()
 
@@ -29,25 +30,26 @@ const emit = defineEmits<{
 
 const dataStore = useDataStore()
 
-if (import.meta.env.VITE_BUILD_MODE === "static") {
-  getBuiltData().catch((error) => console.error(error))
-} else {
-  fetchData()
-}
+const content = (async () => await getData())()
 
 watch(() => props.dataReloaded, () => {
-  fetchData()
+  if (content) {
+    content.refresh()
+  }
 })
 
+watch(() => content?.data, () => {
+  dataStore.currentModelData = content?.data
+})
 
 const filteredList = computed<ModelContent[]>(() => {
-  if (props.displayAll) {
-    return dataStore.currentModelData.filter(item =>
+  if (props.displayAll && content?.data) {
+    return toValue(content.data).filter((item: ModelContent) =>
         (!props.displayStatus && (item.status === 'published')) ||
         (props.displayStatus && item.status === props.displayStatus)
     )
   } else {
-    return dataStore.currentModelData?.filter(item => {
+    return toValue(content?.data)?.filter((item: ModelContent) => {
       return item.status === "published"
           && applyFilter(
               item,
@@ -57,7 +59,7 @@ const filteredList = computed<ModelContent[]>(() => {
     })
   }
 
-})
+},)
 
 const currentModel = computed(() => {
   return props.currentApp.modelCollection.find(
@@ -65,21 +67,20 @@ const currentModel = computed(() => {
   )
 })
 
-function fetchData() {
-  fetch(`/api/data/${props.currentApp.id}/${props.moduleParams.model}`)
-      .then(res => res.json())
-      .then((data) => {
-        dataStore.currentModelData = data
-      }).catch((error) => console.error(error))
-}
-
-async function getBuiltData() {
-  const data = await import(`./../../../../Data/build/${props.currentApp.id}.json`)
-
-
-  dataStore.currentModelData = data.default.filter((item: ModelContent) =>
-      item.modelId === props.moduleParams.model
-  )
+async function getData() {
+  if (import.meta.env.VITE_BUILD_MODE === "static") {
+    const staticData = await import(`./../../../../Data/build/${props.currentApp.id}.json`)
+    return {
+      data: staticData.default.filter((item: ModelContent) =>
+          item.modelId === props.moduleParams.model
+      ),
+      refresh: () => {
+        return;
+      }
+    }
+  } else {
+    return await picFetch<ModelContent[]>(`${props.currentApp.id}/${props.moduleParams.model}`)
+  }
 }
 
 

@@ -44,7 +44,7 @@ const routeParams = {
     }
 }
 
-describe("AppDisplay", () => {
+describe("User test", () => {
     beforeEach(() => {
         // creates a fresh pinia and makes it active
         // so it's automatically picked up by any useStore() call

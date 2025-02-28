@@ -166,18 +166,20 @@ async function saveCategory() {
             {{ status }}
           </v-btn>
         </div>
-        <display-list
-          v-if="settingsStore.currentAppSettings"
-          :categories="categories"
-          :current-app="settingsStore.currentAppSettings"
-          :data-reloaded="dataReloaded"
-          :display-all="true"
-          :display-status="selectedStatus"
-          :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
-          class="pic-display-edit"
-          data-testid="content-list"
-          @clickItem="editItem($event)"
-        />
+        <Suspense>
+          <display-list
+            v-if="settingsStore.currentAppSettings"
+            :categories="categories"
+            :current-app="settingsStore.currentAppSettings"
+            :data-reloaded="dataReloaded"
+            :display-all="true"
+            :display-status="selectedStatus"
+            :module-params="{model: currentEditModel.id, categories: [], type: 'List'}"
+            class="pic-display-edit"
+            data-testid="content-list"
+            @clickItem="editItem($event)"
+          />
+        </Suspense>
       </template>
     </v-col>
   </v-row>
